@@ -16,13 +16,6 @@ interface AdapterInterface extends \Piwik\Db\TransactionalDatabaseInterface
      */
     public function resetConfig();
     /**
-     * Return default port.
-     * @deprecated Use Schema::getDefaultPortForSchema instead
-     *
-     * @return int
-     */
-    public static function getDefaultPort();
-    /**
      * Check database server version
      *
      * @throws Exception if database version is less than required version

@@ -24,10 +24,7 @@ use Piwik\Timer;
 use Piwik\Log\LoggerInterface;
 class QueueConsumer
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private LoggerInterface $logger;
     /**
      * @var FixedSiteIds|SharedSiteIds
      */
@@ -40,26 +37,14 @@ class QueueConsumer
      * @var int
      */
     private $pid;
-    /**
-     * @var Model
-     */
-    private $model;
+    private Model $model;
     /**
      * @var ArchiveFilter
      */
     private $archiveFilter;
-    /**
-     * @var SegmentArchiving
-     */
-    private $segmentArchiving;
-    /**
-     * @var CronArchive
-     */
-    private $cronArchive;
-    /**
-     * @var array
-     */
-    private $invalidationsToExclude;
+    private \Piwik\CronArchive\SegmentArchiving $segmentArchiving;
+    private CronArchive $cronArchive;
+    private array $invalidationsToExclude;
     /**
      * @var string[]
      */
@@ -339,14 +324,6 @@ class QueueConsumer
         }
         return \false;
     }
-    private function isArchiveNonSegmentAndInProgressArchiveSegment(array $archiveToProcess, array $archiveBeingProcessed) : bool
-    {
-        // archive is for different site/period
-        if ($archiveToProcess['idsite'] != $archiveBeingProcessed['idsite'] || $archiveToProcess['periodObj']->getId() != $archiveBeingProcessed['periodObj']->getId() || $archiveToProcess['periodObj']->getDateStart()->toString() != $archiveBeingProcessed['periodObj']->getDateStart()->toString()) {
-            return \false;
-        }
-        return empty($archiveToProcess['segment']) && !empty($archiveBeingProcessed['segment']);
-    }
     private function detectPluginForArchive(&$archive) : void
     {
         $archive['plugin'] = $this->getPluginNameForArchiveIfAny($archive);
@@ -394,7 +371,7 @@ class QueueConsumer
     private function getPluginNameForArchiveIfAny(array $archive) : ?string
     {
         $name = $archive['name'];
-        if (strpos($name, '.') === \false) {
+        if (!str_contains($name, '.')) {
             return null;
         }
         $parts = explode('.', $name);

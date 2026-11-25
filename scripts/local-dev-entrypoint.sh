@@ -61,7 +61,7 @@ function handle_cli_command() {
     exit $?
   elif [[ "$EXECUTE_TARGET" = "matomo:console" ]]; then
     . $NVM_DIR/nvm.sh
-    nvm use 16 > /dev/null
+    nvm use default > /dev/null
     cd $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/matomo/app
     ./console $EXECUTE_ARGS
     exit $?
@@ -723,7 +723,7 @@ EOF
 
   # set allow_wp_app_password_auth tracker config, used in tests
   echo "set allow_wp_app_password_auth config..."
-  php $DOCUMENT_ROOT/matomo-for-wordpress/app/console config:set --section=Tracker --key=allow_wp_app_password_auth --value=1
+  php "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/matomo/app/console" config:set --section=Tracker --key=allow_wp_app_password_auth --value=1
 
   # add test-utility-plugin used in UI tests
   mkdir -p $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/mu-plugins

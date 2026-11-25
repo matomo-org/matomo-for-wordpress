@@ -20,13 +20,13 @@ use Matomo\Dependencies\Twig\Compiler;
 #[YieldReady]
 class WithNode extends Node
 {
-    public function __construct(Node $body, ?Node $variables, bool $only, int $lineno, ?string $tag = null)
+    public function __construct(Node $body, ?Node $variables, bool $only, int $lineno)
     {
         $nodes = ['body' => $body];
         if (null !== $variables) {
             $nodes['variables'] = $variables;
         }
-        parent::__construct($nodes, ['only' => $only], $lineno, $tag);
+        parent::__construct($nodes, ['only' => $only], $lineno);
     }
     public function compile(Compiler $compiler) : void
     {
@@ -40,7 +40,7 @@ class WithNode extends Node
             if ($this->getAttribute('only')) {
                 $compiler->write("\$context = [];\n");
             }
-            $compiler->write(\sprintf("\$context = \$this->env->mergeGlobals(array_merge(\$context, \$%s));\n", $varsName));
+            $compiler->write(\sprintf("\$context = \$%s + \$context + \$this->env->getGlobals();\n", $varsName));
         }
         $compiler->subcompile($this->getNode('body'))->write(\sprintf("\$context = \$%s;\n", $parentContextName));
     }

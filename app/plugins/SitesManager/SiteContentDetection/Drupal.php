@@ -26,7 +26,7 @@ class Drupal extends \Piwik\Plugins\SitesManager\SiteContentDetection\SiteConten
     public function isDetected(?string $data = null, ?array $headers = null) : bool
     {
         $needle = '<meta name="Generator" content="Drupal';
-        if (strpos($data, $needle) !== \false) {
+        if (str_contains($data, $needle)) {
             return \true;
         }
         // https://github.com/drupal/drupal/blob/9.2.x/core/includes/install.core.inc#L1054

@@ -20,15 +20,15 @@ namespace Matomo\Dependencies\Symfony\Component\HttpFoundation\Session\Storage\H
  */
 class MemcachedSessionHandler extends AbstractSessionHandler
 {
-    private $memcached;
+    private \Memcached $memcached;
     /**
-     * @var int Time to live in seconds
+     * Time to live in seconds.
      */
-    private $ttl;
+    private int|\Closure|null $ttl;
     /**
-     * @var string Key prefix for shared environments
+     * Key prefix for shared environments.
      */
-    private $prefix;
+    private string $prefix;
     /**
      * Constructor.
      *
@@ -42,45 +42,42 @@ class MemcachedSessionHandler extends AbstractSessionHandler
     {
         $this->memcached = $memcached;
         if ($diff = array_diff(array_keys($options), ['prefix', 'expiretime', 'ttl'])) {
-            throw new \InvalidArgumentException(sprintf('The following options are not supported "%s".', implode(', ', $diff)));
+            throw new \InvalidArgumentException(\sprintf('The following options are not supported "%s".', implode(', ', $diff)));
         }
         $this->ttl = $options['expiretime'] ?? $options['ttl'] ?? null;
         $this->prefix = $options['prefix'] ?? 'sf2s';
     }
-    /**
-     * @return bool
-     */
-    #[\ReturnTypeWillChange]
-    public function close()
+    public function close() : bool
     {
         return $this->memcached->quit();
     }
-    /**
-     * {@inheritdoc}
-     */
-    protected function doRead(string $sessionId)
+    protected function doRead(#[\SensitiveParameter]
+        string $sessionId) : string|false
     {
-        return $this->memcached->get($this->prefix . $sessionId) ?: '';
+        $data = $this->memcached->get($this->prefix . $sessionId);
+        if (\false === $data && \Memcached::RES_NOTFOUND !== $this->memcached->getResultCode()) {
+            return \false;
+        }
+        return $data ?: '';
     }
-    /**
-     * @return bool
-     */
-    #[\ReturnTypeWillChange]
-    public function updateTimestamp($sessionId, $data)
+    public function updateTimestamp(#[\SensitiveParameter]
+        string $sessionId, string $data) : bool
     {
+        // PHP 8.6 calls updateTimestamp() instead of write() for a session that is still empty
+        if ('' === $data || \function_exists('igbinary_serialize') && igbinary_serialize([]) === $data) {
+            return $this->destroy($sessionId);
+        }
         $this->memcached->touch($this->prefix . $sessionId, $this->getCompatibleTtl());
         return \true;
     }
-    /**
-     * {@inheritdoc}
-     */
-    protected function doWrite(string $sessionId, string $data)
+    protected function doWrite(#[\SensitiveParameter]
+        string $sessionId, string $data) : bool
     {
         return $this->memcached->set($this->prefix . $sessionId, $data, $this->getCompatibleTtl());
     }
     private function getCompatibleTtl() : int
     {
-        $ttl = (int) ($this->ttl ?? \ini_get('session.gc_maxlifetime'));
+        $ttl = ($this->ttl instanceof \Closure ? ($this->ttl)() : $this->ttl) ?? \ini_get('session.gc_maxlifetime');
         // If the relative TTL that is used exceeds 30 days, memcached will treat the value as Unix time.
         // We have to convert it to an absolute Unix time at this point, to make sure the TTL is correct.
         if ($ttl > 60 * 60 * 24 * 30) {
@@ -88,29 +85,21 @@ class MemcachedSessionHandler extends AbstractSessionHandler
         }
         return $ttl;
     }
-    /**
-     * {@inheritdoc}
-     */
-    protected function doDestroy(string $sessionId)
+    protected function doDestroy(#[\SensitiveParameter]
+        string $sessionId) : bool
     {
         $result = $this->memcached->delete($this->prefix . $sessionId);
         return $result || \Memcached::RES_NOTFOUND == $this->memcached->getResultCode();
     }
-    /**
-     * @return int|false
-     */
-    #[\ReturnTypeWillChange]
-    public function gc($maxlifetime)
+    public function gc(int $maxlifetime) : int|false
     {
         // not required here because memcached will auto expire the records anyhow.
         return 0;
     }
     /**
      * Return a Memcached instance.
-     *
-     * @return \Memcached
      */
-    protected function getMemcached()
+    protected function getMemcached() : \Memcached
     {
         return $this->memcached;
     }

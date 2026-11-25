@@ -7,23 +7,39 @@ namespace Matomo\Dependencies;
  */
 class Less_Tree_Selector extends Less_Tree
 {
+    /** @var Less_Tree_Element[] */
     public $elements;
+    /** @var Less_Tree_Condition|null */
     public $condition;
+    /** @var Less_Tree_Extend[] */
     public $extendList = [];
-    public $_css;
+    /** @var int|null */
     public $index;
+    /** @var bool */
     public $evaldCondition = \false;
-    public $type = 'Selector';
+    /** @var array|null */
     public $currentFileInfo = [];
+    /** @var null|bool */
     public $isReferenced;
+    /** @var null|bool */
     public $mediaEmpty;
+    /** @var int */
     public $elements_len = 0;
+    /** @var string[] */
     public $_oelements;
+    /** @var array<string,true> */
     public $_oelements_assoc;
+    /** @var int */
     public $_oelements_len;
+    /** @var bool */
     public $cacheable = \true;
     /**
-     * @param bool $isReferenced
+     * @param Less_Tree_Element[] $elements
+     * @param Less_Tree_Element[] $extendList
+     * @param Less_Tree_Condition|null $condition
+     * @param int|null $index
+     * @param array|null $currentFileInfo
+     * @param bool|null $isReferenced
      */
     public function __construct($elements, $extendList = [], $condition = null, $index = null, $currentFileInfo = null, $isReferenced = null)
     {
@@ -53,7 +69,7 @@ class Less_Tree_Selector extends Less_Tree
     }
     public function createDerived($elements, $extendList = null, $evaldCondition = null)
     {
-        $newSelector = new Less_Tree_Selector($elements, $extendList ?: $this->extendList, null, $this->index, $this->currentFileInfo, $this->isReferenced);
+        $newSelector = new self($elements, $extendList ?: $this->extendList, null, $this->index, $this->currentFileInfo, $this->isReferenced);
         $newSelector->evaldCondition = $evaldCondition ?: $this->evaldCondition;
         $newSelector->mediaEmpty = $this->mediaEmpty;
         return $newSelector;
@@ -71,6 +87,9 @@ class Less_Tree_Selector extends Less_Tree
         return $other->_oelements_len;
         // return number of matched elements
     }
+    /**
+     * @see less-2.5.3.js#Selector.prototype.CacheElements
+     */
     public function CacheElements()
     {
         $this->_oelements = [];
@@ -78,17 +97,22 @@ class Less_Tree_Selector extends Less_Tree
         $css = '';
         foreach ($this->elements as $v) {
             $css .= $v->combinator;
-            if (!$v->value_is_object) {
+            if (!$v->value instanceof Less_Tree) {
                 $css .= $v->value;
                 continue;
             }
-            if (!\property_exists($v->value, 'value') || !\is_string($v->value->value)) {
+            // @phan-suppress-next-line PhanUndeclaredProperty
+            if (isset($v->value->value) && \is_scalar($v->value->value)) {
+                // @phan-suppress-next-line PhanUndeclaredProperty
+                $css .= $v->value->value;
+                continue;
+            }
+            if ($v->value instanceof Less_Tree_Selector || $v->value instanceof Less_Tree_Variable || !\is_string($v->value->value)) {
                 $this->cacheable = \false;
                 return;
             }
-            $css .= $v->value->value;
         }
-        $this->_oelements_len = \preg_match_all('/[,&#\\.\\w-](?:[\\w-]|(?:\\\\.))*/', $css, $matches);
+        $this->_oelements_len = \preg_match_all('/[,&#\\*\\.\\w-](?:[\\w-]|(?:\\\\.))*/', $css, $matches);
         if ($this->_oelements_len) {
             $this->_oelements = $matches[0];
             if ($this->_oelements[0] === '&') {
@@ -110,7 +134,7 @@ class Less_Tree_Selector extends Less_Tree
         }
         $extendList = [];
         foreach ($this->extendList as $el) {
-            $extendList[] = $el->compile($el);
+            $extendList[] = $el->compile($env);
         }
         $evaldCondition = \false;
         if ($this->condition) {

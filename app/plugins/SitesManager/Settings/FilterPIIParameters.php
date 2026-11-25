@@ -20,8 +20,7 @@ class FilterPIIParameters implements OptionSettingInterface, PolicyComparisonInt
     use OptionGetterTrait;
     /** @use PolicyComparisonTrait<string> */
     use PolicyComparisonTrait;
-    /** @var string $value */
-    private $value;
+    private string $value;
     protected function __construct(string $value)
     {
         $this->value = $value;
@@ -29,6 +28,14 @@ class FilterPIIParameters implements OptionSettingInterface, PolicyComparisonInt
     public static function getTitle() : string
     {
         return Piwik::translate('SitesManager_FilterPIIParametersSettingTitle');
+    }
+    public static function getWhatItDoes(?int $idSite = null) : string
+    {
+        return Piwik::translate('SitesManager_FilterPIIParametersSettingWhatItDoes');
+    }
+    public static function getImpact(?int $idSite = null) : string
+    {
+        return Piwik::translate('SitesManager_FilterPIIParametersSettingImpact');
     }
     public static function getInstance(?int $idSite = null)
     {
@@ -40,6 +47,10 @@ class FilterPIIParameters implements OptionSettingInterface, PolicyComparisonInt
     public static function getInlineHelp() : string
     {
         return '';
+    }
+    public static function getPolicyOrder() : int
+    {
+        return 15;
     }
     public static function getPolicyRequirements() : array
     {

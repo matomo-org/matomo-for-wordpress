@@ -182,18 +182,12 @@ class CronArchive
      * @var array
      */
     private $periodIdsToLabels;
-    /**
-     * @var ArchiveFilter
-     */
-    private $archiveFilter;
+    private ArchiveFilter $archiveFilter;
     /**
      * @var bool|mixed
      */
     private $supportsAsync;
-    /**
-     * @var null|int
-     */
-    private $signal = null;
+    private ?int $signal = null;
     /**
      * @var CliMulti|null
      */
@@ -1141,7 +1135,7 @@ class CronArchive
             $processes = Process::getListOfRunningProcesses();
             $instanceId = \Piwik\SettingsPiwik::getPiwikInstanceId();
             foreach ($processes as $process) {
-                if (strpos($process, ' core:archive') !== \false && strpos($process, 'console ') !== \false && (!$instanceId || strpos($process, '--matomo-domain=' . $instanceId) !== \false || strpos($process, '--matomo-domain="' . $instanceId . '"') !== \false || strpos($process, '--matomo-domain=\'' . $instanceId . "'") !== \false || strpos($process, '--piwik-domain=' . $instanceId) !== \false || strpos($process, '--piwik-domain="' . $instanceId . '"') !== \false || strpos($process, '--piwik-domain=\'' . $instanceId . "'") !== \false)) {
+                if (str_contains($process, ' core:archive') && str_contains($process, 'console ') && (!$instanceId || str_contains($process, '--matomo-domain=' . $instanceId) || str_contains($process, '--matomo-domain="' . $instanceId . '"') || str_contains($process, '--matomo-domain=\'' . $instanceId . "'") || str_contains($process, '--piwik-domain=' . $instanceId) || str_contains($process, '--piwik-domain="' . $instanceId . '"') || str_contains($process, '--piwik-domain=\'' . $instanceId . "'"))) {
                     $numRunning++;
                 }
             }

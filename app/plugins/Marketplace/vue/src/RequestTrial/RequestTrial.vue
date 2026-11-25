@@ -7,14 +7,17 @@
 <template>
   <div class="ui-confirm" ref="confirm">
     <h2>{{ translate('Marketplace_RequestTrialConfirmTitle', plugin?.displayName) }}</h2>
-    <p>{{ translate('Marketplace_RequestTrialConfirmEmailWarning') }}</p>
+    <p v-if="plugin?.isTrialPending">
+      {{ translate('Marketplace_RequestTrialConfirmAlreadyRequested') }}
+    </p>
+    <p v-else>{{ translate('Marketplace_RequestTrialConfirmEmailWarning') }}</p>
     <input role="yes" type="button" :value="translate('General_Yes')"/>
     <input role="no" type="button" :value="translate('General_No')"/>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, PropType } from 'vue';
 
 import {
   AjaxHelper,
@@ -22,13 +25,13 @@ import {
   NotificationsStore,
   translate,
 } from 'CoreHome';
-import { PluginDetails } from '../types';
+import { PluginCard } from '../types';
 
 export default defineComponent({
   props: {
     modelValue: {
-      type: Object,
-      default: () => ({}),
+      type: Object as PropType<PluginCard | null>,
+      default: () => null,
     },
   },
   emits: ['update:modelValue', 'trialRequested'],
@@ -54,12 +57,12 @@ export default defineComponent({
     },
   },
   computed: {
-    plugin(): PluginDetails {
-      return this.modelValue as PluginDetails;
+    plugin(): PluginCard {
+      return this.modelValue as PluginCard;
     },
   },
   methods: {
-    requestTrial(plugin: PluginDetails) {
+    requestTrial(plugin: PluginCard) {
       AjaxHelper.post(
         {
           module: 'API',

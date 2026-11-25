@@ -39,7 +39,7 @@ class ApiTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 		$request  = new WP_REST_Request( 'GET', '/' . API::VERSION . '/api/matomo_version' );
 		$response = rest_get_server()->dispatch( $request );
-		$this->assertStringStartsWith( '5.', $response->get_data() );
+		$this->assertSame( \Piwik\Version::VERSION, $response->get_data() );
 		$this->assertTrue( strlen( $response->get_data() ) < 15 );
 	}
 
@@ -50,7 +50,7 @@ class ApiTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$request->set_param( 'format', 'json' );
 
 		$response = rest_get_server()->dispatch( $request );
-		$this->assertStringStartsWith( '5.', $response->get_data() );
+		$this->assertSame( \Piwik\Version::VERSION, $response->get_data() );
 		// check that the string is not serialized json
 		$this->assertNull( json_decode( $response->get_data() ) );
 	}

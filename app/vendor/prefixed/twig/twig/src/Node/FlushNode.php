@@ -20,12 +20,16 @@ use Matomo\Dependencies\Twig\Compiler;
 #[YieldReady]
 class FlushNode extends Node
 {
-    public function __construct(int $lineno, string $tag)
+    public function __construct(int $lineno)
     {
-        parent::__construct([], [], $lineno, $tag);
+        parent::__construct([], [], $lineno);
     }
     public function compile(Compiler $compiler) : void
     {
-        $compiler->addDebugInfo($this)->write("flush();\n");
+        $compiler->addDebugInfo($this);
+        if ($compiler->getEnvironment()->useYield()) {
+            $compiler->write("yield '';\n");
+        }
+        $compiler->write("flush();\n");
     }
 }

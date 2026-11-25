@@ -12,8 +12,8 @@ namespace Matomo\Dependencies\Symfony\Component\HttpKernel\Fragment;
 
 use Matomo\Dependencies\Symfony\Component\HttpFoundation\Request;
 use Matomo\Dependencies\Symfony\Component\HttpFoundation\Response;
+use Matomo\Dependencies\Symfony\Component\HttpFoundation\UriSigner;
 use Matomo\Dependencies\Symfony\Component\HttpKernel\Controller\ControllerReference;
-use Matomo\Dependencies\Symfony\Component\HttpKernel\UriSigner;
 use Matomo\Dependencies\Twig\Environment;
 /**
  * Implements the Hinclude rendering strategy.
@@ -22,10 +22,10 @@ use Matomo\Dependencies\Twig\Environment;
  */
 class HIncludeFragmentRenderer extends RoutableFragmentRenderer
 {
-    private $globalDefaultTemplate;
-    private $signer;
-    private $twig;
-    private $charset;
+    private ?string $globalDefaultTemplate;
+    private ?UriSigner $signer;
+    private ?Environment $twig;
+    private string $charset;
     /**
      * @param string|null $globalDefaultTemplate The global default content (it can be a template name or the content)
      */
@@ -38,23 +38,19 @@ class HIncludeFragmentRenderer extends RoutableFragmentRenderer
     }
     /**
      * Checks if a templating engine has been set.
-     *
-     * @return bool
      */
-    public function hasTemplating()
+    public function hasTemplating() : bool
     {
         return null !== $this->twig;
     }
     /**
-     * {@inheritdoc}
-     *
      * Additional available options:
      *
      *  * default:    The default content (it can be a template name or the content)
      *  * id:         An optional hx:include tag id attribute
      *  * attributes: An optional array of hx:include tag attributes
      */
-    public function render($uri, Request $request, array $options = [])
+    public function render(string|ControllerReference $uri, Request $request, array $options = []) : Response
     {
         if ($uri instanceof ControllerReference) {
             $uri = (new FragmentUriGenerator($this->fragmentPath, $this->signer))->generate($uri, $request);
@@ -72,18 +68,15 @@ class HIncludeFragmentRenderer extends RoutableFragmentRenderer
             $attributes['id'] = $options['id'];
         }
         $renderedAttributes = '';
-        if (\count($attributes) > 0) {
+        if ($attributes) {
             $flags = \ENT_QUOTES | \ENT_SUBSTITUTE;
             foreach ($attributes as $attribute => $value) {
-                $renderedAttributes .= sprintf(' %s="%s"', htmlspecialchars($attribute, $flags, $this->charset, \false), htmlspecialchars($value, $flags, $this->charset, \false));
+                $renderedAttributes .= \sprintf(' %s="%s"', htmlspecialchars($attribute, $flags, $this->charset, \false), htmlspecialchars($value, $flags, $this->charset, \false));
             }
         }
-        return new Response(sprintf('<hx:include src="%s"%s>%s</hx:include>', $uri, $renderedAttributes, $content));
+        return new Response(\sprintf('<hx:include src="%s"%s>%s</hx:include>', $uri, $renderedAttributes, $content));
     }
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
+    public function getName() : string
     {
         return 'hinclude';
     }

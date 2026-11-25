@@ -119,7 +119,6 @@
         "ExceptionDatabaseVersion": "คุณ %1$s มีเวอร์ชั่นคือ %2$s แต่ Matomo ต้องมีอย่างน้อย %3$s.",
         "ExceptionFileIntegrity": "พบข้อผิดพลาดในการตรวจสอบความสมบูรณ์: %s",
         "ExceptionFilesizeMismatch": "ขนาดของไฟล์ไม่ตรงกัน: %1$s (ขนาดไฟล์ที่คาดไว้: %2$s, พบ: %3$s)",
-        "ExceptionIncompatibleClientServerVersions": "คุณ %1$s เวอร์ชั่นของไคลเอ็นต์ %2$s ซึ่งไม่เข้ากันกับเวอร์ชั่นของเซิร์ฟเวอร์ %3$s.",
         "ExceptionInvalidAggregateReportsFormat": "รูปแบบการรวมรายงาน '%1$s' ไม่ถูกต้อง กรุณาลองรายการดังต่อไปนี้แทน: %2$s",
         "ExceptionInvalidArchiveTimeToLive": "วันนี้เวลาเก็บอยู่จะต้องเป็นจำนวนวินาทีที่มากกว่าศูนย์",
         "ExceptionInvalidDateFormat": "รูปแบบเวลาจะเป็น: %1$s หรือคีย์บอร์ดใดที่รองรับฟังก์ชั่น %2$s (ดู %3$s สำหรับข้อมูลเพิ่มเติม)",
@@ -347,6 +346,20 @@
         "PickARow": "เลือกแถวที่ต้องการเปรียบเทียบ",
         "PickAnotherRow": "เลือกแถวอื่นๆที่ต้องการเปรียบเทียบ"
     },
+    "AIProviders": {
+        "AnthropicDefaultModelDescription": "ค่าเริ่มต้นโมเดล: claude-haiku-4-5",
+        "ApiKey": "API key",
+        "ApiKeyAlreadyConfiguredPlaceholder": "เพิ่มคีย์เพื่อแทนที่คีย์เดิม",
+        "ApiKeyPlaceholder": "ใส่ API Key ของคุณ",
+        "BedrockDescription": "เข้าถึงโมเดลผ่าน AWS Bedrock",
+        "BedrockEndpointPlaceholder": "ตัวอย่าง eu-central-1",
+        "BedrockEndpointTitle": "ภูมิภาค AWS",
+        "ClickTestConnectionToShowAvailableModels": "คลิกเพื่อทดสอบการเชื่อมต่อโมเดลที่ใช้งานได้",
+        "ConfigurationIntro": "ตั้งค่าผู้ให้บริการ AI และการตั้งค่าค่าเริ่มต้น AI ใน Matomo",
+        "CustomProviderDescription": "ใช้ OpenAI Endpoint ที่เข้ากันได้ของคุณ",
+        "DefaultBadge": "มาตรฐาน",
+        "DefaultCapabilityLevel": "ค่าเริ่มต้นของระดับขีดจำกัด"
+    },
     "API": {
         "KeepTokenSecret": "token_auth นี้จะเป็นความลับในการเข้าสู่ระบบและรหัสผ่านของคุณ %1$s ไม่แชร์ %2$s ได้",
         "LoadedAPIs": "โหลด API %s สำเร็จแล้ว",
@@ -427,10 +440,8 @@
     },
     "CoreHome": {
         "CategoryNoData": "ไม่มีข้อมูลในประเภทนี้ พยายาม \"รวมประชากรทั้งหมด\"",
-        "ChangeVisualization": "เปลี่ยน มุมมอง",
         "CheckForUpdates": "ตรวจสอบชุดอัพเดท",
         "ChooseWebsite": "เลือกเว็บไซต์",
-        "Default": "ค่าเริ่มต้น",
         "PresetDateToday": "วันนี้",
         "PresetDateYesterday": "เมื่อวาน",
         "ShowJSCode": "แสดงรหัส JavaScript เมื่อต้องการแทรก",
@@ -601,7 +612,6 @@
         "GoalName": "ชื่อเป้าหมาย",
         "GoalX": "เป้าหมาย %s",
         "Goals": "เป้าหมาย",
-        "GoalsOverview": "ภาพรวมของเป้าหมาย",
         "IsExactly": "คือว่า %s",
         "Manually": "ด้วยตนเอง",
         "ManuallyTriggeredUsingJavascriptFunction": "เป้าหมายถูกเรียกด้วยตนเองโดยใช้ JavaScript API trackGoal()",
@@ -614,6 +624,8 @@
         "ProductName": "ชื่อสินค้า",
         "ProductSKU": "รหัส SKU สินค้า",
         "Products": "รายการ",
+        "RecommendationCountOnePage": "1 หน้า",
+        "RecommendationCountPages": "%s หน้า",
         "ReturningVisitorsConversionRateIs": "อัตราการย้อนกลับของการแปลงผู้เข้าชมเป็น %s",
         "URL": "URL",
         "UpdateGoal": "อัพเดตเป้าหมาย",
@@ -623,10 +635,12 @@
         "WhereThe": "ที่ซึ่ง"
     },
     "Installation": {
+        "CollaborativeProject": "Matomo เป็นโครงการที่เกิดจากความร่วมมือและสร้างขึ้นด้วยความรัก",
+        "ConfigurationHelp": "โปรดแก้ไขไฟล์การตั้งค่า Matomo ของคุณ โดยเลือกทำอย่างใดอย่างหนึ่ง: ลบไฟล์ config\/config.ini.php แล้วเริ่มขั้นตอนการติดตั้งใหม่อีกครั้ง, หรือทำการแก้ไขการตั้งค่าการเชื่อมต่อฐานข้อมูลให้ถูกต้อง",
         "ConfirmDeleteExistingTables": "คุณแน่ใจหรือไม่ว่าต้องการลบตาราง: %s จากฐานข้อมูล? คำเตือน: ข้อมูลในตารางเหล่านี้ไม่สามารถกู้คืนได้",
         "Congratulations": "ขอแสดงความยินดี",
         "CopySystemCheck": "คัดลอกรายงานระบบ",
-        "DatabaseAbilities": "การจัดการและการดึงข้อมูล",
+        "DatabaseAbilities": "การจัดการและดึงข้อมูล",
         "DatabaseCreation": "การสร้างฐานข้อมูล",
         "DatabaseErrorConnect": "ข้อผิดพลาดขณะพยายามที่จะเชื่อมต่อไปยังเซิร์ฟเวอร์ฐานข้อมูล",
         "DatabaseServerVersion": "เวอร์ชั่นของเซิร์ฟเวอร์ฐานข้อมูล",
@@ -672,7 +686,6 @@
         "SystemCheckFileIntegrity": "ความสมบูรณ์ของไฟล์",
         "SystemCheckFunctions": "จำเป็นต้องใช้ฟังก์ชัน",
         "SystemCheckGDHelp": "sparklines (กราฟเล็กๆ)จะไม่ทำงาน",
-        "SystemCheckGlobHelp": "ฟังก์ชันที่มีอยู่ภายในนี้ได้ถูกปิดการใช้งานบนโฮสต์ของคุณ Matomo จะพยายามทำการจำลองฟังก์ชันนี้ แต่อาจพบเพิ่มเติมข้อบังคับด้านความปลอดภัย ฟังก์ชันการทำงานอาจจะโดนผลกระทบ",
         "SystemCheckGzcompressHelp": "คุณต้องเปิดใช้ส่วนขยาย zlib และฟังก์ชั่น gzcompress",
         "SystemCheckGzuncompressHelp": "คุณต้องเปิดใช้ส่วนขยาย zlib และฟังก์ชั่น gzuncompress",
         "SystemCheckMailHelp": "ความคิดเห็นและลืมรหัสผ่านจะไม่สามารถส่งข้อความโดยไม่ต้องรวมกับ mail()",
@@ -1913,6 +1926,8 @@
     },
     "Marketplace": {
         "ActivateLicenseKey": "เปิดใช้งาน",
+        "CategoryEcommerce": "อีคอมเมิร์ซ",
+        "CategorySecurity": "ความปลอดภัย",
         "PluginKeywords": "คีย์เวิร์ด",
         "SubscriptionType": "รูปแบบ",
         "Support": "บริการช่วยเหลือ"
@@ -1928,8 +1943,7 @@
     },
     "MultiSites": {
         "AllWebsitesDashboardTitle": "เว็บไซต์ทั้งหมด",
-        "Evolution": "ความเปลี่ยนแปลง",
-        "TotalPageviews": "เพจวิวทั้งหมด"
+        "Evolution": "ความเปลี่ยนแปลง"
     },
     "Overlay": {
         "Clicks": "%s คลิก",
@@ -1995,12 +2009,6 @@
         "Resolutions": "ความละเอียด",
         "WidgetGlobalVisitors": "การตั้งค่าผู้เข้าชมโดยรวม",
         "WidgetResolutions": "ความละเอียดจอภาพ"
-    },
-    "SEO": {
-        "DomainAge": "อายุโดเมน",
-        "Rank": "อันดับ",
-        "SEORankingsFor": "SEO จัดอันดับไว้ที่ %s",
-        "SeoRankings": "อันดับ SEO"
     },
     "ScheduledReports": {
         "AlsoSendReportToTheseEmails": "นอกจากนี้ ส่งรายงานไปยังอีเมล์ของเหล่านี้ (หนึ่งอีเมล์ต่อบรรทัด):",

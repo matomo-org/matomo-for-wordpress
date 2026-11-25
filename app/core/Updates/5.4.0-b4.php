@@ -18,10 +18,7 @@ use Piwik\Updates as PiwikUpdates;
  */
 class Updates_5_4_0_b4 extends PiwikUpdates
 {
-    /**
-     * @var MigrationFactory
-     */
-    private $migration;
+    private MigrationFactory $migration;
     /**
      * @var string
      */

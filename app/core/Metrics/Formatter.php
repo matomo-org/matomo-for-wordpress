@@ -201,7 +201,7 @@ class Formatter
         if ($formatAll) {
             foreach ($dataTable->getRows() as $row) {
                 foreach ($row->getColumns() as $column => $columnValue) {
-                    if (strpos($column, 'revenue') === \false || !is_numeric($columnValue)) {
+                    if (!str_contains($column, 'revenue') || !is_numeric($columnValue)) {
                         continue;
                     }
                     if ($columnValue !== \false) {

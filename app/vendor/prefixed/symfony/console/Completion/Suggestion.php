@@ -15,16 +15,18 @@ namespace Matomo\Dependencies\Symfony\Component\Console\Completion;
  *
  * @author Wouter de Jong <wouter@wouterj.nl>
  */
-class Suggestion
+class Suggestion implements \Stringable
 {
-    private $value;
-    public function __construct(string $value)
+    public function __construct(private readonly string $value, private readonly string $description = '')
     {
-        $this->value = $value;
     }
     public function getValue() : string
     {
         return $this->value;
+    }
+    public function getDescription() : string
+    {
+        return $this->description;
     }
     public function __toString() : string
     {

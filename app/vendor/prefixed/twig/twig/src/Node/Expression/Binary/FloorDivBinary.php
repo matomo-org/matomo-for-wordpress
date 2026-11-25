@@ -11,7 +11,8 @@
 namespace Matomo\Dependencies\Twig\Node\Expression\Binary;
 
 use Matomo\Dependencies\Twig\Compiler;
-class FloorDivBinary extends AbstractBinary
+use Matomo\Dependencies\Twig\Node\Expression\ReturnNumberInterface;
+class FloorDivBinary extends AbstractBinary implements ReturnNumberInterface
 {
     public function compile(Compiler $compiler) : void
     {

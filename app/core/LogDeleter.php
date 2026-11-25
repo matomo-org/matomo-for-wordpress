@@ -19,14 +19,8 @@ use Piwik\Plugins\SitesManager\Model;
  */
 class LogDeleter
 {
-    /**
-     * @var RawLogDao
-     */
-    private $rawLogDao;
-    /**
-     * @var LogTablesProvider
-     */
-    private $logTablesProvider;
+    private RawLogDao $rawLogDao;
+    private LogTablesProvider $logTablesProvider;
     public function __construct(RawLogDao $rawLogDao, LogTablesProvider $logTablesProvider)
     {
         $this->rawLogDao = $rawLogDao;

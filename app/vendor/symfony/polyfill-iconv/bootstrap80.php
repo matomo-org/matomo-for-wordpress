@@ -114,7 +114,7 @@ namespace {
         if (!\function_exists('iconv_substr')) {
             function iconv_substr(?string $string, ?int $offset, ?int $length = null, ?string $encoding = null) : string|false
             {
-                return p\Iconv::iconv_substr((string) $string, (string) $offset, $length, $encoding);
+                return p\Iconv::iconv_substr((string) $string, (string) $offset, $length ?? 2147483647, $encoding);
             }
         }
         if (!\function_exists('iconv_mime_decode')) {

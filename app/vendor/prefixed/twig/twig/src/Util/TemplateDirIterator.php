@@ -16,7 +16,7 @@ namespace Matomo\Dependencies\Twig\Util;
 class TemplateDirIterator extends \IteratorIterator
 {
     /**
-     * @return mixed
+     * @return string
      */
     #[\ReturnTypeWillChange]
     public function current()
@@ -24,7 +24,7 @@ class TemplateDirIterator extends \IteratorIterator
         return file_get_contents(parent::current());
     }
     /**
-     * @return mixed
+     * @return string
      */
     #[\ReturnTypeWillChange]
     public function key()

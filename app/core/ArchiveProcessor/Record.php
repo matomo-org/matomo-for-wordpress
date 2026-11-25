@@ -24,42 +24,18 @@ class Record
      * @var string
      */
     private $name;
-    /**
-     * @var string|null
-     */
-    private $plugin = null;
+    private ?string $plugin = null;
     /**
      * @var string|int
      */
     private $columnToSortByBeforeTruncation;
-    /**
-     * @var int|null
-     */
-    private $maxRowsInTable;
-    /**
-     * @var int|null
-     */
-    private $maxRowsInSubtable;
-    /**
-     * @var string|null
-     */
-    private $countOfRecordName = null;
-    /**
-     * @var bool
-     */
-    private $countOfRecordNameIsRecursive = \false;
-    /**
-     * @var bool
-     */
-    private $countOfRecordNameIsForLeafs = \false;
-    /**
-     * @var array|null
-     */
-    private $columnToRenameAfterAggregation = null;
-    /**
-     * @var array|null
-     */
-    private $blobColumnAggregationOps = null;
+    private ?int $maxRowsInTable = null;
+    private ?int $maxRowsInSubtable = null;
+    private ?string $countOfRecordName = null;
+    private bool $countOfRecordNameIsRecursive = \false;
+    private bool $countOfRecordNameIsForLeafs = \false;
+    private ?array $columnToRenameAfterAggregation = null;
+    private ?array $blobColumnAggregationOps = null;
     /**
      * @var callable|null
      */
@@ -68,10 +44,7 @@ class Record
      * @var callable|null
      */
     private $aggregatedRecordTransform = null;
-    /**
-     * @var string|null
-     */
-    private $builtFromFlatRecord = null;
+    private ?string $builtFromFlatRecord = null;
     /**
      * @var callable|null
      */
@@ -80,6 +53,9 @@ class Record
      * @var callable|null
      */
     private $legacyHierarchyToFlatReducerCallback = null;
+    /**
+     * @return self
+     */
     public static function make($type, $name)
     {
         $record = new \Piwik\ArchiveProcessor\Record();

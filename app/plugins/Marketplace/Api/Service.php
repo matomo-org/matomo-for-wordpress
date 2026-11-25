@@ -14,6 +14,11 @@ class Service
     public const CACHE_TIMEOUT_IN_SECONDS = 1200;
     public const HTTP_REQUEST_TIMEOUT = 60;
     /**
+     * Actions the Marketplace answers the same for every consumer, so they are sent without the access token and
+     * stay a cacheable GET.
+     */
+    private const ACTIONS_WITHOUT_ACCESS_TOKEN = ['info'];
+    /**
      * @var string
      */
     private $domain;
@@ -23,16 +28,14 @@ class Service
     private $accessToken;
     /**
      * API version to use on the Marketplace
-     * @var string
      */
-    private $version = '2.0';
+    private string $version = '2.0';
     public function __construct($domain)
     {
         $this->domain = $domain;
     }
-    public function authenticate(
-#[\SensitiveParameter]
-$accessToken)
+    public function authenticate(#[\SensitiveParameter]
+        $accessToken)
     {
         if (empty($accessToken)) {
             $this->accessToken = null;
@@ -61,8 +64,11 @@ $accessToken)
         return !empty($this->accessToken);
     }
     /**
-     * Downloads data from the given URL via a POST request. If a destination path is given, the downloaded data
-     * will be stored in the given path and returned otherwise.
+     * Downloads data from the given URL. If a destination path is given, the downloaded data will be stored in the
+     * given path and returned otherwise.
+     *
+     * POST is requested whenever post data is passed or {@link authenticate()} has added the access token, so neither
+     * ends up in the URL. Otherwise it is a GET.
      *
      * Make sure to call {@link authenticate()} to download paid plugins.
      *
@@ -71,23 +77,25 @@ $accessToken)
      * @param null|int $timeout Defaults to 60 seconds see {@link self::HTTP_REQUEST_TIMEOUT}
      * @param null|array $postData eg array('email' => 'user@example.org')
      * @param bool $getExtendedInfo Return the extended response info for the HTTP request.
+     * @param bool $withAccessToken Pass false to leave the access token off a request the Marketplace does not
+     *                              personalise.
      * @return bool|string Returns the downloaded data or true if a destination path was given.
      * @throws \Exception
      */
-    public function download($url, $destinationPath = null, $timeout = null, ?array $postData = null, bool $getExtendedInfo = \false)
+    public function download($url, $destinationPath = null, $timeout = null, ?array $postData = null, bool $getExtendedInfo = \false, bool $withAccessToken = \true)
     {
         $method = Http::getTransportMethod();
         if (!isset($timeout)) {
             $timeout = static::HTTP_REQUEST_TIMEOUT;
         }
-        if ($this->accessToken) {
+        if ($withAccessToken && $this->accessToken) {
             if (!is_array($postData)) {
                 $postData = [];
             }
             $postData['access_token'] = $this->accessToken;
         }
         $file = Http::ensureDestinationDirectoryExists($destinationPath);
-        return Http::sendHttpRequestBy($method, $url, $timeout, $userAgent = null, $destinationPath, $file, $followDepth = 0, $acceptLanguage = \false, $acceptInvalidSslCertificate = \false, $byteRange = \false, $getExtendedInfo, $httpMethod = 'POST', $httpUsername = null, $httpPassword = null, $postData);
+        return Http::sendHttpRequestBy($method, $url, $timeout, $userAgent = null, $destinationPath, $file, $followDepth = 0, $acceptLanguage = \false, $acceptInvalidSslCertificate = \false, $byteRange = \false, $getExtendedInfo, $httpMethod = null === $postData ? 'GET' : 'POST', $httpUsername = null, $httpPassword = null, $postData);
     }
     /**
      * Executes the given API action on the Marketplace using the given params and returns the result.
@@ -108,7 +116,8 @@ $accessToken)
         $endpoint = sprintf('%s/api/%s/', $this->domain, $this->version);
         $query = Http::buildQuery($params);
         $url = sprintf('%s%s?%s', $endpoint, $action, $query);
-        $response = $this->download($url, null, null, $postData, \true);
+        $withAccessToken = !in_array($action, self::ACTIONS_WITHOUT_ACCESS_TOKEN, \true);
+        $response = $this->download($url, null, null, $postData, \true, $withAccessToken);
         $result = $response['data'] ?? null;
         if (null === $result) {
             throw new \Piwik\Plugins\Marketplace\Api\Service\Exception('There was an error reading the response from the Marketplace. Please try again later.', \Piwik\Plugins\Marketplace\Api\Service\Exception::HTTP_ERROR);

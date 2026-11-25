@@ -158,7 +158,7 @@ class AIChatbotReports extends RecordBuilder
         return max($configLimit, $maxRowsInTable, $maxRowsInSubtable);
     }
     /**
-     * @param array<string, DataTable> $tables
+     * @param array<string, int|DataTable> $tables
      */
     private function populateNumerics(ArchiveProcessor $archiveProcessor, array &$tables) : void
     {

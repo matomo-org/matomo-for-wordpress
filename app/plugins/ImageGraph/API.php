@@ -17,6 +17,7 @@ use Piwik\DataTable;
 use Piwik\DataTable\Map;
 use Piwik\Exception\InvalidDimensionException;
 use Piwik\Filesystem;
+use Piwik\Http\SecurityHeaders;
 use Piwik\Period;
 use Piwik\Piwik;
 use Piwik\Request as PiwikRequest;
@@ -55,7 +56,7 @@ class API extends \Piwik\Plugin\API
     /**
      * @var array[]
      */
-    private static $DEFAULT_GRAPH_TYPE_OVERRIDE = array('Referrers_getReferrerType' => array(\false => \Piwik\Plugins\ImageGraph\StaticGraph::GRAPH_TYPE_HORIZONTAL_BAR));
+    private static array $DEFAULT_GRAPH_TYPE_OVERRIDE = array('Referrers_getReferrerType' => array(\false => \Piwik\Plugins\ImageGraph\StaticGraph::GRAPH_TYPE_HORIZONTAL_BAR));
     public const GRAPH_OUTPUT_INLINE = 0;
     public const GRAPH_OUTPUT_FILE = 1;
     public const GRAPH_OUTPUT_PHP = 2;
@@ -414,6 +415,8 @@ class API extends \Piwik\Plugin\API
                 return $graph->getRenderedImage();
             case self::GRAPH_OUTPUT_INLINE:
             default:
+                // the graph library streams the image and its content type itself, so ours go first
+                SecurityHeaders::sendForDataResponse();
                 $graph->sendToBrowser();
                 exit;
         }

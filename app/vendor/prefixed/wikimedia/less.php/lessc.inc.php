@@ -15,12 +15,19 @@ if (!\class_exists('Matomo\\Dependencies\\Less_Parser')) {
 }
 class lessc
 {
+    /** @var string */
     public static $VERSION = Less_Version::less_version;
+    /** @var string|string[] */
     public $importDir = '';
+    /** @var array<string,int> */
     protected $allParsedFiles = [];
+    /** @var array<string,callable> */
     protected $libFunctions = [];
+    /** @var array */
     protected $registeredVars = [];
+    /** @var string */
     private $formatterName;
+    /** @var array<string,mixed> */
     private $options = [];
     public function __construct($lessc = null, $sourceName = null)
     {
@@ -100,14 +107,12 @@ class lessc
         }
         return $options;
     }
+    /**
+     * @return array<string,string>
+     */
     protected function getImportDirs()
     {
-        $dirs_ = (array) $this->importDir;
-        $dirs = [];
-        foreach ($dirs_ as $dir) {
-            $dirs[$dir] = '';
-        }
-        return $dirs;
+        return \array_fill_keys((array) $this->importDir, '');
     }
     public function compile($string, $name = null)
     {
@@ -124,8 +129,7 @@ class lessc
         }
         $parser->parse($string);
         $out = $parser->getCss();
-        $parsed = Less_Parser::AllParsedFiles();
-        foreach ($parsed as $file) {
+        foreach ($parser->getParsedFiles() as $file) {
             $this->addParsedFile($file);
         }
         $this->importDir = $oldImport;
@@ -152,8 +156,7 @@ class lessc
         }
         $parser->parseFile($fname);
         $out = $parser->getCss();
-        $parsed = Less_Parser::AllParsedFiles();
-        foreach ($parsed as $file) {
+        foreach ($parser->getParsedFiles() as $file) {
             $this->addParsedFile($file);
         }
         $this->importDir = $oldImport;
@@ -196,15 +199,15 @@ class lessc
         $root = null;
         if (\is_string($in)) {
             $root = $in;
-        } elseif (\is_array($in) and isset($in['root'])) {
-            if ($force or !isset($in['files'])) {
+        } elseif (\is_array($in) && isset($in['root'])) {
+            if ($force || !isset($in['files'])) {
                 // If we are forcing a recompile or if for some reason the
                 // structure does not contain any file information we should
                 // specify the root to trigger a rebuild.
                 $root = $in['root'];
-            } elseif (isset($in['files']) and \is_array($in['files'])) {
+            } elseif (isset($in['files']) && \is_array($in['files'])) {
                 foreach ($in['files'] as $fname => $ftime) {
-                    if (!\file_exists($fname) or \filemtime($fname) > $ftime) {
+                    if (!\file_exists($fname) || \filemtime($fname) > $ftime) {
                         // One of the files we knew about previously has changed
                         // so we should look at our incoming root again.
                         $root = $in['root'];
@@ -217,32 +220,20 @@ class lessc
             // that looks like a compatible lessphp cache structure.
             return null;
         }
-        if ($root !== null) {
-            // If we have a root value which means we should rebuild.
-            $out = [];
-            $out['root'] = $root;
-            $out['compiled'] = $this->compileFile($root);
-            $out['files'] = $this->allParsedFiles();
-            $out['updated'] = \time();
-            return $out;
-        } else {
-            // No changes, pass back the structure
-            // we were given initially.
+        if ($root === null) {
+            // No changes, pass back the structure we were given initially.
             return $in;
         }
+        return ['root' => $root, 'compiled' => $this->compileFile($root), 'files' => $this->allParsedFiles, 'updated' => \time()];
     }
     public function ccompile($in, $out, $less = null)
     {
-        if ($less === null) {
-            $less = new self();
-        }
+        $less ??= new self();
         return $less->checkedCompile($in, $out);
     }
     public static function cexecute($in, $force = \false, $less = null)
     {
-        if ($less === null) {
-            $less = new self();
-        }
+        $less ??= new self();
         return $less->cachedCompile($in, $force);
     }
     public function allParsedFiles()

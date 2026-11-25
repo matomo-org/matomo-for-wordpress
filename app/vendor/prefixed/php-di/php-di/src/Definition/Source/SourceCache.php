@@ -1,5 +1,6 @@
 <?php
 
+declare (strict_types=1);
 namespace Matomo\Dependencies\DI\Definition\Source;
 
 use Matomo\Dependencies\DI\Definition\AutowireDefinition;
@@ -12,24 +13,11 @@ use Matomo\Dependencies\DI\Definition\ObjectDefinition;
  */
 class SourceCache implements DefinitionSource, MutableDefinitionSource
 {
-    /**
-     * @var string
-     */
-    const CACHE_KEY = 'php-di.definitions.';
-    /**
-     * @var DefinitionSource
-     */
-    private $cachedSource;
-    /**
-     * @var string
-     */
-    private $cacheNamespace;
-    public function __construct(DefinitionSource $cachedSource, string $cacheNamespace = '')
+    public const CACHE_KEY = 'php-di.definitions.';
+    public function __construct(private DefinitionSource $cachedSource, private string $cacheNamespace = '')
     {
-        $this->cachedSource = $cachedSource;
-        $this->cacheNamespace = $cacheNamespace;
     }
-    public function getDefinition(string $name)
+    public function getDefinition(string $name) : ?Definition
     {
         $definition = apcu_fetch($this->getCacheKey($name));
         if ($definition === \false) {
@@ -56,11 +44,11 @@ class SourceCache implements DefinitionSource, MutableDefinitionSource
     {
         return self::CACHE_KEY . $this->cacheNamespace . $name;
     }
-    public function addDefinition(Definition $definition)
+    public function addDefinition(Definition $definition) : void
     {
         throw new \LogicException('You cannot set a definition at runtime on a container that has caching enabled. Doing so would risk caching the definition for the next execution, where it might be different. You can either put your definitions in a file, remove the cache or ->set() a raw value directly (PHP object, string, int, ...) instead of a PHP-DI definition.');
     }
-    private function shouldBeCached(Definition $definition = null) : bool
+    private function shouldBeCached(?Definition $definition = null) : bool
     {
         return $definition === null || $definition instanceof ObjectDefinition || $definition instanceof AutowireDefinition;
     }

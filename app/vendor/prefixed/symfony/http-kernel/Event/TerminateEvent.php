@@ -23,7 +23,7 @@ use Matomo\Dependencies\Symfony\Component\HttpKernel\HttpKernelInterface;
  */
 final class TerminateEvent extends KernelEvent
 {
-    private $response;
+    private Response $response;
     public function __construct(HttpKernelInterface $kernel, Request $request, Response $response)
     {
         parent::__construct($kernel, $request, HttpKernelInterface::MAIN_REQUEST);

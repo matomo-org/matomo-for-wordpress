@@ -1,5 +1,6 @@
 <?php
 
+declare (strict_types=1);
 /*
  * This file is part of the Monolog package.
  *
@@ -10,6 +11,7 @@
  */
 namespace Matomo\Dependencies\Monolog\Handler\FingersCrossed;
 
+use Matomo\Dependencies\Monolog\LogRecord;
 /**
  * Interface for activation strategies for the FingersCrossedHandler.
  *
@@ -19,9 +21,6 @@ interface ActivationStrategyInterface
 {
     /**
      * Returns whether the given record activates the handler.
-     *
-     * @param  array   $record
-     * @return bool
      */
-    public function isHandlerActivated(array $record);
+    public function isHandlerActivated(LogRecord $record) : bool;
 }

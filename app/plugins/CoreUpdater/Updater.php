@@ -9,7 +9,6 @@
 namespace Piwik\Plugins\CoreUpdater;
 
 use Exception;
-use Piwik\ArchiveProcessor\Rules;
 use Piwik\CliMulti;
 use Piwik\Common;
 use Piwik\Config\GeneralConfig;
@@ -30,16 +29,12 @@ use Piwik\Version;
 class Updater
 {
     public const OPTION_LATEST_VERSION = 'UpdateCheck_LatestVersion';
+    /** Marks an update log message as a failure, so the log does not tick it off as done. */
+    public const MESSAGE_FAILED_PREFIX = "✗ ";
     public const PATH_TO_EXTRACT_LATEST_VERSION = '/latest/';
     public const DOWNLOAD_TIMEOUT = 720;
-    /**
-     * @var Translator
-     */
-    private $translator;
-    /**
-     * @var ReleaseChannels
-     */
-    private $releaseChannels;
+    private Translator $translator;
+    private ReleaseChannels $releaseChannels;
     /**
      * @var string
      */
@@ -70,20 +65,19 @@ class Updater
     /**
      * Update Piwik codebase by downloading and installing the latest version.
      *
-     * @param bool $https Whether to use HTTPS if supported of not. If false, will use HTTP.
      * @return string[] Return an array of messages for the user.
      * @throws ArchiveDownloadException
      * @throws UpdaterException
      * @throws Exception
      */
-    public function updatePiwik($https = \true)
+    public function updatePiwik()
     {
         if (!$this->isNewVersionAvailable()) {
             throw new Exception($this->translator->translate('CoreUpdater_ExceptionAlreadyLatestVersion', Version::VERSION));
         }
         SettingsServer::setMaxExecutionTime(0);
         $newVersion = $this->getLatestVersion();
-        $url = $this->getArchiveUrl($newVersion, $https);
+        $url = $this->getArchiveUrl($newVersion);
         $messages = [];
         $pluginManager = PluginManager::getInstance();
         $activatedPlugins = $pluginManager->getActivatedPlugins();
@@ -126,8 +120,8 @@ class Updater
                     // ignore any error should this fail too. this might be the case eg if
                     // the user upgrades from one major version to another major version
                     if (is_string($responseCliMulti)) {
-                        $messages[] = $responseCliMulti;
                         // show why the original request failed eg invalid ssl certificate
+                        $messages[] = self::MESSAGE_FAILED_PREFIX . $responseCliMulti;
                     }
                 }
             }
@@ -160,11 +154,19 @@ class Updater
                 foreach ($pluginsWithUpdate as $pluginWithUpdate) {
                     $pluginName = $pluginWithUpdate['name'];
                     $messages[] = $this->translator->translate('CoreUpdater_UpdatingPluginXToVersionY', [$pluginName, $pluginWithUpdate['version']]);
-                    $pluginInstaller = new PluginInstaller($marketplaceClient);
-                    $pluginInstaller->installOrUpdatePluginFromMarketplace($pluginName);
+                    try {
+                        $pluginInstaller = new PluginInstaller($marketplaceClient);
+                        $pluginInstaller->installOrUpdatePluginFromMarketplace($pluginName);
+                    } catch (\Throwable $e) {
+                        // one plugin that cannot be updated - an expired or missing license being the
+                        // common case - must not keep the remaining ones on their old version
+                        $messages[] = self::MESSAGE_FAILED_PREFIX . $this->translator->translate('CoreUpdater_UpdatingPluginXFailedY', [$pluginName, $e->getMessage()]);
+                    }
                 }
             } catch (MarketplaceApi\Exception $e) {
-                // there is a problem with the connection to the server, ignore for now
+                // there is a problem with the connection to the server, so no plugin can be updated
+                // in this run - report it instead of letting the update look like it found nothing
+                $messages[] = self::MESSAGE_FAILED_PREFIX . $this->translator->translate('CoreUpdater_CheckingForPluginUpdatesFailed', $e->getMessage());
             } catch (Exception $e) {
                 throw new \Piwik\Plugins\CoreUpdater\UpdaterException($e, $messages);
             }
@@ -219,7 +221,8 @@ class Updater
         try {
             Http::fetchRemoteFile($url, $archiveFile, 0, self::DOWNLOAD_TIMEOUT);
         } catch (Exception $e) {
-            // We throw a specific exception allowing to offer HTTP download if HTTPS failed
+            // A specific exception so the controller can tell a download failure apart from later
+            // errors and show the matching terminal error screen (secure HTTPS vs generic).
             throw new \Piwik\Plugins\CoreUpdater\ArchiveDownloadException($e);
         }
         return $archiveFile;
@@ -298,10 +301,6 @@ class Updater
     {
         // Load classes that move to a different file path in the new version before any files are replaced.
         $this->preloadRelocatedClasses();
-        // Make sure the execute bit is set for this shell script
-        if (!Rules::isBrowserTriggerEnabled()) {
-            @chmod($extractedArchiveDirectory . '/misc/cron/archive.sh', 0755);
-        }
         $model = new \Piwik\Plugins\CoreUpdater\Model();
         // Check if the target directories are writable
         $this->checkFolderPermissions($extractedArchiveDirectory, PIWIK_INCLUDE_PATH);
@@ -315,8 +314,11 @@ class Updater
          * These files are visible in the web root and are generally
          * served directly by the web server.  May be shared.
          */
-        if (PIWIK_INCLUDE_PATH !== PIWIK_DOCUMENT_ROOT) {
-            // @phpstan-ignore notIdentical.alwaysFalse
+        /** @var string $includePath */
+        $includePath = PIWIK_INCLUDE_PATH;
+        /** @var string $documentRoot */
+        $documentRoot = PIWIK_DOCUMENT_ROOT;
+        if ($includePath !== $documentRoot) {
             // Copy PHP files that expect to be in the document root
             $specialCases = array('/index.php', '/piwik.php', '/js/index.php');
             foreach ($specialCases as $file) {
@@ -331,19 +333,24 @@ class Updater
     }
     /**
      * @param string $version
-     * @param bool $https Whether to use HTTPS if supported of not. If false, will use HTTP.
      * @return string
      */
-    public function getArchiveUrl($version, $https = \true)
+    public function getArchiveUrl($version)
     {
         $channel = $this->releaseChannels->getActiveReleaseChannel();
         $url = $channel->getDownloadUrlWithoutScheme($version);
-        if (Http::isUpdatingOverHttps() && $https && GeneralConfig::getConfigValue('force_matomo_http_request') == 0) {
-            $url = 'https' . $url;
-        } else {
-            $url = 'http' . $url;
-        }
-        return $url;
+        return ($this->isUpdatingOverSecureConnection() ? 'https' : 'http') . $url;
+    }
+    /**
+     * Whether the update archive is downloaded over a secure HTTPS connection.
+     *
+     * The update is always fetched over HTTPS. Plain HTTP is used only when an administrator
+     * explicitly enables it via the force_matomo_http_request config option, e.g. for environments
+     * where HTTPS to matomo.org cannot be used.
+     */
+    public function isUpdatingOverSecureConnection() : bool
+    {
+        return !GeneralConfig::getBoolConfigValue('force_matomo_http_request', \false);
     }
     private function getIncompatiblePlugins($piwikVersion)
     {

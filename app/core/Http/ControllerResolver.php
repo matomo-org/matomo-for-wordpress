@@ -19,14 +19,8 @@ use Piwik\Plugin\WidgetsProvider;
  */
 class ControllerResolver
 {
-    /**
-     * @var FactoryInterface
-     */
-    private $abstractFactory;
-    /**
-     * @var WidgetsProvider
-     */
-    private $widgets;
+    private FactoryInterface $abstractFactory;
+    private WidgetsProvider $widgets;
     public function __construct(FactoryInterface $abstractFactory, WidgetsProvider $widgets)
     {
         $this->abstractFactory = $abstractFactory;

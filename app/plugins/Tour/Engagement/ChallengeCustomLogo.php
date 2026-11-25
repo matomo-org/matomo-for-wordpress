@@ -14,10 +14,7 @@ use Piwik\Plugins\Tour\Dao\DataFinder;
 use Piwik\Url;
 class ChallengeCustomLogo extends \Piwik\Plugins\Tour\Engagement\Challenge
 {
-    /**
-     * @var DataFinder
-     */
-    private $finder;
+    private DataFinder $finder;
     /**
      * @var null|bool
      */

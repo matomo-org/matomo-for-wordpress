@@ -16,10 +16,7 @@ use Piwik\UpdateCheck\ReleaseChannel;
  */
 class ReleaseChannels
 {
-    /**
-     * @var Manager
-     */
-    private $pluginManager;
+    private \Piwik\Plugin\Manager $pluginManager;
     public function __construct(\Piwik\Plugin\Manager $pluginManager)
     {
         $this->pluginManager = $pluginManager;

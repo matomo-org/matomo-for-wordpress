@@ -10,6 +10,7 @@
  */
 namespace Matomo\Dependencies\Symfony\Bridge\Monolog\Processor;
 
+use Matomo\Dependencies\Monolog\LogRecord;
 use Matomo\Dependencies\Symfony\Component\Console\ConsoleEvents;
 use Matomo\Dependencies\Symfony\Component\Console\Event\ConsoleEvent;
 use Matomo\Dependencies\Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -18,40 +19,60 @@ use Matomo\Dependencies\Symfony\Contracts\Service\ResetInterface;
  * Adds the current console command information to the log entry.
  *
  * @author Piotr Stankowski <git@trakos.pl>
+ *
+ * @final since Symfony 6.1
  */
 class ConsoleCommandProcessor implements EventSubscriberInterface, ResetInterface
 {
-    private $commandData;
-    private $includeArguments;
-    private $includeOptions;
+    use CompatibilityProcessor;
+    private array $commandDataStack = [];
+    private bool $includeArguments;
+    private bool $includeOptions;
     public function __construct(bool $includeArguments = \true, bool $includeOptions = \false)
     {
         $this->includeArguments = $includeArguments;
         $this->includeOptions = $includeOptions;
     }
-    public function __invoke(array $records)
+    private function doInvoke(array|LogRecord $record) : array|LogRecord
     {
-        if (null !== $this->commandData && !isset($records['extra']['command'])) {
-            $records['extra']['command'] = $this->commandData;
+        if ($this->commandDataStack && !isset($record['extra']['command'])) {
+            $record['extra']['command'] = $this->commandDataStack[array_key_last($this->commandDataStack)];
         }
-        return $records;
+        return $record;
     }
+    /**
+     * @return void
+     */
     public function reset()
     {
-        $this->commandData = null;
+        // the command data is set on ConsoleEvents::COMMAND and removed on ConsoleEvents::TERMINATE,
+        // it must outlive any reset happening while a command is still running
     }
+    /**
+     * @return void
+     */
     public function addCommandData(ConsoleEvent $event)
     {
-        $this->commandData = ['name' => $event->getCommand()->getName()];
+        $commandData = ['name' => $event->getCommand()->getName()];
         if ($this->includeArguments) {
-            $this->commandData['arguments'] = $event->getInput()->getArguments();
+            $commandData['arguments'] = $event->getInput()->getArguments();
         }
         if ($this->includeOptions) {
-            $this->commandData['options'] = $event->getInput()->getOptions();
+            $commandData['options'] = $event->getInput()->getOptions();
         }
+        $this->commandDataStack[] = $commandData;
     }
-    public static function getSubscribedEvents()
+    public function removeCommandData() : void
     {
-        return [ConsoleEvents::COMMAND => ['addCommandData', 1]];
+        array_pop($this->commandDataStack);
+    }
+    public static function getSubscribedEvents() : array
+    {
+        return [
+            ConsoleEvents::COMMAND => ['addCommandData', 1],
+            // lower than ConsoleHandler::onTerminate() (-255) so that records logged
+            // on ConsoleEvents::TERMINATE still carry the command information
+            ConsoleEvents::TERMINATE => ['removeCommandData', -2048],
+        ];
     }
 }

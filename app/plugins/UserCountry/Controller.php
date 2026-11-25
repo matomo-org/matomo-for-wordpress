@@ -10,6 +10,7 @@ namespace Piwik\Plugins\UserCountry;
 
 use Exception;
 use Piwik\Common;
+use Piwik\Exception\NoPrivilegesException;
 use Piwik\IP;
 use Piwik\Notification;
 use Piwik\Piwik;
@@ -115,7 +116,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
     private function dieIfGeolocationAdminIsDisabled()
     {
         if (!\Piwik\Plugins\UserCountry\UserCountry::isGeoLocationAdminEnabled()) {
-            throw new \Exception('Geo location setting page has been disabled.');
+            throw new NoPrivilegesException('Geo location setting page has been disabled.', 403);
         }
     }
 }

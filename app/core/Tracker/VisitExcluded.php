@@ -23,10 +23,7 @@ use Piwik\Config;
  */
 class VisitExcluded
 {
-    /**
-     * @var ReferrerSpamFilter
-     */
-    private $spamFilter;
+    private ReferrerSpamFilter $spamFilter;
     private $siteCache = array();
     public $request;
     public $idSite;
@@ -190,7 +187,7 @@ class VisitExcluded
     public function isChromeDataSaverUsed(IP $ip)
     {
         // see https://github.com/piwik/piwik/issues/7733
-        return !empty($_SERVER['HTTP_VIA']) && \false !== strpos(strtolower($_SERVER['HTTP_VIA']), 'chrome-compression-proxy') && $ip->isInRanges($this->getGoogleBotIpRanges());
+        return !empty($_SERVER['HTTP_VIA']) && str_contains(strtolower($_SERVER['HTTP_VIA']), 'chrome-compression-proxy') && $ip->isInRanges($this->getGoogleBotIpRanges());
     }
     protected function getBotIpRanges()
     {

@@ -1,0 +1,29 @@
+<?php
+
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+namespace Matomo\Dependencies\Symfony\Component\HttpFoundation\RequestMatcher;
+
+use Matomo\Dependencies\Symfony\Component\HttpFoundation\Request;
+use Matomo\Dependencies\Symfony\Component\HttpFoundation\RequestMatcherInterface;
+/**
+ * Checks the Request URL path info matches a regular expression.
+ *
+ * @author Fabien Potencier <fabien@symfony.com>
+ */
+class PathRequestMatcher implements RequestMatcherInterface
+{
+    public function __construct(private string $regexp)
+    {
+    }
+    public function matches(Request $request) : bool
+    {
+        return preg_match('{' . $this->regexp . '}s', rawurldecode($request->getPathInfo()));
+    }
+}

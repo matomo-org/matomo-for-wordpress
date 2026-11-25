@@ -23,14 +23,8 @@ use Piwik\Plugin\ProcessedMetric;
 class AIAgentMetric extends ProcessedMetric
 {
     private const TRANSLATIONS = ['avg_time_on_site_ai_agent' => 'AIAgents_ColumnAIAgentAverageVisitDuration', 'avg_time_on_site_human' => 'AIAgents_ColumnHumanAverageVisitDuration', 'bounce_rate_ai_agent' => 'AIAgents_ColumnAIAgentBounceRate', 'bounce_rate_human' => 'AIAgents_ColumnHumanBounceRate', 'nb_actions_per_visit_ai_agent' => 'AIAgents_ColumnAIAgentAvgActionsPerVisit', 'nb_actions_per_visit_human' => 'AIAgents_ColumnHumanAvgActionsPerVisit'];
-    /**
-     * @var ProcessedMetric
-     */
-    private $wrapped;
-    /**
-     * @var string
-     */
-    private $suffix;
+    private ProcessedMetric $wrapped;
+    private string $suffix;
     public function __construct(ProcessedMetric $wrapped, string $suffix)
     {
         $this->wrapped = $wrapped;

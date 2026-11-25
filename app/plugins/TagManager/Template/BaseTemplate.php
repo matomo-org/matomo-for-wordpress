@@ -90,7 +90,7 @@ abstract class BaseTemplate
     }
     /**
      * Get the translated description of this template.
-     * @return string
+     * @return string|null
      */
     public function getDescription()
     {
@@ -102,10 +102,11 @@ abstract class BaseTemplate
             }
             return $translated;
         }
+        return null;
     }
     /**
      * Get the translated help text for this template.
-     * @return string
+     * @return string|null
      */
     public function getHelp()
     {
@@ -117,6 +118,7 @@ abstract class BaseTemplate
             }
             return $translated;
         }
+        return null;
     }
     /**
      * Get the order for this template. The lower the order is, the higher in the list the template will be shown.
@@ -236,6 +238,7 @@ abstract class BaseTemplate
         if ($this->hasTemplateFile($file)) {
             return trim(file_get_contents($file));
         }
+        return null;
     }
     /**
      * Lets you hide the advanced settings tab in the UI.

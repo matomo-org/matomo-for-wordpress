@@ -10,18 +10,12 @@
       feature="Tag Manager"
       :content-title="editTitle"
     >
-      <p v-show="isLoading">
-        <span class="loadingPiwik">
-          <img src="plugins/Morpheus/images/loading-blue.gif" />
-          {{ translate('General_LoadingData') }}
-        </span>
-      </p>
-      <p v-show="isUpdating">
-        <span class="loadingPiwik">
-          <img src="plugins/Morpheus/images/loading-blue.gif" />
-          {{ translate('TagManager_UpdatingData') }}
-        </span>
-      </p>
+      <ActivityIndicator
+        :loading="isLoading || isUpdating"
+        :loading-message="isUpdating
+          ? translate('TagManager_UpdatingData')
+          : translate('General_LoadingData')"
+      />
       <form
         v-show="!chooseTriggerType && editTitle"
         @submit="edit ? updateTrigger() : createTrigger()"
@@ -188,7 +182,7 @@
           </li>
           <li
             class="collection-item avatar"
-            @click="createTriggerType(triggerTemplate)"
+            @click="createTriggerType(triggerTemplate as TriggerType)"
             :class="{
               disabledTemplate: isTriggerTemplateDisabled[triggerTemplate.id],
               [`templateType${ triggerTemplate.id}`]: true,
@@ -198,7 +192,7 @@
             :title="!isTriggerTemplateDisabled[triggerTemplate.id] ? '' : collectionItemAvatarText"
           >
             <img
-              alt
+              alt=""
               class="circle"
               :src="triggerTemplate.icon"
               v-if="triggerTemplate.icon"
@@ -230,6 +224,7 @@
 <script lang="ts">
 import { DeepReadonly, defineComponent, nextTick } from 'vue';
 import {
+  ActivityIndicator,
   translate,
   AjaxHelper,
   ContentBlock,
@@ -257,7 +252,7 @@ interface Option {
   tooltip: string;
 }
 
-interface TriggerEditState {
+export interface TriggerEditState {
   isDirty: boolean;
   chooseTriggerType: boolean;
   availableTriggers: DeepReadonly<TriggerCategory[]>;
@@ -298,6 +293,7 @@ export default defineComponent({
     },
   },
   components: {
+    ActivityIndicator,
     ContentBlock,
     Field,
     GroupedSettings,
@@ -422,7 +418,7 @@ export default defineComponent({
             }
 
             this.trigger = clone(trigger) as unknown as Trigger;
-            this.parameterValues = Object.fromEntries(trigger.typeMetadata.parameters.map(
+            this.parameterValues = Object.fromEntries((trigger.typeMetadata?.parameters || []).map(
               (s) => [s.name, s.value],
             ));
 

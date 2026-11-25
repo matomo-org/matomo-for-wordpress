@@ -13,7 +13,7 @@ use Piwik\Plugin\Manager;
 class ContextProvider
 {
     /**
-     * @var BaseContext[]
+     * @var BaseContext[]|null
      */
     private $cached;
     /**
@@ -41,6 +41,7 @@ class ContextProvider
                 return $context;
             }
         }
+        return null;
     }
     /**
      * @return BaseContext[]
@@ -54,8 +55,8 @@ class ContextProvider
                 $this->cached[] = StaticContainer::get($tag);
             }
             usort($this->cached, function ($a, $b) {
-                /** @var $a baseContext */
-                /** @var $b baseContext */
+                /** @var BaseContext $a */
+                /** @var BaseContext $b */
                 return $a->getOrder() - $b->getOrder();
             });
         }

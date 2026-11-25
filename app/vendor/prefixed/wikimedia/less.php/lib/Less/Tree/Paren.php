@@ -5,11 +5,10 @@ namespace Matomo\Dependencies;
 /**
  * @private
  */
-class Less_Tree_Paren extends Less_Tree
+class Less_Tree_Paren extends Less_Tree implements Less_Tree_HasValueProperty
 {
-    /** @var Less_Tree $value */
+    /** @var Less_Tree */
     public $value;
-    public $type = 'Paren';
     /**
      * @param Less_Tree $value
      */
@@ -32,6 +31,6 @@ class Less_Tree_Paren extends Less_Tree
     }
     public function compile($env)
     {
-        return new Less_Tree_Paren($this->value->compile($env));
+        return new self($this->value->compile($env));
     }
 }

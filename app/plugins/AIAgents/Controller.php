@@ -15,10 +15,7 @@ use Piwik\SettingsPiwik;
 use Piwik\Translation\Translator;
 class Controller extends PluginController
 {
-    /**
-     * @var Translator
-     */
-    private $translator;
+    private Translator $translator;
     public function __construct(Translator $translator)
     {
         parent::__construct();

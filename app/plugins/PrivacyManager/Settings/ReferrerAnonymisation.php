@@ -32,10 +32,7 @@ class ReferrerAnonymisation implements CustomSettingInterface, PolicyComparisonI
      * @use CustomGetterTrait<string|null>
      */
     use CustomGetterTrait;
-    /**
-     * @var string|null
-     */
-    private $value;
+    private ?string $value;
     private function __construct(?string $value)
     {
         $this->value = $value;
@@ -57,6 +54,14 @@ class ReferrerAnonymisation implements CustomSettingInterface, PolicyComparisonI
     {
         return Piwik::translate('PrivacyManager_ReferrerAnonymizationSettingTitle');
     }
+    public static function getWhatItDoes(?int $idSite = null) : string
+    {
+        return Piwik::translate('PrivacyManager_ReferrerAnonymizationSettingWhatItDoes');
+    }
+    public static function getImpact(?int $idSite = null) : string
+    {
+        return Piwik::translate('PrivacyManager_ReferrerAnonymizationSettingImpact');
+    }
     public static function getComplianceRequirementNote(?int $idSite = null) : string
     {
         return Piwik::translate('PrivacyManager_ReferrerAnonymizationSettingRequirementNote');
@@ -66,11 +71,20 @@ class ReferrerAnonymisation implements CustomSettingInterface, PolicyComparisonI
         // not used as not a true setting, help text part of FE vue component
         return '';
     }
+    public static function getPolicyOrder() : int
+    {
+        return 60;
+    }
     public static function getPolicyRequirements() : array
     {
         $policies = [];
         $policies[CnilPolicy::class] = ReferrerAnonymizer::EXCLUDE_PATH;
         return $policies;
+    }
+    public static function getPolicyConstraintType(string $policy) : string
+    {
+        // a policy sets the least amount of the referrer to strip, stripping more stays compliant
+        return PolicyComparisonInterface::POLICY_CONSTRAINT_MIN;
     }
     public static function getInstance(?int $idSite = null) : self
     {

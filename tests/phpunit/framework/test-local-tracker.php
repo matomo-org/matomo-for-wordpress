@@ -23,15 +23,22 @@ class MatomoLocalTracker extends PiwikTracker {
 
 	private $extra_server_vars = [];
 
+	private $last_logged_requests = null;
+
+	public function get_last_logged_requests() {
+		return $this->last_logged_requests;
+	}
+
 	public function setExtraServerVar( $name, $value ) {
 		$this->extra_server_vars[ $name ] = $value;
 	}
 
-	protected function getBaseUrl() {
+	protected function getBaseUrl(): string {
 		return self::$URL; // avoid adding another query string
 	}
 
-	protected function sendRequest( $url, $method = 'GET', $data = null, $force = false ) {
+	protected function sendRequest( $url, $method = 'GET', $data = null, $force = false ): string|bool {
+		$this->last_logged_requests = null;
 		if ( ! empty( $this->token_auth ) ) {
 			$url .= '&token_auth=' . rawurlencode( $this->token_auth );
 		}
@@ -86,14 +93,16 @@ class MatomoLocalTracker extends PiwikTracker {
 		}
 		Tracker::loadTrackerEnvironment();
 		// do tracking and capture output
+		$output = false;
 		ob_start();
 		try {
 			$local_tracker = new Tracker();
 			$request       = new Tracker\RequestSet();
 			$request->setRequests( $requests );
 
-			$handler  = Tracker\Handler\Factory::make();
-			$response = $local_tracker->main( $handler, $request );
+			$handler                    = Tracker\Handler\Factory::make();
+			$response                   = $local_tracker->main( $handler, $request );
+			$this->last_logged_requests = $local_tracker->getCountOfLoggedRequests();
 			if ( ! is_null( $response ) ) {
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				echo $response;

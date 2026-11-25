@@ -35,10 +35,8 @@ class Loader
     private static $archivingDepth = 0;
     /**
      * Tracks whether the current prepareArchive run reused an existing archive instead of processing.
-     *
-     * @var boolean
      */
-    private $didReuseArchive = \false;
+    private bool $didReuseArchive = \false;
     /**
      * @var Parameters
      */
@@ -55,14 +53,8 @@ class Loader
      * @var LoggerInterface
      */
     private $logger;
-    /**
-     * @var RawLogDao
-     */
-    private $rawLogDao;
-    /**
-     * @var Model
-     */
-    private $dataAccessModel;
+    private RawLogDao $rawLogDao;
+    private Model $dataAccessModel;
     /**
      * @var bool
      */
@@ -115,6 +107,13 @@ class Loader
             $requestedReport = Common::getRequestVar('requestedReport', '', 'string');
             if (!empty($requestedReport)) {
                 $this->params->setArchiveOnlyReport($requestedReport);
+            }
+        }
+        // a report-only archive is partial, so it must not be stored under the done flag of an archive for all plugins
+        if (!empty($this->params->getArchiveOnlyReport())) {
+            $doneFlag = \Piwik\ArchiveProcessor\Rules::getDoneStringFlagFor([$this->params->getSite()->getId()], $this->params->getSegment(), $this->params->getPeriod()->getLabel(), $pluginName);
+            if ($doneFlag === \Piwik\ArchiveProcessor\Rules::getDoneFlagArchiveContainsAllPlugins($this->params->getSegment())) {
+                throw new \Exception('Archiving a specific report is only possible for an archive of a single plugin.');
             }
         }
         // invalidate existing archives before we start archiving in case data was tracked in the past. if the archive is

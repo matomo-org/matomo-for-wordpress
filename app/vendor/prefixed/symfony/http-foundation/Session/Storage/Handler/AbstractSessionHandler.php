@@ -20,64 +20,70 @@ use Matomo\Dependencies\Symfony\Component\HttpFoundation\Session\SessionUtils;
  */
 abstract class AbstractSessionHandler implements \SessionHandlerInterface, \SessionUpdateTimestampHandlerInterface
 {
-    private $sessionName;
-    private $prefetchId;
-    private $prefetchData;
-    private $newSessionId;
-    private $igbinaryEmptyData;
-    /**
-     * @return bool
-     */
-    #[\ReturnTypeWillChange]
-    public function open($savePath, $sessionName)
+    private string $sessionName;
+    private string $prefetchId;
+    private string|false $prefetchData;
+    private ?\Throwable $prefetchError = null;
+    private ?string $newSessionId = null;
+    private ?string $readSessionId = null;
+    private string $igbinaryEmptyData;
+    public function __serialize() : array
+    {
+        throw new \BadMethodCallException('Cannot serialize ' . static::class);
+    }
+    public function __unserialize(array $data) : void
+    {
+        throw new \BadMethodCallException('Cannot unserialize ' . static::class);
+    }
+    public function open(string $savePath, string $sessionName) : bool
     {
         $this->sessionName = $sessionName;
         if (!headers_sent() && !\ini_get('session.cache_limiter') && '0' !== \ini_get('session.cache_limiter')) {
-            header(sprintf('Cache-Control: max-age=%d, private, must-revalidate', 60 * (int) \ini_get('session.cache_expire')));
+            header(\sprintf('Cache-Control: max-age=%d, private, must-revalidate', 60 * (int) \ini_get('session.cache_expire')));
         }
         return \true;
     }
     /**
      * @return string
      */
-    protected abstract function doRead(string $sessionId);
-    /**
-     * @return bool
-     */
-    protected abstract function doWrite(string $sessionId, string $data);
-    /**
-     * @return bool
-     */
-    protected abstract function doDestroy(string $sessionId);
-    /**
-     * @return bool
-     */
-    #[\ReturnTypeWillChange]
-    public function validateId($sessionId)
+    public function create_sid()
     {
-        $this->prefetchData = $this->read($sessionId);
-        $this->prefetchId = $sessionId;
-        if (\PHP_VERSION_ID < 70317 || 70400 <= \PHP_VERSION_ID && \PHP_VERSION_ID < 70405) {
-            // work around https://bugs.php.net/79413
-            foreach (debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS) as $frame) {
-                if (!isset($frame['class']) && isset($frame['function']) && \in_array($frame['function'], ['session_regenerate_id', 'session_create_id'], \true)) {
-                    return '' === $this->prefetchData;
-                }
-            }
+        return session_create_id() ?: throw new \RuntimeException('Unable to create a session ID.');
+    }
+    protected abstract function doRead(#[\SensitiveParameter]
+        string $sessionId) : string|false;
+    protected abstract function doWrite(#[\SensitiveParameter]
+        string $sessionId, string $data) : bool;
+    protected abstract function doDestroy(#[\SensitiveParameter]
+        string $sessionId) : bool;
+    public function validateId(#[\SensitiveParameter]
+        string $sessionId) : bool
+    {
+        // Reporting a failed read as an invalid ID would make PHP issue a new ID and cookie, orphaning the session.
+        // Keep the ID instead and let the failure surface from read().
+        try {
+            $this->prefetchData = $this->read($sessionId);
+        } catch (\Throwable $e) {
+            $this->prefetchData = \false;
+            $this->prefetchError = $e;
         }
+        $this->prefetchId = $sessionId;
         return '' !== $this->prefetchData;
     }
-    /**
-     * @return string
-     */
-    #[\ReturnTypeWillChange]
-    public function read($sessionId)
+    public function read(#[\SensitiveParameter]
+        string $sessionId) : string|false
     {
-        if (null !== $this->prefetchId) {
+        $this->readSessionId = $sessionId;
+        if (isset($this->prefetchId)) {
             $prefetchId = $this->prefetchId;
             $prefetchData = $this->prefetchData;
-            $this->prefetchId = $this->prefetchData = null;
+            $prefetchError = $this->prefetchError;
+            unset($this->prefetchId, $this->prefetchData);
+            $this->prefetchError = null;
             if ($prefetchId === $sessionId || '' === $prefetchData) {
+                if ($prefetchError) {
+                    throw $prefetchError;
+                }
                 $this->newSessionId = '' === $prefetchData ? $sessionId : null;
                 return $prefetchData;
             }
@@ -86,31 +92,33 @@ abstract class AbstractSessionHandler implements \SessionHandlerInterface, \Sess
         $this->newSessionId = '' === $data ? $sessionId : null;
         return $data;
     }
-    /**
-     * @return bool
-     */
-    #[\ReturnTypeWillChange]
-    public function write($sessionId, $data)
+    public function updateTimestamp(#[\SensitiveParameter]
+        string $sessionId, string $data) : bool
     {
-        if (null === $this->igbinaryEmptyData) {
-            // see https://github.com/igbinary/igbinary/issues/146
-            $this->igbinaryEmptyData = \function_exists('igbinary_serialize') ? igbinary_serialize([]) : '';
+        $this->igbinaryEmptyData ??= \function_exists('igbinary_serialize') ? igbinary_serialize([]) : '';
+        if ('' === $data || $this->igbinaryEmptyData === $data) {
+            return $this->destroy($sessionId);
         }
+        return \true;
+    }
+    public function write(#[\SensitiveParameter]
+        string $sessionId, string $data) : bool
+    {
+        // see https://github.com/igbinary/igbinary/issues/146
+        $this->igbinaryEmptyData ??= \function_exists('igbinary_serialize') ? igbinary_serialize([]) : '';
         if ('' === $data || $this->igbinaryEmptyData === $data) {
             return $this->destroy($sessionId);
         }
         $this->newSessionId = null;
         return $this->doWrite($sessionId, $data);
     }
-    /**
-     * @return bool
-     */
-    #[\ReturnTypeWillChange]
-    public function destroy($sessionId)
+    public function destroy(#[\SensitiveParameter]
+        string $sessionId) : bool
     {
-        if (!headers_sent() && filter_var(\ini_get('session.use_cookies'), \FILTER_VALIDATE_BOOLEAN)) {
-            if (!$this->sessionName) {
-                throw new \LogicException(sprintf('Session name cannot be empty, did you forget to call "parent::open()" in "%s"?.', static::class));
+        // only the handler that read the session manages its cookie, e.g. not the write-only handler of MigratingSessionHandler
+        if ($this->readSessionId === $sessionId && !headers_sent() && filter_var(\ini_get('session.use_cookies'), \FILTER_VALIDATE_BOOL)) {
+            if (!isset($this->sessionName)) {
+                throw new \LogicException(\sprintf('Session name cannot be empty, did you forget to call "parent::open()" in "%s"?.', static::class));
             }
             $cookie = SessionUtils::popSessionCookie($this->sessionName, $sessionId);
             /*
@@ -121,13 +129,9 @@ abstract class AbstractSessionHandler implements \SessionHandlerInterface, \Sess
              * started the session).
              */
             if (null === $cookie || isset($_COOKIE[$this->sessionName])) {
-                if (\PHP_VERSION_ID < 70300) {
-                    setcookie($this->sessionName, '', 0, \ini_get('session.cookie_path'), \ini_get('session.cookie_domain'), filter_var(\ini_get('session.cookie_secure'), \FILTER_VALIDATE_BOOLEAN), filter_var(\ini_get('session.cookie_httponly'), \FILTER_VALIDATE_BOOLEAN));
-                } else {
-                    $params = session_get_cookie_params();
-                    unset($params['lifetime']);
-                    setcookie($this->sessionName, '', $params);
-                }
+                $params = session_get_cookie_params();
+                unset($params['lifetime']);
+                setcookie($this->sessionName, '', $params);
             }
         }
         return $this->newSessionId === $sessionId || $this->doDestroy($sessionId);

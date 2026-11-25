@@ -149,7 +149,7 @@ class Tracker
              * When set to 1, only bot tracking will be processed. In case the request is not detected as bot, it will be discarded
              * Setting it to 2 enables auto mode. Meaning it will be either processed as bot request or visit, depending on the detection
              *
-             * @deprecated Remove this parameter handling with Matomo 6 and decide the tracking method based on the bot detection only.
+             * @deprecated Remove this parameter handling in a future major version and decide the tracking method based on the bot detection only.
              */
             $recMode = $rawParams['recMode'] ?? null;
             if (((int) $recMode === 1 || (int) $recMode === 2) && $isBot) {
@@ -277,7 +277,7 @@ class Tracker
             TrackerConfig::setConfigValue('use_third_party_id_cookie', 1);
         }
         // Tests using window_look_back_for_visitor
-        if (\Piwik\Common::getRequestVar('forceLargeWindowLookBackForVisitor', \false, null, $args) == 1 || strpos(json_encode($args, \true), '"forceLargeWindowLookBackForVisitor":"1"') !== \false) {
+        if (\Piwik\Common::getRequestVar('forceLargeWindowLookBackForVisitor', \false, null, $args) == 1 || str_contains(json_encode($args, \true), '"forceLargeWindowLookBackForVisitor":"1"')) {
             TrackerConfig::setConfigValue('window_look_back_for_visitor', 2678400);
         }
         // Tests can force the enabling of IP anonymization

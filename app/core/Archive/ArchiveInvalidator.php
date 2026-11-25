@@ -58,18 +58,9 @@ class ArchiveInvalidator
     public const INVALIDATION_STATUS_QUEUED = 0;
     public const INVALIDATION_STATUS_IN_PROGRESS = 1;
     private $rememberArchivedReportIdStart = 'report_to_invalidate_';
-    /**
-     * @var Model
-     */
-    private $model;
-    /**
-     * @var SegmentArchiving|null
-     */
-    private $segmentArchiving;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private Model $model;
+    private ?SegmentArchiving $segmentArchiving;
+    private LoggerInterface $logger;
     /**
      * @var int[]
      */
@@ -235,7 +226,7 @@ class ArchiveInvalidator
     public function markArchivesAsInvalidated(array $idSites, array $dates, $period, ?Segment $segment = null, bool $cascadeDown = \false, bool $forceInvalidateNonexistentRanges = \false, ?string $name = null, bool $ignorePurgeLogDataDate = \false, bool $doNotCreateInvalidations = \false)
     {
         $plugin = null;
-        if ($name && strpos($name, '.') !== \false) {
+        if ($name && str_contains($name, '.')) {
             [$plugin] = explode('.', $name);
         } elseif ($name) {
             $plugin = $name;
@@ -598,7 +589,7 @@ class ArchiveInvalidator
     }
     private function makePeriod($date, $period)
     {
-        if ($period === 'range' && strpos($date, ',') === \false) {
+        if ($period === 'range' && !str_contains($date, ',')) {
             $date = $date . ',' . $date;
             return new Period\Range('range', $date);
         } else {

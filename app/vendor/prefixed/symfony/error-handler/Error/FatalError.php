@@ -12,20 +12,21 @@ namespace Matomo\Dependencies\Symfony\Component\ErrorHandler\Error;
 
 class FatalError extends \Error
 {
-    private $error;
+    private array $error;
     /**
-     * {@inheritdoc}
-     *
      * @param array $error An array as returned by error_get_last()
      */
     public function __construct(string $message, int $code, array $error, ?int $traceOffset = null, bool $traceArgs = \true, ?array $trace = null)
     {
         parent::__construct($message, $code);
         $this->error = $error;
+        // the backtrace is exposed by getTrace(), keeping a copy here would leak it and its arguments when the error is dumped
+        unset($this->error['trace']);
         if (null !== $trace) {
             if (!$traceArgs) {
-                foreach ($trace as &$frame) {
-                    unset($frame['args'], $frame['this'], $frame);
+                foreach ($trace as $index => $frame) {
+                    unset($frame['args'], $frame['this']);
+                    $trace[$index] = $frame;
                 }
             }
         } elseif (null !== $traceOffset) {
@@ -61,14 +62,10 @@ class FatalError extends \Error
         foreach (['file' => $error['file'], 'line' => $error['line'], 'trace' => $trace] as $property => $value) {
             if (null !== $value) {
                 $refl = new \ReflectionProperty(\Error::class, $property);
-                $refl->setAccessible(\true);
                 $refl->setValue($this, $value);
             }
         }
     }
-    /**
-     * {@inheritdoc}
-     */
     public function getError() : array
     {
         return $this->error;

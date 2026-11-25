@@ -14,10 +14,7 @@ use Piwik\Translation\Translator;
  */
 class RecommendedExtensionsCheck implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnostic
 {
-    /**
-     * @var Translator
-     */
-    private $translator;
+    private Translator $translator;
     public function __construct(Translator $translator)
     {
         $this->translator = $translator;
@@ -47,11 +44,11 @@ class RecommendedExtensionsCheck implements \Piwik\Plugins\Diagnostics\Diagnosti
      */
     private function getRecommendedExtensions()
     {
-        return array('json', 'libxml', 'dom', 'SimpleXML', 'openssl');
+        return array('libxml', 'dom', 'SimpleXML', 'openssl');
     }
     private function getHelpMessage($missingExtension)
     {
-        $messages = array('json' => 'Installation_SystemCheckWarnJsonHelp', 'libxml' => 'Installation_SystemCheckWarnLibXmlHelp', 'dom' => 'Installation_SystemCheckWarnDomHelp', 'SimpleXML' => 'Installation_SystemCheckWarnSimpleXMLHelp', 'openssl' => 'Installation_SystemCheckWarnOpensslHelp');
+        $messages = array('libxml' => 'Installation_SystemCheckWarnLibXmlHelp', 'dom' => 'Installation_SystemCheckWarnDomHelp', 'SimpleXML' => 'Installation_SystemCheckWarnSimpleXMLHelp', 'openssl' => 'Installation_SystemCheckWarnOpensslHelp');
         return $this->translator->translate($messages[$missingExtension]);
     }
 }

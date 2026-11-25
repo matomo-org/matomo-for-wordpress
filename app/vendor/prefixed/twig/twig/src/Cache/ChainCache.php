@@ -18,15 +18,13 @@ namespace Matomo\Dependencies\Twig\Cache;
  *
  * @author Quentin Devos <quentin@devos.pm>
  */
-final class ChainCache implements CacheInterface
+final class ChainCache implements CacheInterface, RemovableCacheInterface
 {
-    private $caches;
     /**
      * @param iterable<CacheInterface> $caches The ordered list of caches used to store and fetch cached items
      */
-    public function __construct(iterable $caches)
+    public function __construct(private iterable $caches)
     {
-        $this->caches = $caches;
     }
     public function generateKey(string $name, string $className) : string
     {
@@ -58,6 +56,14 @@ final class ChainCache implements CacheInterface
             }
         }
         return 0;
+    }
+    public function remove(string $name, string $cls) : void
+    {
+        foreach ($this->caches as $cache) {
+            if ($cache instanceof RemovableCacheInterface) {
+                $cache->remove($name, $cls);
+            }
+        }
     }
     /**
      * @return string[]

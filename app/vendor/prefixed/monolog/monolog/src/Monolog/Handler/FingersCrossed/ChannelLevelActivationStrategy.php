@@ -1,5 +1,6 @@
 <?php
 
+declare (strict_types=1);
 /*
  * This file is part of the Monolog package.
  *
@@ -10,7 +11,10 @@
  */
 namespace Matomo\Dependencies\Monolog\Handler\FingersCrossed;
 
+use Matomo\Dependencies\Monolog\Level;
 use Matomo\Dependencies\Monolog\Logger;
+use Matomo\Dependencies\Psr\Log\LogLevel;
+use Matomo\Dependencies\Monolog\LogRecord;
 /**
  * Channel and Error level based monolog activation strategy. Allows to trigger activation
  * based on level per channel. e.g. trigger activation on level 'ERROR' by default, except
@@ -20,10 +24,10 @@ use Matomo\Dependencies\Monolog\Logger;
  *
  * <code>
  *   $activationStrategy = new ChannelLevelActivationStrategy(
- *       Logger::CRITICAL,
+ *       Level::Critical,
  *       array(
- *           'request' => Logger::ALERT,
- *           'sensitive' => Logger::ERROR,
+ *           'request' => Level::Alert,
+ *           'sensitive' => Level::Error,
  *       )
  *   );
  *   $handler = new FingersCrossedHandler(new StreamHandler('php://stderr'), $activationStrategy);
@@ -33,22 +37,28 @@ use Matomo\Dependencies\Monolog\Logger;
  */
 class ChannelLevelActivationStrategy implements ActivationStrategyInterface
 {
-    private $defaultActionLevel;
-    private $channelToActionLevel;
+    private Level $defaultActionLevel;
     /**
-     * @param int   $defaultActionLevel   The default action level to be used if the record's category doesn't match any
-     * @param array $channelToActionLevel An array that maps channel names to action levels.
+     * @var array<string, Level>
      */
-    public function __construct($defaultActionLevel, $channelToActionLevel = array())
+    private array $channelToActionLevel;
+    /**
+     * @param int|string|Level|LogLevel::*                $defaultActionLevel   The default action level to be used if the record's category doesn't match any
+     * @param array<string, int|string|Level|LogLevel::*> $channelToActionLevel An array that maps channel names to action levels.
+     *
+     * @phpstan-param value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::* $defaultActionLevel
+     * @phpstan-param array<string, value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::*> $channelToActionLevel
+     */
+    public function __construct(int|string|Level $defaultActionLevel, array $channelToActionLevel = [])
     {
         $this->defaultActionLevel = Logger::toMonologLevel($defaultActionLevel);
-        $this->channelToActionLevel = array_map('Matomo\\Dependencies\\Monolog\\Logger::toMonologLevel', $channelToActionLevel);
+        $this->channelToActionLevel = array_map(Logger::toMonologLevel(...), $channelToActionLevel);
     }
-    public function isHandlerActivated(array $record)
+    public function isHandlerActivated(LogRecord $record) : bool
     {
-        if (isset($this->channelToActionLevel[$record['channel']])) {
-            return $record['level'] >= $this->channelToActionLevel[$record['channel']];
+        if (isset($this->channelToActionLevel[$record->channel])) {
+            return $record->level->value >= $this->channelToActionLevel[$record->channel]->value;
         }
-        return $record['level'] >= $this->defaultActionLevel;
+        return $record->level->value >= $this->defaultActionLevel->value;
     }
 }

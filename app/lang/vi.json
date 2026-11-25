@@ -150,7 +150,6 @@
         "ExceptionFileIntegrity": "Kiểm tra tính toàn vẹn không thành công: %s",
         "ExceptionFileToDelete": "Tập tin cần xóa: %s",
         "ExceptionFilesizeMismatch": "Kích thước tập tin không phù hợp: %1$s (chiều dài dự kiến: %2$s, được tìm thấy: %3$s)",
-        "ExceptionIncompatibleClientServerVersions": "Phiên bản client %1$s của bạn đang là %2$s nó không tương thích với phiên bản máy chủ %3$s.",
         "ExceptionInvalidAggregateReportsFormat": "Định dạng báo cáo tổng hợp '%1$s' không hợp lệ. Hãy thử các cách sau để thay thế: %2$s.",
         "ExceptionInvalidArchiveTimeToLive": "Hiện nay thời gian lưu trữ để tồn tại phải có số giây lớn hơn 0",
         "ExceptionInvalidDateFormat": "Định dạng ngày phải: %1$s hoặc các từ khoá được hỗ trợ bởi hàm %2$s (xem %3$s để biết thêm thông tin)",
@@ -509,6 +508,9 @@
         "PickARow": "Chọn một hàng để so sánh",
         "PickAnotherRow": "Chọn một hàng khác để so sánh"
     },
+    "AIProviders": {
+        "DefaultBadge": "Mặc định"
+    },
     "API": {
         "Glossary": "Thuật ngữ",
         "KeepTokenSecret": "token_auth này chặt chẽ như mật khẩu đăng nhập của bạn, %1$s không thể chia sẻ nó %2$s!",
@@ -695,17 +697,11 @@
         "ChooseWebsite": "Chọn website",
         "CloseWidgetDirections": "Bạn có thể đóng widget này bằng cách click vào biểu tượng \"X\" ở trên cùng của các widget",
         "DataForThisReportHasBeenPurged": "Các dữ liệu cho báo cáo này là nhiều hơn %s tháng và đã được loại bỏ",
-        "DataTableExcludeAggregateRows": "Hàng tổng hợp hiển thị %s Hide",
-        "DataTableIncludeAggregateRows": "Hàng tổng hợp hiển thị %s Show",
-        "Default": "mặc định",
         "DonateCall1": "Matomo sẽ luôn luôn cho bạn thấy không có gì để sử dụng, nhưng điều đó không có nghĩa là nó cho thấy chúng ta không có gì để làm.",
         "DonateCall2": "Matomo cần sự hỗ trợ của bạn để phát triển và phát triển mạnh hơn.",
         "EndShortcut": "Kết Thúc",
         "ExceptionNotAllowlistedIP": "Bạn không thế sử dụng Matomo vì địa chỉ IP %s của bạn không được cho phép.",
-        "ExcludeRowsWithLowPopulation": "Tất cả các hàng được hiển thị %s Loại trừ dân số thấp",
         "ExternalHelp": "Giúp đỡ (mở trong tab mới)",
-        "FlattenDataTable": "Báo cáo này là phân cấp %s Làm cho nó minh bạch",
-        "IncludeRowsWithLowPopulation": "Các Hàng với mật độ tập trung thấp đang ẩn %s Hiển thị tất cả các hàng",
         "InjectedHostEmailBody": "Xin chào, hôm nay tôi đã cố gắng để truy cập Matomo và gặp phải cảnh báo tên máy chủ chưa biết",
         "InjectedHostEmailSubject": "Matomo được truy cập với tên máy chủ không rõ ràng :%s",
         "InjectedHostNonSuperUserWarning": "%1$sNhấn vào đây để truy cập Matomo một cách an toàn%2$s và loại bỏ cảnh báo này. Bạn còn có thể liên lạc với người quản trị Matomo và thông báo cho họ về vấn đề này(%3$sNhấn vào đây để gửi email%4$s)",
@@ -725,7 +721,6 @@
         "SystemSummaryPhpVersion": "Phiên bản PHP",
         "TableNoData": "Không có dữ liệu cho bảng này.",
         "ThereIsNoDataForThisReport": "Không có dữ liệu cho báo cáo này",
-        "UnFlattenDataTable": "Báo cáo là rõ ràng %s Làm cho nó có thứ bậc",
         "ViewAllPiwikVideoTutorials": "Xem tất cả các video hướng dẫn Matomo",
         "WebAnalyticsReports": "Các báo cáo phân tích web",
         "YouAreUsingTheLatestVersion": "Bạn đang sử dụng phiên bản mới nhất của Matomo!"
@@ -1015,7 +1010,6 @@
         "GoalName": "Tên mục tiêu",
         "GoalX": "Mục tiêu %s",
         "Goals": "Các mục tiêu",
-        "GoalsOverview": "Các mục tiêu tổng quan",
         "GoalsOverviewDocumentation": "Đây là một cái nhìn tổng thể về goal conversions. Thoạt đầu, đồ thị này cho thấy tổng tất cả các lần chuyển đổi. %s Dưới đồ thị này, bạn có thể thấy các báo cáo conversion đối với mỗi goal của bạn. Sparklines có thể được phóng to khi click vào.",
         "HelpOneConversionPerVisit": "Nếu một trang phù hợp với mục tiêu này được làm mới hoặc xem nhiều hơn một lần trong một lượt truy cập, Mục tiêu sẽ chỉ được theo dõi lần đầu tiên trang đã được nạp trong lượt truy cập này.",
         "IsExactly": "%s chính xác",
@@ -1033,6 +1027,8 @@
         "ProductName": "Tên sản phẩm",
         "ProductSKU": "Sản phẩm SKU",
         "Products": "Các sản phẩm",
+        "RecommendationCountOnePage": "1 trang",
+        "RecommendationCountPages": "%s trang",
         "ReturningVisitorsConversionRateIs": "Tỷ lệ chuyển đổi khách truy cập quay lại là %s",
         "SingleGoalOverviewDocumentation": "Đây là tổng quan về chuyển đổi một mục tiêu duy nhất. %s Các Sparkline dưới biểu đồ có thể được mở rộng bằng cách nhấp vào chúng.",
         "URL": "URL",
@@ -1108,7 +1104,6 @@
         "SystemCheckFileIntegrity": "File nguyên vẹn",
         "SystemCheckFunctions": "Các hàm yêu cầu",
         "SystemCheckGDHelp": "Các Sparkline (đồ thị nhỏ) và đồ thị hình ảnh (trong ứng dụng Matomo trên di động và báo cáo Email) sẽ không làm việc.",
-        "SystemCheckGlobHelp": "Các hàm nội tại đã bị vô hiệu hóa trên máy chủ của bạn. Matomo sẽ cố gắng để giả lập hàm này nhưng có thể gặp phải những hạn chế bảo mật cao hơn. Chức năng có thể bị ảnh hưởng.",
         "SystemCheckGzcompressHelp": "Bạn cần bật zlib extension and gzcompress function.",
         "SystemCheckGzuncompressHelp": "Bạn cần bật zlib extension and gzuncompress function.",
         "SystemCheckMailHelp": "Feedback và thông báo mất mật khẩu sẽ không được gửi nếu thiếu mail().",
@@ -2228,12 +2223,14 @@
         "AllowedUploadFormats": "Bạn có thể tải tiện ích hoặc giao diện dưới định dạng .zip lên qua trang này",
         "Authors": "Tác giả",
         "BackToMarketplace": "Quay lại Chợ ứng dụng",
+        "CategoryDevelopment": "Phát triển",
+        "CategoryEcommerce": "Thương mại điện tử",
+        "CategorySecurity": "Bảo mật",
         "Developer": "Người phát triển",
         "InstallingPlugin": "Cài đặt %s",
         "LastUpdated": "Lần cập nhật cuối",
         "Marketplace": "Chợ ứng dụng",
         "NoPluginsFound": "Tiện ích không tìm thấy",
-        "NoThemesFound": "Giao diện không tìm thấy",
         "NumDownloadsLatestVersion": "Phiên bản mới nhất: %s lượt tải",
         "PluginKeywords": "Từ khóa",
         "PluginVersionInfo": "%1$s từ %2$s",
@@ -2282,8 +2279,7 @@
         "Evolution": "Sự tiến triển",
         "LoadingWebsites": "Đang tải website",
         "PluginDescription": "Xem và so sánh toàn bộ các website bạn quản lý",
-        "TopLinkTooltip": "So sánh các số liệu thống kê Web Analytics cho tất cả các trang web của bạn.",
-        "TotalPageviews": "Tổng số lượt xem trang"
+        "TopLinkTooltip": "So sánh các số liệu thống kê Web Analytics cho tất cả các trang web của bạn."
     },
     "Overlay": {
         "Clicks": "%s click",
@@ -2320,7 +2316,6 @@
         "DeleteLogsOlderThan": "Xóa các bản ghi cũ hơn",
         "DeleteMaxRows": "Số hàng lớn nhất phải xóa trong mỗi lần chạy:",
         "DeleteMaxRowsNoLimit": "không giới hạn",
-        "DeleteReportsConfirm": "Bạn muốn cho phép xóa dữ liệu báo cáo. Nếu báo cáo cũ được loại bỏ, bạn sẽ phải xử lý lại chúng theo thứ tự xem. Bạn có chắc bạn muốn làm điều này?",
         "DeleteReportsOlderThan": "Xóa báo cáo cũ hơn",
         "DoNotTrack_Description": "Do Not Track là một công nghệ và đề xuất chính sách cho phép người dùng chọn không bị theo dõi bởi các trang web họ truy cập, bao gồm cả dịch vụ phân tích, mạng lưới quảng cáo, và các nền tảng xã hội.",
         "DoNotTrack_Disable": "Vô hiệu hóa Do Not Track hỗ trợ",
@@ -2340,7 +2335,6 @@
         "MenuPrivacySettings": "Riêng tư",
         "NextDelete": "Xóa lịch trình tiếp theo trong",
         "PurgeNow": "Loại bỏ DB ngay",
-        "PurgeNowConfirm": "Bạn muốn xóa vĩnh viễn dữ liệu từ cơ sở dữ liệu của bạn. Bạn có chắc muốn tiếp tục?",
         "PurgingData": "Đang loại bỏ dữ liệu…",
         "ReportsDataSavedEstimate": "Kích cỡ cơ sở dữ liệu",
         "SaveSettingsBeforePurge": "Bạn đã thay đổi thiết lập việc xóa dữ liệu. Vui lòng lưu chúng trước khi bắt đầu loại bỏ.",
@@ -2404,13 +2398,6 @@
         "WidgetGlobalVisitors": "Cấu hình khách truy cập",
         "WidgetGlobalVisitorsDocumentation": "Báo cáo này cho thấy các cấu hình tổng thể phổ biến nhất mà khách truy cập của bạn đã có. Một cấu hình là sự kết hợp của một hệ điều hành, một loại trình duyệt và độ phân giải màn hình.",
         "WidgetResolutions": "Độ phân giải màn hình"
-    },
-    "SEO": {
-        "Bing_IndexedPages": "Các trang được lập chỉ mục Bing",
-        "DomainAge": "Tuổi tên miền",
-        "Rank": "Xếp hạng",
-        "SEORankingsFor": "Xếp hạng SEO cho %s",
-        "SeoRankings": "Xếp hạng SEO"
     },
     "ScheduledReports": {
         "AggregateReportsFormat": "Tùy chọn hiển thị",
@@ -2579,7 +2566,6 @@
         "Engagement": "Tham gia"
     },
     "Transitions": {
-        "BouncesInline": "%s bị trả lại",
         "DirectEntries": "Các mục trực tiếp",
         "ErrorBack": "Quay trở lại hành động trước đó",
         "ExitsInline": "%s thoát",
@@ -2601,8 +2587,7 @@
         "ToFollowingSiteSearches": "Các tìm kiếm nội bộ",
         "ToFollowingSiteSearchesInline": "%s Các tìm kiếm nội bộ",
         "TransitionsSubcategoryHelp2": "Xem chi tiết hơn",
-        "XOfAllPageviews": "%s của tất cả các lượt xem của trang này",
-        "XOutOfYVisits": "%1$s (trong số %2$s)"
+        "XOfAllPageviews": "%s của tất cả các lượt xem của trang này"
     },
     "TwoFactorAuth": {
         "TwoFAShort": "2FA"
@@ -2668,7 +2653,8 @@
     "UserLanguage": {
         "BrowserLanguage": "Ngôn ngữ trình duyệt",
         "LanguageCode": "Mã ngôn ngữ",
-        "PluginDescription": "Các báo cáo ngôn ngữ được sử dụng bởi trình duyệt người dùng của bạn."
+        "PluginDescription": "Các báo cáo ngôn ngữ được sử dụng bởi trình duyệt người dùng của bạn.",
+        "getLanguageDocumentation": "Hiển thị ngôn ngữ mà trình duyệt của khách truy cập đang sử dụng. (ví dụ: \"Tiếng Pháp\")"
     },
     "UsersManager": {
         "2FA": "2FA",

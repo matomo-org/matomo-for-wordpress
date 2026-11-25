@@ -1,5 +1,6 @@
 <?php
 
+declare (strict_types=1);
 /*
  * This file is part of the Monolog package.
  *
@@ -11,8 +12,11 @@
 namespace Matomo\Dependencies\Monolog\Handler;
 
 use Matomo\Dependencies\Monolog\Formatter\ChromePHPFormatter;
-use Matomo\Dependencies\Monolog\Logger;
+use Matomo\Dependencies\Monolog\Formatter\FormatterInterface;
+use Matomo\Dependencies\Monolog\Level;
 use Matomo\Dependencies\Monolog\Utils;
+use Matomo\Dependencies\Monolog\LogRecord;
+use Matomo\Dependencies\Monolog\JsonSerializableDateTimeImmutable;
 /**
  * Handler sending logs to the ChromePHP extension (http://www.chromephp.com/)
  *
@@ -22,62 +26,59 @@ use Matomo\Dependencies\Monolog\Utils;
  */
 class ChromePHPHandler extends AbstractProcessingHandler
 {
+    use WebRequestRecognizerTrait;
     /**
      * Version of the extension
      */
-    const VERSION = '4.0';
+    protected const VERSION = '4.0';
     /**
      * Header name
      */
-    const HEADER_NAME = 'X-ChromeLogger-Data';
+    protected const HEADER_NAME = 'X-ChromeLogger-Data';
     /**
      * Regular expression to detect supported browsers (matches any Chrome, or Firefox 43+)
      */
-    const USER_AGENT_REGEX = '{\\b(?:Chrome/\\d+(?:\\.\\d+)*|HeadlessChrome|Firefox/(?:4[3-9]|[5-9]\\d|\\d{3,})(?:\\.\\d)*)\\b}';
-    protected static $initialized = \false;
+    protected const USER_AGENT_REGEX = '{\\b(?:Chrome/\\d+(?:\\.\\d+)*|HeadlessChrome|Firefox/(?:4[3-9]|[5-9]\\d|\\d{3,})(?:\\.\\d)*)\\b}';
+    protected static bool $initialized = \false;
     /**
      * Tracks whether we sent too much data
      *
      * Chrome limits the headers to 4KB, so when we sent 3KB we stop sending
-     *
-     * @var bool
      */
-    protected static $overflowed = \false;
-    protected static $json = array('version' => self::VERSION, 'columns' => array('label', 'log', 'backtrace', 'type'), 'rows' => array());
-    protected static $sendHeaders = \true;
-    /**
-     * @param int  $level  The minimum logging level at which this handler will be triggered
-     * @param bool $bubble Whether the messages that are handled can bubble up the stack or not
-     */
-    public function __construct($level = Logger::DEBUG, $bubble = \true)
+    protected static bool $overflowed = \false;
+    /** @var mixed[] */
+    protected static array $json = ['version' => self::VERSION, 'columns' => ['label', 'log', 'backtrace', 'type'], 'rows' => []];
+    protected static bool $sendHeaders = \true;
+    public function __construct(int|string|Level $level = Level::Debug, bool $bubble = \true)
     {
         parent::__construct($level, $bubble);
-        if (!function_exists('json_encode')) {
-            throw new \RuntimeException('PHP\'s json extension is required to use Monolog\'s ChromePHPHandler');
-        }
     }
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
-    public function handleBatch(array $records)
+    public function handleBatch(array $records) : void
     {
-        $messages = array();
+        if (!$this->isWebRequest()) {
+            return;
+        }
+        $messages = [];
         foreach ($records as $record) {
-            if ($record['level'] < $this->level) {
+            if ($record->level < $this->level) {
                 continue;
             }
-            $messages[] = $this->processRecord($record);
+            $message = $this->processRecord($record);
+            $messages[] = $message;
         }
-        if (!empty($messages)) {
+        if (\count($messages) > 0) {
             $messages = $this->getFormatter()->formatBatch($messages);
             self::$json['rows'] = array_merge(self::$json['rows'], $messages);
             $this->send();
         }
     }
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    protected function getDefaultFormatter()
+    protected function getDefaultFormatter() : FormatterInterface
     {
         return new ChromePHPFormatter();
     }
@@ -86,11 +87,13 @@ class ChromePHPHandler extends AbstractProcessingHandler
      *
      * @see sendHeader()
      * @see send()
-     * @param array $record
      */
-    protected function write(array $record)
+    protected function write(LogRecord $record) : void
     {
-        self::$json['rows'][] = $record['formatted'];
+        if (!$this->isWebRequest()) {
+            return;
+        }
+        self::$json['rows'][] = $record->formatted;
         $this->send();
     }
     /**
@@ -98,7 +101,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
      *
      * @see sendHeader()
      */
-    protected function send()
+    protected function send() : void
     {
         if (self::$overflowed || !self::$sendHeaders) {
             return;
@@ -109,28 +112,25 @@ class ChromePHPHandler extends AbstractProcessingHandler
             if (!self::$sendHeaders) {
                 return;
             }
-            self::$json['request_uri'] = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
+            self::$json['request_uri'] = $_SERVER['REQUEST_URI'] ?? '';
         }
-        $json = Utils::jsonEncode(self::$json, null, \true);
-        $data = base64_encode(utf8_encode($json));
-        if (strlen($data) > 3 * 1024) {
+        $json = Utils::jsonEncode(self::$json, Utils::DEFAULT_JSON_FLAGS & ~\JSON_UNESCAPED_UNICODE, \true);
+        $data = base64_encode($json);
+        if (\strlen($data) > 3 * 1024) {
             self::$overflowed = \true;
-            $record = array('message' => 'Incomplete logs, chrome header size limit reached', 'context' => array(), 'level' => Logger::WARNING, 'level_name' => Logger::getLevelName(Logger::WARNING), 'channel' => 'monolog', 'datetime' => new \DateTime(), 'extra' => array());
-            self::$json['rows'][count(self::$json['rows']) - 1] = $this->getFormatter()->format($record);
-            $json = Utils::jsonEncode(self::$json, null, \true);
-            $data = base64_encode(utf8_encode($json));
+            $record = new LogRecord(message: 'Incomplete logs, chrome header size limit reached', level: Level::Warning, channel: 'monolog', datetime: new JsonSerializableDateTimeImmutable(\true));
+            self::$json['rows'][\count(self::$json['rows']) - 1] = $this->getFormatter()->format($record);
+            $json = Utils::jsonEncode(self::$json, Utils::DEFAULT_JSON_FLAGS & ~\JSON_UNESCAPED_UNICODE, \true);
+            $data = base64_encode($json);
         }
         if (trim($data) !== '') {
-            $this->sendHeader(self::HEADER_NAME, $data);
+            $this->sendHeader(static::HEADER_NAME, $data);
         }
     }
     /**
      * Send header string to the client
-     *
-     * @param string $header
-     * @param string $content
      */
-    protected function sendHeader($header, $content)
+    protected function sendHeader(string $header, string $content) : void
     {
         if (!headers_sent() && self::$sendHeaders) {
             header(sprintf('%s: %s', $header, $content));
@@ -138,34 +138,12 @@ class ChromePHPHandler extends AbstractProcessingHandler
     }
     /**
      * Verifies if the headers are accepted by the current user agent
-     *
-     * @return bool
      */
-    protected function headersAccepted()
+    protected function headersAccepted() : bool
     {
-        if (empty($_SERVER['HTTP_USER_AGENT'])) {
+        if (!isset($_SERVER['HTTP_USER_AGENT'])) {
             return \false;
         }
-        return preg_match(self::USER_AGENT_REGEX, $_SERVER['HTTP_USER_AGENT']);
-    }
-    /**
-     * BC getter for the sendHeaders property that has been made static
-     */
-    public function __get($property)
-    {
-        if ('sendHeaders' !== $property) {
-            throw new \InvalidArgumentException('Undefined property ' . $property);
-        }
-        return static::$sendHeaders;
-    }
-    /**
-     * BC setter for the sendHeaders property that has been made static
-     */
-    public function __set($property, $value)
-    {
-        if ('sendHeaders' !== $property) {
-            throw new \InvalidArgumentException('Undefined property ' . $property);
-        }
-        static::$sendHeaders = $value;
+        return preg_match(static::USER_AGENT_REGEX, $_SERVER['HTTP_USER_AGENT']) === 1;
     }
 }

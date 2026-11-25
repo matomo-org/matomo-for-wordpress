@@ -23,4 +23,9 @@ class SameasTest extends TestExpression
     {
         $compiler->raw('(')->subcompile($this->getNode('node'))->raw(' === ')->subcompile($this->getNode('arguments')->getNode('0'))->raw(')');
     }
+    public function getStringCoercedChildNames() : array
+    {
+        // `===` is strict, no coercion
+        return [];
+    }
 }

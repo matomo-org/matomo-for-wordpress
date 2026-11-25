@@ -17,24 +17,18 @@ use Piwik\Plugin\Manager;
  */
 class ContainerFactory
 {
-    /**
-     * @var PluginList
-     */
-    private $pluginList;
-    /**
-     * @var GlobalSettingsProvider
-     */
-    private $settings;
+    private PluginList $pluginList;
+    private GlobalSettingsProvider $settings;
     /**
      * Optional environment configs to load.
      *
      * @var string[]
      */
-    private $environments;
+    private array $environments;
     /**
      * @var array[]
      */
-    private $definitions;
+    private array $definitions;
     /**
      * @param string[] $environments Optional environment configs to load.
      * @param array[] $definitions
@@ -53,7 +47,6 @@ class ContainerFactory
     public function create() : \Piwik\Container\Container
     {
         $builder = new ContainerBuilder(\Piwik\Container\Container::class);
-        $builder->useAnnotations(\false);
         // INI config
         $builder->addDefinitions(new \Piwik\Container\IniConfigDefinitionSource($this->settings));
         // Global config

@@ -20,8 +20,8 @@ class OutputFormatterStyleStack implements ResetInterface
     /**
      * @var OutputFormatterStyleInterface[]
      */
-    private $styles;
-    private $emptyStyle;
+    private array $styles = [];
+    private OutputFormatterStyleInterface $emptyStyle;
     public function __construct(?OutputFormatterStyleInterface $emptyStyle = null)
     {
         $this->emptyStyle = $emptyStyle ?? new OutputFormatterStyle();
@@ -29,6 +29,8 @@ class OutputFormatterStyleStack implements ResetInterface
     }
     /**
      * Resets stack (ie. empty internal arrays).
+     *
+     * @return void
      */
     public function reset()
     {
@@ -36,6 +38,8 @@ class OutputFormatterStyleStack implements ResetInterface
     }
     /**
      * Pushes a style in the stack.
+     *
+     * @return void
      */
     public function push(OutputFormatterStyleInterface $style)
     {
@@ -44,13 +48,11 @@ class OutputFormatterStyleStack implements ResetInterface
     /**
      * Pops a style from the stack.
      *
-     * @return OutputFormatterStyleInterface
-     *
      * @throws InvalidArgumentException When style tags incorrectly nested
      */
-    public function pop(?OutputFormatterStyleInterface $style = null)
+    public function pop(?OutputFormatterStyleInterface $style = null) : OutputFormatterStyleInterface
     {
-        if (empty($this->styles)) {
+        if (!$this->styles) {
             return $this->emptyStyle;
         }
         if (null === $style) {
@@ -66,12 +68,10 @@ class OutputFormatterStyleStack implements ResetInterface
     }
     /**
      * Computes current style with stacks top codes.
-     *
-     * @return OutputFormatterStyle
      */
-    public function getCurrent()
+    public function getCurrent() : OutputFormatterStyleInterface
     {
-        if (empty($this->styles)) {
+        if (!$this->styles) {
             return $this->emptyStyle;
         }
         return $this->styles[\count($this->styles) - 1];
@@ -79,15 +79,12 @@ class OutputFormatterStyleStack implements ResetInterface
     /**
      * @return $this
      */
-    public function setEmptyStyle(OutputFormatterStyleInterface $emptyStyle)
+    public function setEmptyStyle(OutputFormatterStyleInterface $emptyStyle) : static
     {
         $this->emptyStyle = $emptyStyle;
         return $this;
     }
-    /**
-     * @return OutputFormatterStyleInterface
-     */
-    public function getEmptyStyle()
+    public function getEmptyStyle() : OutputFormatterStyleInterface
     {
         return $this->emptyStyle;
     }

@@ -30,13 +30,14 @@ class ResponseCacheStrategy implements ResponseCacheStrategyInterface
      * Cache-Control headers that are sent to the final response if they appear in ALL of the responses.
      */
     private const INHERIT_DIRECTIVES = ['public', 'immutable'];
-    private $embeddedResponses = 0;
-    private $isNotCacheableResponseEmbedded = \false;
-    private $age = 0;
-    private $flagDirectives = ['no-cache' => null, 'no-store' => null, 'no-transform' => null, 'must-revalidate' => null, 'proxy-revalidate' => null, 'public' => null, 'private' => null, 'immutable' => null];
-    private $ageDirectives = ['max-age' => null, 's-maxage' => null, 'expires' => \false];
+    private int $embeddedResponses = 0;
+    private bool $isNotCacheableResponseEmbedded = \false;
+    private int $age = 0;
+    private \DateTimeInterface|false|null $lastModified = null;
+    private array $flagDirectives = ['no-cache' => null, 'no-store' => null, 'no-transform' => null, 'must-revalidate' => null, 'proxy-revalidate' => null, 'public' => null, 'private' => null, 'immutable' => null];
+    private array $ageDirectives = ['max-age' => null, 's-maxage' => null, 'expires' => \false];
     /**
-     * {@inheritdoc}
+     * @return void
      */
     public function add(Response $response)
     {
@@ -74,9 +75,13 @@ class ResponseCacheStrategy implements ResponseCacheStrategyInterface
         if (null !== $expires) {
             $this->ageDirectives['expires'] = \true;
         }
+        if (\false !== $this->lastModified) {
+            $lastModified = $response->getLastModified();
+            $this->lastModified = $lastModified ? max($this->lastModified, $lastModified) : \false;
+        }
     }
     /**
-     * {@inheritdoc}
+     * @return void
      */
     public function update(Response $response)
     {
@@ -84,14 +89,12 @@ class ResponseCacheStrategy implements ResponseCacheStrategyInterface
         if (0 === $this->embeddedResponses) {
             return;
         }
-        // Remove validation related headers of the final response,
-        // because some of the response content comes from at least
-        // one embedded response (which likely has a different caching strategy).
+        // Remove Etag since it cannot be merged from embedded responses.
         $response->setEtag(null);
-        $response->setLastModified(null);
         $this->add($response);
         $response->headers->set('Age', $this->age);
         if ($this->isNotCacheableResponseEmbedded) {
+            $response->setLastModified(null);
             if ($this->flagDirectives['no-store']) {
                 $response->headers->set('Cache-Control', 'no-cache, no-store, must-revalidate');
             } else {
@@ -99,6 +102,7 @@ class ResponseCacheStrategy implements ResponseCacheStrategyInterface
             }
             return;
         }
+        $response->setLastModified($this->lastModified ?: null);
         $flags = array_filter($this->flagDirectives);
         if (isset($flags['must-revalidate'])) {
             $flags['no-cache'] = \true;
@@ -130,12 +134,12 @@ class ResponseCacheStrategy implements ResponseCacheStrategyInterface
     {
         // RFC2616: A response received with a status code of 200, 203, 300, 301 or 410
         // MAY be stored by a cache […] unless a cache-control directive prohibits caching.
-        if ($response->headers->hasCacheControlDirective('no-cache') || $response->headers->getCacheControlDirective('no-store')) {
+        if ($response->headers->hasCacheControlDirective('no-cache') || $response->headers->hasCacheControlDirective('no-store')) {
             return \true;
         }
-        // Last-Modified and Etag headers cannot be merged, they render the response uncacheable
+        // Etag headers cannot be merged, they render the response uncacheable
         // by default (except if the response also has max-age etc.).
-        if (\in_array($response->getStatusCode(), [200, 203, 300, 301, 410]) && null === $response->getLastModified() && null === $response->getEtag()) {
+        if (null === $response->getEtag() && \in_array($response->getStatusCode(), [200, 203, 300, 301, 410])) {
             return \false;
         }
         // RFC2616: A response received with any other status code (e.g. status codes 302 and 307)

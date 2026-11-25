@@ -69,6 +69,7 @@ class Variable extends \Piwik\Plugins\TagManager\Model\BaseModel
         $this->variablesProvider->checkIsValidVariable($type);
         $createdDate = $this->getCurrentDateTime();
         $parameters = $this->formatParameters($type, $parameters);
+        $this->checkWriteCapabilityForContainerVersion($idSite, $idContainerVersion);
         return $this->dao->createVariable($idSite, $idContainerVersion, $type, $name, $parameters, $defaultValue, $lookupTable, $createdDate, $description);
     }
     public function updateContainerVariable($idSite, $idContainerVersion, $idVariable, $name, $parameters, $defaultValue, $lookupTable, $description = '')
@@ -119,15 +120,26 @@ class Variable extends \Piwik\Plugins\TagManager\Model\BaseModel
         $triggers = $this->trigger->getContainerTriggers($idSite, $idContainerVersion);
         $variables = $this->getContainerVariables($idSite, $idContainerVersion);
         foreach ($tags as $tag) {
-            foreach ($tag['typeMetadata']['parameters'] as $parameter) {
+            if (empty($tag['typeMetadata']) && in_array($varName, $this->listVariableNamesInParameters($tag), \true)) {
+                $tagRef = new TagReference($tag['idtag'], $tag['name']);
+                $references[] = $tagRef->toArray();
+                continue;
+            }
+            foreach ($tag['typeMetadata']['parameters'] ?? [] as $parameter) {
                 if ($this->isUsingParameterTheVariable($parameter, $varName)) {
                     $tagRef = new TagReference($tag['idtag'], $tag['name']);
                     $references[] = $tagRef->toArray();
+                    continue 2;
                 }
             }
         }
         foreach ($triggers as $trigger) {
-            foreach ($trigger['typeMetadata']['parameters'] as $parameter) {
+            if (empty($trigger['typeMetadata']) && in_array($varName, $this->listVariableNamesInParameters($trigger), \true)) {
+                $triggerRef = new TriggerReference($trigger['idtrigger'], $trigger['name']);
+                $references[] = $triggerRef->toArray();
+                continue;
+            }
+            foreach ($trigger['typeMetadata']['parameters'] ?? [] as $parameter) {
                 if ($this->isUsingParameterTheVariable($parameter, $varName)) {
                     $triggerRef = new TriggerReference($trigger['idtrigger'], $trigger['name']);
                     $references[] = $triggerRef->toArray();
@@ -139,6 +151,7 @@ class Variable extends \Piwik\Plugins\TagManager\Model\BaseModel
                 if ($condition['actual'] === $varName) {
                     $triggerRef = new TriggerReference($trigger['idtrigger'], $trigger['name']);
                     $references[] = $triggerRef->toArray();
+                    break;
                 }
             }
         }
@@ -212,7 +225,9 @@ class Variable extends \Piwik\Plugins\TagManager\Model\BaseModel
                     $trigger['conditions'][$index] = $condition;
                 }
             }
-            if ($parameters || $found) {
+            if (($parameters || $found) && empty($trigger['typeMetadata'])) {
+                $this->trigger->updateReferencesOfUnavailableTrigger($idSite, $idContainerVersion, $trigger['idtrigger'], $parameters ?: $trigger['parameters'], $trigger['conditions']);
+            } elseif ($parameters || $found) {
                 $this->trigger->updateContainerTrigger($idSite, $idContainerVersion, $trigger['idtrigger'], $trigger['name'], $parameters, $trigger['conditions']);
             }
         }
@@ -253,16 +268,43 @@ class Variable extends \Piwik\Plugins\TagManager\Model\BaseModel
         $newVarNameTemplate = $this->convertVariableNameToTemplateVar($newVarName);
         $found = \false;
         $parameters = $entity['parameters'];
-        foreach ($entity['typeMetadata']['parameters'] as $parameter) {
-            $paramName = $parameter['name'];
-            if ($this->canParameterContainVariables($parameter, $entity['type']) && isset($parameters[$paramName]) && is_string($parameters[$paramName]) && strpos($parameters[$paramName], $oldVarNameTemplate) !== \false) {
+        foreach ($this->getParameterValuesThatCanContainVariables($entity) as $paramName => $value) {
+            if (strpos($value, $oldVarNameTemplate) !== \false) {
                 $found = \true;
-                $parameters[$paramName] = str_replace($oldVarNameTemplate, $newVarNameTemplate, $parameters[$paramName]);
+                $parameters[$paramName] = str_replace($oldVarNameTemplate, $newVarNameTemplate, $value);
             }
         }
         if ($found) {
             return $parameters;
         }
+    }
+    /**
+     * Returns the string parameter values of the Tag/Trigger/Variable that can contain variables. Without the type
+     * metadata, eg when the plugin providing the type is no longer active, we cannot tell which parameters accept
+     * variables, so all string values are returned to keep the references.
+     *
+     * @param array $entity The array of the Tag/Trigger/Variable built when loading the entry from the database
+     * @return array<string, string> Parameter values by parameter name
+     */
+    private function getParameterValuesThatCanContainVariables(array $entity) : array
+    {
+        $parameters = $entity['parameters'] ?? [];
+        $values = [];
+        if (empty($entity['typeMetadata'])) {
+            foreach ($parameters as $paramName => $value) {
+                if (is_string($value)) {
+                    $values[$paramName] = $value;
+                }
+            }
+            return $values;
+        }
+        foreach ($entity['typeMetadata']['parameters'] as $parameter) {
+            $paramName = $parameter['name'];
+            if ($this->canParameterContainVariables($parameter, $entity['type']) && isset($parameters[$paramName]) && is_string($parameters[$paramName])) {
+                $values[$paramName] = $parameters[$paramName];
+            }
+        }
+        return $values;
     }
     private function canParameterContainVariables(array $parameterMetadata, string $entityType)
     {
@@ -278,13 +320,11 @@ class Variable extends \Piwik\Plugins\TagManager\Model\BaseModel
     public function listVariableNamesInParameters(array $entity) : array
     {
         $variables = [];
-        $parameters = $entity['parameters'];
-        foreach ($entity['typeMetadata']['parameters'] as $parameter) {
-            $paramName = $parameter['name'];
-            if ($this->canParameterContainVariables($parameter, $entity['type']) && isset($parameters[$paramName]) && is_string($parameters[$paramName]) && strpos($parameters[$paramName], '{{') !== \false) {
+        foreach ($this->getParameterValuesThatCanContainVariables($entity) as $value) {
+            if (strpos($value, '{{') !== \false) {
                 // Use regex to get the list of all the variable names
                 $matches = [];
-                preg_match_all('/{{.[^}]+}}/', $parameters[$paramName], $matches);
+                preg_match_all('/{{.[^}]+}}/', $value, $matches);
                 $matches = array_unique($matches[0]);
                 $matches = array_map(function ($value) {
                     return trim(str_replace(['{{', '}}'], '', $value));
@@ -308,6 +348,7 @@ class Variable extends \Piwik\Plugins\TagManager\Model\BaseModel
         if (!$skipReferenceCheck && $this->getContainerVariableReferences($idSite, $idContainerVersion, $idVariable)) {
             throw new \Exception(Piwik::translate('TagManager_ErrorDeleteReferencedVariable'));
         }
+        $this->checkWriteCapabilityForContainerVersion($idSite, $idContainerVersion);
         $this->dao->deleteContainerVariable($idSite, $idContainerVersion, $idVariable, $this->getCurrentDateTime());
     }
     public function getContainerVariable($idSite, $idContainerVersion, $idVariable)
@@ -423,7 +464,7 @@ class Variable extends \Piwik\Plugins\TagManager\Model\BaseModel
     {
         $idDestinationSite = $idDestinationSite ?: $idSite;
         $idDestinationVersion = $idContainerVersion;
-        if ($idDestinationSite !== null && !empty($idDestinationContainer)) {
+        if (!empty($idDestinationContainer)) {
             $idDestinationVersion = $this->getDraftContainerVersion($idDestinationSite, $idDestinationContainer);
             $this->checkWriteCapabilityForContainerVersion($idDestinationSite, $idDestinationVersion, $idDestinationContainer);
         } else {
@@ -497,6 +538,7 @@ class Variable extends \Piwik\Plugins\TagManager\Model\BaseModel
         if (!isset($columns['updated_date'])) {
             $columns['updated_date'] = $this->getCurrentDateTime();
         }
+        $this->checkWriteCapabilityForContainerVersion($idSite, $idContainerVersion);
         $this->dao->updateVariableColumns($idSite, $idContainerVersion, $idVariable, $columns);
     }
     private function enrichVariables($variables)

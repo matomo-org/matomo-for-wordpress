@@ -12,6 +12,7 @@ namespace Matomo\Dependencies\Symfony\Bridge\Monolog\Formatter;
 
 use Matomo\Dependencies\Monolog\Formatter\FormatterInterface;
 use Matomo\Dependencies\Monolog\Logger;
+use Matomo\Dependencies\Monolog\LogRecord;
 use Matomo\Dependencies\Symfony\Component\Console\Formatter\OutputFormatter;
 use Matomo\Dependencies\Symfony\Component\VarDumper\Cloner\Data;
 use Matomo\Dependencies\Symfony\Component\VarDumper\Cloner\Stub;
@@ -22,16 +23,22 @@ use Matomo\Dependencies\Symfony\Component\VarDumper\Dumper\CliDumper;
  *
  * @author Tobias Schultze <http://tobion.de>
  * @author Grégoire Pineau <lyrixx@lyrixx.info>
+ *
+ * @final since Symfony 6.1
  */
 class ConsoleFormatter implements FormatterInterface
 {
+    use CompatibilityFormatter;
     public const SIMPLE_FORMAT = "%datetime% %start_tag%%level_name%%end_tag% <comment>[%channel%]</> %message%%context%%extra%\n";
     public const SIMPLE_DATE = 'H:i:s';
     private const LEVEL_COLOR_MAP = [Logger::DEBUG => 'fg=white', Logger::INFO => 'fg=green', Logger::NOTICE => 'fg=blue', Logger::WARNING => 'fg=cyan', Logger::ERROR => 'fg=yellow', Logger::CRITICAL => 'fg=red', Logger::ALERT => 'fg=red', Logger::EMERGENCY => 'fg=white;bg=red'];
-    private $options;
-    private $cloner;
+    private array $options;
+    private VarCloner $cloner;
+    /**
+     * @var resource|null
+     */
     private $outputBuffer;
-    private $dumper;
+    private CliDumper $dumper;
     /**
      * Available options:
      *   * format: The format of the outputted log string. The following placeholders are supported: %datetime%, %start_tag%, %level_name%, %end_tag%, %channel%, %message%, %context%, %extra%;
@@ -44,53 +51,46 @@ class ConsoleFormatter implements FormatterInterface
         $this->options = array_replace(['format' => self::SIMPLE_FORMAT, 'date_format' => self::SIMPLE_DATE, 'colors' => \true, 'multiline' => \false, 'level_name_format' => '%-9s', 'ignore_empty_context_and_extra' => \true], $options);
         if (class_exists(VarCloner::class)) {
             $this->cloner = new VarCloner();
-            $this->cloner->addCasters(['*' => [$this, 'castObject']]);
+            $this->cloner->addCasters(['*' => $this->castObject(...)]);
             $this->outputBuffer = fopen('php://memory', 'r+');
             if ($this->options['multiline']) {
                 $output = $this->outputBuffer;
             } else {
-                $output = [$this, 'echoLine'];
+                $output = $this->echoLine(...);
             }
             $this->dumper = new CliDumper($output, null, CliDumper::DUMP_LIGHT_ARRAY | CliDumper::DUMP_COMMA_SEPARATOR);
         }
     }
-    /**
-     * {@inheritdoc}
-     *
-     * @return mixed
-     */
-    public function formatBatch(array $records)
+    public function formatBatch(array $records) : mixed
     {
         foreach ($records as $key => $record) {
             $records[$key] = $this->format($record);
         }
         return $records;
     }
-    /**
-     * {@inheritdoc}
-     *
-     * @return mixed
-     */
-    public function format(array $record)
+    private function doFormat(array|LogRecord $record) : mixed
     {
+        if ($record instanceof LogRecord) {
+            $record = $record->toArray();
+        }
         $record = $this->replacePlaceHolder($record);
         if (!$this->options['ignore_empty_context_and_extra'] || !empty($record['context'])) {
-            $context = ($this->options['multiline'] ? "\n" : ' ') . $this->dumpData($record['context']);
+            $context = ($this->options['multiline'] ? "\n" : ' ') . OutputFormatter::escape($this->dumpData($record['context']));
         } else {
             $context = '';
         }
         if (!$this->options['ignore_empty_context_and_extra'] || !empty($record['extra'])) {
-            $extra = ($this->options['multiline'] ? "\n" : ' ') . $this->dumpData($record['extra']);
+            $extra = ($this->options['multiline'] ? "\n" : ' ') . OutputFormatter::escape($this->dumpData($record['extra']));
         } else {
             $extra = '';
         }
-        $formatted = strtr($this->options['format'], ['%datetime%' => $record['datetime'] instanceof \DateTimeInterface ? $record['datetime']->format($this->options['date_format']) : $record['datetime'], '%start_tag%' => sprintf('<%s>', self::LEVEL_COLOR_MAP[$record['level']]), '%level_name%' => sprintf($this->options['level_name_format'], $record['level_name']), '%end_tag%' => '</>', '%channel%' => $record['channel'], '%message%' => $this->replacePlaceHolder($record)['message'], '%context%' => $context, '%extra%' => $extra]);
+        $formatted = strtr($this->options['format'], ['%datetime%' => $record['datetime'] instanceof \DateTimeInterface ? $record['datetime']->format($this->options['date_format']) : self::escape($record['datetime']), '%start_tag%' => \sprintf('<%s>', self::LEVEL_COLOR_MAP[$record['level']]), '%level_name%' => \sprintf($this->options['level_name_format'], self::escape($record['level_name'])), '%end_tag%' => '</>', '%channel%' => self::escape($record['channel']), '%message%' => $record['message'], '%context%' => $context, '%extra%' => $extra]);
         return $formatted;
     }
     /**
      * @internal
      */
-    public function echoLine(string $line, int $depth, string $indentPad)
+    public function echoLine(string $line, int $depth, string $indentPad) : void
     {
         if (-1 !== $depth) {
             fwrite($this->outputBuffer, $line);
@@ -99,7 +99,7 @@ class ConsoleFormatter implements FormatterInterface
     /**
      * @internal
      */
-    public function castObject($v, array $a, Stub $s, bool $isNested) : array
+    public function castObject(mixed $v, array $a, Stub $s, bool $isNested) : array
     {
         if ($this->options['multiline']) {
             return $a;
@@ -112,7 +112,7 @@ class ConsoleFormatter implements FormatterInterface
     }
     private function replacePlaceHolder(array $record) : array
     {
-        $message = $record['message'];
+        $message = $record['message'] = self::escape($record['message']);
         if (!str_contains($message, '{')) {
             return $record;
         }
@@ -122,14 +122,14 @@ class ConsoleFormatter implements FormatterInterface
             // Remove quotes added by the dumper around string.
             $v = trim($this->dumpData($v, \false), '"');
             $v = OutputFormatter::escape($v);
-            $replacements['{' . $k . '}'] = sprintf('<comment>%s</>', $v);
+            $replacements['{' . $k . '}'] = \sprintf('<comment>%s</>', $v);
         }
         $record['message'] = strtr($message, $replacements);
         return $record;
     }
-    private function dumpData($data, ?bool $colors = null) : string
+    private function dumpData(mixed $data, ?bool $colors = null) : string
     {
-        if (null === $this->dumper) {
+        if (!isset($this->dumper)) {
             return '';
         }
         if (null === $colors) {
@@ -146,5 +146,9 @@ class ConsoleFormatter implements FormatterInterface
         rewind($this->outputBuffer);
         ftruncate($this->outputBuffer, 0);
         return rtrim($dump);
+    }
+    private static function escape(string $value) : string
+    {
+        return OutputFormatter::escape(preg_replace('/[\\x00-\\x08\\x0B-\\x1F\\x7F]|\\xC2[\\x80-\\x9F]/', '', $value));
     }
 }

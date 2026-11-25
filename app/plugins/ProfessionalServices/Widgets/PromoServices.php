@@ -15,14 +15,8 @@ use Piwik\View;
 use Piwik\Widget\WidgetConfig;
 class PromoServices extends \Piwik\Widget\Widget
 {
-    /**
-     * @var Advertising
-     */
-    private $advertising;
-    /**
-     * @var Promo
-     */
-    private $promo;
+    private Advertising $advertising;
+    private Promo $promo;
     public function __construct(Advertising $advertising, Promo $promo)
     {
         $this->advertising = $advertising;

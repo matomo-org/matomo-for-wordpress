@@ -11,6 +11,7 @@ namespace Piwik\Plugins\AIProviders;
 
 use Piwik\Piwik;
 use Piwik\Plugin\API as PluginAPI;
+use Piwik\Plugins\AIProviders\Model\AIProcessingSettings;
 use Piwik\Plugins\AIProviders\Model\Configuration;
 use Piwik\Plugins\AIProviders\Provider\AIProvider;
 /**
@@ -32,10 +33,15 @@ class API extends PluginAPI
      * @var AIProviderService
      */
     private $aiProviderService;
-    public function __construct(Configuration $configuration, \Piwik\Plugins\AIProviders\AIProviderService $aiProviderService)
+    /**
+     * @var AIProcessingSettings
+     */
+    private $aiProcessingSettings;
+    public function __construct(Configuration $configuration, \Piwik\Plugins\AIProviders\AIProviderService $aiProviderService, AIProcessingSettings $aiProcessingSettings)
     {
         $this->configuration = $configuration;
         $this->aiProviderService = $aiProviderService;
+        $this->aiProcessingSettings = $aiProcessingSettings;
     }
     /**
      * Returns AI provider settings for the administration UI.
@@ -70,9 +76,8 @@ class API extends PluginAPI
      *                                      with connection settings.
      * @return array<string, mixed> Updated provider metadata and masked configuration values.
      */
-    public function saveSettings(string $defaultProviderId = '', string $defaultCapabilityLevel = '',
-#[\SensitiveParameter]
-string $providerConfigurations = '{}') : array
+    public function saveSettings(string $defaultProviderId = '', string $defaultCapabilityLevel = '', #[\SensitiveParameter]
+        string $providerConfigurations = '{}') : array
     {
         Piwik::checkUserHasSuperUserAccess();
         $providers = \Piwik\Plugins\AIProviders\AIProviders::getAvailableProviders();
@@ -90,9 +95,8 @@ string $providerConfigurations = '{}') : array
      *         Tested provider's metadata and the models it can serve (empty for
      *         providers that do not expose a model listing).
      */
-    public function testConnection(string $providerId,
-#[\SensitiveParameter]
-string $providerConfiguration = '{}') : array
+    public function testConnection(string $providerId, #[\SensitiveParameter]
+        string $providerConfiguration = '{}') : array
     {
         Piwik::checkUserHasSuperUserAccess();
         $providers = \Piwik\Plugins\AIProviders\AIProviders::getAvailableProviders();
@@ -116,6 +120,34 @@ string $providerConfiguration = '{}') : array
         return $this->configuration->getSettings($providers);
     }
     /**
+     * Returns which data categories AI features may send to an AI provider,
+     * and the features that use each category.
+     *
+     * @return list<array{id: string, enabled: bool, usedBy: list<array{name: string, disclosureUrl: string}>}>
+     *         One entry per category, see the `AIProcessingSettings::CATEGORY_*` constants.
+     */
+    public function getAIProcessingSettings() : array
+    {
+        Piwik::checkUserHasSuperUserAccess();
+        $settings = [];
+        foreach ($this->aiProcessingSettings->getFeaturesByCategory() as $category => $features) {
+            $settings[] = ['id' => $category, 'enabled' => $this->aiProcessingSettings->isEnabled($category), 'usedBy' => $features];
+        }
+        return $settings;
+    }
+    /**
+     * Enables the given data categories for AI processing and disables all others.
+     *
+     * @param array<string> $enabledCategories Category IDs to enable.
+     * @return list<array{id: string, enabled: bool, usedBy: list<array{name: string, disclosureUrl: string}>}>
+     */
+    public function setAIProcessingSettings(array $enabledCategories = []) : array
+    {
+        Piwik::checkUserHasSuperUserAccess();
+        $this->aiProcessingSettings->setEnabledCategories($enabledCategories);
+        return $this->getAIProcessingSettings();
+    }
+    /**
      * Resolves a provider for the administration endpoints. Restricted
      * providers (registered as non-selectable by a managed environment) are
      * reported as unknown on purpose, so admin surfaces neither reveal nor
@@ -132,9 +164,8 @@ string $providerConfiguration = '{}') : array
     /**
      * @return array<string, mixed>
      */
-    private function decodeProviderConfiguration(
-#[\SensitiveParameter]
-string $providerConfigurationJson) : array
+    private function decodeProviderConfiguration(#[\SensitiveParameter]
+        string $providerConfigurationJson) : array
     {
         $decoded = json_decode($providerConfigurationJson, \true);
         if (!is_array($decoded)) {

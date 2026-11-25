@@ -9,6 +9,7 @@
 namespace Piwik\Plugins\Monolog\Handler;
 
 use Matomo\Dependencies\Monolog\Handler\AbstractProcessingHandler;
+use Matomo\Dependencies\Monolog\LogRecord;
 use Piwik\Common;
 use Piwik\Db;
 /**
@@ -16,7 +17,7 @@ use Piwik\Db;
  */
 class DatabaseHandler extends AbstractProcessingHandler
 {
-    protected function write(array $record)
+    protected function write(LogRecord $record) : void
     {
         $sql = sprintf('INSERT INTO `%s` (tag, timestamp, level, message) VALUES (?, ?, ?, ?)', Common::prefixTable('logger_message'));
         $queryLog = Db::isQueryLogEnabled();

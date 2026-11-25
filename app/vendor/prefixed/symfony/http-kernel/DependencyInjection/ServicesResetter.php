@@ -10,6 +10,8 @@
  */
 namespace Matomo\Dependencies\Symfony\Component\HttpKernel\DependencyInjection;
 
+use ProxyManager\Proxy\LazyLoadingInterface;
+use Symfony\Component\VarExporter\LazyObjectInterface;
 use Matomo\Dependencies\Symfony\Contracts\Service\ResetInterface;
 /**
  * Resets provided services.
@@ -21,8 +23,8 @@ use Matomo\Dependencies\Symfony\Contracts\Service\ResetInterface;
  */
 class ServicesResetter implements ResetInterface
 {
-    private $resettableServices;
-    private $resetMethods;
+    private \Traversable $resettableServices;
+    private array $resetMethods;
     /**
      * @param \Traversable<string, object>   $resettableServices
      * @param array<string, string|string[]> $resetMethods
@@ -32,15 +34,30 @@ class ServicesResetter implements ResetInterface
         $this->resettableServices = $resettableServices;
         $this->resetMethods = $resetMethods;
     }
-    public function reset()
+    public function reset() : void
     {
+        $throwable = null;
         foreach ($this->resettableServices as $id => $service) {
+            if ($service instanceof LazyObjectInterface && !$service->isLazyObjectInitialized(\true)) {
+                continue;
+            }
+            if ($service instanceof LazyLoadingInterface && !$service->isProxyInitialized()) {
+                continue;
+            }
             foreach ((array) $this->resetMethods[$id] as $resetMethod) {
                 if ('?' === $resetMethod[0] && !method_exists($service, $resetMethod = substr($resetMethod, 1))) {
                     continue;
                 }
-                $service->{$resetMethod}();
+                try {
+                    $service->{$resetMethod}();
+                } catch (\Throwable $e) {
+                    // failing to reset one service should not prevent resetting the remaining ones
+                    $throwable ??= $e;
+                }
             }
+        }
+        if (null !== $throwable) {
+            throw $throwable;
         }
     }
 }

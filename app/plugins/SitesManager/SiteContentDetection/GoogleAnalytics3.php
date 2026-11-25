@@ -23,7 +23,7 @@ class GoogleAnalytics3 extends \Piwik\Plugins\SitesManager\SiteContentDetection\
         if (empty($data)) {
             return \false;
         }
-        if (strpos($data, '(i,s,o,g,r,a,m)') !== \false) {
+        if (str_contains($data, '(i,s,o,g,r,a,m)')) {
             return \true;
         }
         $tests = ["/UA-\\d{5,}-\\d{1,}/", "/google\\-analytics\\.com\\/analytics\\.js/", "/window\\.ga\\s?=\\s?window\\.ga/", "/google[ _\\-]{0,1}analytics/i"];

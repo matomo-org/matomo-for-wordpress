@@ -18,16 +18,10 @@ use Piwik\Url;
 use Piwik\View;
 class InactiveUsersNotificationEmail extends Mail
 {
-    /**
-     * @var UserNotification
-     */
-    private $notification;
-    /** @var string */
-    private $recipient;
-    /** @var array */
-    private $emailData;
-    /** @var Model */
-    private $userModel;
+    private UserNotification $notification;
+    private string $recipient;
+    private array $emailData;
+    private Model $userModel;
     public function __construct(UserNotification $notification, string $recipient, array $emailData)
     {
         parent::__construct();

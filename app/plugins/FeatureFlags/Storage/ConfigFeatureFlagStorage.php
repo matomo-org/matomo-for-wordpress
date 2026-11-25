@@ -17,10 +17,7 @@ class ConfigFeatureFlagStorage implements FeatureFlagStorageInterface
     private const CONFIG_FEATURE_NAME_SUFFIX = '_feature';
     private const CONFIG_FEATURE_ENABLED_VALUE = 'enabled';
     private const CONFIG_FEATURE_DISABLED_VALUE = 'disabled';
-    /**
-     * @var Config
-     */
-    private $config;
+    private Config $config;
     /**
      * @internal
      */

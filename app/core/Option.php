@@ -109,14 +109,8 @@ class Option
         $option->loaded = \false;
         $option->all = array();
     }
-    /**
-     * @var array
-     */
-    private $all = array();
-    /**
-     * @var bool
-     */
-    private $loaded = \false;
+    private array $all = array();
+    private bool $loaded = \false;
     /**
      * Singleton instance
      * @var \Piwik\Option

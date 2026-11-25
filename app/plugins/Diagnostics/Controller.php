@@ -13,10 +13,7 @@ use Piwik\Piwik;
 use Piwik\Plugin\SettingsProvider;
 class Controller extends \Piwik\Plugin\ControllerAdmin
 {
-    /**
-     * @var ConfigReader
-     */
-    private $configReader;
+    private \Piwik\Plugins\Diagnostics\ConfigReader $configReader;
     public function __construct(\Piwik\Plugins\Diagnostics\ConfigReader $configReader)
     {
         $this->configReader = $configReader;

@@ -49,7 +49,7 @@ if ($trace['file']) {
     ?>
         <?php 
     $lineNumber = $trace['line'] ?: 1;
-    $fileLink = $this->getFileLink($trace['file'], $lineNumber);
+    $fileLink = $this->fileLinkFormat->format($trace['file'], $lineNumber);
     $filePath = \strtr(\strip_tags($this->formatFile($trace['file'], $lineNumber)), [' at line ' . $lineNumber => '']);
     $filePathParts = \explode(\DIRECTORY_SEPARATOR, $filePath);
     ?>

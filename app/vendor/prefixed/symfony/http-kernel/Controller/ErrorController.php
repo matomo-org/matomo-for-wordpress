@@ -23,10 +23,10 @@ use Matomo\Dependencies\Symfony\Component\HttpKernel\HttpKernelInterface;
  */
 class ErrorController
 {
-    private $kernel;
-    private $controller;
-    private $errorRenderer;
-    public function __construct(HttpKernelInterface $kernel, $controller, ErrorRendererInterface $errorRenderer)
+    private HttpKernelInterface $kernel;
+    private string|object|array|null $controller;
+    private ErrorRendererInterface $errorRenderer;
+    public function __construct(HttpKernelInterface $kernel, string|object|array|null $controller, ErrorRendererInterface $errorRenderer)
     {
         $this->kernel = $kernel;
         $this->controller = $controller;

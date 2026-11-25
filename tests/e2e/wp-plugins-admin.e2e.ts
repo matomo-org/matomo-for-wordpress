@@ -29,8 +29,25 @@ describe('WordPress Customizations > Plugins Admin', () => {
     await PluginsAdmin.hideNotifications();
     await PluginsAdmin.hidePluginFilters();
     await PluginsAdmin.hidePluginVersion();
+
+    // The total includes hidden, unrelated plugins and changes with the test environment.
+    // Ignore only these two counters while comparing the Matomo row without any tolerance.
+    const pluginCountRegions = await browser.execute(() => {
+      return Array.from(document.querySelectorAll('.tablenav .displaying-num'), (element) => {
+        const rect = element.getBoundingClientRect();
+        return {
+          x: Math.floor(rect.left + window.scrollX) - 2,
+          y: Math.floor(rect.top + window.scrollY) - 2,
+          width: Math.ceil(rect.width) + 4,
+          height: Math.ceil(rect.height) + 4,
+        };
+      });
+    });
     expect(
-      await browser.checkFullPageScreen(`wp-customizations.plugins-admin.data-deletion.${process.env.PHP_VERSION}${trunkSuffix}`)
+      await browser.checkFullPageScreen(
+        `wp-customizations.plugins-admin.data-deletion.${process.env.PHP_VERSION}${trunkSuffix}`,
+        { blockOut: pluginCountRegions }
+      )
     ).toEqual(0);
   });
 

@@ -15,7 +15,7 @@ namespace Matomo\Dependencies\Symfony\Component\Console\Helper;
  */
 class TableRows implements \IteratorAggregate
 {
-    private $generator;
+    private \Closure $generator;
     public function __construct(\Closure $generator)
     {
         $this->generator = $generator;

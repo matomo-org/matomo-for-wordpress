@@ -21,10 +21,7 @@ use Piwik\SettingsServer;
  */
 class SegmentQueryDecorator extends LogQueryBuilder
 {
-    /**
-     * @var StoredSegmentService
-     */
-    private $storedSegmentService;
+    private StoredSegmentService $storedSegmentService;
     public function __construct(StoredSegmentService $storedSegmentService, LogTablesProvider $logTablesProvider)
     {
         $this->storedSegmentService = $storedSegmentService;
@@ -42,7 +39,7 @@ class SegmentQueryDecorator extends LogQueryBuilder
             $prefixParts[] = "idSegments = [" . implode(', ', $idSegments) . "]";
         }
         $select = 'SELECT';
-        if (!empty($prefixParts) && 0 === strpos(trim($result['sql']), $select)) {
+        if (!empty($prefixParts) && str_starts_with(trim($result['sql']), $select)) {
             $result['sql'] = trim($result['sql']);
             $result['sql'] = 'SELECT /* ' . implode(', ', $prefixParts) . ' */' . substr($result['sql'], strlen($select));
         }

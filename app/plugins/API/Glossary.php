@@ -11,10 +11,7 @@ namespace Piwik\Plugins\API;
 use Piwik\Metrics;
 class Glossary
 {
-    /**
-     * @var API
-     */
-    private $api;
+    private \Piwik\Plugins\API\API $api;
     public function __construct(\Piwik\Plugins\API\API $api)
     {
         $this->api = $api;

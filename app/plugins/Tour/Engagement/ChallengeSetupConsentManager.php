@@ -14,8 +14,7 @@ use Piwik\Plugins\SitesManager\SiteContentDetection\SiteContentDetectionAbstract
 use Piwik\SiteContentDetector;
 class ChallengeSetupConsentManager extends \Piwik\Plugins\Tour\Engagement\Challenge
 {
-    /** @var SiteContentDetector */
-    private $siteContentDetector;
+    private SiteContentDetector $siteContentDetector;
     /**
      * @var ConsentManagerDetectionAbstract|null
      */

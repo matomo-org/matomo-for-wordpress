@@ -111,7 +111,10 @@ class NumberFormatter
         if (!is_numeric($newValue)) {
             return $value;
         }
-        $pattern = $this->getPattern($value, 'Intl_NumberFormatPercent');
+        // The sign has to be read from the number, not from $value: locales that lead with the
+        // percent sign hand us "%15", whose first character sorts below "0", so the string
+        // comparison in isNegative() picked the negative pattern.
+        $pattern = $this->getPattern($newValue, 'Intl_NumberFormatPercent');
         return $this->formatNumberWithPattern($pattern, $newValue, $maximumFractionDigits, $minimumFractionDigits);
     }
     /**
@@ -122,7 +125,7 @@ class NumberFormatter
      */
     public function formatPercentEvolution($value)
     {
-        $isPositiveEvolution = !empty($value) && ($value > 0 || substr($value, 0, 1) === '+');
+        $isPositiveEvolution = !empty($value) && ($value > 0 || str_starts_with($value, '+'));
         $formatted = self::formatPercent($value);
         if ($isPositiveEvolution) {
             // $this->symbols has already been initialized from formatPercent().
@@ -248,7 +251,7 @@ class NumberFormatter
         if (!is_numeric($value)) {
             return $value;
         }
-        $usesGrouping = strpos($pattern, ',') !== \false;
+        $usesGrouping = str_contains($pattern, ',');
         // if pattern has number groups, parse them.
         if ($usesGrouping) {
             preg_match('/#+0/', $pattern, $primaryGroupMatches);

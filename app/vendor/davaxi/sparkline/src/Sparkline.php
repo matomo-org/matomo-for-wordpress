@@ -8,9 +8,6 @@ use Davaxi\Sparkline\Picture;
 use Davaxi\Sparkline\PointTrait;
 use Davaxi\Sparkline\StyleTrait;
 use InvalidArgumentException;
-/**
- * Class Sparkline.
- */
 class Sparkline
 {
     use StyleTrait;
@@ -25,8 +22,7 @@ class Sparkline
     const CSS_PADDING_THREE = 3;
     const CSS_PADDING = 4;
     /**
-     * @var string
-     *             ex: QUERY_STRING if dedicated url
+     * @var string ex: QUERY_STRING if dedicated url
      */
     protected $eTag;
     /**
@@ -46,8 +42,6 @@ class Sparkline
      */
     protected $server = [];
     /**
-     * Sparkline constructor.
-     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -68,16 +62,14 @@ class Sparkline
         $this->eTag = md5($eTag);
     }
     /**
-     * @param string $filename
-     *                         Without extension
+     * @param string $filename Without extension
      */
     public function setFilename(string $filename)
     {
         $this->filename = $filename;
     }
     /**
-     * @param string|int $expire
-     *                           time format or string format
+     * @param string|int $expire time format or string format
      */
     public function setExpire($expire)
     {
@@ -102,9 +94,12 @@ class Sparkline
         $stepCount = $this->getMaxNumberOfDataPointsAcrossSerieses();
         foreach ($this->data as $seriesIndex => $series) {
             $seriesNormalized = $this->getNormalizedData($seriesIndex);
-            list($polygon, $line) = $this->getChartElements($seriesNormalized, $stepCount);
+            $originSeries = $this->getNormalizedOriginSeries($seriesIndex);
+            list($polygon, $line) = $this->getChartElements($seriesNormalized, $stepCount, $originSeries);
             $picture->applyPolygon($polygon, $this->getFillColor($seriesIndex), $count);
-            $picture->applyLine($line, $this->getLineColor($seriesIndex));
+            if (!$this->isLineDeactivated($seriesIndex)) {
+                $picture->applyLine($line, $this->getLineColor($seriesIndex), $this->getLineStyle($seriesIndex));
+            }
             foreach ($this->points as $point) {
                 if ($point['series'] != $seriesIndex) {
                     continue;
@@ -197,9 +192,6 @@ class Sparkline
     }
     public function destroy()
     {
-        if ($this->file && \PHP_VERSION < 80000) {
-            imagedestroy($this->file);
-        }
         $this->file = null;
     }
 }

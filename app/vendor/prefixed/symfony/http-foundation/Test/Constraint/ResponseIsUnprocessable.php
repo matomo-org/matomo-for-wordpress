@@ -14,17 +14,12 @@ use PHPUnit\Framework\Constraint\Constraint;
 use Matomo\Dependencies\Symfony\Component\HttpFoundation\Response;
 final class ResponseIsUnprocessable extends Constraint
 {
-    /**
-     * {@inheritdoc}
-     */
     public function toString() : string
     {
         return 'is unprocessable';
     }
     /**
      * @param Response $other
-     *
-     * {@inheritdoc}
      */
     protected function matches($other) : bool
     {
@@ -32,8 +27,6 @@ final class ResponseIsUnprocessable extends Constraint
     }
     /**
      * @param Response $other
-     *
-     * {@inheritdoc}
      */
     protected function failureDescription($other) : string
     {
@@ -41,8 +34,6 @@ final class ResponseIsUnprocessable extends Constraint
     }
     /**
      * @param Response $other
-     *
-     * {@inheritdoc}
      */
     protected function additionalFailureDescription($other) : string
     {

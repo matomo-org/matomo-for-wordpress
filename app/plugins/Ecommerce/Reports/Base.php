@@ -9,6 +9,7 @@
 namespace Piwik\Plugins\Ecommerce\Reports;
 
 use Piwik\Common;
+use Piwik\Exception\NoPrivilegesException;
 use Piwik\Piwik;
 use Piwik\Plugin\Report;
 use Piwik\Url;
@@ -36,7 +37,7 @@ abstract class Base extends Report
             if (Piwik::hasUserSuperUserAccess()) {
                 $message .= ' Most likely Ecommerce is not enabled for the requested site.';
             }
-            throw new \Exception($message);
+            throw new NoPrivilegesException($message, 403);
         }
     }
     public function configureReportMetadata(&$availableReports, $infos)

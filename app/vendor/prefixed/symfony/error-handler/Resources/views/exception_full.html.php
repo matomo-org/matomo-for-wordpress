@@ -14,7 +14,7 @@ echo $_message;
 ?></title>
         <link rel="icon" type="image/png" href="<?php 
 echo $this->include('assets/images/favicon.png.base64');
-?>">
+?>" />
         <style><?php 
 echo $this->include('assets/css/exception.css');
 ?></style>

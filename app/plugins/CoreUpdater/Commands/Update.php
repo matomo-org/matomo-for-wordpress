@@ -212,7 +212,7 @@ class Update extends ConsoleCommand
     {
         $plugins = array();
         foreach ($componentsWithUpdateFile as $componentName => $updates) {
-            if ($componentName !== 'core' && 0 !== strpos($componentName, 'log_')) {
+            if ($componentName !== 'core' && !str_starts_with($componentName, 'log_')) {
                 $plugins[] = $componentName;
             }
         }
@@ -222,7 +222,7 @@ class Update extends ConsoleCommand
     {
         $dimensions = array();
         foreach ($componentsWithUpdateFile as $componentName => $updates) {
-            if (0 === strpos($componentName, 'log_')) {
+            if (str_starts_with($componentName, 'log_')) {
                 $dimensions[] = $componentName;
             }
         }

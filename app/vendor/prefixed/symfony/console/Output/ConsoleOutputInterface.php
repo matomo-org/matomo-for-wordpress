@@ -20,10 +20,11 @@ interface ConsoleOutputInterface extends OutputInterface
 {
     /**
      * Gets the OutputInterface for errors.
-     *
-     * @return OutputInterface
      */
-    public function getErrorOutput();
+    public function getErrorOutput() : OutputInterface;
+    /**
+     * @return void
+     */
     public function setErrorOutput(OutputInterface $error);
     public function section() : ConsoleSectionOutput;
 }

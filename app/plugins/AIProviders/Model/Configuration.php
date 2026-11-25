@@ -132,9 +132,8 @@ class Configuration
      * In a managed environment the provider and its credentials
      * are forced from configuration, so nothing is persisted here.
      */
-    public function saveSettings(AIProvidersList $providers, string $defaultProviderId, string $defaultCapabilityLevel,
-#[\SensitiveParameter]
-string $providerConfigurationsJson) : void
+    public function saveSettings(AIProvidersList $providers, string $defaultProviderId, string $defaultCapabilityLevel, #[\SensitiveParameter]
+        string $providerConfigurationsJson) : void
     {
         if ($this->canEditProviderConfiguration()) {
             $submittedProviderConfigurations = $this->decodeProviderConfigurations($providerConfigurationsJson);
@@ -168,11 +167,9 @@ string $providerConfigurationsJson) : void
      * @param array{apiKey: string, endpointUrl: string, model: string, useFipsEndpoint: bool|null} $configFileConfiguration
      * @param array{apiKey: string, endpointUrl: string, model: string, useFipsEndpoint: bool} $storedConfiguration
      */
-    private function resolveEndpointUrl(AIProvider $provider,
-#[\SensitiveParameter]
-array $configFileConfiguration,
-#[\SensitiveParameter]
-array $storedConfiguration) : string
+    private function resolveEndpointUrl(AIProvider $provider, #[\SensitiveParameter]
+        array $configFileConfiguration, #[\SensitiveParameter]
+            array $storedConfiguration) : string
     {
         if (!$provider->supportsCustomEndpoint()) {
             return '';
@@ -196,9 +193,8 @@ array $storedConfiguration) : string
      * @param array<string, mixed> $submittedProviderConfiguration
      * @return array{apiKey: string, endpointUrl: string, model: string, useFipsEndpoint: bool}
      */
-    public function getProviderConfigurationForUse(AIProvider $provider,
-#[\SensitiveParameter]
-array $submittedProviderConfiguration = []) : array
+    public function getProviderConfigurationForUse(AIProvider $provider, #[\SensitiveParameter]
+        array $submittedProviderConfiguration = []) : array
     {
         $providerId = $provider->getId();
         // Checked against the submitted values before the merge below fills the
@@ -360,9 +356,8 @@ array $submittedProviderConfiguration = []) : array
     /**
      * @return array<string, array<string, string>>
      */
-    private function decodeProviderConfigurations(
-#[\SensitiveParameter]
-string $providerConfigurationsJson) : array
+    private function decodeProviderConfigurations(#[\SensitiveParameter]
+        string $providerConfigurationsJson) : array
     {
         $decoded = json_decode($providerConfigurationsJson, \true);
         if (!is_array($decoded)) {
@@ -382,9 +377,8 @@ string $providerConfigurationsJson) : array
      *
      * @param array<string, mixed> $submittedProviderConfigurations
      */
-    private function saveProviderConfigurations(AIProvidersList $providers,
-#[\SensitiveParameter]
-array $submittedProviderConfigurations) : void
+    private function saveProviderConfigurations(AIProvidersList $providers, #[\SensitiveParameter]
+        array $submittedProviderConfigurations) : void
     {
         $existingProviderConfigurations = $this->getProviderConfigurations();
         $providerConfigurations = [];
@@ -424,9 +418,8 @@ array $submittedProviderConfigurations) : void
      *
      * @param array<string, mixed> $submittedProviderConfiguration
      */
-    private function checkSubmittedEndpointUrlIsAllowed(AIProvider $provider,
-#[\SensitiveParameter]
-array $submittedProviderConfiguration, string $endpointUrl) : void
+    private function checkSubmittedEndpointUrlIsAllowed(AIProvider $provider, #[\SensitiveParameter]
+        array $submittedProviderConfiguration, string $endpointUrl) : void
     {
         if (!array_key_exists('endpointUrl', $submittedProviderConfiguration) || !$this->isEndpointUrlSuppliedCentrally($provider) || $endpointUrl === $this->getEffectiveEndpointUrl($provider)) {
             return;
@@ -464,9 +457,8 @@ array $submittedProviderConfiguration, string $endpointUrl) : void
      *
      * @param array<string, array{apiKey: string, endpointUrl: string, model: string, useFipsEndpoint: bool}> $existingProviderConfigurations
      */
-    private function getEndpointUrlToStore(AIProvider $provider, string $endpointUrl,
-#[\SensitiveParameter]
-array $existingProviderConfigurations) : string
+    private function getEndpointUrlToStore(AIProvider $provider, string $endpointUrl, #[\SensitiveParameter]
+        array $existingProviderConfigurations) : string
     {
         if (!$this->isEndpointUrlSuppliedCentrally($provider)) {
             return $endpointUrl;
@@ -499,11 +491,9 @@ array $existingProviderConfigurations) : string
      * @param array<string, mixed> $submittedProviderConfiguration
      * @param array<string, array{apiKey: string, endpointUrl: string, model: string, useFipsEndpoint: bool}> $existingProviderConfigurations
      */
-    private function getSubmittedApiKey(
-#[\SensitiveParameter]
-array $submittedProviderConfiguration,
-#[\SensitiveParameter]
-array $existingProviderConfigurations, string $providerId) : string
+    private function getSubmittedApiKey(#[\SensitiveParameter]
+        array $submittedProviderConfiguration, #[\SensitiveParameter]
+            array $existingProviderConfigurations, string $providerId) : string
     {
         if ($this->hasSubmittedApiKey($submittedProviderConfiguration)) {
             return trim((string) $submittedProviderConfiguration['apiKey']);
@@ -513,9 +503,8 @@ array $existingProviderConfigurations, string $providerId) : string
     /**
      * @param array<string, mixed> $submittedProviderConfiguration
      */
-    private function hasSubmittedApiKey(
-#[\SensitiveParameter]
-array $submittedProviderConfiguration) : bool
+    private function hasSubmittedApiKey(#[\SensitiveParameter]
+        array $submittedProviderConfiguration) : bool
     {
         return isset($submittedProviderConfiguration['apiKey']) && is_string($submittedProviderConfiguration['apiKey']) && trim($submittedProviderConfiguration['apiKey']) !== '';
     }

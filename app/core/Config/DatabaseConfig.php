@@ -14,8 +14,4 @@ class DatabaseConfig extends \Piwik\Config\SectionConfig
     {
         return 'database';
     }
-    public static function isTiDb() : bool
-    {
-        return self::getConfigValue('schema') === 'Tidb';
-    }
 }

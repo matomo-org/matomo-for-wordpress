@@ -87,6 +87,7 @@ namespace {
     \define("LEGEND_ROUND", 690802);
     \define("LEGEND_VERTICAL", 690901);
     \define("LEGEND_HORIZONTAL", 690902);
+    \define("LEGEND_FAMILY_ASDEFINED", 691050);
     \define("LEGEND_FAMILY_BOX", 691051);
     \define("LEGEND_FAMILY_CIRCLE", 691052);
     \define("LEGEND_FAMILY_LINE", 691053);
@@ -147,6 +148,7 @@ namespace {
     \define("PIE_LABEL_COLOR_MANUAL", 140011);
     \define("PIE_VALUE_NATURAL", 140020);
     \define("PIE_VALUE_PERCENTAGE", 140021);
+    \define("PIE_VALUE_BOTH", 140022);
     \define("PIE_VALUE_INSIDE", 140030);
     \define("PIE_VALUE_OUTSIDE", 140031);
     /**

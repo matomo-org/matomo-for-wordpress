@@ -27,6 +27,7 @@ use Piwik\FrontController;
 use Piwik\Menu\MenuAdmin;
 use Piwik\Menu\MenuTop;
 use Piwik\NoAccessException;
+use Piwik\Notification;
 use Piwik\Notification\Manager as NotificationManager;
 use Piwik\Period\Month;
 use Piwik\Period;
@@ -35,10 +36,10 @@ use Piwik\Period\Range;
 use Piwik\Piwik;
 use Piwik\Plugins\CoreAdminHome\CustomLogo;
 use Piwik\Plugins\CoreVisualizations\Visualizations\JqplotGraph\Evolution;
-use Piwik\Plugins\LanguagesManager\LanguagesManager;
 use Piwik\Plugins\UsersManager\Model as UsersModel;
 use Piwik\SettingsPiwik;
 use Piwik\Site;
+use Piwik\Translation\Translator;
 use Piwik\Url;
 use Piwik\Plugin;
 use Piwik\View;
@@ -75,6 +76,15 @@ use Piwik\ViewDataTable\Factory as ViewDataTableFactory;
  */
 abstract class Controller
 {
+    /**
+     * First upstream release of each PHP branch that fixes the critical vulnerabilities announced on 2026-10-21.
+     * Older branches get no upstream fix, newer branches were never affected.
+     */
+    private const PHP_SECURITY_ADVISORY_2026_10_21_FIXED_RELEASES = ['8.2' => 35, '8.3' => 36, '8.4' => 27, '8.5' => 12];
+    private const PHP_SECURITY_ADVISORY_2026_10_21_ADVISORY_URL = 'https://www.php.net/archive/2026.php#2026-10-21-5';
+    private const PHP_SECURITY_ADVISORY_2026_10_21_ANNOUNCEMENT_URL = 'https://matomo.org/blog/2026/10/critical-php-security-vulnerabilities-important-update-for-matomo-users/';
+    private const PHP_SECURITY_ADVISORY_2026_10_21_NOTIFICATION_ID = 'PhpSecurityAdvisory_2026_10_21';
+    private const LEGACY_PHP_SECURITY_ADVISORY_2026_10_21_NOTIFICATION_ID = 'PHPCriticalSecurityVulnerabilityCheck';
     /**
      * The plugin name, eg. `'Referrers'`.
      *
@@ -266,7 +276,7 @@ abstract class Controller
      */
     protected function renderTemplateAs($template, array $variables = array(), $viewType = null)
     {
-        if (\false === strpos($template, '@') || \false === strpos($template, '/')) {
+        if (!str_contains($template, '@') || !str_contains($template, '/')) {
             $template = '@' . $this->pluginName . '/' . $template;
         }
         $view = new View($template);
@@ -322,7 +332,6 @@ abstract class Controller
             return $apiAction->render();
         }
         $pluginName = $this->pluginName;
-        /** @var Proxy $apiProxy */
         $apiProxy = Proxy::getInstance();
         if (!$apiProxy->isExistingApiAction($pluginName, $apiAction)) {
             throw new \Exception("Invalid action name '{$apiAction}' for '{$pluginName}' plugin.");
@@ -581,16 +590,57 @@ abstract class Controller
         $view->endDate = $dateEnd;
         $timezoneOffsetInSeconds = Date::getUtcOffset($siteTimezone);
         $view->timezoneOffset = $timezoneOffsetInSeconds;
-        $language = LanguagesManager::getLanguageForSession();
-        $view->language = !empty($language) ? $language : LanguagesManager::getLanguageCodeForCurrentUser();
+        // the language the page was rendered in, which a ?language= in the URL overrides
+        $view->language = StaticContainer::get(Translator::class)->getCurrentLanguage();
         $this->setBasicVariablesViewAs($view, $viewType);
         $view->topMenu = MenuTop::getInstance()->getMenu();
         $view->adminMenu = MenuAdmin::getInstance()->getMenu();
         $notifications = $view->notifications;
         if (empty($notifications)) {
+            self::notifyWhenPhpIsAffectedBySecurityAdvisory20261021();
             $view->notifications = NotificationManager::getAllNotificationsToDisplay();
             NotificationManager::cancelAllNonPersistent();
         }
+    }
+    /**
+     * @internal temporary warning, will be removed again, together with the legacy notification ID.
+     *           Admins can hide it with [General] disabled_notifications[] = PhpSecurityAdvisory_2026_10_21
+     */
+    protected static function notifyWhenPhpIsAffectedBySecurityAdvisory20261021() : void
+    {
+        if (defined('PIWIK_TEST_MODE')) {
+            // to avoid changing every UI test
+            return;
+        }
+        // a token_auth request is likely an embedded page shown to the public, not a signed-in user
+        if (Piwik::isUserIsAnonymous() || StaticContainer::get(AuthenticationToken::class)->getAuthToken() !== '') {
+            return;
+        }
+        // sessions may still hold the warning under the ID it had before it was renamed
+        NotificationManager::cancel(self::LEGACY_PHP_SECURITY_ADVISORY_2026_10_21_NOTIFICATION_ID);
+        if (NotificationManager::isDisabled(self::PHP_SECURITY_ADVISORY_2026_10_21_NOTIFICATION_ID) || !self::isPhpAffectedBySecurityAdvisory20261021(\PHP_MAJOR_VERSION, \PHP_MINOR_VERSION, \PHP_RELEASE_VERSION)) {
+            // persistent notifications stay in the session, so drop it once PHP has been fixed or the warning is turned off
+            NotificationManager::cancel(self::PHP_SECURITY_ADVISORY_2026_10_21_NOTIFICATION_ID);
+            return;
+        }
+        $message = Piwik::translate('General_PhpCriticalSecurityUpdateRequired', [\PHP_MAJOR_VERSION . '.' . \PHP_MINOR_VERSION . '.' . \PHP_RELEASE_VERSION, Url::getExternalLinkTag(self::PHP_SECURITY_ADVISORY_2026_10_21_ANNOUNCEMENT_URL), '</a>', Url::getExternalLinkTag(self::PHP_SECURITY_ADVISORY_2026_10_21_ADVISORY_URL), '</a>']);
+        $notification = new Notification($message);
+        $notification->raw = \true;
+        $notification->title = Piwik::translate('General_PhpCriticalSecurityUpdateRequiredTitle');
+        $notification->priority = Notification::PRIORITY_MAX;
+        $notification->context = Notification::CONTEXT_WARNING;
+        // persistent, so the reporting UI doesn't clear it when it renders a report like it does with transient ones
+        $notification->type = Notification::TYPE_PERSISTENT;
+        $notification->flags = Notification::FLAG_NO_CLEAR;
+        NotificationManager::notify(self::PHP_SECURITY_ADVISORY_2026_10_21_NOTIFICATION_ID, $notification);
+    }
+    private static function isPhpAffectedBySecurityAdvisory20261021(int $major, int $minor, int $release) : bool
+    {
+        $branch = $major . '.' . $minor;
+        if (isset(self::PHP_SECURITY_ADVISORY_2026_10_21_FIXED_RELEASES[$branch])) {
+            return $release < self::PHP_SECURITY_ADVISORY_2026_10_21_FIXED_RELEASES[$branch];
+        }
+        return version_compare($branch, '8.2', '<');
     }
     private function getValidDate(Date $date, Date $minDate, Date $maxDate)
     {
@@ -619,7 +669,6 @@ abstract class Controller
         $view->disableTrackingMatomoAppLinks = PiwikConfig::getInstance()->General['disable_tracking_matomo_app_links'];
         if (!Piwik::isUserIsAnonymous()) {
             $this->showWhatIsNew($view);
-            $view->contactEmail = implode(',', Piwik::getContactEmailAddresses());
             // for BC only. Use contactEmail instead
             $view->emailSuperUser = implode(',', Piwik::getAllSuperUserAccessEmailAddresses());
         }
@@ -643,7 +692,7 @@ abstract class Controller
         $themeMode = (new UserPreferences())->getThemeMode();
         $view->themeStyles = \Piwik\Plugin\ThemeStyles::get($themeMode);
         $general = PiwikConfig::getInstance()->General;
-        $view->enableFrames = $general['enable_framed_pages'] || isset($general['enable_framed_logins']) && $general['enable_framed_logins'];
+        $view->enableFrames = $general['enable_framed_pages'] || !empty($general['enable_framed_logins']);
         $embeddedAsIframe = Common::getRequestVar('module', '', 'string') === 'Widgetize';
         if (!$view->enableFrames && !$embeddedAsIframe) {
             $view->setXFrameOptions('sameorigin');
@@ -659,7 +708,7 @@ abstract class Controller
             $allSites = Request::processRequest('SitesManager.getAllSitesId', [], []);
             return count($allSites) === 1;
         });
-        if (isset($this->site) && is_object($this->site) && $this->site instanceof Site) {
+        if ($this->site instanceof Site) {
             $view->siteName = $this->site->getName();
         }
         self::setHostValidationVariablesView($view);
@@ -744,7 +793,7 @@ abstract class Controller
             // invalid host, so display warning to user
             $validHosts = Url::getTrustedHostsFromConfig();
             $validHost = $validHosts[0];
-            $invalidHost = Common::sanitizeInputValue(Url::getHost(\false));
+            $invalidHost = Common::sanitizeInputValue(Url::getCurrentHost('unknown', \false));
             $emailSubject = rawurlencode(Piwik::translate('CoreHome_InjectedHostEmailSubject', $invalidHost));
             $emailBody = rawurlencode(Piwik::translate('CoreHome_InjectedHostEmailBody'));
             $superUserEmail = rawurlencode(implode(',', Piwik::getContactEmailAddresses()));

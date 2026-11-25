@@ -12,10 +12,7 @@ use Piwik\DataTable\Row;
 use Piwik\DataTable;
 class MergeDataTables
 {
-    /**
-     * @var bool
-     */
-    private $copyExtraProcessedMetrics;
+    private bool $copyExtraProcessedMetrics;
     public function __construct(bool $copyExtraProcessedMetrics = \false)
     {
         $this->copyExtraProcessedMetrics = $copyExtraProcessedMetrics;

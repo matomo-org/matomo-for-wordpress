@@ -17,8 +17,12 @@ use Matomo\Dependencies\Twig\Node\Node;
  */
 final class InlinePrint extends AbstractExpression
 {
+    /**
+     * @param AbstractExpression $node
+     */
     public function __construct(Node $node, int $lineno)
     {
+        trigger_deprecation('twig/twig', '3.16', \sprintf('The "%s" class is deprecated with no replacement.', static::class));
         parent::__construct(['node' => $node], [], $lineno);
     }
     public function compile(Compiler $compiler) : void

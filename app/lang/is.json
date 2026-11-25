@@ -155,6 +155,9 @@
         "YouMustBeLoggedIn": "Þú verður að verainnskráð(ur) til að hafa aðgang að þessu.",
         "YourChangesHaveBeenSaved": "Breytingarnarn þínar hafa verið vistaðar."
     },
+    "AIProviders": {
+        "DefaultBadge": "Sjálfgefið"
+    },
     "API": {
         "KeepTokenSecret": "Þessi tókar auðkenning er eins leynd og þitt notendanafn og lykilorð %1$s deilið því ekki%2$s!",
         "LoadedAPIs": "Tókst að hlaða %s API",
@@ -262,13 +265,14 @@
         "GoalName": "Nafn Markmiðs",
         "GoalX": "Markmið %s",
         "Goals": "Markmið",
-        "GoalsOverview": "Yfirlit Markmiða",
         "IsExactly": "er nákvæmlega %s",
         "Manually": "handvirkt",
         "ManuallyTriggeredUsingJavascriptFunction": "Markmið er kveikt handvirkt með því að nota JavaScript API trackGoal()",
         "MatchesExpression": "upfyllir skilyrðið %s",
         "Optional": "(valkvætt)",
         "Pattern": "Mynstur",
+        "RecommendationCountOnePage": "1 síða",
+        "RecommendationCountPages": "%s síður",
         "URL": "URL",
         "UpdateGoal": "Uppfæra Markmið",
         "ViewAndEditGoals": "Skoða og breyta Markmiðum",

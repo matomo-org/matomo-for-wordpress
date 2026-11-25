@@ -12,36 +12,21 @@ namespace Matomo\Dependencies\DI\Definition;
 class InstanceDefinition implements Definition
 {
     /**
-     * Instance on which to inject dependencies.
-     *
-     * @var object
+     * @param object $instance Instance on which to inject dependencies.
      */
-    private $instance;
-    /**
-     * @var ObjectDefinition
-     */
-    private $objectDefinition;
-    /**
-     * @param object $instance
-     */
-    public function __construct($instance, ObjectDefinition $objectDefinition)
+    public function __construct(private object $instance, private ObjectDefinition $objectDefinition)
     {
-        $this->instance = $instance;
-        $this->objectDefinition = $objectDefinition;
     }
     public function getName() : string
     {
         // Name are superfluous for instance definitions
         return '';
     }
-    public function setName(string $name)
+    public function setName(string $name) : void
     {
         // Name are superfluous for instance definitions
     }
-    /**
-     * @return object
-     */
-    public function getInstance()
+    public function getInstance() : object
     {
         return $this->instance;
     }
@@ -49,11 +34,11 @@ class InstanceDefinition implements Definition
     {
         return $this->objectDefinition;
     }
-    public function replaceNestedDefinitions(callable $replacer)
+    public function replaceNestedDefinitions(callable $replacer) : void
     {
         $this->objectDefinition->replaceNestedDefinitions($replacer);
     }
-    public function __toString()
+    public function __toString() : string
     {
         return 'Instance';
     }

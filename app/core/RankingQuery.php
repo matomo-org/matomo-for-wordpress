@@ -46,15 +46,13 @@ class RankingQuery
     /**
      * Contains the labels of the inner query.
      * Format: "label" => true (to make sure labels don't appear twice)
-     * @var array
      */
-    private $labelColumns = array();
+    private array $labelColumns = array();
     /**
      * The columns of the inner query that are not labels
      * Format: "label" => "aggregation function" or false for no aggregation
-     * @var array
      */
-    private $additionalColumns = array();
+    private array $additionalColumns = array();
     /**
      * The limit for each group
      * @var int
@@ -314,7 +312,7 @@ class RankingQuery
             }
             $counterRollupExpression = "\n                , CASE\n                    {$counterRollupWhen}\n                    ELSE 0\n                END AS counterRollup\n            ";
         }
-        if (\false === strpos($innerQuery, ' LIMIT ') && !Schema::getInstance()->supportsSortingInSubquery()) {
+        if (!str_contains($innerQuery, ' LIMIT ') && !Schema::getInstance()->supportsSortingInSubquery()) {
             // Setting a limit for the inner query forces the optimizer to use a temporary table, which uses the sorting
             $innerQuery .= ' LIMIT 18446744073709551615';
         }

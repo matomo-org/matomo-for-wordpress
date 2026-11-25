@@ -7,19 +7,23 @@
 
 import { mount } from '@vue/test-utils';
 
-const mockBroadcast = { getValueFromUrl: jest.fn((_param: string) => '') };
-const mockMatomo = { on: jest.fn(), off: jest.fn(), broadcast: mockBroadcast };
+const { mockMatomo, mockBroadcast } = vi.hoisted(() => {
+  const mockBroadcast = { getValueFromUrl: vi.fn((_param: string) => '') };
+  return {
+    mockBroadcast,
+    mockMatomo: { on: vi.fn(), off: vi.fn(), broadcast: mockBroadcast },
+  };
+});
 
-jest.mock('CoreHome', () => ({
+vi.mock('CoreHome', () => ({
   Matomo: mockMatomo,
   translate: (key: string) => key,
   Widget: { template: '<div class="stub-widget" />' },
   WidgetType: {},
   ReportHeader: { template: '<div />' },
-}), { virtual: true });
+}));
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const WidgetPreview = require('./WidgetPreview.vue').default;
+import WidgetPreview from './WidgetPreview.vue';
 
 describe('Dashboard/AddWidgetModal/WidgetPreview', () => {
   function getHandler(eventName: string) {
@@ -34,7 +38,7 @@ describe('Dashboard/AddWidgetModal/WidgetPreview', () => {
   }
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     mockBroadcast.getValueFromUrl.mockReturnValue('');
     // Make sure no previous test leaked a body#standalone marker.
     document.body.removeAttribute('id');
@@ -189,7 +193,7 @@ describe('Dashboard/AddWidgetModal/WidgetPreview', () => {
     const wrapper = mountComponent();
     const root = wrapper.element as HTMLElement;
     const widgetContent = root.querySelector('.widgetContent') as HTMLElement;
-    const created = jest.fn();
+    const created = vi.fn();
     (window as any).$(widgetContent).on('widget:create', created);
 
     const detached = document.createElement('div');
@@ -210,7 +214,7 @@ describe('Dashboard/AddWidgetModal/WidgetPreview', () => {
     const wrapper = mountComponent();
     const root = wrapper.element as HTMLElement;
     const widgetContent = root.querySelector('.widgetContent') as HTMLElement;
-    const created = jest.fn();
+    const created = vi.fn();
     (window as any).$(widgetContent).on('widget:create', created);
 
     getHandler('widget:loaded')!({

@@ -19,21 +19,18 @@ use Piwik\Config\GeneralConfig;
  */
 class EgressHostValidator
 {
-    // Ranges filter_var does not flag but an SSRF-safe fetch must not reach.
-    // IPv4: CGNAT, IETF protocol, TEST-NET-1/2/3, 6to4 relay anycast, benchmarking, multicast.
-    // IPv6: deprecated IPv4-compatible space (::/96), transition ranges that can smuggle a
-    // private IPv4 destination (6to4, Teredo, NAT64), documentation, discard, reserved
-    // space (fe00::/8), and multicast.
-    private const EXTRA_BLOCKED_RANGES = ['100.64.0.0/10', '192.0.0.0/24', '192.0.2.0/24', '192.88.99.0/24', '198.18.0.0/15', '198.51.100.0/24', '203.0.113.0/24', '224.0.0.0/4', '::/96', '2002::/16', '2001::/32', '2001:db8::/32', '64:ff9b::/96', '64:ff9b:1::/48', '100::/64', 'fe00::/8', 'ff00::/8'];
+    // Ranges filter_var does not flag but an SSRF-safe fetch must not reach: CGNAT, IETF protocol,
+    // TEST-NET, benchmarking, multicast, documentation, discard, reserved space, plus IPv4-mapped/
+    // compatible and transition ranges (6to4, Teredo, NAT64) that can insert a private IPv4 target.
+    private const EXTRA_BLOCKED_RANGES = ['100.64.0.0/10', '192.0.0.0/24', '192.0.2.0/24', '192.88.99.0/24', '198.18.0.0/15', '198.51.100.0/24', '203.0.113.0/24', '224.0.0.0/4', '::/96', '::ffff:0:0/96', '2002::/16', '2001::/32', '2001:db8::/32', '64:ff9b::/96', '64:ff9b:1::/48', '100::/64', 'fe00::/8', 'ff00::/8'];
     /** @var callable(string): string[] */
     private $resolver;
     /** @var string[] */
     private $allowedPrivateRanges;
     /**
      * @param callable|null $resolver Host-to-IPs resolver, defaults to DNS. Injectable for tests.
-     * @param string[]|null $allowedPrivateRanges Non-public addresses to accept anyway (single IPs, CIDR
-     *                                            or wildcard ranges), e.g. for intranet sites. Defaults
-     *                                            to `[General] allowed_private_egress_ranges`.
+     * @param string[]|null $allowedPrivateRanges Non-public addresses to accept anyway (IPs, CIDR or
+     *                                            wildcard ranges), defaults to the config allowlist.
      */
     public function __construct(?callable $resolver = null, ?array $allowedPrivateRanges = null)
     {
@@ -105,16 +102,6 @@ class EgressHostValidator
     }
     public static function isPublicIp(string $ip) : bool
     {
-        // Unwrap IPv4-mapped IPv6 in any textual form (::ffff:169.254.169.254, ::ffff:a9fe:a9fe,
-        // 0:0:0:0:0:ffff:a9fe:a9fe) via the binary form; PHP < 8.1 does not flag these.
-        // @todo When min PHP version >= 8.1 (Matomo 6), verify filter_var() flags IPv4-mapped IPv6
-        //      in the reserved/private ranges natively - if so, remove this block and rely on filter_var()
-        if (strpos($ip, ':') !== \false) {
-            $bin = @inet_pton($ip);
-            if ($bin !== \false && strlen($bin) === 16 && substr($bin, 0, 12) === "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff") {
-                $ip = inet_ntop(substr($bin, 12));
-            }
-        }
         if (\false === filter_var($ip, \FILTER_VALIDATE_IP, \FILTER_FLAG_NO_PRIV_RANGE | \FILTER_FLAG_NO_RES_RANGE)) {
             return \false;
         }

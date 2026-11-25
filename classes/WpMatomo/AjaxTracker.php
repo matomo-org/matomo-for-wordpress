@@ -37,6 +37,8 @@ class AjaxTracker extends \MatomoTracker {
 		$idsite = $site->get_current_matomo_site_id();
 
 		if ( ! $idsite ) {
+			// Matomo 6 declares idSite as a typed property without a default.
+			$this->idSite = 0;
 			return;
 		}
 
@@ -50,11 +52,11 @@ class AjaxTracker extends \MatomoTracker {
 
 		parent::__construct( $idsite, $api_endpoint );
 
-		$this->ip = false;
+		$this->ip = null;
 
 		// we are using the tracker only in ajax so the referer contains the actual url
-		$this->urlReferrer = false;
-		$this->pageUrl     = ! empty( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : false;
+		$this->urlReferrer = null;
+		$this->pageUrl     = ! empty( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : '';
 
 		if ( ! $settings->get_global_option( 'disable_cookies' ) ) {
 			$tracking_code_generator = new TrackingCodeGenerator( $settings, new GeneratorOptions( $settings ) );
@@ -94,7 +96,7 @@ class AjaxTracker extends \MatomoTracker {
 		return $response === base64_decode( $gif_response );
 	}
 
-	protected function setCookie( $cookieName, $cookieValue, $cookieTTL ) {
+	protected function setCookie( $cookieName, $cookieValue, $cookieTTL ): self {
 		if ( ! $this->has_cookie ) {
 			// we only set / overwrite cookies if it is a visitor that has eg no JS enabled or ad blocker enabled etc.
 			// this way we will track all cart updates and orders into the same visitor on following requests.
@@ -102,9 +104,10 @@ class AjaxTracker extends \MatomoTracker {
 			// any cookie
 			parent::setCookie( $cookieName, $cookieValue, $cookieTTL );
 		}
+		return $this;
 	}
 
-	protected function sendRequest( $url, $method = 'GET', $data = null, $force = false ) {
+	protected function sendRequest( $url, $method = 'GET', $data = null, $force = false ): string|bool {
 		if ( ! $this->idSite ) {
 			$this->logger->log('ecommerce tracking could not find idSite, cannot send request');
 			return ''; // not installed or synced yet
@@ -184,10 +187,10 @@ class AjaxTracker extends \MatomoTracker {
 	 * In Matomo for WordPress we want to rely entirely on JavaScript tracker
 	 * for creating cookies.
 	 *
-	 * @return void
+	 * @return self
 	 */
-	protected function setFirstPartyCookies() {
-		// disabled
+	protected function setFirstPartyCookies(): self {
+		return $this;
 	}
 
 	/**

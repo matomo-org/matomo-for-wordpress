@@ -70,8 +70,7 @@
       <tbody>
         <tr v-if="isLoading">
           <td colspan="7">
-            <span class="loadingPiwik"><img src="plugins/Morpheus/images/loading-blue.gif" />
-              {{ translate('General_LoadingData') }}</span>
+            <ActivityIndicator :loading="true" />
           </td>
         </tr>
         <tr v-if="!isLoading && container?.releases?.length === 0">
@@ -86,7 +85,9 @@
           <td class="environment">{{ ucfirst(release.environment) }}</td>
           <td class="name">{{ releaseVersions[release.idcontainerrelease]?.name }}</td>
           <td class="revision">{{ releaseVersions[release.idcontainerrelease]?.revision }}</td>
-          <td class="released_by">{{ release.release_login }}</td>
+          <td class="released_by">
+            {{ release.release_login || translate('General_Unknown') }}
+          </td>
           <td class="released_on"><span class="date">{{ release.release_date_pretty }}</span></td>
         </tr>
       </tbody>

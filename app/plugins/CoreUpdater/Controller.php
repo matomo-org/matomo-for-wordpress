@@ -10,11 +10,12 @@ namespace Piwik\Plugins\CoreUpdater;
 
 use Exception;
 use Piwik\AssetManager;
+use Piwik\AssetManager\UIAssetFetcher\PluginUmdAssetFetcher;
 use Piwik\Common;
 use Piwik\Config;
-use Piwik\DataTable\Renderer\Json;
+use Piwik\Exception\NoPrivilegesException;
+use Piwik\Http\JsonResponse;
 use Piwik\DbHelper;
-use Piwik\Development;
 use Piwik\Filechecks;
 use Piwik\FileIntegrity;
 use Piwik\Filesystem;
@@ -39,10 +40,7 @@ class Controller extends \Piwik\Plugin\Controller
     private $warningMessages = array();
     private $errorMessages = array();
     private $deactivatedPlugins = array();
-    /**
-     * @var Updater
-     */
-    private $updater;
+    private \Piwik\Plugins\CoreUpdater\Updater $updater;
     /**
      * @var Plugins
      */
@@ -62,6 +60,7 @@ class Controller extends \Piwik\Plugin\Controller
     {
         Common::sendHeader('Content-Type: text/css');
         Common::sendHeader('Cache-Control: max-age=' . 60 * 60);
+        Common::stripHeader('Set-Cookie');
         $files = array('plugins/Morpheus/stylesheets/base/bootstrap.css', 'plugins/Morpheus/stylesheets/base/icons.css', "node_modules/jquery-ui-dist/jquery-ui.theme.min.css", "node_modules/jquery-ui-dist/jquery-ui.structure.min.css", 'node_modules/@materializecss/materialize/dist/css/materialize.min.css', 'plugins/Morpheus/stylesheets/base.less', 'plugins/Morpheus/stylesheets/general/_forms.less', 'plugins/Morpheus/stylesheets/simple_structure.css', 'plugins/CoreHome/stylesheets/jquery.ui.autocomplete.css', 'plugins/Dashboard/stylesheets/dashboard.less', 'plugins/CoreUpdater/stylesheets/updateLayout.css');
         return AssetManager::compileCustomStylesheets($files);
     }
@@ -74,17 +73,20 @@ class Controller extends \Piwik\Plugin\Controller
     {
         Common::sendHeader('Content-Type: application/javascript; charset=UTF-8');
         Common::sendHeader('Cache-Control: max-age=' . 60 * 60);
+        Common::stripHeader('Set-Cookie');
         $files = array("node_modules/jquery/dist/jquery.min.js", "node_modules/jquery-ui-dist/jquery-ui.min.js", 'node_modules/@materializecss/materialize/dist/js/materialize.min.js', "plugins/CoreHome/javascripts/materialize-bc.js", 'plugins/Morpheus/javascripts/piwikHelper.js', "plugins/CoreHome/javascripts/broadcast.js", 'plugins/CoreUpdater/javascripts/updateLayout.js', 'plugins/Installation/javascripts/installation.js');
         CoreVue::addJsFilesTo($files);
-        $coreHomeUmd = Development::isEnabled() ? 'CoreHome.umd.js' : 'CoreHome.umd.min.js';
-        $files[] = "plugins/CoreHome/vue/dist/{$coreHomeUmd}";
+        $coreHomeUmd = PluginUmdAssetFetcher::getUmdFileToUseForPlugin('CoreHome');
+        if ($coreHomeUmd) {
+            $files[] = $coreHomeUmd;
+        }
         return AssetManager::compileCustomJs($files);
     }
     public function newVersionAvailable()
     {
         Piwik::checkUserHasSuperUserAccess();
         if (!SettingsPiwik::isAutoUpdateEnabled()) {
-            throw new Exception('Auto updater is disabled');
+            throw new NoPrivilegesException('Auto updater is disabled', 403);
         }
         $this->checkNewVersionIsAvailableOrDie();
         $newVersion = $this->updater->getLatestVersion();
@@ -113,16 +115,18 @@ class Controller extends \Piwik\Plugin\Controller
     {
         Piwik::checkUserHasSuperUserAccess();
         if (!SettingsPiwik::isAutoUpdateEnabled()) {
-            throw new Exception('Auto updater is disabled');
+            throw new NoPrivilegesException('Auto updater is disabled', 403);
         }
         Nonce::checkNonce('oneClickUpdate');
         $view = new OneClickDone(Piwik::getCurrentUserTokenAuth());
-        $useHttps = Common::getRequestVar('https', 1, 'int');
         try {
-            $messages = $this->updater->updatePiwik($useHttps);
+            $messages = $this->updater->updatePiwik();
             $this->refreshUpdateDetailsToken();
         } catch (\Piwik\Plugins\CoreUpdater\ArchiveDownloadException $e) {
-            $view->httpsFail = $useHttps;
+            // Only show the HTTPS-specific error screen when the download was actually attempted over
+            // HTTPS. A failed plain-HTTP download (force_matomo_http_request enabled) falls back to the
+            // generic update error screen.
+            $view->httpsFail = $this->updater->isUpdatingOverSecureConnection();
             $view->error = $e->getMessage();
             $messages = $e->getUpdateLogMessages();
         } catch (\Piwik\Plugins\CoreUpdater\UpdaterException $e) {
@@ -133,45 +137,44 @@ class Controller extends \Piwik\Plugin\Controller
         $result = $view->render();
         return $result;
     }
-    public function oneClickUpdatePartTwo()
+    #[JsonResponse]
+    public function oneClickUpdatePartTwo() : string
     {
         if (!SettingsPiwik::isAutoUpdateEnabled()) {
-            throw new Exception('Auto updater is disabled');
+            throw new NoPrivilegesException('Auto updater is disabled', 403);
         }
-        Json::sendHeaderJSON();
-        $task = "Couldn't update Marketplace plugins.";
+        $task = \Piwik\Plugins\CoreUpdater\Updater::MESSAGE_FAILED_PREFIX . "Couldn't update Marketplace plugins.";
         $nonce = Common::getRequestVar('nonce', '', 'string');
         if (empty($nonce)) {
-            return json_encode(['No token. ' . $task]);
+            return json_encode([$task . ' No token.']);
         }
         $value = Option::get('NonceOneClickUpdatePartTwo');
         if (empty($value)) {
-            return json_encode(['Invalid token. ' . $task]);
+            return json_encode([$task . ' Invalid token.']);
         }
         $value = json_decode($value, \true);
         if (empty($value['nonce']) || empty($value['ttl']) || time() > (int) $value['ttl'] || $nonce !== $value['nonce']) {
-            return json_encode(['Invalid nonce or nonce expired. ' . $task]);
+            return json_encode([$task . ' Invalid nonce or nonce expired.']);
         }
         try {
             $messages = $this->updater->oneClickUpdatePartTwo();
         } catch (\Piwik\Plugins\CoreUpdater\UpdaterException $e) {
             $messages = $e->getUpdateLogMessages();
-            $messages[] = $e->getMessage();
+            $messages[] = \Piwik\Plugins\CoreUpdater\Updater::MESSAGE_FAILED_PREFIX . $e->getMessage();
         } catch (Exception $e) {
-            $messages = [$e->getMessage()];
+            $messages = [\Piwik\Plugins\CoreUpdater\Updater::MESSAGE_FAILED_PREFIX . $e->getMessage()];
         }
         return json_encode($messages);
     }
     public function oneClickResults()
     {
         if (!SettingsPiwik::isAutoUpdateEnabled()) {
-            throw new Exception('Auto updater is disabled');
+            throw new NoPrivilegesException('Auto updater is disabled', 403);
         }
         $httpsFail = (bool) Common::getRequestVar('httpsFail', 0, 'int', $_POST);
         $error = Common::getRequestVar('error', '', 'string', $_POST);
         if ($httpsFail) {
             $view = new View('@CoreUpdater/updateHttpsError');
-            $view->nonce = Nonce::getNonce('oneClickUpdate');
             $view->error = $error;
         } elseif ($error) {
             $view = new View('@CoreUpdater/updateHttpError');
@@ -223,7 +226,7 @@ class Controller extends \Piwik\Plugin\Controller
     public function runUpdaterAndExit($doDryRun = null)
     {
         if (!SettingsPiwik::isAutoUpdateEnabled()) {
-            throw new Exception('Auto updater is disabled');
+            throw new NoPrivilegesException('Auto updater is disabled', 403);
         }
         $updater = new DbUpdater();
         $componentsWithUpdateFile = $updater->getComponentUpdates();
@@ -306,7 +309,7 @@ class Controller extends \Piwik\Plugin\Controller
             foreach ($componentsWithUpdateFile as $name => $filenames) {
                 if ($name == 'core') {
                     $coreToUpdate = \true;
-                } elseif (0 === strpos($name, 'log_')) {
+                } elseif (str_starts_with($name, 'log_')) {
                     $dimensionsToUpdate[] = $name;
                 } else {
                     $pluginNamesToUpdate[] = $name;
@@ -315,10 +318,9 @@ class Controller extends \Piwik\Plugin\Controller
         }
         // check file integrity
         [$success, $messages] = FileIntegrity::getFileIntegrityInformation();
+        // Messages on a passing check are only notes, which the updater does not need to show
         if (!$success) {
             $this->warningMessages[] = Piwik::translate('General_FileIntegrityWarning');
-        }
-        if (count($messages) > 0) {
             $this->warningMessages = array_merge($this->warningMessages, $messages);
         }
         Filesystem::deleteAllCacheOnUpdate();

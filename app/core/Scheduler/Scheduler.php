@@ -49,26 +49,15 @@ class Scheduler
 {
     /**
      * Is the scheduler running any task.
-     * @var bool
      */
-    private $isRunningTask = \false;
+    private bool $isRunningTask = \false;
     /**
      * Should the last run task be scheduled for a retry
-     * @var bool
      */
-    private $scheduleRetry = \false;
-    /**
-     * @var Timetable
-     */
-    private $timetable;
-    /**
-     * @var TaskLoader
-     */
-    private $loader;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private bool $scheduleRetry = \false;
+    private \Piwik\Scheduler\Timetable $timetable;
+    private \Piwik\Scheduler\TaskLoader $loader;
+    private LoggerInterface $logger;
     /**
      * @var Lock
      */

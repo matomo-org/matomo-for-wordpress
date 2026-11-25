@@ -12,8 +12,15 @@
 namespace Matomo\Dependencies\Twig\Node\Expression\Binary;
 
 use Matomo\Dependencies\Twig\Compiler;
-class AndBinary extends AbstractBinary
+use Matomo\Dependencies\Twig\Node\Expression\ReturnBoolInterface;
+use Matomo\Dependencies\Twig\Node\Expression\Test\TrueTest;
+use Matomo\Dependencies\Twig\Node\Node;
+class AndBinary extends AbstractBinary implements ReturnBoolInterface
 {
+    public function __construct(Node $left, Node $right, int $lineno)
+    {
+        parent::__construct(TrueTest::wrap($left), TrueTest::wrap($right), $lineno);
+    }
     public function operator(Compiler $compiler) : Compiler
     {
         return $compiler->raw('&&');

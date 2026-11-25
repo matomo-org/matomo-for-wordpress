@@ -51,7 +51,15 @@ abstract class BaseContext
      * @var Salt
      */
     protected $salt;
+    /**
+     * @var array<string, array>
+     */
     private $variables = array();
+    /**
+     * Set when a referenced variable, or a variable it references, has a type that is not available
+     * @var bool
+     */
+    private $referencesUnavailableVariable = \false;
     private $nestedVariableCals = [];
     public function __construct(VariablesProvider $variablesProvider, Variable $variableModel, Trigger $triggerModel, Tag $tagModel, Container $containerModel, StorageInterface $storage, Salt $salt)
     {
@@ -87,24 +95,57 @@ abstract class BaseContext
             if ($tag['status'] !== TagsDao::STATUS_ACTIVE) {
                 continue;
             }
-            $containerJs['tags'][] = ['id' => $tag['idtag'], 'type' => $tag['type'], 'name' => $tag['name'], 'parameters' => $this->parametersToVariableJs($container, $tag), 'blockTriggerIds' => $tag['block_trigger_ids'], 'fireTriggerIds' => $tag['fire_trigger_ids'], 'fireLimit' => $tag['fire_limit'], 'fireDelay' => $tag['fire_delay'], 'startDate' => $tag['start_date'], 'endDate' => $tag['end_date']];
+            if (empty($tag['typeMetadata'])) {
+                // the tag type is not available, eg because the plugin providing it is no longer active
+                continue;
+            }
+            $this->referencesUnavailableVariable = \false;
+            $parameters = $this->parametersToVariableJs($container, $tag);
+            if ($this->referencesUnavailableVariable) {
+                // the tag would otherwise run with an unresolved variable
+                continue;
+            }
+            $containerJs['tags'][] = ['id' => $tag['idtag'], 'type' => $tag['type'], 'name' => $tag['name'], 'parameters' => $parameters, 'blockTriggerIds' => $tag['block_trigger_ids'], 'fireTriggerIds' => $tag['fire_trigger_ids'], 'fireLimit' => $tag['fire_limit'], 'fireDelay' => $tag['fire_delay'], 'startDate' => $tag['start_date'], 'endDate' => $tag['end_date']];
         }
+        $ignoredTriggerIds = [];
         foreach ($this->triggerModel->getContainerTriggers($idSite, $idContainerVersion) as $trigger) {
             // we are ignoring any trigger that is not actually used in any tag for performance reasons
             // (for now, we might change this later so triggers can more easily build on top of each other)
+            if (empty($trigger['typeMetadata'])) {
+                // the trigger type is not available, eg because the plugin providing it is no longer active
+                $ignoredTriggerIds[] = $trigger['idtrigger'];
+                continue;
+            }
             $conditions = [];
             if (!empty($trigger['conditions'])) {
                 foreach ($trigger['conditions'] as $condition) {
                     if (!empty($condition['actual'])) {
                         $actual = $this->variableToArray($container, $condition['actual']);
-                        if ($actual) {
-                            $conditions[] = ['actual' => $actual, 'comparison' => $condition['comparison'], 'expected' => $condition['expected']];
+                        if (!$actual) {
+                            // the condition variable type is not available. Ignoring only the condition would make
+                            // the trigger fire more often than configured, so we ignore the whole trigger instead
+                            $ignoredTriggerIds[] = $trigger['idtrigger'];
+                            continue 2;
                         }
+                        $conditions[] = ['actual' => $actual, 'comparison' => $condition['comparison'], 'expected' => $condition['expected']];
                     }
                 }
             }
-            $trigger = ['id' => $trigger['idtrigger'], 'type' => $trigger['type'], 'name' => $trigger['name'], 'parameters' => $this->parametersToVariableJs($container, $trigger), 'conditions' => $conditions];
+            $this->referencesUnavailableVariable = \false;
+            $parameters = $this->parametersToVariableJs($container, $trigger);
+            if ($this->referencesUnavailableVariable) {
+                // the trigger would otherwise run with an unresolved variable
+                $ignoredTriggerIds[] = $trigger['idtrigger'];
+                continue;
+            }
+            $trigger = ['id' => $trigger['idtrigger'], 'type' => $trigger['type'], 'name' => $trigger['name'], 'parameters' => $parameters, 'conditions' => $conditions];
             $containerJs['triggers'][] = $trigger;
+        }
+        if (!empty($ignoredTriggerIds)) {
+            // a tag must not fire without one of its block triggers, so we ignore such a tag as well
+            $containerJs['tags'] = array_values(array_filter($containerJs['tags'], function ($tag) use($ignoredTriggerIds) {
+                return empty(array_intersect((array) $tag['blockTriggerIds'], $ignoredTriggerIds));
+            }));
         }
         foreach ($this->variableModel->getContainerVariables($idSite, $idContainerVersion) as $variable) {
             // we are ignoring any trigger that is not actually used in any tag for performance reasons
@@ -130,6 +171,9 @@ abstract class BaseContext
         }
         return $response;
     }
+    /**
+     * @phpstan-impure sets $referencesUnavailableVariable
+     */
     private function parametersToVariableJs($container, $entity)
     {
         if (!empty($entity['name'])) {
@@ -224,7 +268,7 @@ abstract class BaseContext
                 }
                 if ($start === \false || $end === \false) {
                     $val = $this->substr($value, $pos);
-                    if ($val !== '' && $val !== \false && $val !== null) {
+                    if ($val !== '') {
                         $multiVars[] = $val;
                     }
                     break;
@@ -233,7 +277,7 @@ abstract class BaseContext
                     // only if string does not start with "{{..."
                     $val = str_replace(array('\\{', '\\}'), array('{', '}'), $this->substr($value, $pos, $start - $pos));
                     // regular text
-                    if ($val !== '' && $val !== \false && $val !== null) {
+                    if ($val !== '') {
                         $multiVars[] = $val;
                     }
                 }
@@ -254,7 +298,7 @@ abstract class BaseContext
                     $multiVars[] = '{{' . $variableName . '}}';
                 }
                 $pos = $end + $ignoreLengthOpeningBrackets;
-            } while ($end !== \false);
+            } while (\true);
             $allStrings = \true;
             foreach ($multiVars as $var) {
                 if (!is_string($var)) {
@@ -281,6 +325,9 @@ abstract class BaseContext
         }
         return substr($str, $start, $length);
     }
+    /**
+     * @phpstan-impure sets $referencesUnavailableVariable
+     */
     protected function variableToArray($container, $variableNameOrVariable)
     {
         if (is_array($variableNameOrVariable)) {
@@ -290,14 +337,27 @@ abstract class BaseContext
         } else {
             $variable = $this->variableModel->findVariableByName($container['idsite'], $container['idcontainerversion'], $variableNameOrVariable);
         }
+        if ($variable && empty($variable['typeMetadata'])) {
+            // the variable type is not available, eg because the plugin providing it is no longer active
+            $this->referencesUnavailableVariable = \true;
+            return null;
+        }
         if ($variable) {
+            // a variable that references an unavailable variable is not available either
+            $referencesUnavailableVariable = $this->referencesUnavailableVariable;
+            $this->referencesUnavailableVariable = \false;
+            $parameters = $this->parametersToVariableJs($container, $variable);
+            if ($this->referencesUnavailableVariable) {
+                return null;
+            }
+            $this->referencesUnavailableVariable = $referencesUnavailableVariable;
             $lookUpTable = [];
             if (!empty($variable['lookup_table']) && is_array($variable['lookup_table'])) {
                 foreach ($variable['lookup_table'] as $lookup) {
                     $lookUpTable[] = ['matchValue' => $lookup['match_value'], 'outValue' => $lookup['out_value'], 'comparison' => $lookup['comparison']];
                 }
             }
-            $var = ['name' => $variable['name'], 'type' => $variable['type'], 'lookUpTable' => $lookUpTable, 'defaultValue' => $variable['default_value'], 'parameters' => $this->parametersToVariableJs($container, $variable)];
+            $var = ['name' => $variable['name'], 'type' => $variable['type'], 'lookUpTable' => $lookUpTable, 'defaultValue' => $variable['default_value'], 'parameters' => $parameters];
             // by setting var name key we make sure to not include same var twice
             $this->variables[$var['name']] = $var;
             return $var;
@@ -312,6 +372,10 @@ abstract class BaseContext
                 $var = ['name' => ucfirst($variable->getId()), 'type' => $variable->getId(), 'lookUpTable' => [], 'defaultValue' => null, 'parameters' => $this->parametersToVariableJs($container, array('parameters' => $defaultParams, 'typeMetadata' => array()))];
                 $this->variables[$var['name']] = $var;
                 return $var;
+            }
+            if (is_string($variableNameOrVariable) && $this->variablesProvider->isDisabledInConfig($variableNameOrVariable)) {
+                // a pre-configured variable disabled in the configuration is not available either
+                $this->referencesUnavailableVariable = \true;
             }
         }
     }
@@ -388,13 +452,10 @@ abstract class BaseContext
             foreach ($files as $file) {
                 $filename = str_replace($basePath . '/' . StaticContainer::get('TagManagerContainerFilesPrefix'), '', $file);
                 $filename = str_replace('.js', '', $filename);
-                $filename = explode('_', $filename);
-                if (count($filename) === 3) {
-                    // 0 = container
-                    // 1 = environment
-                    // 2 = hash
-                    // we ignore preview environment and live environment already by design but also define it specifically
-                    $env = $filename[1];
+                // <container>_<environment>_<hash>, environment may contain underscores
+                // we ignore preview environment and live environment already by design but also define it specifically
+                if (preg_match('/^[^_]+_(.+)_[0-9a-f]{24}$/', $filename, $matches)) {
+                    $env = $matches[1];
                     try {
                         Environment::checkEnvironmentNameFormat($env);
                     } catch (\Exception $e) {

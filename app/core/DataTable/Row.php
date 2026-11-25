@@ -28,10 +28,8 @@ class Row extends \ArrayObject
     public const COMPARISONS_METADATA_NAME = 'comparisons';
     /**
      * List of columns that cannot be summed. An associative array for speed.
-     *
-     * @var array
      */
-    private static $unsummableColumns = array(
+    private static array $unsummableColumns = array(
         'label' => \true,
         'full_url' => \true,
         // column used w/ old Piwik versions,
@@ -631,7 +629,7 @@ class Row extends \ArrayObject
      *
      * @param mixed $elem1
      * @param mixed $elem2
-     * @return bool
+     * @return int
      * @ignore
      */
     public static function compareElements($elem1, $elem2)

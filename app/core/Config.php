@@ -216,7 +216,7 @@ class Config
         $hostConfigs = self::getLocalConfigInfoForHostname($hostname);
         $fileNames = '';
         foreach ($hostConfigs as $hostConfig) {
-            if (count($hostConfigs) > 1 && $preferredPath && strpos($hostConfig['path'], $preferredPath) === \false) {
+            if (count($hostConfigs) > 1 && $preferredPath && !str_contains($hostConfig['path'], $preferredPath)) {
                 continue;
             }
             $filename = $hostConfig['file'];

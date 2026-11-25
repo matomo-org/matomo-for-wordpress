@@ -44,10 +44,12 @@
         <tbody>
           <tr v-show="isLoading || isUpdating">
             <td colspan="7">
-              <span class="loadingPiwik">
-                <img src="plugins/Morpheus/images/loading-blue.gif" />
-                {{ translate('General_LoadingData') }}
-              </span>
+              <ActivityIndicator
+                :loading="isLoading || isUpdating"
+                :loading-message="isUpdating
+                  ? translate('TagManager_UpdatingData')
+                  : translate('General_LoadingData')"
+              />
             </td>
           </tr>
           <tr v-show="!isLoading && !variables.length">
@@ -77,9 +79,13 @@
             </td>
             <td
               class="type"
-              :title="variable.typeMetadata.description"
+              :title="variable.typeMetadata
+                ? variable.typeMetadata.description
+                : translate('TagManager_TypeNotAvailableHelp')"
             >
-              {{ variable.typeMetadata.name }}
+              {{ variable.typeMetadata
+                ? variable.typeMetadata.name
+                : translate('TagManager_TypeNotAvailable', variable.type) }}
             </td>
             <td class="lookupTable">
               <span
@@ -89,7 +95,7 @@
             </td>
             <td
               class="lastUpdated"
-              :title="translate('TagManager_CreatedOnX', variable.created_date_pretty)"
+              :title="translate('TagManager_CreatedOnX', variable.created_date_pretty || '')"
             >
               <span>{{ variable.updated_date_pretty }}</span>
             </td>
@@ -99,12 +105,13 @@
             >
               <a
                 class="table-action icon-edit"
-                @click="editVariable(variable.idvariable, variable.type)"
+                v-show="variable.typeMetadata"
+                @click="editVariable(variable.idvariable ?? 0)"
                 :title="translate('TagManager_EditVariable')"
               />
               <a
                 class="table-action icon-content-copy"
-                v-show="hasPublishCapability()"
+                v-show="hasPublishCapability() && variable.typeMetadata"
                 @click="openCopyDialog(variable)"
                 :title="translate(
                   'TagManager_CopyX',
@@ -114,7 +121,7 @@
               <a
                 v-show="!variable.typeMetadata?.isCustomTemplate || canUseCustomTemplates"
                 class="table-action icon-delete"
-                @click="deleteVariable(variable)"
+                @click="deleteVariable(variable as DeepReadonly<Variable>)"
                 :title="translate('TagManager_DeleteX', translate('TagManager_Variable'))"
               />
             </td>
@@ -195,15 +202,7 @@
       <p>
         {{ translate('TagManager_VariableBeingUsedBy') }}
       </p>
-      <ul class="collection">
-        <li
-          class="collection-item"
-          v-for="reference in variableReferences"
-          :key="`${reference.referenceType}.${reference.referenceId}`"
-        >
-          {{ reference.referenceTypeName }}: {{ reference.referenceName }}
-        </li>
-      </ul>
+      <ReferenceList :references="variableReferences" />
       <p>
         {{ translate('TagManager_VariableBeingUsedNeedsRemove') }}
       </p>
@@ -219,6 +218,7 @@
 <script lang="ts">
 import { DeepReadonly, defineComponent } from 'vue';
 import {
+  ActivityIndicator,
   AjaxHelper,
   ContentBlock,
   ContentTable,
@@ -233,8 +233,9 @@ import {
   ContainerVariableCategory,
   Variable, VariableType,
 } from '../types';
+import ReferenceList from '../ReferenceList/ReferenceList.vue';
 
-interface VariableListState {
+export interface VariableListState {
   hasWriteAccess: boolean;
   variableReferences: VariableReference[];
   containerVariables: ContainerVariableCategory[];
@@ -256,8 +257,10 @@ export default defineComponent({
     variablesHelpText: String,
   },
   components: {
+    ActivityIndicator,
     Field,
     ContentBlock,
+    ReferenceList,
   },
   directives: {
     ContentTable,
@@ -298,6 +301,7 @@ export default defineComponent({
         idContainer: this.idContainer,
         idContainerVersion: this.idContainerVersion,
         idVariable: variable.idvariable,
+        filter_limit: '-1',
       }).then((references) => {
         if (!references || !references.length) {
           this.variableReferences = [];
@@ -362,8 +366,8 @@ export default defineComponent({
         if (typeof entity[propName] === 'string') {
           propValue = (entity[propName] as string);
         } else if (propName === 'typeMetadata') {
-          const propTypeMeta = (entity.typeMetadata as VariableType);
-          propValue = (propTypeMeta.name as string);
+          const propTypeMeta = (entity.typeMetadata as VariableType|null);
+          propValue = (propTypeMeta?.name || '');
         } else if (propName === 'parameters' && entity.type === 'CustomJsFunction') {
           const propTypeParameters = (entity.parameters as Record<string, unknown>);
           propValue = (propTypeParameters.jsFunction as string);

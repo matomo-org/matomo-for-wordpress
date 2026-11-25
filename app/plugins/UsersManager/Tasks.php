@@ -14,14 +14,8 @@ use Piwik\Plugins\UsersManager\TokenNotifications\TokenNotifierTask;
 use Piwik\Plugins\UsersManager\UserNotifications\UserNotifierTask;
 class Tasks extends \Piwik\Plugin\Tasks
 {
-    /**
-     * @var Model
-     */
-    private $usersModel;
-    /**
-     * @var API
-     */
-    private $usersManagerApi;
+    private \Piwik\Plugins\UsersManager\Model $usersModel;
+    private \Piwik\Plugins\UsersManager\API $usersManagerApi;
     public function __construct(\Piwik\Plugins\UsersManager\Model $usersModel, \Piwik\Plugins\UsersManager\API $usersManagerApi)
     {
         $this->usersModel = $usersModel;

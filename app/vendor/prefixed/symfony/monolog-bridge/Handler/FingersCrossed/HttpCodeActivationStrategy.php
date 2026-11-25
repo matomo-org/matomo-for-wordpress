@@ -11,33 +11,22 @@
 namespace Matomo\Dependencies\Symfony\Bridge\Monolog\Handler\FingersCrossed;
 
 use Matomo\Dependencies\Monolog\Handler\FingersCrossed\ActivationStrategyInterface;
-use Matomo\Dependencies\Monolog\Handler\FingersCrossed\ErrorLevelActivationStrategy;
+use Matomo\Dependencies\Monolog\LogRecord;
 use Matomo\Dependencies\Symfony\Component\HttpFoundation\RequestStack;
-use Matomo\Dependencies\Symfony\Component\HttpKernel\Exception\HttpException;
+use Matomo\Dependencies\Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 /**
  * Activation strategy that ignores certain HTTP codes.
  *
  * @author Shaun Simmons <shaun@envysphere.com>
  * @author Pierrick Vignand <pierrick.vignand@gmail.com>
- *
- * @final
  */
-class HttpCodeActivationStrategy extends ErrorLevelActivationStrategy implements ActivationStrategyInterface
+final class HttpCodeActivationStrategy implements ActivationStrategyInterface
 {
-    private $inner;
-    private $exclusions;
-    private $requestStack;
     /**
-     * @param array                                  $exclusions each exclusion must have a "code" and "urls" keys
-     * @param ActivationStrategyInterface|int|string $inner      an ActivationStrategyInterface to decorate
+     * @param array $exclusions each exclusion must have a "code" and "urls" keys
      */
-    public function __construct(RequestStack $requestStack, array $exclusions, $inner)
+    public function __construct(private RequestStack $requestStack, private array $exclusions, private ActivationStrategyInterface $inner)
     {
-        if (!$inner instanceof ActivationStrategyInterface) {
-            trigger_deprecation('symfony/monolog-bridge', '5.2', 'Passing an actionLevel (int|string) as constructor\'s 3rd argument of "%s" is deprecated, "%s" expected.', __CLASS__, ActivationStrategyInterface::class);
-            $actionLevel = $inner;
-            $inner = new ErrorLevelActivationStrategy($actionLevel);
-        }
         foreach ($exclusions as $exclusion) {
             if (!\array_key_exists('code', $exclusion)) {
                 throw new \LogicException('An exclusion must have a "code" key.');
@@ -46,14 +35,11 @@ class HttpCodeActivationStrategy extends ErrorLevelActivationStrategy implements
                 throw new \LogicException('An exclusion must have a "urls" key.');
             }
         }
-        $this->inner = $inner;
-        $this->requestStack = $requestStack;
-        $this->exclusions = $exclusions;
     }
-    public function isHandlerActivated(array $record) : bool
+    public function isHandlerActivated(array|LogRecord $record) : bool
     {
         $isActivated = $this->inner->isHandlerActivated($record);
-        if ($isActivated && isset($record['context']['exception']) && $record['context']['exception'] instanceof HttpException && ($request = $this->requestStack->getMainRequest())) {
+        if ($isActivated && isset($record['context']['exception']) && $record['context']['exception'] instanceof HttpExceptionInterface && ($request = $this->requestStack->getMainRequest())) {
             foreach ($this->exclusions as $exclusion) {
                 if ($record['context']['exception']->getStatusCode() !== $exclusion['code']) {
                     continue;

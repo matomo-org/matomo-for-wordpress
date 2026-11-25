@@ -11,11 +11,12 @@
 namespace Matomo\Dependencies\Twig\Node\Expression\Binary;
 
 use Matomo\Dependencies\Twig\Compiler;
-class HasEveryBinary extends AbstractBinary
+use Matomo\Dependencies\Twig\Node\Expression\ReturnBoolInterface;
+class HasEveryBinary extends AbstractBinary implements ReturnBoolInterface
 {
     public function compile(Compiler $compiler) : void
     {
-        $compiler->raw('CoreExtension::arrayEvery($this->env, ')->subcompile($this->getNode('left'))->raw(', ')->subcompile($this->getNode('right'))->raw(')');
+        $compiler->raw('CoreExtension::arrayEvery($this->env, ')->subcompile($this->getNode('left'))->raw(', ')->subcompile($this->getNode('right'))->raw(', $this->env->hasExtension(\\Twig\\Extension\\SandboxExtension::class) && $this->env->getExtension(\\Twig\\Extension\\SandboxExtension::class)->getChecker()->isSandboxed($this->source))');
     }
     public function operator(Compiler $compiler) : Compiler
     {

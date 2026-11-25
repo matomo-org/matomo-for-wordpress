@@ -20,6 +20,7 @@ use Piwik\Plugins\Actions\Columns\Metrics\AverageTimeOnPage;
 use Piwik\Plugins\Actions\Columns\Metrics\BounceRate;
 use Piwik\Plugins\Actions\Columns\Metrics\ExitRate;
 use Piwik\Plugin\ReportsProvider;
+use Piwik\Request;
 use Piwik\Tracker\Action;
 use Piwik\Tracker\PageUrl;
 /**
@@ -107,7 +108,7 @@ class API extends \Piwik\Plugin\API
                 $notDefinedUrl = \Piwik\Plugins\Actions\ArchivingHelper::getUnknownActionName(Action::TYPE_PAGE_URL);
                 foreach ($dataTable->getRows() as $row) {
                     $label = (string) $row->getColumn('label');
-                    if (substr($label, 0, 1) !== '/' && $label !== $notDefinedUrl) {
+                    if (!str_starts_with($label, '/') && $label !== $notDefinedUrl) {
                         $row->setColumn('label', '/' . $label);
                     }
                 }
@@ -688,9 +689,10 @@ class API extends \Piwik\Plugin\API
         }
     }
     /**
-     * Reads the pre-flattened archive record directly for top-level flat requests when flat-first
-     * archiving is enabled, avoiding loading the hierarchy and collapsing it again at request time.
-     * Otherwise (and for subtable drill-downs) reads the hierarchical record as before.
+     * Reads the pre-flattened archive record directly for top-level requests that the request-time
+     * flattener will act on, when flat-first archiving is enabled, avoiding loading the hierarchy and
+     * collapsing it again at request time. Otherwise (and for subtable drill-downs) reads the
+     * hierarchical record as before.
      *
      * @param int|string|int[] $idSite
      * @param string|null|false $segment
@@ -700,7 +702,12 @@ class API extends \Piwik\Plugin\API
      */
     private function createActionsTableFromArchive(string $hierarchicalRecord, string $flatRecord, $idSite, string $period, string $date, $segment, bool $expanded, $idSubtable, $depth, bool $flat)
     {
-        $useFlatRecord = $flat && empty($idSubtable) && \Piwik\Plugins\Actions\ArchivingHelper::isFlatArchivingEnabled();
+        // aggregate rows are the category rows of the hierarchy, and the dimension columns are built
+        // from the hierarchy levels, so both need the hierarchical record the flat record replaces
+        $request = Request::fromRequest();
+        $needsHierarchy = $request->getBoolParameter('include_aggregate_rows', \false) || $request->getBoolParameter('show_dimensions', \false);
+        // a depth limit trims the tree the flattener then walks, which the flat record cannot reproduce
+        $useFlatRecord = $flat && empty($idSubtable) && empty($depth) && !$needsHierarchy && \Piwik\Plugins\Actions\ArchivingHelper::isFlatArchivingEnabled();
         if (!$useFlatRecord) {
             return Archive::createDataTableFromArchive($hierarchicalRecord, $idSite, $period, $date, $segment, $expanded, $flat, $idSubtable, $depth);
         }

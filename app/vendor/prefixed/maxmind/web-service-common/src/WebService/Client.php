@@ -23,88 +23,46 @@ use Matomo\Dependencies\MaxMind\WebService\Http\RequestFactory;
 class Client
 {
     public const VERSION = '0.2.0';
+    private readonly ?string $caBundle;
+    private readonly ?float $connectTimeout;
+    private readonly string $host;
+    private readonly bool $useHttps;
+    private readonly RequestFactory $httpRequestFactory;
+    private readonly string $licenseKey;
+    private readonly ?string $proxy;
+    private readonly ?float $timeout;
+    private readonly string $userAgentPrefix;
+    private readonly int $accountId;
     /**
-     * @var string|null
-     */
-    private $caBundle;
-    /**
-     * @var float|null
-     */
-    private $connectTimeout;
-    /**
-     * @var string
-     */
-    private $host = 'api.maxmind.com';
-    /**
-     * @var bool
-     */
-    private $useHttps = \true;
-    /**
-     * @var RequestFactory
-     */
-    private $httpRequestFactory;
-    /**
-     * @var string
-     */
-    private $licenseKey;
-    /**
-     * @var string|null
-     */
-    private $proxy;
-    /**
-     * @var float|null
-     */
-    private $timeout;
-    /**
-     * @var string
-     */
-    private $userAgentPrefix;
-    /**
-     * @var int
-     */
-    private $accountId;
-    /**
-     * @param int    $accountId  your MaxMind account ID
-     * @param string $licenseKey your MaxMind license key
-     * @param array  $options    an array of options. Possible keys:
-     *                           * `host` - The host to use when connecting to the web service.
-     *                           * `useHttps` - A boolean flag for sending the request via https.(True by default)
-     *                           * `userAgent` - The prefix of the User-Agent to use in the request.
-     *                           * `caBundle` - The bundle of CA root certificates to use in the request.
-     *                           * `connectTimeout` - The connect timeout to use for the request.
-     *                           * `timeout` - The timeout to use for the request.
-     *                           * `proxy` - The HTTP proxy to use. May include a schema, port,
-     *                           username, and password, e.g., `http://username:password@127.0.0.1:10`.
+     * @param int                  $accountId  your MaxMind account ID
+     * @param string               $licenseKey your MaxMind license key
+     * @param array<string, mixed> $options    an array of options. Possible keys:
+     *                                         * `host` - The host to use when connecting to the web service.
+     *                                         * `useHttps` - Set to false to disable HTTPS.
+     *                                         * `userAgent` - The prefix of the User-Agent to use in the request.
+     *                                         * `caBundle` - The bundle of CA root certificates to use in the request.
+     *                                         * `connectTimeout` - The connect timeout to use for the request.
+     *                                         * `timeout` - The timeout to use for the request.
+     *                                         * `proxy` - The HTTP proxy to use. May include a schema, port,
+     *                                         username, and password, e.g., `http://username:password@127.0.0.1:10`.
      */
     public function __construct(int $accountId, string $licenseKey, array $options = [])
     {
         $this->accountId = $accountId;
         $this->licenseKey = $licenseKey;
-        $this->httpRequestFactory = isset($options['httpRequestFactory']) ? $options['httpRequestFactory'] : new RequestFactory();
-        if (isset($options['host'])) {
-            $this->host = $options['host'];
-        }
-        if (isset($options['useHttps'])) {
-            $this->useHttps = $options['useHttps'];
-        }
-        if (isset($options['userAgent'])) {
-            $this->userAgentPrefix = $options['userAgent'] . ' ';
-        }
-        $this->caBundle = isset($options['caBundle']) ? $this->caBundle = $options['caBundle'] : $this->getCaBundle();
-        if (isset($options['connectTimeout'])) {
-            $this->connectTimeout = $options['connectTimeout'];
-        }
-        if (isset($options['timeout'])) {
-            $this->timeout = $options['timeout'];
-        }
-        if (isset($options['proxy'])) {
-            $this->proxy = $options['proxy'];
-        }
+        $this->httpRequestFactory = $options['httpRequestFactory'] ?? new RequestFactory();
+        $this->host = $options['host'] ?? 'api.maxmind.com';
+        $this->useHttps = $options['useHttps'] ?? \true;
+        $this->userAgentPrefix = isset($options['userAgent']) ? $options['userAgent'] . ' ' : '';
+        $this->caBundle = $options['caBundle'] ?? $this->getCaBundle();
+        $this->connectTimeout = $options['connectTimeout'] ?? null;
+        $this->timeout = $options['timeout'] ?? null;
+        $this->proxy = $options['proxy'] ?? null;
     }
     /**
-     * @param string $service name of the service querying
-     * @param string $path    the URI path to use
-     * @param array  $input   the data to be posted as JSON
+     * @param string       $service name of the service querying
+     * @param string       $path    the URI path to use
+     * @param array<mixed> $input   the data to be posted as JSON
      *
      * @throws InvalidInputException      when the request has missing or invalid
      *                                    data
@@ -117,7 +75,7 @@ class Client
      * @throws WebServiceException        when some other error occurs. This also
      *                                    serves as the base class for the above exceptions.
      *
-     * @return array|null The decoded content of a successful response
+     * @return array<mixed>|null The decoded content of a successful response
      */
     public function post(string $service, string $path, array $input) : ?array
     {
@@ -129,6 +87,9 @@ class Client
         [$statusCode, $contentType, $responseBody] = $request->post($requestBody);
         return $this->handleResponse($statusCode, $contentType, $responseBody, $service, $path);
     }
+    /**
+     * @return array<mixed>|null
+     */
     public function get(string $service, string $path) : ?array
     {
         $request = $this->createRequest($path);
@@ -138,11 +99,17 @@ class Client
     private function userAgent() : string
     {
         $curlVersion = curl_version();
+        if ($curlVersion === \false) {
+            throw new \RuntimeException('curl_version() returned false');
+        }
         return $this->userAgentPrefix . 'MaxMind-WS-API/' . self::VERSION . ' PHP/' . \PHP_VERSION . ' curl/' . $curlVersion['version'];
     }
+    /**
+     * @param array<string> $headers
+     */
     private function createRequest(string $path, array $headers = []) : Http\Request
     {
-        array_push($headers, 'Authorization: Basic ' . base64_encode($this->accountId . ':' . $this->licenseKey), 'Accept: application/json');
+        $headers = [...$headers, 'Authorization: Basic ' . base64_encode($this->accountId . ':' . $this->licenseKey), 'Accept: application/json'];
         return $this->httpRequestFactory->request($this->urlFor($path), ['caBundle' => $this->caBundle, 'connectTimeout' => $this->connectTimeout, 'headers' => $headers, 'proxy' => $this->proxy, 'timeout' => $this->timeout, 'userAgent' => $this->userAgent()]);
     }
     /**
@@ -161,7 +128,7 @@ class Client
      * @throws WebServiceException        when some other error occurs. This also
      *                                    serves as the base class for the above exceptions
      *
-     * @return array|null The decoded content of a successful response
+     * @return array<mixed>|null The decoded content of a successful response
      */
     private function handleResponse(int $statusCode, ?string $contentType, ?string $responseBody, string $service, string $path) : ?array
     {
@@ -221,7 +188,7 @@ class Client
         if ($body === null || $body === '') {
             throw new HttpException("Received a {$statusCode} error for {$service} with no body", $statusCode, $this->urlFor($path));
         }
-        if ($contentType === null || !strstr($contentType, 'json')) {
+        if ($contentType === null || !str_contains($contentType, 'json')) {
             throw new HttpException("Received a {$statusCode} error for {$service} with " . 'the following body: ' . $body, $statusCode, $this->urlFor($path));
         }
         $message = json_decode($body, \true);
@@ -297,7 +264,7 @@ class Client
      *                             included, or is expected and included
      *                             but cannot be decoded as JSON
      *
-     * @return array|null the decoded request body
+     * @return array<mixed>|null the decoded request body
      */
     private function handleSuccess(int $statusCode, ?string $body, string $service) : ?array
     {
@@ -321,6 +288,9 @@ class Client
     private function getCaBundle() : ?string
     {
         $curlVersion = curl_version();
+        if ($curlVersion === \false) {
+            throw new \RuntimeException('curl_version() returned false');
+        }
         // On OS X, when the SSL version is "SecureTransport", the system's
         // keychain will be used.
         if ($curlVersion['ssl_version'] === 'SecureTransport') {
@@ -329,7 +299,7 @@ class Client
         $cert = CaBundle::getSystemCaRootBundlePath();
         // Check if the cert is inside a phar. If so, we need to copy the cert
         // to a temp file so that curl can see it.
-        if (substr($cert, 0, 7) === 'phar://') {
+        if (str_starts_with($cert, 'phar://')) {
             $tempDir = sys_get_temp_dir();
             $newCert = tempnam($tempDir, 'geoip2-');
             if ($newCert === \false) {

@@ -25,18 +25,9 @@ class BruteForceDetection
     private $maxLogAttempts;
     private $table = self::TABLE_NAME;
     private $tablePrefixed = '';
-    /**
-     * @var SystemSettings
-     */
-    private $settings;
-    /**
-     * @var Updater
-     */
-    private $updater;
-    /**
-     * @var Model
-     */
-    private $model;
+    private SystemSettings $settings;
+    private Updater $updater;
+    private Model $model;
     public function __construct(SystemSettings $systemSettings, Model $model)
     {
         $this->tablePrefixed = Common::prefixTable($this->table);
@@ -165,7 +156,7 @@ class BruteForceDetection
             $this->model->markSuspiciousLoginsNotifiedEmailSent($login);
         } catch (\Exception $ex) {
             // log if error is not that we can't find a user
-            if (strpos($ex->getMessage(), 'unable to find user to send') === \false) {
+            if (!str_contains($ex->getMessage(), 'unable to find user to send')) {
                 StaticContainer::get(LoggerInterface::class)->info('Error when sending ' . SuspiciousLoginAttemptsInLastHourEmail::class . ' email. User exists but encountered {exception}', ['exception' => $ex]);
             }
         }
@@ -180,7 +171,7 @@ class BruteForceDetection
     {
         // ignore column not found errors during one click update since the db will not be up to date while new code is being used
         $module = Common::getRequestVar('module', \false);
-        if (strpos($ex->getMessage(), 'Unknown column') === \false || $module != 'CoreUpdater') {
+        if (!str_contains($ex->getMessage(), 'Unknown column') || $module != 'CoreUpdater') {
             throw $ex;
         }
     }

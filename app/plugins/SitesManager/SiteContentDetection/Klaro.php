@@ -23,12 +23,12 @@ class Klaro extends \Piwik\Plugins\SitesManager\SiteContentDetection\ConsentMana
     {
         $needle1 = 'klaro.js';
         $needle2 = 'kiprotect.com';
-        return strpos($data, $needle1) !== \false || strpos($data, $needle2) !== \false;
+        return str_contains($data, $needle1) || str_contains($data, $needle2);
     }
     public function checkIsConnected(?string $data = null, ?array $headers = null) : bool
     {
         $needle1 = 'KlaroWatcher()';
         $needle2 = "title: 'Matomo',";
-        return strpos($data, $needle1) !== \false || strpos($data, $needle2) !== \false;
+        return str_contains($data, $needle1) || str_contains($data, $needle2);
     }
 }

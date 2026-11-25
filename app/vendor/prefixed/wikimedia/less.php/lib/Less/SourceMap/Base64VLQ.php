@@ -139,7 +139,7 @@ class Less_SourceMap_Base64VLQ
     public function base64Encode($number)
     {
         if ($number < 0 || $number > 63) {
-            throw new \Exception(\sprintf('Invalid number "%s" given. Must be between 0 and 63.', (string) $number));
+            throw new \Exception("Invalid number \"{$number}\" given. Must be between 0 and 63.");
         }
         return $this->intToCharMap[$number];
     }

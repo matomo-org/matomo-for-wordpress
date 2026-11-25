@@ -11,24 +11,16 @@ namespace Matomo\Dependencies\DI\Definition;
  */
 class ArrayDefinition implements Definition
 {
-    /**
-     * Entry name.
-     * @var string
-     */
-    private $name = '';
-    /**
-     * @var array
-     */
-    private $values;
-    public function __construct(array $values)
+    /** Entry name. */
+    private string $name = '';
+    public function __construct(private array $values)
     {
-        $this->values = $values;
     }
     public function getName() : string
     {
         return $this->name;
     }
-    public function setName(string $name)
+    public function setName(string $name) : void
     {
         $this->name = $name;
     }
@@ -36,11 +28,11 @@ class ArrayDefinition implements Definition
     {
         return $this->values;
     }
-    public function replaceNestedDefinitions(callable $replacer)
+    public function replaceNestedDefinitions(callable $replacer) : void
     {
         $this->values = array_map($replacer, $this->values);
     }
-    public function __toString()
+    public function __toString() : string
     {
         $str = '[' . \PHP_EOL;
         foreach ($this->values as $key => $value) {

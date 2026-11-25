@@ -141,7 +141,7 @@ class UserPreferences
             return $userSettingsDate;
         }
         // if last7, last30, etc.
-        if (strpos($userSettingsDate, 'last') === 0 || strpos($userSettingsDate, 'previous') === 0) {
+        if (str_starts_with($userSettingsDate, 'last') || str_starts_with($userSettingsDate, 'previous')) {
             return $userSettingsDate;
         }
         return 'today';
@@ -157,7 +157,7 @@ class UserPreferences
         if (in_array($defaultDate, array('today', 'yesterday'))) {
             return 'day';
         }
-        if (strpos($defaultDate, 'last') === 0 || strpos($defaultDate, 'previous') === 0) {
+        if (str_starts_with($defaultDate, 'last') || str_starts_with($defaultDate, 'previous')) {
             return 'range';
         }
         return $defaultDate;

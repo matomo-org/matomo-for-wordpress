@@ -4,17 +4,24 @@ namespace Matomo\Dependencies;
 
 /**
  * @private
+ * @see less-3.13.1.js#Expression.prototype
  */
-class Less_Tree_Expression extends Less_Tree
+class Less_Tree_Expression extends Less_Tree implements Less_Tree_HasValueProperty
 {
-    /** @var array */
+    /** @var Less_Tree[] */
     public $value = [];
-    public $parens = \false;
-    public $type = 'Expression';
-    public function __construct($value, $parens = null)
+    /** @var bool */
+    public $noSpacing;
+    /** @var true|null */
+    public $parens = null;
+    /**
+     * @param Less_Tree[] $value
+     * @param bool $noSpacing
+     */
+    public function __construct($value, $noSpacing = \false)
     {
         $this->value = $value;
-        $this->parens = $parens;
+        $this->noSpacing = $noSpacing;
     }
     public function accept($visitor)
     {
@@ -22,21 +29,23 @@ class Less_Tree_Expression extends Less_Tree
     }
     public function compile($env)
     {
+        $mathOn = $env->isMathOn();
+        // NOTE: We don't support STRICT_LEGACY (Less.js 3.13)
+        $inParenthesis = $this->parens && (\true || !$this->parensInOp);
         $doubleParen = \false;
-        if ($this->parens && !$this->parensInOp) {
-            Less_Environment::$parensStack++;
+        if ($inParenthesis) {
+            $env->inParenthesis();
         }
-        $returnValue = null;
         if ($this->value) {
-            $count = \count($this->value);
-            if ($count > 1) {
+            if (\count($this->value) > 1) {
                 $ret = [];
                 foreach ($this->value as $e) {
                     $ret[] = $e->compile($env);
                 }
-                $returnValue = new Less_Tree_Expression($ret);
+                $returnValue = new self($ret, $this->noSpacing);
             } else {
-                if ($this->value[0] instanceof Less_Tree_Expression && $this->value[0]->parens && !$this->value[0]->parensInOp) {
+                // Implied `if ( count() === 1 )`
+                if ($this->value[0] instanceof self && $this->value[0]->parens && !$this->value[0]->parensInOp && !$env->inCalc) {
                     $doubleParen = \true;
                 }
                 $returnValue = $this->value[0]->compile($env);
@@ -44,12 +53,11 @@ class Less_Tree_Expression extends Less_Tree
         } else {
             $returnValue = $this;
         }
-        if ($this->parens) {
-            if (!$this->parensInOp) {
-                Less_Environment::$parensStack--;
-            } elseif (!Less_Environment::isMathOn() && !$doubleParen) {
-                $returnValue = new Less_Tree_Paren($returnValue);
-            }
+        if ($inParenthesis) {
+            $env->outOfParenthesis();
+        }
+        if ($this->parens && $this->parensInOp && !$mathOn && !$doubleParen && !$returnValue instanceof Less_Tree_Dimension) {
+            $returnValue = new Less_Tree_Paren($returnValue);
         }
         return $returnValue;
     }
@@ -61,8 +69,13 @@ class Less_Tree_Expression extends Less_Tree
         $val_len = \count($this->value);
         for ($i = 0; $i < $val_len; $i++) {
             $this->value[$i]->genCSS($output);
-            if ($i + 1 < $val_len) {
-                $output->add(' ');
+            if (!$this->noSpacing && $i + 1 < $val_len) {
+                // NOTE: Comma handling backported from Less.js 4.2.1 (T386077)
+                // Local variable helps phan to infer types on this condition
+                $nextVal = $this->value[$i + 1];
+                if (!$nextVal instanceof Less_Tree_Anonymous || $nextVal->value !== ',') {
+                    $output->add(' ');
+                }
             }
         }
     }
@@ -78,5 +91,33 @@ class Less_Tree_Expression extends Less_Tree
             }
             $this->value = $new_value;
         }
+    }
+    public function markReferenced()
+    {
+        if (\is_array($this->value)) {
+            foreach ($this->value as $v) {
+                if (\method_exists($v, 'markReferenced')) {
+                    $v->markReferenced();
+                }
+            }
+        }
+    }
+    /**
+     * Should be used only in Less_Tree_Call::functionCaller()
+     * to retrieve expression without comments
+     * @internal
+     */
+    public function mapToFunctionCallArgument()
+    {
+        if (\is_array($this->value)) {
+            $subNodes = [];
+            foreach ($this->value as $subNode) {
+                if (!$subNode instanceof Less_Tree_Comment) {
+                    $subNodes[] = $subNode;
+                }
+            }
+            return \count($subNodes) === 1 ? $subNodes[0] : new Less_Tree_Expression($subNodes);
+        }
+        return $this;
     }
 }

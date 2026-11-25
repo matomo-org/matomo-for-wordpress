@@ -58,7 +58,7 @@ var SegmentedVisitorLog = function() {
         return getLabelFromTr($tr, apiMethod);
     }
 
-    function setPopoverTitle(apiMethod, segment, index) {
+    function setPopoverTitle(apiMethod, segment, index, rowSegment) {
         var dataTable = getDataTableFromApiMethod(apiMethod);
 
         if (!dataTable) {
@@ -66,18 +66,21 @@ var SegmentedVisitorLog = function() {
                 // this is needed when the popover is opened before the dataTable is there which can often
                 // happen when opening the popover directly via URL (broadcast.popoverHandler)
                 setTimeout(function () {
-                    setPopoverTitle(apiMethod, segment, index + 1);
+                    setPopoverTitle(apiMethod, segment, index + 1, rowSegment);
                 }, 150);
             }
             return;
         }
 
         var segmentName = getDimensionFromApiMethod(apiMethod);
-        var segmentValue = findTitleOfRowHavingRawSegmentValue(apiMethod, segment);
+        var displayedSegment = rowSegment || segment;
+        var segmentValue = findTitleOfRowHavingRawSegmentValue(apiMethod, displayedSegment);
 
-        if (!segmentName || (segment && segment.indexOf(';') > 0)) {
+        // Without a matching row (e.g. a popover opened from a URL) there is no label to show,
+        // so name the conditions instead of showing an empty value
+        if (!segmentName || (displayedSegment && (!segmentValue || displayedSegment.indexOf(';') > 0))) {
             segmentName = _pk_translate('General_Segment');
-            var segmentParts = segment.split(';');
+            var segmentParts = displayedSegment.split(';');
             segmentValue = segmentParts.join(' ' + _pk_translate('General_And') + ' ');
         }
 
@@ -108,14 +111,16 @@ var SegmentedVisitorLog = function() {
         var callback = function (html) {
             Piwik_Popover.setContent(html);
 
-            // remove title returned from the server
+            // remove title returned from the server. Only the heading: the report header around it
+            // is what hosts the export and the actions, so dropping the whole host would take them
+            // with it (same as PagePerformance.js, which shows the report in a popover too).
             var title = box.find('.enrichedHeadline').closest('h2');
 
             // if the enriched headline has been already parsed, there might be additional content,
-            // so we prefer using the original title, which is placed in div with class "title"
+            // so we prefer using the original title, which the headline renders on its own element
             // @see plugins/CoreHome/vue/src/EnrichedHeadline/EnrichedHeadline.vue
-            if (title.find('.title')) {
-                var defaultTitle = title.find('.title').text();
+            if (title.find('.enrichedHeadline__title')) {
+                var defaultTitle = title.find('.enrichedHeadline__title').text();
             } else {
                 var defaultTitle = title.text();
             }
@@ -126,7 +131,7 @@ var SegmentedVisitorLog = function() {
 
             Piwik_Popover.setTitle(defaultTitle);
 
-            setPopoverTitle(apiMethod, segment, 0);
+            setPopoverTitle(apiMethod, segment, 0, extraParams.intersectSegment);
         };
 
         // prepare loading the popover contents
@@ -155,4 +160,3 @@ var SegmentedVisitorLog = function() {
         show: show
     }
 }();
-

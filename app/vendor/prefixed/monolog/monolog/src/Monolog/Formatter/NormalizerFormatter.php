@@ -1,5 +1,6 @@
 <?php
 
+declare (strict_types=1);
 /*
  * This file is part of the Monolog package.
  *
@@ -10,8 +11,10 @@
  */
 namespace Matomo\Dependencies\Monolog\Formatter;
 
-use Exception;
+use Matomo\Dependencies\Monolog\JsonSerializableDateTimeImmutable;
 use Matomo\Dependencies\Monolog\Utils;
+use Throwable;
+use Matomo\Dependencies\Monolog\LogRecord;
 /**
  * Normalizes incoming records to remove objects/resources so it's easier to dump to various targets
  *
@@ -19,30 +22,38 @@ use Matomo\Dependencies\Monolog\Utils;
  */
 class NormalizerFormatter implements FormatterInterface
 {
-    const SIMPLE_DATE = "Y-m-d H:i:s";
-    protected $dateFormat;
-    protected $maxDepth;
+    public const SIMPLE_DATE = "Y-m-d\\TH:i:sP";
+    protected string $dateFormat;
+    protected int $maxNormalizeDepth = 9;
+    protected int $maxNormalizeItemCount = 1000;
+    protected ?int $maxTraceLength = null;
+    private int $jsonEncodeOptions = Utils::DEFAULT_JSON_FLAGS;
+    protected string $basePath = '';
     /**
-     * @param string $dateFormat The format of the timestamp: one supported by DateTime::format
-     * @param int $maxDepth
+     * @param string|null $dateFormat The format of the timestamp: one supported by DateTime::format
      */
-    public function __construct($dateFormat = null, $maxDepth = 9)
+    public function __construct(?string $dateFormat = null)
     {
-        $this->dateFormat = $dateFormat ?: static::SIMPLE_DATE;
-        $this->maxDepth = $maxDepth;
-        if (!function_exists('json_encode')) {
-            throw new \RuntimeException('PHP\'s json extension is required to use Monolog\'s NormalizerFormatter');
-        }
+        $this->dateFormat = null === $dateFormat ? static::SIMPLE_DATE : $dateFormat;
     }
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
-    public function format(array $record)
+    public function format(LogRecord $record)
     {
-        return $this->normalize($record);
+        return $this->normalizeRecord($record);
     }
     /**
-     * {@inheritdoc}
+     * Normalize an arbitrary value to a scalar|array|null
+     *
+     * @return null|scalar|array<mixed[]|scalar|null>
+     */
+    public function normalizeValue(mixed $data) : mixed
+    {
+        return $this->normalize($data);
+    }
+    /**
+     * @inheritDoc
      */
     public function formatBatch(array $records)
     {
@@ -51,27 +62,110 @@ class NormalizerFormatter implements FormatterInterface
         }
         return $records;
     }
-    /**
-     * @return int
-     */
-    public function getMaxDepth()
+    public function getDateFormat() : string
     {
-        return $this->maxDepth;
+        return $this->dateFormat;
     }
     /**
-     * @param int $maxDepth
+     * @return $this
      */
-    public function setMaxDepth($maxDepth)
+    public function setDateFormat(string $dateFormat) : self
     {
-        $this->maxDepth = $maxDepth;
+        $this->dateFormat = $dateFormat;
+        return $this;
     }
-    protected function normalize($data, $depth = 0)
+    /**
+     * The maximum number of normalization levels to go through
+     */
+    public function getMaxNormalizeDepth() : int
     {
-        if ($depth > $this->maxDepth) {
-            return 'Over ' . $this->maxDepth . ' levels deep, aborting normalization';
+        return $this->maxNormalizeDepth;
+    }
+    /**
+     * @return $this
+     */
+    public function setMaxNormalizeDepth(int $maxNormalizeDepth) : self
+    {
+        $this->maxNormalizeDepth = $maxNormalizeDepth;
+        return $this;
+    }
+    /**
+     * The maximum number of items to normalize per level
+     */
+    public function getMaxNormalizeItemCount() : int
+    {
+        return $this->maxNormalizeItemCount;
+    }
+    /**
+     * @return $this
+     */
+    public function setMaxNormalizeItemCount(int $maxNormalizeItemCount) : self
+    {
+        $this->maxNormalizeItemCount = $maxNormalizeItemCount;
+        return $this;
+    }
+    /**
+     * The maximum number of stack trace frames to include
+     */
+    public function getMaxTraceLength() : ?int
+    {
+        return $this->maxTraceLength;
+    }
+    /**
+     * @return $this
+     */
+    public function setMaxTraceLength(?int $maxTraceLength) : self
+    {
+        $this->maxTraceLength = $maxTraceLength;
+        return $this;
+    }
+    /**
+     * Enables `json_encode` pretty print.
+     *
+     * @return $this
+     */
+    public function setJsonPrettyPrint(bool $enable) : self
+    {
+        if ($enable) {
+            $this->jsonEncodeOptions |= \JSON_PRETTY_PRINT;
+        } else {
+            $this->jsonEncodeOptions &= ~\JSON_PRETTY_PRINT;
         }
-        if (null === $data || is_scalar($data)) {
-            if (is_float($data)) {
+        return $this;
+    }
+    /**
+     * Setting a base path will hide the base path from exception and stack trace file names to shorten them
+     * @return $this
+     */
+    public function setBasePath(string $path = '') : self
+    {
+        if ($path !== '') {
+            $path = rtrim($path, \DIRECTORY_SEPARATOR) . \DIRECTORY_SEPARATOR;
+        }
+        $this->basePath = $path;
+        return $this;
+    }
+    /**
+     * Provided as extension point
+     *
+     * Because normalize is called with sub-values of context data etc, normalizeRecord can be
+     * extended when data needs to be appended on the record array but not to other normalized data.
+     *
+     * @return array<mixed[]|scalar|null>
+     */
+    protected function normalizeRecord(LogRecord $record) : array
+    {
+        /** @var array<mixed[]|scalar|null> $normalized */
+        $normalized = $this->normalize($record->toArray());
+        return $normalized;
+    }
+    /**
+     * @return null|scalar|array<mixed[]|scalar|null>
+     */
+    protected function normalize(mixed $data, int $depth = 0) : mixed
+    {
+        if (null === $data || \is_scalar($data)) {
+            if (\is_float($data)) {
                 if (is_infinite($data)) {
                     return ($data > 0 ? '' : '-') . 'INF';
                 }
@@ -81,47 +175,71 @@ class NormalizerFormatter implements FormatterInterface
             }
             return $data;
         }
-        if (is_array($data)) {
-            $normalized = array();
+        if ($depth > $this->maxNormalizeDepth) {
+            return 'Over ' . $this->maxNormalizeDepth . ' levels deep, aborting normalization';
+        }
+        if (\is_array($data)) {
+            $normalized = [];
             $count = 1;
             foreach ($data as $key => $value) {
-                if ($count++ > 1000) {
-                    $normalized['...'] = 'Over 1000 items (' . count($data) . ' total), aborting normalization';
+                if ($count++ > $this->maxNormalizeItemCount) {
+                    $normalized['...'] = 'Over ' . $this->maxNormalizeItemCount . ' items (' . \count($data) . ' total), aborting normalization';
                     break;
                 }
                 $normalized[$key] = $this->normalize($value, $depth + 1);
             }
             return $normalized;
         }
-        if ($data instanceof \DateTime) {
-            return $data->format($this->dateFormat);
+        if ($data instanceof \DateTimeInterface) {
+            return $this->formatDate($data);
         }
-        if (is_object($data)) {
-            // TODO 2.0 only check for Throwable
-            if ($data instanceof Exception || \PHP_VERSION_ID > 70000 && $data instanceof \Throwable) {
-                return $this->normalizeException($data);
+        if (\is_object($data)) {
+            if ($data instanceof Throwable) {
+                return $this->normalizeException($data, $depth);
             }
-            // non-serializable objects that implement __toString stringified
-            if (method_exists($data, '__toString') && !$data instanceof \JsonSerializable) {
-                $value = $data->__toString();
+            if ($data instanceof \JsonSerializable) {
+                /** @var null|scalar|array<mixed[]|scalar|null> $value */
+                $value = $data->jsonSerialize();
+            } elseif (\get_class($data) === '__PHP_Incomplete_Class') {
+                $accessor = new \ArrayObject($data);
+                $value = (string) $accessor['__PHP_Incomplete_Class_Name'];
+            } elseif (method_exists($data, '__toString')) {
+                try {
+                    /** @var string $value */
+                    $value = $data->__toString();
+                } catch (\Throwable) {
+                    // if the toString method is failing, use the default behavior
+                    /** @var null|scalar|array<mixed[]|scalar|null> $value */
+                    $value = json_decode($this->toJson($data, \true), \true);
+                }
             } else {
-                // the rest is json-serialized in some way
-                $value = $this->toJson($data, \true);
+                // the rest is normalized by json encoding and decoding it
+                /** @var null|scalar|array<mixed[]|scalar|null> $value */
+                $value = json_decode($this->toJson($data, \true), \true);
             }
-            return sprintf("[object] (%s: %s)", Utils::getClass($data), $value);
+            return [Utils::getClass($data) => $value];
         }
-        if (is_resource($data)) {
-            return sprintf('[resource] (%s)', get_resource_type($data));
+        if (\is_resource($data)) {
+            return sprintf('[resource(%s)]', get_resource_type($data));
         }
-        return '[unknown(' . gettype($data) . ')]';
+        return '[unknown(' . \gettype($data) . ')]';
     }
-    protected function normalizeException($e)
+    /**
+     * @return array<array-key, string|int|array<string|int|array<string>>>
+     */
+    protected function normalizeException(Throwable $e, int $depth = 0)
     {
-        // TODO 2.0 only check for Throwable
-        if (!$e instanceof Exception && !$e instanceof \Throwable) {
-            throw new \InvalidArgumentException('Exception/Throwable expected, got ' . gettype($e) . ' / ' . Utils::getClass($e));
+        if ($depth > $this->maxNormalizeDepth) {
+            return ['Over ' . $this->maxNormalizeDepth . ' levels deep, aborting normalization'];
         }
-        $data = array('class' => Utils::getClass($e), 'message' => $e->getMessage(), 'code' => (int) $e->getCode(), 'file' => $e->getFile() . ':' . $e->getLine());
+        if ($e instanceof \JsonSerializable) {
+            return (array) $e->jsonSerialize();
+        }
+        $file = $e->getFile();
+        if ($this->basePath !== '') {
+            $file = preg_replace('{^' . preg_quote($this->basePath) . '}', '', $file);
+        }
+        $data = ['class' => Utils::getClass($e), 'message' => $e->getMessage(), 'code' => (int) $e->getCode(), 'file' => $file . ':' . $e->getLine()];
         if ($e instanceof \SoapFault) {
             if (isset($e->faultcode)) {
                 $data['faultcode'] = $e->faultcode;
@@ -130,21 +248,47 @@ class NormalizerFormatter implements FormatterInterface
                 $data['faultactor'] = $e->faultactor;
             }
             if (isset($e->detail)) {
-                if (is_string($e->detail)) {
+                if (\is_string($e->detail)) {
                     $data['detail'] = $e->detail;
-                } elseif (is_object($e->detail) || is_array($e->detail)) {
+                } elseif (\is_object($e->detail) || \is_array($e->detail)) {
                     $data['detail'] = $this->toJson($e->detail, \true);
                 }
             }
         }
-        $trace = $e->getTrace();
+        $trace = array_slice($e->getTrace(), 0, $this->maxTraceLength);
         foreach ($trace as $frame) {
             if (isset($frame['file'])) {
-                $data['trace'][] = $frame['file'] . ':' . $frame['line'];
+                $file = $frame['file'];
+                if ($this->basePath !== '') {
+                    $file = preg_replace('{^' . preg_quote($this->basePath) . '}', '', $file) ?? $file;
+                }
+                $data['trace'][] = $file . ':' . ($frame['line'] ?? 0);
+            } else {
+                // Frames called by the engine itself have no file/line: shutdown functions,
+                // callbacks run by internal functions, destructors. Skipping them made traces
+                // look shorter than they were, and entirely empty for fatal errors caught in a
+                // shutdown function, so they are reported by name instead.
+                $call = $frame['function'];
+                // since PHP 8.4 a closure is named after its declaring scope, which already
+                // includes the class, so prefixing it again would just repeat it
+                if (isset($frame['class']) && !str_starts_with($call, '{closure:')) {
+                    // before 8.4 the name is <namespace>\{closure}, and the class has the namespace
+                    $call = str_ends_with($call, '\\{closure}') ? '{closure}' : $call;
+                    $call = Utils::getClassName($frame['class']) . ($frame['type'] ?? '::') . $call;
+                }
+                // anonymous classes carry their declaration site after a NUL byte, which truncates
+                // syslog lines and is not valid JSON; PHP 8.4 embeds it in closure names too
+                $call = preg_replace('{@anonymous\\x00.*?\\$[0-9a-f]++(?=::|$)}s', '@anonymous', $call) ?? $call;
+                if ($this->basePath !== '') {
+                    // closure names embed the file they were declared in since PHP 8.4, so the
+                    // pattern cannot be anchored; limit it or a recurring base path is stripped twice
+                    $call = preg_replace('{' . preg_quote($this->basePath) . '}', '', $call, 1) ?? $call;
+                }
+                $data['trace'][] = 'internal[' . $call . ']:0';
             }
         }
-        if ($previous = $e->getPrevious()) {
-            $data['previous'] = $this->normalizeException($previous);
+        if (($previous = $e->getPrevious()) instanceof \Throwable) {
+            $data['previous'] = $this->normalizeException($previous, $depth + 1);
         }
         return $data;
     }
@@ -152,12 +296,36 @@ class NormalizerFormatter implements FormatterInterface
      * Return the JSON representation of a value
      *
      * @param  mixed             $data
-     * @param  bool              $ignoreErrors
      * @throws \RuntimeException if encoding fails and errors are not ignored
-     * @return string
+     * @return string            if encoding fails and ignoreErrors is true 'null' is returned
      */
-    protected function toJson($data, $ignoreErrors = \false)
+    protected function toJson($data, bool $ignoreErrors = \false) : string
     {
-        return Utils::jsonEncode($data, null, $ignoreErrors);
+        return Utils::jsonEncode($data, $this->jsonEncodeOptions, $ignoreErrors);
+    }
+    protected function formatDate(\DateTimeInterface $date) : string
+    {
+        // in case the date format isn't custom then we defer to the custom JsonSerializableDateTimeImmutable
+        // formatting logic, which will pick the right format based on whether useMicroseconds is on
+        if ($this->dateFormat === self::SIMPLE_DATE && $date instanceof JsonSerializableDateTimeImmutable) {
+            return (string) $date;
+        }
+        return $date->format($this->dateFormat);
+    }
+    /**
+     * @return $this
+     */
+    public function addJsonEncodeOption(int $option) : self
+    {
+        $this->jsonEncodeOptions |= $option;
+        return $this;
+    }
+    /**
+     * @return $this
+     */
+    public function removeJsonEncodeOption(int $option) : self
+    {
+        $this->jsonEncodeOptions &= ~$option;
+        return $this;
     }
 }

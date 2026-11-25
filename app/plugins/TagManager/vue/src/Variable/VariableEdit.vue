@@ -10,18 +10,12 @@
       feature="Tag Manager"
       :content-title="editTitle"
     >
-      <p v-show="isLoading">
-        <span class="loadingPiwik">
-          <img src="plugins/Morpheus/images/loading-blue.gif" />
-          {{ translate('General_LoadingData') }}
-        </span>
-      </p>
-      <p v-show="isUpdating">
-        <span class="loadingPiwik">
-          <img src="plugins/Morpheus/images/loading-blue.gif" />
-          {{ translate('TagManager_UpdatingData') }}
-        </span>
-      </p>
+      <ActivityIndicator
+        :loading="isLoading || isUpdating"
+        :loading-message="isUpdating
+          ? translate('TagManager_UpdatingData')
+          : translate('General_LoadingData')"
+      />
       <form
         v-show="!chooseVariableType && editTitle"
         @submit="edit ? updateVariable() : createVariable()"
@@ -212,10 +206,10 @@
             class="collection-item avatar"
             @click="createVariableType(variableTemplate)"
             :class="{
-              disabledTemplate: this.isVariableTemplateDisabled[variableTemplate.id],
+              disabledTemplate: isVariableTemplateDisabled[variableTemplate.id],
               [`templateType${variableTemplate.id}`]: true,
             }"
-            :title="!this.isVariableTemplateDisabled[variableTemplate.id] ? '' :
+            :title="!isVariableTemplateDisabled[variableTemplate.id] ? '' :
               translate('TagManager_UseCustomTemplateCapabilityPermissionRequiredDescription',
                 '',
                 translate('TagManager_CapabilityUseCustomTemplates'),
@@ -223,7 +217,7 @@
                 )"
           >
             <img
-              alt
+              alt=""
               class="circle"
               :src="variableTemplate.icon"
               v-if="variableTemplate.icon"
@@ -255,6 +249,7 @@
 <script lang="ts">
 import { defineComponent, nextTick } from 'vue';
 import {
+  ActivityIndicator,
   translate,
   AjaxHelper,
   ContentBlock,
@@ -278,7 +273,7 @@ import {
 } from '../types';
 import AvailableComparisonsStore from '../AvailableComparisons.store';
 
-interface VariableEditState {
+export interface VariableEditState {
   isDirty: boolean;
   showAdvanced: boolean;
   canUseCustomTemplates: boolean;
@@ -311,6 +306,7 @@ export default defineComponent({
     },
   },
   components: {
+    ActivityIndicator,
     GroupedSettings,
     ContentBlock,
     Field,
@@ -415,13 +411,16 @@ export default defineComponent({
             }
 
             this.variable = clone(variable) as unknown as Variable;
-            this.variable.typeMetadata.parameters = variable.typeMetadata.parameters.filter(
-              (item) => !Object.prototype.hasOwnProperty.call(item, 'uiControlAttributes') || !Object.prototype.hasOwnProperty.call(item.uiControlAttributes, 'showAdvancedSettings'),
-            );
-            this.variable.typeMetadata.advancedParameters = variable.typeMetadata.parameters.filter(
-              (item) => Object.prototype.hasOwnProperty.call(item, 'uiControlAttributes') && Object.prototype.hasOwnProperty.call(item.uiControlAttributes, 'showAdvancedSettings'),
-            );
-            this.parameterValues = Object.fromEntries(variable.typeMetadata.parameters.map(
+            const parameters = variable.typeMetadata?.parameters || [];
+            if (this.variable.typeMetadata) {
+              this.variable.typeMetadata.parameters = parameters.filter(
+                (item) => !Object.prototype.hasOwnProperty.call(item, 'uiControlAttributes') || !Object.prototype.hasOwnProperty.call(item.uiControlAttributes, 'showAdvancedSettings'),
+              );
+              this.variable.typeMetadata.advancedParameters = parameters.filter(
+                (item) => Object.prototype.hasOwnProperty.call(item, 'uiControlAttributes') && Object.prototype.hasOwnProperty.call(item.uiControlAttributes, 'showAdvancedSettings'),
+              );
+            }
+            this.parameterValues = Object.fromEntries(parameters.map(
               (s) => [s.name, s.value],
             ));
 
@@ -513,7 +512,7 @@ export default defineComponent({
         typeMetadata: variableTemplate,
       };
 
-      this.variable.typeMetadata.advancedParameters = [];
+      variableTemplate.advancedParameters = [];
       const advancedOptions = variableTemplate.parameters.filter(
         (item) => Object.prototype.hasOwnProperty.call(item, 'uiControlAttributes') && Object.prototype.hasOwnProperty.call(item.uiControlAttributes, 'showAdvancedSettings'),
       );
@@ -523,8 +522,8 @@ export default defineComponent({
       this.parameterValues = Object.fromEntries(variableTemplate.parameters.map(
         (s) => [s.name, s.value],
       ));
-      this.variable.typeMetadata.advancedParameters = advancedOptions;
-      this.variable.typeMetadata.parameters = nonAdvancedOptions;
+      variableTemplate.advancedParameters = advancedOptions;
+      variableTemplate.parameters = nonAdvancedOptions;
 
       if (this.variable.typeMetadata?.name) {
         this.editTitle += `: ${this.variable.typeMetadata.name}`;

@@ -19,10 +19,7 @@ use Piwik\Widget\WidgetContainerConfig;
  */
 class WidgetsProvider
 {
-    /**
-     * @var Plugin\Manager
-     */
-    private $pluginManager;
+    private Plugin\Manager $pluginManager;
     public function __construct(Plugin\Manager $pluginManager)
     {
         $this->pluginManager = $pluginManager;

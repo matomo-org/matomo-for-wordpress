@@ -20,9 +20,8 @@ class Adapter
      * @param bool $connect
      * @return AdapterInterface
      */
-    public static function factory($adapterName,
-#[\SensitiveParameter]
-&$dbInfos, $connect = \true)
+    public static function factory($adapterName, #[\SensitiveParameter]
+        &$dbInfos, $connect = \true)
     {
         if ($connect) {
             if (isset($dbInfos['port']) && is_string($dbInfos['port']) && $dbInfos['port'][0] === '/') {
@@ -75,18 +74,6 @@ class Adapter
         return $className;
     }
     /**
-     * Get default port for named adapter
-     *
-     * @deprecated use Schema::getDefaultPortForSchema instead
-     * @param string $adapterName
-     * @return int
-     */
-    public static function getDefaultPortForAdapter($adapterName)
-    {
-        $className = self::getAdapterClassName($adapterName);
-        return call_user_func(array($className, 'getDefaultPort'));
-    }
-    /**
      * Get list of adapters
      *
      * @return array
@@ -131,7 +118,7 @@ class Adapter
             'Access denied' => Piwik::translate('General_ExceptionDatabaseAccess'),
         );
         foreach ($safeMessageMap as $search_term => $safeMessage) {
-            if (strpos($message, $search_term) !== \false) {
+            if (str_contains($message, $search_term)) {
                 return $safeMessage;
             }
         }

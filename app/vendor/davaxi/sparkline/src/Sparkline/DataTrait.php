@@ -2,19 +2,15 @@
 
 namespace Davaxi\Sparkline;
 
-/**
- * Trait DataTrait.
- */
 trait DataTrait
 {
     /**
-     * @var int
-     *          Base of value
+     * @var int Base of value
      */
     protected $base;
     /**
-     * @var int
-     *          Original value of chart
+     * Scalar float or per-series arrays of per-point floor values.
+     * @var float|float[][]
      */
     protected $originValue = 0;
     /**
@@ -22,27 +18,35 @@ trait DataTrait
      */
     protected $data = [[0, 0]];
     /**
-     * @param $base
-     * Set base for values
+     * @param int $base Set base for values
      */
     public function setBase($base)
     {
         $this->base = $base;
     }
     /**
-     * @param float $originValue
-     *                           Set origin value of chart
+     * Set per-point floor values per series, mirroring setData().
+     * Each argument is an array of floor values for one series.
+     * A scalar call setOriginValue(5.0) is also still accepted for all-series use.
+     *
+     * @param float|array ...$seriesOrigins
      */
-    public function setOriginValue(float $originValue)
+    public function setOriginValue(...$seriesOrigins)
     {
-        $this->originValue = $originValue;
+        if (count($seriesOrigins) === 1 && !is_array($seriesOrigins[0])) {
+            $this->originValue = (float) $seriesOrigins[0];
+            return;
+        }
+        $this->originValue = [];
+        foreach ($seriesOrigins as $data) {
+            $this->originValue[] = array_values((array) $data);
+        }
     }
     /**
      * @param ...$allSeries
      */
     public function setData(...$allSeries)
     {
-        $allSeries = func_get_args();
         $this->data = [];
         foreach ($allSeries as $data) {
             $this->addSeries($data);
@@ -79,10 +83,49 @@ trait DataTrait
     public function getNormalizedData(int $seriesIndex = 0) : array
     {
         $data = $this->data[$seriesIndex];
+        $originMin = $this->getOriginMin();
         foreach ($data as $i => $value) {
-            $data[$i] = max(0, $value - $this->originValue);
+            $data[$i] = max(0, $value - $originMin);
         }
         return $data;
+    }
+    /**
+     * @param int $seriesIndex
+     * @return array Floor values matching the series data length, or empty if none set.
+     */
+    public function getOriginSeries(int $seriesIndex = 0) : array
+    {
+        if (!is_array($this->originValue)) {
+            return [];
+        }
+        return $this->originValue[$seriesIndex] ?? [];
+    }
+    /**
+     * Floor values shifted by getOriginMin() so they are in the same coordinate
+     * space as getNormalizedData() — ready to pass to getDataForChartElements().
+     * @param int $seriesIndex
+     * @return array
+     */
+    public function getNormalizedOriginSeries(int $seriesIndex = 0) : array
+    {
+        $series = $this->getOriginSeries($seriesIndex);
+        if (empty($series)) {
+            return [];
+        }
+        $min = $this->getOriginMin();
+        return array_map(fn($v) => max(0, $v - $min), $series);
+    }
+    /**
+     * @param int $seriesIndex
+     * @param int $pointIndex
+     * @return float
+     */
+    protected function getOriginValueForPoint(int $seriesIndex, int $pointIndex) : float
+    {
+        if (is_array($this->originValue)) {
+            return (float) ($this->originValue[$seriesIndex][$pointIndex] ?? 0);
+        }
+        return (float) $this->originValue;
     }
     /**
      * @param int $seriesIndex
@@ -131,11 +174,20 @@ trait DataTrait
      */
     protected function getMaxValueAcrossSeries() : float
     {
-        if ($this->base) {
-            return $this->base;
+        $topMax = $this->base ?? max(array_map('max', $this->data));
+        return $topMax - $this->getOriginMin();
+    }
+    /**
+     * The minimum floor value across all series — used as the y-axis origin.
+     * @return float
+     */
+    protected function getOriginMin() : float
+    {
+        if (is_array($this->originValue)) {
+            $floors = array_merge(...array_values($this->originValue));
+            return $floors ? min($floors) : 0;
         }
-        $maxes = array_map('max', $this->data);
-        return max($maxes);
+        return (float) $this->originValue;
     }
     protected function getMaxNumberOfDataPointsAcrossSerieses()
     {

@@ -11,7 +11,6 @@
 namespace Matomo\Dependencies\Symfony\Component\HttpKernel\DependencyInjection;
 
 use Composer\Autoload\ClassLoader;
-use Symfony\Component\Debug\DebugClassLoader as LegacyDebugClassLoader;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Matomo\Dependencies\Symfony\Component\ErrorHandler\DebugClassLoader;
@@ -23,13 +22,13 @@ use Matomo\Dependencies\Symfony\Component\HttpKernel\Kernel;
  */
 class AddAnnotatedClassesToCachePass implements CompilerPassInterface
 {
-    private $kernel;
+    private Kernel $kernel;
     public function __construct(Kernel $kernel)
     {
         $this->kernel = $kernel;
     }
     /**
-     * {@inheritdoc}
+     * @return void
      */
     public function process(ContainerBuilder $container)
     {
@@ -77,7 +76,7 @@ class AddAnnotatedClassesToCachePass implements CompilerPassInterface
             if (!\is_array($function)) {
                 continue;
             }
-            if ($function[0] instanceof DebugClassLoader || $function[0] instanceof LegacyDebugClassLoader) {
+            if ($function[0] instanceof DebugClassLoader) {
                 $function = $function[0]->getClassLoader();
             }
             if (\is_array($function) && $function[0] instanceof ClassLoader) {
@@ -95,7 +94,7 @@ class AddAnnotatedClassesToCachePass implements CompilerPassInterface
             // Wildcards * and **
             $regex = strtr($regex, ['\\*\\*' => '.*?', '\\*' => '[^\\\\]*?']);
             // If this class does not end by a slash, anchor the end
-            if ('\\' !== substr($regex, -1)) {
+            if (!str_ends_with($regex, '\\')) {
                 $regex .= '$';
             }
             $regexps[] = '{^\\\\' . $regex . '}';

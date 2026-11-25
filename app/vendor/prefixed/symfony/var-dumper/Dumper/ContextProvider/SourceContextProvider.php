@@ -10,7 +10,8 @@
  */
 namespace Matomo\Dependencies\Symfony\Component\VarDumper\Dumper\ContextProvider;
 
-use Matomo\Dependencies\Symfony\Component\HttpKernel\Debug\FileLinkFormatter;
+use Matomo\Dependencies\Symfony\Component\ErrorHandler\ErrorRenderer\FileLinkFormatter;
+use Matomo\Dependencies\Symfony\Component\HttpKernel\Debug\FileLinkFormatter as LegacyFileLinkFormatter;
 use Matomo\Dependencies\Symfony\Component\VarDumper\Cloner\VarCloner;
 use Matomo\Dependencies\Symfony\Component\VarDumper\Dumper\HtmlDumper;
 use Matomo\Dependencies\Symfony\Component\VarDumper\VarDumper;
@@ -23,11 +24,11 @@ use Matomo\Dependencies\Twig\Template;
  */
 final class SourceContextProvider implements ContextProviderInterface
 {
-    private $limit;
-    private $charset;
-    private $projectDir;
-    private $fileLinkFormatter;
-    public function __construct(?string $charset = null, ?string $projectDir = null, ?FileLinkFormatter $fileLinkFormatter = null, int $limit = 9)
+    private int $limit;
+    private ?string $charset;
+    private ?string $projectDir;
+    private FileLinkFormatter|LegacyFileLinkFormatter|null $fileLinkFormatter;
+    public function __construct(?string $charset = null, ?string $projectDir = null, FileLinkFormatter|LegacyFileLinkFormatter|null $fileLinkFormatter = null, int $limit = 9)
     {
         $this->charset = $charset;
         $this->projectDir = $projectDir;
@@ -59,7 +60,7 @@ final class SourceContextProvider implements ContextProviderInterface
                             $line = $info[$trace[$i - 1]['line']];
                             $file = method_exists($template, 'getSourceContext') ? $template->getSourceContext()->getPath() : null;
                             if ($src) {
-                                $src = explode("\n", $src);
+                                $src = explode("\n", str_replace(["\r\n", "\r"], "\n", $src));
                                 $fileExcerpt = [];
                                 for ($i = max($line - 3, 1), $max = min($line + 3, \count($src)); $i <= $max; ++$i) {
                                     $fileExcerpt[] = '<li' . ($i === $line ? ' class="selected"' : '') . '><code>' . $this->htmlEncode($src[$i - 1]) . '</code></li>';
@@ -93,7 +94,7 @@ final class SourceContextProvider implements ContextProviderInterface
     private function htmlEncode(string $s) : string
     {
         $html = '';
-        $dumper = new HtmlDumper(function ($line) use(&$html) {
+        $dumper = new HtmlDumper(static function ($line) use(&$html) {
             $html .= $line;
         }, $this->charset);
         $dumper->setDumpHeader('');

@@ -16,7 +16,7 @@ This page contains information about installing the Library for PHP.
 
 ### Requirements
 
-- PHP version 7.0.0 or greater
+- PHP version 8.0.0 or greater
 - The GD PHP extension
 - The MBString PHP extension
 
@@ -32,13 +32,17 @@ or
 
 ```json
   "require": {
-    "davaxi/sparkline": "^2.3"
+    "davaxi/sparkline": "^2.4"
   }
 ```
 
+#### For PHP >= 7.0
+
+See https://github.com/davaxi/Sparkline/tree/2.3.0
+
 #### For PHP >= 5.4.0
 
-Show https://github.com/davaxi/Sparkline/tree/1.2.3
+See https://github.com/davaxi/Sparkline/tree/1.2.3
 
 ## Usage
 
@@ -49,13 +53,11 @@ Example:
 ```php
 <?php
 
-require '/path/to/sparkline/folder/autoload.php';
+require 'vendor/autoload.php';
 
 $sparkline = new Davaxi\Sparkline();
 $sparkline->setData(array(2,4,5,6,10,7,8,5,7,7,11,8,6,9,11,9,13,14,12,16));
 $sparkline->display();
-
-?>
 ```
 
 ## Documentation

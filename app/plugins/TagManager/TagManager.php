@@ -61,6 +61,7 @@ class TagManager extends \Piwik\Plugin
             // in case a Matomo tracker is bundled
             'SitesManager.deleteSite.end' => 'onSiteDeleted',
             'SitesManager.addSite.end' => 'onSiteAdded',
+            'UsersManager.deleteUser' => 'onUserDeleted',
             'System.addSystemSummaryItems' => 'addSystemSummaryItems',
             'Template.afterJsTracker' => 'addTagManagerCode',
             'Template.siteWithoutDataTab.MatomoTagManager.content' => 'setTagManagerCode',
@@ -429,6 +430,9 @@ class TagManager extends \Piwik\Plugin
         $result[] = 'TagManager_DebugUrlSameUrlErrorMessage';
         $result[] = 'TagManager_NameOfLatestVersion';
         $result[] = 'TagManager_Created';
+        $result[] = 'TagManager_CreatedBy';
+        $result[] = 'TagManager_UnknownUserHelp';
+        $result[] = 'General_Unknown';
         $result[] = 'TagManager_CreateVersionWithoutPublishing';
         $result[] = 'TagManager_PublishVersionToEnvironmentToViewEmbedCode';
         $result[] = 'TagManager_CreateVersionAndPublishRelease';
@@ -452,6 +456,9 @@ class TagManager extends \Piwik\Plugin
         $result[] = 'TagManager_Containers';
         $result[] = 'TagManager_Type';
         $result[] = 'TagManager_Types';
+        $result[] = 'TagManager_TypeNotAvailable';
+        $result[] = 'TagManager_TypeNotAvailableHelp';
+        $result[] = 'TagManager_TriggerNotAvailableOption';
         $result[] = 'TagManager_Tag';
         $result[] = 'TagManager_Tags';
         $result[] = 'TagManager_Version';
@@ -588,6 +595,7 @@ class TagManager extends \Piwik\Plugin
         $result[] = 'TagManager_VersionsDescriptionDescription';
         $result[] = 'TagManager_VersionsEnvironmentsDescription';
         $result[] = 'TagManager_VersionsCreatedDescription';
+        $result[] = 'TagManager_VersionsCreatedByDescription';
         $result[] = 'TagManager_VersionsActionDescription';
         $result[] = 'TagManager_CreateNewVersionNow';
         $result[] = 'TagManager_SelectAVariable';
@@ -884,7 +892,9 @@ class TagManager extends \Piwik\Plugin
         $stylesheets[] = "plugins/TagManager/stylesheets/manageList.less";
         $stylesheets[] = "plugins/TagManager/stylesheets/manageEdit.less";
         $stylesheets[] = "plugins/TagManager/stylesheets/containerMenu.less";
+        $stylesheets[] = "plugins/TagManager/stylesheets/previewDebugNotification.less";
         $stylesheets[] = "plugins/TagManager/vue/src/Tag/TagEdit.less";
+        $stylesheets[] = "plugins/TagManager/vue/src/ReferenceList/ReferenceList.less";
         $stylesheets[] = "plugins/TagManager/vue/src/VariableSelectType/VariableSelectType.less";
         $stylesheets[] = "plugins/TagManager/vue/src/Field/FieldVariableTemplate.less";
         $stylesheets[] = "plugins/TagManager/vue/src/ContainerSelector/ContainerSelector.less";
@@ -932,6 +942,13 @@ class TagManager extends \Piwik\Plugin
             BaseContext::removeAllContainerFiles($container['idcontainer']);
         }
         $dao->deleteContainersForSite($idSite, $deletedDate);
+    }
+    public function onUserDeleted($userLogin)
+    {
+        $dao = new ContainerVersionsDao();
+        $dao->anonymizeUserLogin($userLogin);
+        $dao = new ContainerReleaseDao();
+        $dao->anonymizeUserLogin($userLogin);
     }
     public function getMessagesToWarnOnSiteRemoval(&$messages, $idSite)
     {

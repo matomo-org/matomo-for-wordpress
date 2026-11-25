@@ -20,9 +20,9 @@ use Matomo\Dependencies\Twig\Compiler;
 #[YieldReady]
 class CaptureNode extends Node
 {
-    public function __construct(Node $body, int $lineno, ?string $tag = null)
+    public function __construct(Node $body, int $lineno)
     {
-        parent::__construct(['body' => $body], ['raw' => \false], $lineno, $tag);
+        parent::__construct(['body' => $body], ['raw' => \false], $lineno);
     }
     public function compile(Compiler $compiler) : void
     {
@@ -30,7 +30,7 @@ class CaptureNode extends Node
         if (!$this->getAttribute('raw')) {
             $compiler->raw("('' === \$tmp = ");
         }
-        $compiler->raw($useYield ? "implode('', iterator_to_array(" : '\\Matomo\\Dependencies\\Twig\\Extension\\CoreExtension::captureOutput(')->raw("(function () use (&\$context, \$macros, \$blocks) {\n")->indent()->subcompile($this->getNode('body'))->write("return; yield '';\n")->outdent()->write('})()');
+        $compiler->raw($useYield ? "implode('', iterator_to_array(" : '\\Matomo\\Dependencies\\Twig\\Extension\\CoreExtension::captureOutput(')->raw("(function () use (&\$context, \$macros, \$blocks) {\n")->indent()->subcompile($this->getNode('body'))->write("return; yield;\n")->outdent()->write('})()');
         if ($useYield) {
             $compiler->raw(', false))');
         } else {

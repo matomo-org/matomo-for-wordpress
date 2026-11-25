@@ -14,10 +14,7 @@ class TransactionLevel
 {
     public const TEST_OPTION_NAME = 'TransactionLevel.testOption';
     private $statusBackup;
-    /**
-     * @var TransactionalDatabaseInterface $transactionalDatabase
-     */
-    private $transactionalDatabase;
+    private \Piwik\Db\TransactionalDatabaseInterface $transactionalDatabase;
     public function __construct(\Piwik\Db\TransactionalDatabaseInterface $transactionalDatabase)
     {
         $this->transactionalDatabase = $transactionalDatabase;
@@ -26,13 +23,6 @@ class TransactionLevel
     {
         $dbSettings = new Db\Settings();
         return strtolower($dbSettings->getEngine()) === 'innodb';
-    }
-    /**
-     * @deprecated Use `setTransactionLevelForNonLockingReads`
-     */
-    public function setUncommitted()
-    {
-        return $this->setTransactionLevelForNonLockingReads();
     }
     public function setTransactionLevelForNonLockingReads() : bool
     {

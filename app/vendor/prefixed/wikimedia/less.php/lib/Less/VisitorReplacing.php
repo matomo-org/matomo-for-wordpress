@@ -7,27 +7,7 @@ namespace Matomo\Dependencies;
  */
 class Less_VisitorReplacing extends Less_Visitor
 {
-    public function visitObj($node)
-    {
-        $funcName = 'visit' . $node->type;
-        if (isset($this->_visitFnCache[$funcName])) {
-            $visitDeeper = \true;
-            $node = $this->{$funcName}($node, $visitDeeper);
-            if ($node) {
-                if ($visitDeeper && \is_object($node)) {
-                    $node->accept($this);
-                }
-                $funcName .= "Out";
-                if (isset($this->_visitFnCache[$funcName])) {
-                    $this->{$funcName}($node);
-                }
-            }
-        } else {
-            $node->accept($this);
-        }
-        return $node;
-    }
-    public function visitArray($nodes)
+    public function visitArray(&$nodes)
     {
         $newNodes = [];
         foreach ($nodes as $node) {

@@ -9,13 +9,14 @@
 namespace Piwik\Plugins\Monolog\Handler;
 
 use Matomo\Dependencies\Monolog\Handler\AbstractHandler;
+use Matomo\Dependencies\Monolog\LogRecord;
 class LogCaptureHandler extends AbstractHandler
 {
     /**
      * @var array
      */
     private $allLogs;
-    public function handle(array $record)
+    public function handle(LogRecord $record) : bool
     {
         $this->allLogs[] = $record;
         return \false;

@@ -3,8 +3,9 @@
 namespace Piwik\Plugins\GeoIp2;
 
 use Piwik\Common;
-use Piwik\DataTable\Renderer\Json;
+use Piwik\Exception\NoPrivilegesException;
 use Piwik\Http;
+use Piwik\Http\JsonResponse;
 use Piwik\Option;
 use Piwik\Piwik;
 use Piwik\Plugins\GeoIp2\LocationProvider\GeoIp2;
@@ -13,6 +14,7 @@ use Piwik\View;
 class Controller extends \Piwik\Plugin\ControllerAdmin
 {
     private const DOWNLOAD_URL_OPTION_PREFIX = 'geoip2.download_url.';
+    private const INVALID_HTTP_METHOD_ERROR = 'Invalid HTTP method.';
     /**
      * Starts or continues download of DBIP-City.mmdb.
      *
@@ -29,16 +31,14 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
      *   'expected_file_size' - The expected finished file size as returned by the HTTP server.
      *   'next_screen' - When the download finishes, this is the next screen that should be shown.
      *   'error' - When an error occurs, the message is returned in this property.
-     *
-     * @return string
      */
-    public function downloadFreeDBIPLiteDB()
+    #[JsonResponse]
+    public function downloadFreeDBIPLiteDB() : string
     {
         $this->dieIfGeolocationAdminIsDisabled();
         Piwik::checkUserHasSuperUserAccess();
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $this->checkTokenInUrl();
-            Json::sendHeaderJSON();
             $outputPath = \Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater::getTemporaryFolder('DBIP-City.mmdb.gz', \true);
             try {
                 $result = Http::downloadChunk($url = GeoIp2::getDbIpLiteUrl(), $outputPath, $continue = Common::getRequestVar('continue', \true, 'int'));
@@ -60,7 +60,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
                 return (string) json_encode(array('error' => $ex->getMessage()));
             }
         }
-        return '';
+        return (string) json_encode(['error' => self::INVALID_HTTP_METHOD_ERROR]);
     }
     /**
      * Sets the URLs used to download new versions of the installed GeoIP databases.
@@ -74,15 +74,13 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
      * Output (json):
      *   'error' - if an error occurs its message is set as the resulting JSON object's
      *             'error' property.
-     *
-     * @return string
      */
-    public function updateGeoIPLinks()
+    #[JsonResponse]
+    public function updateGeoIPLinks() : string
     {
         $this->dieIfGeolocationAdminIsDisabled();
         Piwik::checkUserHasSuperUserAccess();
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            Json::sendHeaderJSON();
             try {
                 $this->checkTokenInUrl();
                 \Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater::setUpdaterOptionsFromUrl();
@@ -101,7 +99,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
                 return (string) json_encode(array('error' => $ex->getMessage()));
             }
         }
-        return '';
+        return (string) json_encode(['error' => self::INVALID_HTTP_METHOD_ERROR]);
     }
     /**
      * Starts or continues a download for a missing GeoIP database. A database is missing if
@@ -119,17 +117,15 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
      *                         downloading.
      *   'current_size' - Size of the current file on disk.
      *   'expected_file_size' - Size of the completely downloaded file.
-     *
-     * @return string
      */
-    public function downloadMissingGeoIpDb()
+    #[JsonResponse]
+    public function downloadMissingGeoIpDb() : string
     {
         $this->dieIfGeolocationAdminIsDisabled();
         Piwik::checkUserHasSuperUserAccess();
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             try {
                 $this->checkTokenInUrl();
-                Json::sendHeaderJSON();
                 // based on the database type (provided by the 'key' query param) determine the
                 // url & output file name
                 $key = Common::getRequestVar('key', null, 'string');
@@ -158,7 +154,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
                 return (string) json_encode(array('error' => $ex->getMessage()));
             }
         }
-        return '';
+        return (string) json_encode(['error' => self::INVALID_HTTP_METHOD_ERROR]);
     }
     private function trackOrValidateConfiguredDownloadUrl(string $key, string $configuredUrl, int $isContinuation) : void
     {
@@ -240,7 +236,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
     private function dieIfGeolocationAdminIsDisabled() : void
     {
         if (!UserCountry::isGeoLocationAdminEnabled()) {
-            throw new \Exception('Geo location setting page has been disabled.');
+            throw new NoPrivilegesException('Geo location setting page has been disabled.', 403);
         }
     }
 }

@@ -43,10 +43,23 @@ class VisitorDetails extends VisitorDetailsAbstract
         // Enrich with time spent per action
         $nextActionId = 0;
         foreach ($actionDetails as $idx => &$action) {
-            if ($idx < $nextActionId || !$this->isPageView($action)) {
-                unset($action['timeSpentRef']);
+            // The writer measures site searches too, and those are not page views. Let anything
+            // carrying its own measured time through, or the seconds it holds reach no row.
+            $hasMeasuredTime = isset($action['pageTimeSpent']) && (int) $action['pageTimeSpent'] > 0;
+            if ($idx < $nextActionId || !$hasMeasuredTime && !$this->isPageView($action)) {
+                unset($action['timeSpentRef'], $action['pageTimeSpent']);
                 continue;
                 // skip to next page view
+            }
+            // pageTimeSpent already covers events, content impressions and heartbeats, so the
+            // legacy walk-forward below would double-count. 0 means the row was never closed
+            // (last hit of an open visit, or pre-writer data), so fall through instead.
+            if ($hasMeasuredTime) {
+                $action['timeSpent'] = (int) $action['pageTimeSpent'];
+                $action['timeSpentPretty'] = $formatter->getPrettyTimeFromSeconds($action['timeSpent'], \true);
+                $nextActionId = $idx + 1;
+                unset($action['timeSpentRef'], $action['pageTimeSpent']);
+                continue;
             }
             $action['timeSpent'] = 0;
             // search for next action with timeSpentRef
@@ -84,7 +97,7 @@ class VisitorDetails extends VisitorDetailsAbstract
             if (isset($action['timeSpent'])) {
                 $action['timeSpentPretty'] = $formatter->getPrettyTimeFromSeconds($action['timeSpent'], \true);
             }
-            unset($action['timeSpentRef']);
+            unset($action['timeSpentRef'], $action['pageTimeSpent']);
         }
         $actions = $actionDetails;
     }
@@ -148,7 +161,7 @@ class VisitorDetails extends VisitorDetailsAbstract
             }
             unset($action['url_prefix']);
         }
-        if (!empty($action['url']) && strpos($action['url'], 'http://') === 0) {
+        if (!empty($action['url']) && str_starts_with($action['url'], 'http://')) {
             $host = parse_url($action['url'], \PHP_URL_HOST);
             if ($host && PageUrl::shouldUseHttpsHost($visitorDetails['idSite'], $host)) {
                 $action['url'] = 'https://' . mb_substr($action['url'], 7);
@@ -261,7 +274,10 @@ class VisitorDetails extends VisitorDetailsAbstract
 					log_link_visit_action.time_dom_processing +
 					log_link_visit_action.time_on_load ) AS pageLoadTime,';
         }
-        $sql = "\n\t\t\t\tSELECT\n\t\t\t\t\tlog_link_visit_action.idvisit,\n\t\t\t\t\tCOALESCE(log_action.type, log_action_title.type) AS type,\n\t\t\t\t\tlog_action.name AS url,\n\t\t\t\t\tlog_action.url_prefix,\n\t\t\t\t\tlog_action_title.name AS pageTitle,\n\t\t\t\t\tlog_action.idaction AS pageIdAction,\n\t\t\t\t\tlog_link_visit_action.idpageview,\n\t\t\t\t\tlog_link_visit_action.idlink_va,\n\t\t\t\t\tlog_link_visit_action.server_time as serverTimePretty,\n\t\t\t\t\tlog_link_visit_action.time_spent_ref_action as timeSpentRef,\n\t\t\t\t\tlog_link_visit_action.idlink_va AS pageId,\n\t\t\t\t\tlog_link_visit_action.custom_float,\n\t\t\t\t\t{$pagePerformanceSelect}\n\t\t\t\t\tlog_link_visit_action.pageview_position,\n\t\t\t\t\tlog_link_visit_action.search_cat,\n\t\t\t\t\tlog_link_visit_action.search_count\n\t\t\t\t\t" . $customActionDimensionFields . "\n\t\t\t\tFROM `" . Common::prefixTable('log_link_visit_action') . "` AS log_link_visit_action\n\t\t\t\t\tLEFT JOIN `" . Common::prefixTable('log_action') . "` AS log_action\n\t\t\t\t\tON  log_link_visit_action.idaction_url = log_action.idaction\n\t\t\t\t\tLEFT JOIN `" . Common::prefixTable('log_action') . "` AS log_action_title\n\t\t\t\t\tON  log_link_visit_action.idaction_name = log_action_title.idaction\n\t\t\t\t\t" . implode(" ", $customJoins) . "\n\t\t\t\tWHERE log_link_visit_action.idvisit IN ('" . implode("','", $idVisits) . "')\n\t\t\t\tORDER BY log_link_visit_action.idvisit, log_link_visit_action.server_time, log_link_visit_action.idlink_va\n\t\t\t\t ";
+        // timeSpentRef is kept alongside pageTimeSpent so the walk-forward still works for
+        // pre-writer visits. Joined on idlink_va rather than idpageview: the latter would need
+        // a runtime COLLATE on utf8mb3 installs and fatals there with MySQL error 1253.
+        $sql = "\n\t\t\t\tSELECT\n\t\t\t\t\tlog_link_visit_action.idvisit,\n\t\t\t\t\tCOALESCE(log_action.type, log_action_title.type) AS type,\n\t\t\t\t\tlog_action.name AS url,\n\t\t\t\t\tlog_action.url_prefix,\n\t\t\t\t\tlog_action_title.name AS pageTitle,\n\t\t\t\t\tlog_action.idaction AS pageIdAction,\n\t\t\t\t\tlog_link_visit_action.idpageview,\n\t\t\t\t\tlog_link_visit_action.idlink_va,\n\t\t\t\t\tlog_link_visit_action.server_time as serverTimePretty,\n\t\t\t\t\tlog_link_visit_action.time_spent_ref_action AS timeSpentRef,\n\t\t\t\t\tlog_page_view_time.time_spent AS pageTimeSpent,\n\t\t\t\t\tlog_link_visit_action.idlink_va AS pageId,\n\t\t\t\t\tlog_link_visit_action.custom_float,\n\t\t\t\t\t{$pagePerformanceSelect}\n\t\t\t\t\tlog_link_visit_action.pageview_position,\n\t\t\t\t\tlog_link_visit_action.search_cat,\n\t\t\t\t\tlog_link_visit_action.search_count\n\t\t\t\t\t" . $customActionDimensionFields . "\n\t\t\t\tFROM `" . Common::prefixTable('log_link_visit_action') . "` AS log_link_visit_action\n\t\t\t\t\tLEFT JOIN `" . Common::prefixTable('log_action') . "` AS log_action\n\t\t\t\t\tON  log_link_visit_action.idaction_url = log_action.idaction\n\t\t\t\t\tLEFT JOIN `" . Common::prefixTable('log_action') . "` AS log_action_title\n\t\t\t\t\tON  log_link_visit_action.idaction_name = log_action_title.idaction\n\t\t\t\t\tLEFT JOIN `" . Common::prefixTable('log_page_view_time') . "` AS log_page_view_time\n\t\t\t\t\tON  log_page_view_time.idvisit = log_link_visit_action.idvisit\n\t\t\t\t\tAND log_page_view_time.idlink_va = log_link_visit_action.idlink_va\n\t\t\t\t\t" . implode(" ", $customJoins) . "\n\t\t\t\tWHERE log_link_visit_action.idvisit IN ('" . implode("','", $idVisits) . "')\n\t\t\t\tORDER BY log_link_visit_action.idvisit, log_link_visit_action.server_time, log_link_visit_action.idlink_va\n\t\t\t\t ";
         $actionDetails = $this->getDb()->fetchAll($sql);
         return $actionDetails;
     }

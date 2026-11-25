@@ -6,6 +6,13 @@
  */
 
 import { DeepReadonly } from 'vue';
+import type { Setting } from 'CorePluginsAdmin';
+
+// A setting definition of a tag, trigger or variable type, as the type
+// metadata returns it: a plugin setting plus the ui control's own attributes.
+export interface TypeParameter extends Setting {
+  uiControlAttributes?: Record<string, unknown>;
+}
 
 export interface InstallInstructions {
   description: string;
@@ -34,8 +41,8 @@ export interface VariableType {
   isCustomTemplate: boolean;
   name: string;
   order: number;
-  parameters: Record<string, unknown>[];
-  advancedParameters: Record<string, unknown>[];
+  parameters: TypeParameter[];
+  advancedParameters: TypeParameter[];
 }
 
 export interface Variable {
@@ -53,7 +60,8 @@ export interface Variable {
   type: string;
   updated_date?: string;
   updated_date_pretty?: string;
-  typeMetadata: VariableType;
+  // null when the type is not available, eg because the plugin providing it is no longer active
+  typeMetadata: VariableType|null;
 }
 
 export interface ContainerVariableType {
@@ -83,7 +91,7 @@ export interface VariableType {
   isCustomTemplate: boolean;
   name: string;
   order: number;
-  parameters: Record<string, unknown>[];
+  parameters: TypeParameter[];
 }
 
 export interface VariableCategory {
@@ -91,10 +99,12 @@ export interface VariableCategory {
   types: VariableType[];
 }
 
+export type ReferenceType = 'tag' | 'trigger' | 'variable';
+
 export interface VariableReference {
   referenceId: number;
   referenceName: string;
-  referenceType: string;
+  referenceType: ReferenceType;
   referenceTypeName: string;
 }
 
@@ -110,7 +120,7 @@ export interface TriggerType {
   isCustomTemplate: boolean;
   name: string;
   order: number;
-  parameters: Record<string, unknown>[];
+  parameters: TypeParameter[];
 }
 
 export interface TriggerCategory {
@@ -135,13 +145,15 @@ export interface Trigger {
   description: string;
   status?: string;
   type: string;
-  typeMetadata: TriggerType;
+  // null when the type is not available, eg because the plugin providing it is no longer active
+  typeMetadata: TriggerType|null;
   updated_date?: string;
   updated_date_pretty?: string;
 }
 
 export interface TriggerReference {
   referenceId: number;
+  referenceType: ReferenceType;
   referenceTypeName: string;
   referenceName: string;
 }
@@ -158,7 +170,7 @@ export interface TagType {
   isCustomTemplate: boolean;
   name: string;
   order: number;
-  parameters: Record<string, unknown>[];
+  parameters: TypeParameter[];
 }
 
 export interface TagTypeCategory {
@@ -183,7 +195,8 @@ export interface Tag {
   start_date: null|string;
   status: string;
   type: string;
-  typeMetadata: TagType;
+  // null when the type is not available, eg because the plugin providing it is no longer active
+  typeMetadata: TagType|null;
   updated_date?: string;
   updated_date_pretty?: string;
 }
@@ -198,6 +211,7 @@ export interface Draft {
   name: string;
   created_date: string;
   created_date_pretty: string;
+  created_by: string|null;
   description: string;
   updated_date: string;
   updated_date_pretty: string;
@@ -231,6 +245,7 @@ export interface Release {
 export interface Version {
   created_date?: string;
   created_date_pretty?: string;
+  created_by?: string|null;
   description: string;
   environments: string[];
   idcontainer: string;

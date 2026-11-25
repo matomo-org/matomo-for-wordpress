@@ -1,5 +1,6 @@
 <?php
 
+declare (strict_types=1);
 namespace Matomo\Dependencies\Invoker\ParameterResolver;
 
 use ReflectionFunctionAbstract;
@@ -12,12 +13,10 @@ use ReflectionFunctionAbstract;
  *
  * Parameters that are not indexed by a number (i.e. parameter position)
  * will be ignored.
- *
- * @author Matthieu Napoli <matthieu@mnapoli.fr>
  */
 class NumericArrayResolver implements ParameterResolver
 {
-    public function getParameters(ReflectionFunctionAbstract $reflection, array $providedParameters, array $resolvedParameters)
+    public function getParameters(ReflectionFunctionAbstract $reflection, array $providedParameters, array $resolvedParameters) : array
     {
         // Skip parameters already resolved
         if (!empty($resolvedParameters)) {

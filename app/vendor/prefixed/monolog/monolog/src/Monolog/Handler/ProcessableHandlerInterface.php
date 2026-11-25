@@ -12,10 +12,9 @@ declare (strict_types=1);
 namespace Matomo\Dependencies\Monolog\Handler;
 
 use Matomo\Dependencies\Monolog\Processor\ProcessorInterface;
+use Matomo\Dependencies\Monolog\LogRecord;
 /**
  * Interface to describe loggers that have processors
- *
- * This interface is present in monolog 1.x to ease forward compatibility.
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
@@ -24,15 +23,19 @@ interface ProcessableHandlerInterface
     /**
      * Adds a processor in the stack.
      *
+     * @phpstan-param ProcessorInterface|(callable(LogRecord): LogRecord) $callback
+     *
      * @param  ProcessorInterface|callable $callback
      * @return HandlerInterface            self
      */
-    public function pushProcessor($callback) : HandlerInterface;
+    public function pushProcessor(callable $callback) : HandlerInterface;
     /**
      * Removes the processor on top of the stack and returns it.
      *
-     * @throws \LogicException In case the processor stack is empty
-     * @return callable
+     * @phpstan-return ProcessorInterface|(callable(LogRecord): LogRecord) $callback
+     *
+     * @throws \LogicException             In case the processor stack is empty
+     * @return callable|ProcessorInterface
      */
     public function popProcessor() : callable;
 }

@@ -9,9 +9,9 @@
 namespace Piwik\Plugins\Overlay;
 
 use Exception;
-use Piwik\API\Request;
 use Piwik\Config\GeneralConfig;
 use Piwik\DataTable;
+use Piwik\Piwik;
 use Piwik\Plugins\Transitions\API as APITransitions;
 use Piwik\Tracker\PageUrl;
 /**
@@ -30,19 +30,6 @@ class API extends \Piwik\Plugin\API
     {
         $translations = array('oneClick' => 'Overlay_OneClick', 'clicks' => 'Overlay_Clicks', 'clicksFromXLinks' => 'Overlay_ClicksFromXLinks', 'link' => 'Overlay_Link');
         return array_map(array('\\Piwik\\Piwik', 'translate'), $translations);
-    }
-    /**
-     * Returns the excluded query parameters configured for a website.
-     * This information is used for client-side URL normalization.
-     *
-     * @param int $idSite Deprecated site ID parameter retained for backward compatibility.
-     * @return array Excluded query parameter names returned by `SitesManager.getExcludedQueryParameters`.
-     * @deprecated use SitesManager.getExcludedQueryParameters instead
-     * @todo Remove in Matomo 6
-     */
-    public function getExcludedQueryParameters(int $idSite)
-    {
-        return Request::processRequest('SitesManager.getExcludedQueryParameters');
     }
     /**
      * Returns the following pages reached after visits to a specific page URL.
@@ -65,6 +52,8 @@ class API extends \Piwik\Plugin\API
      */
     public function getFollowingPages($url, int $idSite, $period, $date, $segment = \false)
     {
+        // Check access before touching any site-specific data or caches below.
+        Piwik::checkUserHasViewAccess($idSite);
         $url = PageUrl::excludeQueryParametersFromUrl($url, $idSite);
         // we don't unsanitize $url here. it will be done in the Transitions plugin.
         $resultDataTable = new DataTable();

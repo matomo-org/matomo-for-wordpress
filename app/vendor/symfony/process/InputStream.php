@@ -20,35 +20,40 @@ use Symfony\Component\Process\Exception\RuntimeException;
  */
 class InputStream implements \IteratorAggregate
 {
-    /** @var callable|null */
-    private $onEmpty = null;
-    private $input = [];
-    private $open = \true;
+    private ?\Closure $onEmpty = null;
+    private array $input = [];
+    private bool $open = \true;
     /**
      * Sets a callback that is called when the write buffer becomes empty.
+     *
+     * @return void
      */
     public function onEmpty(?callable $onEmpty = null)
     {
-        $this->onEmpty = $onEmpty;
+        $this->onEmpty = null !== $onEmpty ? $onEmpty(...) : null;
     }
     /**
      * Appends an input to the write buffer.
      *
      * @param resource|string|int|float|bool|\Traversable|null $input The input to append as scalar,
      *                                                                stream resource or \Traversable
+     *
+     * @return void
      */
-    public function write($input)
+    public function write(mixed $input)
     {
         if (null === $input) {
             return;
         }
         if ($this->isClosed()) {
-            throw new RuntimeException(sprintf('"%s" is closed.', static::class));
+            throw new RuntimeException(\sprintf('"%s" is closed.', static::class));
         }
         $this->input[] = \Symfony\Component\Process\ProcessUtils::validateInput(__METHOD__, $input);
     }
     /**
      * Closes the write buffer.
+     *
+     * @return void
      */
     public function close()
     {
@@ -56,16 +61,14 @@ class InputStream implements \IteratorAggregate
     }
     /**
      * Tells whether the write buffer is closed or not.
+     *
+     * @return bool
      */
     public function isClosed()
     {
         return !$this->open;
     }
-    /**
-     * @return \Traversable<int, string>
-     */
-    #[\ReturnTypeWillChange]
-    public function getIterator()
+    public function getIterator() : \Traversable
     {
         $this->open = \true;
         while ($this->open || $this->input) {

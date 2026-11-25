@@ -392,6 +392,9 @@
         "CompareRows": "Kompari registojn",
         "MetricBetweenText": "De %1$sal%2$s"
     },
+    "AIProviders": {
+        "DefaultBadge": "Implicita"
+    },
     "Actions": {
         "PagesSubcategoryHelp3": "Uzi la plus kaj minus ikonoj maldekstre por foliumi."
     },
@@ -445,7 +448,9 @@
         "Forums": "Forumoj"
     },
     "Goals": {
-        "CategoryTextGeneral_Actions": "Paĝoj"
+        "CategoryTextGeneral_Actions": "Paĝoj",
+        "RecommendationCountOnePage": "1 paĝo",
+        "RecommendationCountPages": "%s paĝoj"
     },
     "Installation": {
         "Password": "Pasvorto"
@@ -1548,9 +1553,11 @@
         "Year_Short": "jaro",
         "Yesterday": "Hieraŭ"
     },
+    "Marketplace": {
+        "CategoryDevelopment": "Disvolvigo"
+    },
     "MultiSites": {
-        "AllWebsitesDashboardTitle": "Ĉiuj la retejoj",
-        "TotalPageviews": "Totalaj paĝomontroj"
+        "AllWebsitesDashboardTitle": "Ĉiuj la retejoj"
     },
     "ProfessionalServices": {
         "PromoOverview": "Superrigardo"

@@ -11,7 +11,7 @@
  */
 namespace Matomo\Dependencies\Twig\TokenParser;
 
-use Matomo\Dependencies\Twig\Error\SyntaxError;
+use Matomo\Dependencies\Twig\Node\ConfigNode;
 use Matomo\Dependencies\Twig\Node\Node;
 use Matomo\Dependencies\Twig\Token;
 /**
@@ -26,20 +26,9 @@ final class ExtendsTokenParser extends AbstractTokenParser
     public function parse(Token $token) : Node
     {
         $stream = $this->parser->getStream();
-        if ($this->parser->peekBlockStack()) {
-            throw new SyntaxError('Cannot use "extend" in a block.', $token->getLine(), $stream->getSourceContext());
-        } elseif (!$this->parser->isMainScope()) {
-            throw new SyntaxError('Cannot use "extend" in a macro.', $token->getLine(), $stream->getSourceContext());
-        }
-        if (null !== $this->parser->getParent()) {
-            throw new SyntaxError('Multiple extends tags are forbidden.', $token->getLine(), $stream->getSourceContext());
-        }
-        $this->parser->setParent($this->parser->getExpressionParser()->parseExpression());
-        $stream->expect(
-            /* Token::BLOCK_END_TYPE */
-            3
-        );
-        return new Node();
+        $this->parser->setParent($this->parser->parseExpression(), \false);
+        $stream->expect(Token::BLOCK_END_TYPE);
+        return new ConfigNode($token->getLine());
     }
     public function getTag() : string
     {

@@ -66,7 +66,7 @@ class CustomLogo
             /* We always have our application logo */
             return \true;
         }
-        if ($this->isEnabled() && static::logoExists(static::getPathUserSvgLogo())) {
+        if ($this->isEnabled() && self::logoExists(static::getPathUserSvgLogo())) {
             return \true;
         }
         return \false;
@@ -109,10 +109,10 @@ class CustomLogo
             $themeName = $theme->getPluginName();
         }
         $themeLogo = sprintf($themeLogo, $themeName);
-        if (static::logoExists($themeLogo)) {
+        if (self::logoExists($themeLogo)) {
             $logo = $themeLogo;
         }
-        if ($this->isEnabled() && static::logoExists($customLogo)) {
+        if ($this->isEnabled() && self::logoExists($customLogo)) {
             $logo = $customLogo;
         }
         if (!$pathOnly) {
@@ -191,14 +191,14 @@ class CustomLogo
      */
     public static function hasUserLogo()
     {
-        return static::logoExists(static::getPathUserLogo());
+        return self::logoExists(static::getPathUserLogo());
     }
     /**
      * @return bool
      */
     public static function hasUserFavicon()
     {
-        return static::logoExists(static::getPathUserFavicon());
+        return self::logoExists(static::getPathUserFavicon());
     }
     private function postLogoChangeEvent($imagePath) : void
     {
@@ -335,7 +335,6 @@ class CustomLogo
             default:
                 return \false;
         }
-        // @phpstan-ignore class.notFound
         if (!is_resource($image) && !$image instanceof \GdImage) {
             return \false;
         }

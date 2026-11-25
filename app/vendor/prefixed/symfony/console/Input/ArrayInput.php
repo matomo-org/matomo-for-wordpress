@@ -23,16 +23,13 @@ use Matomo\Dependencies\Symfony\Component\Console\Exception\InvalidOptionExcepti
  */
 class ArrayInput extends Input
 {
-    private $parameters;
+    private array $parameters;
     public function __construct(array $parameters, ?InputDefinition $definition = null)
     {
         $this->parameters = $parameters;
         parent::__construct($definition);
     }
-    /**
-     * {@inheritdoc}
-     */
-    public function getFirstArgument()
+    public function getFirstArgument() : ?string
     {
         foreach ($this->parameters as $param => $value) {
             if ($param && \is_string($param) && '-' === $param[0]) {
@@ -42,10 +39,7 @@ class ArrayInput extends Input
         }
         return null;
     }
-    /**
-     * {@inheritdoc}
-     */
-    public function hasParameterOption($values, bool $onlyParams = \false)
+    public function hasParameterOption(string|array $values, bool $onlyParams = \false) : bool
     {
         $values = (array) $values;
         foreach ($this->parameters as $k => $v) {
@@ -61,10 +55,7 @@ class ArrayInput extends Input
         }
         return \false;
     }
-    /**
-     * {@inheritdoc}
-     */
-    public function getParameterOption($values, $default = \false, bool $onlyParams = \false)
+    public function getParameterOption(string|array $values, string|bool|int|float|array|null $default = \false, bool $onlyParams = \false) : mixed
     {
         $values = (array) $values;
         foreach ($this->parameters as $k => $v) {
@@ -83,10 +74,8 @@ class ArrayInput extends Input
     }
     /**
      * Returns a stringified representation of the args passed to the command.
-     *
-     * @return string
      */
-    public function __toString()
+    public function __toString() : string
     {
         $params = [];
         foreach ($this->parameters as $param => $val) {
@@ -100,13 +89,13 @@ class ArrayInput extends Input
                     $params[] = $param . ('' != $val ? $glue . $this->escapeToken($val) : '');
                 }
             } else {
-                $params[] = \is_array($val) ? implode(' ', array_map([$this, 'escapeToken'], $val)) : $this->escapeToken($val);
+                $params[] = \is_array($val) ? implode(' ', array_map($this->escapeToken(...), $val)) : $this->escapeToken($val);
             }
         }
         return implode(' ', $params);
     }
     /**
-     * {@inheritdoc}
+     * @return void
      */
     protected function parse()
     {
@@ -128,10 +117,10 @@ class ArrayInput extends Input
      *
      * @throws InvalidOptionException When option given doesn't exist
      */
-    private function addShortOption(string $shortcut, $value)
+    private function addShortOption(string $shortcut, mixed $value) : void
     {
         if (!$this->definition->hasShortcut($shortcut)) {
-            throw new InvalidOptionException(sprintf('The "-%s" option does not exist.', $shortcut));
+            throw new InvalidOptionException(\sprintf('The "-%s" option does not exist.', $shortcut));
         }
         $this->addLongOption($this->definition->getOptionForShortcut($shortcut)->getName(), $value);
     }
@@ -141,11 +130,11 @@ class ArrayInput extends Input
      * @throws InvalidOptionException When option given doesn't exist
      * @throws InvalidOptionException When a required value is missing
      */
-    private function addLongOption(string $name, $value)
+    private function addLongOption(string $name, mixed $value) : void
     {
         if (!$this->definition->hasOption($name)) {
             if (!$this->definition->hasNegation($name)) {
-                throw new InvalidOptionException(sprintf('The "--%s" option does not exist.', $name));
+                throw new InvalidOptionException(\sprintf('The "--%s" option does not exist.', $name));
             }
             $optionName = $this->definition->negationToName($name);
             $this->options[$optionName] = \false;
@@ -154,7 +143,7 @@ class ArrayInput extends Input
         $option = $this->definition->getOption($name);
         if (null === $value) {
             if ($option->isValueRequired()) {
-                throw new InvalidOptionException(sprintf('The "--%s" option requires a value.', $name));
+                throw new InvalidOptionException(\sprintf('The "--%s" option requires a value.', $name));
             }
             if (!$option->isValueOptional()) {
                 $value = \true;
@@ -165,15 +154,12 @@ class ArrayInput extends Input
     /**
      * Adds an argument value.
      *
-     * @param string|int $name  The argument name
-     * @param mixed      $value The value for the argument
-     *
      * @throws InvalidArgumentException When argument given doesn't exist
      */
-    private function addArgument($name, $value)
+    private function addArgument(string|int $name, mixed $value) : void
     {
         if (!$this->definition->hasArgument($name)) {
-            throw new InvalidArgumentException(sprintf('The "%s" argument does not exist.', $name));
+            throw new InvalidArgumentException(\sprintf('The "%s" argument does not exist.', $name));
         }
         $this->arguments[$name] = $value;
     }

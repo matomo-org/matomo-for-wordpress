@@ -17,8 +17,8 @@ namespace Matomo\Dependencies\Symfony\Component\HttpFoundation\Session\Attribute
  */
 class AttributeBag implements AttributeBagInterface, \IteratorAggregate, \Countable
 {
-    private $name = 'attributes';
-    private $storageKey;
+    private string $name = 'attributes';
+    private string $storageKey;
     protected $attributes = [];
     /**
      * @param string $storageKey The key used to store attributes in the session
@@ -27,61 +27,49 @@ class AttributeBag implements AttributeBagInterface, \IteratorAggregate, \Counta
     {
         $this->storageKey = $storageKey;
     }
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
+    public function getName() : string
     {
         return $this->name;
     }
+    /**
+     * @return void
+     */
     public function setName(string $name)
     {
         $this->name = $name;
     }
     /**
-     * {@inheritdoc}
+     * @return void
      */
     public function initialize(array &$attributes)
     {
         $this->attributes =& $attributes;
     }
-    /**
-     * {@inheritdoc}
-     */
-    public function getStorageKey()
+    public function getStorageKey() : string
     {
         return $this->storageKey;
     }
-    /**
-     * {@inheritdoc}
-     */
-    public function has(string $name)
+    public function has(string $name) : bool
     {
         return \array_key_exists($name, $this->attributes);
     }
-    /**
-     * {@inheritdoc}
-     */
-    public function get(string $name, $default = null)
+    public function get(string $name, mixed $default = null) : mixed
     {
         return \array_key_exists($name, $this->attributes) ? $this->attributes[$name] : $default;
     }
     /**
-     * {@inheritdoc}
+     * @return void
      */
-    public function set(string $name, $value)
+    public function set(string $name, mixed $value)
     {
         $this->attributes[$name] = $value;
     }
-    /**
-     * {@inheritdoc}
-     */
-    public function all()
+    public function all() : array
     {
         return $this->attributes;
     }
     /**
-     * {@inheritdoc}
+     * @return void
      */
     public function replace(array $attributes)
     {
@@ -90,10 +78,7 @@ class AttributeBag implements AttributeBagInterface, \IteratorAggregate, \Counta
             $this->set($key, $value);
         }
     }
-    /**
-     * {@inheritdoc}
-     */
-    public function remove(string $name)
+    public function remove(string $name) : mixed
     {
         $retval = null;
         if (\array_key_exists($name, $this->attributes)) {
@@ -102,10 +87,7 @@ class AttributeBag implements AttributeBagInterface, \IteratorAggregate, \Counta
         }
         return $retval;
     }
-    /**
-     * {@inheritdoc}
-     */
-    public function clear()
+    public function clear() : mixed
     {
         $return = $this->attributes;
         $this->attributes = [];
@@ -116,18 +98,14 @@ class AttributeBag implements AttributeBagInterface, \IteratorAggregate, \Counta
      *
      * @return \ArrayIterator<string, mixed>
      */
-    #[\ReturnTypeWillChange]
-    public function getIterator()
+    public function getIterator() : \ArrayIterator
     {
         return new \ArrayIterator($this->attributes);
     }
     /**
      * Returns the number of attributes.
-     *
-     * @return int
      */
-    #[\ReturnTypeWillChange]
-    public function count()
+    public function count() : int
     {
         return \count($this->attributes);
     }

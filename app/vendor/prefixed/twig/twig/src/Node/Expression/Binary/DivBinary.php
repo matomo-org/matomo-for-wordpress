@@ -12,7 +12,8 @@
 namespace Matomo\Dependencies\Twig\Node\Expression\Binary;
 
 use Matomo\Dependencies\Twig\Compiler;
-class DivBinary extends AbstractBinary
+use Matomo\Dependencies\Twig\Node\Expression\ReturnNumberInterface;
+class DivBinary extends AbstractBinary implements ReturnNumberInterface
 {
     public function operator(Compiler $compiler) : Compiler
     {

@@ -252,7 +252,7 @@ class ExclusionSettings implements AdminSettingsInterface {
 		if ( isset( $post['excluded_query_parameters'] ) ) {
 			$params = $this->to_comma_list( $post['excluded_query_parameters'] );
 			if ( $params !== $api->getExcludedQueryParametersGlobal() ) {
-				$api->setGlobalExcludedQueryParameters( $params );
+				$api->setGlobalQueryParamExclusion( '' === $params ? 'common_session_parameters' : 'custom', '' === $params ? null : $params );
 				$was_updated = true;
 			}
 		}

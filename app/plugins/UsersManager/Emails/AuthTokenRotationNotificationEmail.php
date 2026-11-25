@@ -17,14 +17,9 @@ use Piwik\Url;
 use Piwik\View;
 class AuthTokenRotationNotificationEmail extends Mail
 {
-    /**
-     * @var TokenNotification
-     */
-    private $notification;
-    /** @var string */
-    private $recipient;
-    /** @var array */
-    private $emailData;
+    private TokenNotification $notification;
+    private string $recipient;
+    private array $emailData;
     public function __construct(TokenNotification $notification, string $recipient, array $emailData)
     {
         parent::__construct();

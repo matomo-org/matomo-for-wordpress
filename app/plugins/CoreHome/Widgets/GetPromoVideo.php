@@ -15,10 +15,7 @@ use Piwik\Translation\Translator;
 use Piwik\View;
 class GetPromoVideo extends Widget
 {
-    /**
-     * @var Translator
-     */
-    private $translator;
+    private Translator $translator;
     public function __construct(Translator $translator)
     {
         $this->translator = $translator;

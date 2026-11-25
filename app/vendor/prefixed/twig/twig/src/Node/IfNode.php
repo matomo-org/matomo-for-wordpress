@@ -13,6 +13,7 @@ namespace Matomo\Dependencies\Twig\Node;
 
 use Matomo\Dependencies\Twig\Attribute\YieldReady;
 use Matomo\Dependencies\Twig\Compiler;
+use Matomo\Dependencies\Twig\Node\Expression\Test\TrueTest;
 /**
  * Represents an if node.
  *
@@ -21,13 +22,16 @@ use Matomo\Dependencies\Twig\Compiler;
 #[YieldReady]
 class IfNode extends Node
 {
-    public function __construct(Node $tests, ?Node $else, int $lineno, ?string $tag = null)
+    public function __construct(Node $tests, ?Node $else, int $lineno)
     {
+        for ($i = 0, $count = \count($tests); $i < $count; $i += 2) {
+            $tests->setNode($i, TrueTest::wrap($tests->getNode((string) $i)));
+        }
         $nodes = ['tests' => $tests];
         if (null !== $else) {
             $nodes['else'] = $else;
         }
-        parent::__construct($nodes, [], $lineno, $tag);
+        parent::__construct($nodes, [], $lineno);
     }
     public function compile(Compiler $compiler) : void
     {

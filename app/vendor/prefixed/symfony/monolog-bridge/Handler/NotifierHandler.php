@@ -11,7 +11,9 @@
 namespace Matomo\Dependencies\Symfony\Bridge\Monolog\Handler;
 
 use Matomo\Dependencies\Monolog\Handler\AbstractHandler;
+use Matomo\Dependencies\Monolog\Level;
 use Matomo\Dependencies\Monolog\Logger;
+use Matomo\Dependencies\Monolog\LogRecord;
 use Symfony\Component\Notifier\Notification\Notification;
 use Symfony\Component\Notifier\Notifier;
 use Symfony\Component\Notifier\NotifierInterface;
@@ -19,19 +21,20 @@ use Symfony\Component\Notifier\NotifierInterface;
  * Uses Notifier as a log handler.
  *
  * @author Fabien Potencier <fabien@symfony.com>
+ *
+ * @final since Symfony 6.1
  */
 class NotifierHandler extends AbstractHandler
 {
-    private $notifier;
-    /**
-     * @param string|int $level The minimum logging level at which this handler will be triggered
-     */
-    public function __construct(NotifierInterface $notifier, $level = Logger::ERROR, bool $bubble = \true)
+    use CompatibilityHandler;
+    private NotifierInterface $notifier;
+    public function __construct(NotifierInterface $notifier, string|int|Level $level = Logger::ERROR, bool $bubble = \true)
     {
         $this->notifier = $notifier;
-        parent::__construct(Logger::toMonologLevel($level) < Logger::ERROR ? Logger::ERROR : $level, $bubble);
+        $level = Logger::toMonologLevel($level);
+        parent::__construct(($level instanceof Level ? $level->value : $level) < Logger::ERROR ? Logger::ERROR : $level, $bubble);
     }
-    public function handle(array $record) : bool
+    private function doHandle(array|LogRecord $record) : bool
     {
         if (!$this->isHandling($record)) {
             return \false;
@@ -41,7 +44,7 @@ class NotifierHandler extends AbstractHandler
     }
     public function handleBatch(array $records) : void
     {
-        if ($records = array_filter($records, [$this, 'isHandling'])) {
+        if ($records = array_filter($records, $this->isHandling(...))) {
             $this->notify($records);
         }
     }
@@ -54,9 +57,10 @@ class NotifierHandler extends AbstractHandler
             $notification = new Notification($record['message']);
         }
         $notification->importanceFromLogLevelName(Logger::getLevelName($record['level']));
-        $this->notifier->send($notification, ...$this->notifier->getAdminRecipients());
+        $recipients = method_exists($this->notifier, 'getAdminRecipients') ? $this->notifier->getAdminRecipients() : [];
+        $this->notifier->send($notification, ...$recipients);
     }
-    private function getHighestRecord(array $records)
+    private function getHighestRecord(array $records) : array|LogRecord
     {
         $highestRecord = null;
         foreach ($records as $record) {

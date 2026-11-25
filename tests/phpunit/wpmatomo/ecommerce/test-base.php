@@ -210,7 +210,7 @@ EOF;
 		$this->assertEquals(
 			[
 				'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&cdt=' . $tracking_time . '&_id=REMOVED&url=&urlref=&idgoal=0&revenue=100&ip_nonce=REMOVED&bots=1',
-				'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&cdt=' . $tracking_time . '&_id=REMOVED&url=&urlref=&idgoal=0&revenue=300&ec_st=200&ec_tx=40&ec_sh=60&ec_id=orderid&ip_nonce=REMOVED&bots=1',
+				'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&cdt=' . $tracking_time . '&_id=REMOVED&url=&urlref=&idgoal=0&revenue=300&ec_st=200&ec_tx=40&ec_sh=60&ec_dt=0&ec_id=orderid&ip_nonce=REMOVED&bots=1',
 			],
 			$this->test_tracker->captured_urls
 		);
@@ -245,7 +245,7 @@ EOF;
 		$this->assertEquals(
 			[
 				'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&_id=REMOVED&url=&urlref=&idgoal=0&revenue=100&bots=1',
-				'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&_id=REMOVED&url=&urlref=&idgoal=0&revenue=300&ec_st=200&ec_tx=40&ec_sh=60&ec_id=orderid&bots=1',
+				'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&_id=REMOVED&url=&urlref=&idgoal=0&revenue=300&ec_st=200&ec_tx=40&ec_sh=60&ec_dt=0&ec_id=orderid&bots=1',
 			],
 			$this->test_tracker->captured_urls
 		);

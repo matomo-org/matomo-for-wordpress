@@ -86,10 +86,7 @@ class ArchiveWriter
      * @var \Piwik\Period
      */
     private $period;
-    /**
-     * @var ArchiveProcessor\Parameters
-     */
-    private $parameters;
+    private ArchiveProcessor\Parameters $parameters;
     /**
      * @var string
      */

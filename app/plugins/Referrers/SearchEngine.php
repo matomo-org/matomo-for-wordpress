@@ -198,12 +198,12 @@ class SearchEngine extends Singleton
         $keywordsHiddenFor = !empty($definitions['hiddenkeyword']) ? $definitions['hiddenkeyword'] : array('/^$/', '/');
         $key = null;
         if ($searchEngineName === 'Google Images') {
-            if (strpos($query, '&prev') !== \false) {
+            if (str_contains($query, '&prev')) {
                 $query = urldecode(trim(UrlHelper::getParameterFromQueryString($query, 'prev')));
                 $query = str_replace('&', '&amp;', strstr($query, '?'));
             }
             $searchEngineName = 'Google Images';
-        } elseif ($searchEngineName === 'Google' && (strpos($query, '&as_') !== \false || strpos($query, 'as_') === 0)) {
+        } elseif ($searchEngineName === 'Google' && (str_contains($query, '&as_') || str_starts_with($query, 'as_'))) {
             $keys = array();
             $key = UrlHelper::getParameterFromQueryString($query, 'as_q');
             if (!empty($key)) {
@@ -251,7 +251,7 @@ class SearchEngine extends Singleton
                     $key = UrlHelper::getParameterFromQueryString($query, $variableName) ?? '';
                     $key = trim(urldecode($key));
                     // Special cases: empty keywords
-                    if (empty($key) && (strpos($query, sprintf('&%s=', $variableName)) !== \false || strpos($query, sprintf('?%s=', $variableName)) !== \false)) {
+                    if (empty($key) && (str_contains($query, sprintf('&%s=', $variableName)) || str_contains($query, sprintf('?%s=', $variableName)))) {
                         $key = \false;
                     }
                     if (!empty($key) || $key === \false) {
@@ -270,7 +270,7 @@ class SearchEngine extends Singleton
                 $pathWithQueryAndFragment .= '#' . $referrerParsed['fragment'];
             }
             foreach ($keywordsHiddenFor as $path) {
-                if (strlen($path) > 1 && substr($path, 0, 1) == '/' && substr($path, -1, 1) == '/') {
+                if (strlen($path) > 1 && str_starts_with($path, '/') && str_ends_with($path, '/')) {
                     if (preg_match($path, $pathWithQueryAndFragment)) {
                         $key = \false;
                         break;
@@ -314,10 +314,10 @@ class SearchEngine extends Singleton
         } elseif (array_key_exists($hostPattern, $searchEngines)) {
             $host = $hostPattern;
         } elseif (!array_key_exists($host, $searchEngines)) {
-            if (!strncmp($query, 'cx=partner-pub-', 15)) {
+            if (str_starts_with($query, 'cx=partner-pub-')) {
                 // Google custom search engine
                 $host = 'google.com/cse';
-            } elseif (!strncmp($path, '/pemonitorhosted/ws/results/', 28)) {
+            } elseif (str_starts_with($path, '/pemonitorhosted/ws/results/')) {
                 // private-label search powered by InfoSpace Metasearch
                 $host = 'wsdsold.infospace.com';
             } elseif (strpos($host, '.images.search.yahoo.com') != \false) {
@@ -424,6 +424,6 @@ class SearchEngine extends Singleton
             return \false;
         }
         $path = str_replace("{k}", $keyword, $definition['backlink']);
-        return $url . (substr($url, -1) != '/' ? '/' : '') . $path;
+        return $url . (!str_ends_with($url, '/') ? '/' : '') . $path;
     }
 }

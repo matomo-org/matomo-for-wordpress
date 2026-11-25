@@ -11,17 +11,20 @@ namespace Piwik;
 use Exception;
 use Piwik\API\Request;
 use Piwik\Exception\PluginNotFoundException;
+use Piwik\Http\BadRequestException;
 use Piwik\Http\HttpCodeException;
 use Piwik\Request\AuthenticationToken;
 use Piwik\Config\GeneralConfig;
 use Piwik\Container\StaticContainer;
 use Piwik\DataTable\Manager;
+use Piwik\DataTable\Renderer\Json;
 use Piwik\Exception\AuthenticationFailedException;
 use Piwik\Exception\DatabaseSchemaIsNewerThanCodebaseException;
 use Piwik\Exception\PluginDeactivatedException;
 use Piwik\Exception\PluginRequiresInternetException;
 use Piwik\Exception\StylesheetLessCompileException;
 use Piwik\Http\ControllerResolver;
+use Piwik\Http\JsonResponse;
 use Piwik\Http\Router;
 use Piwik\Plugins\CoreAdminHome\CustomLogo;
 use Piwik\Session\SessionAuth;
@@ -77,10 +80,13 @@ class FrontController extends \Piwik\Singleton
      * @var bool
      */
     public static $enableDispatch = \true;
+    private bool $initialized = \false;
     /**
-     * @var bool
+     * `module.action` of each controller action currently being dispatched, outermost first.
+     *
+     * @var string[]
      */
-    private $initialized = \false;
+    private array $dispatchStack = [];
     /**
      * @param $lastError
      * @return string
@@ -385,6 +391,9 @@ class FrontController extends \Piwik\Singleton
         }
         if (is_null($action)) {
             $action = \Piwik\Common::getRequestVar('action', \false);
+            if (is_array($action)) {
+                throw new BadRequestException('Invalid action name');
+            }
             if ($action !== \false) {
                 // If a value was provided, check it has the correct type.
                 $action = \Piwik\Common::getRequestVar('action', null, 'string');
@@ -397,7 +406,7 @@ class FrontController extends \Piwik\Singleton
             $parameters = array();
         }
         if (!ctype_alnum($module)) {
-            throw new Exception("Invalid module name '{$module}'");
+            throw new BadRequestException("Invalid module name '{$module}'");
         }
         [$module, $action] = Request::getRenamedModuleAndAction($module, $action);
         if (!\Piwik\SettingsPiwik::isInternetEnabled() && \Piwik\Plugin\Manager::getInstance()->doesPluginRequireInternetConnection($module)) {
@@ -472,8 +481,8 @@ class FrontController extends \Piwik\Singleton
     }
     private function closeSessionEarlyForFasterUI()
     {
-        $isDashboardReferrer = !empty($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], 'module=CoreHome&action=index') !== \false;
-        $isAllWebsitesReferrer = !empty($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], 'module=MultiSites&action=index') !== \false;
+        $isDashboardReferrer = !empty($_SERVER['HTTP_REFERER']) && str_contains($_SERVER['HTTP_REFERER'], 'module=CoreHome&action=index');
+        $isAllWebsitesReferrer = !empty($_SERVER['HTTP_REFERER']) && str_contains($_SERVER['HTTP_REFERER'], 'module=MultiSites&action=index');
         if ($isDashboardReferrer && StaticContainer::get(AuthenticationToken::class)->wasTokenAuthProvidedSecurely() && \Piwik\Common::getRequestVar('widget', 0, 'int') === 1) {
             \Piwik\Session::close();
         }
@@ -492,6 +501,17 @@ class FrontController extends \Piwik\Singleton
             // core:archive command sets xhprof=2
             \Piwik\Profiler::setupProfilerXHProf($mainRun);
         }
+    }
+    /**
+     * Rejects a controller action that is dispatched again before it has finished.
+     */
+    private function enterDispatch(string $module, string $action) : void
+    {
+        $key = $module . '.' . $action;
+        if (in_array($key, $this->dispatchStack, \true)) {
+            throw new Exception(sprintf('Controller action %s is already being dispatched.', $key));
+        }
+        $this->dispatchStack[] = $key;
     }
     /**
      * @param $module
@@ -516,43 +536,70 @@ class FrontController extends \Piwik\Singleton
         /** @var ControllerResolver $controllerResolver */
         $controllerResolver = StaticContainer::get('Piwik\\Http\\ControllerResolver');
         $controller = $controllerResolver->getController($module, $action, $parameters);
-        /**
-         * Triggered directly before controller actions are dispatched.
-         *
-         * This event exists for convenience and is triggered directly after the {@hook Request.dispatch}
-         * event is triggered.
-         *
-         * It can be used to do the same things as the {@hook Request.dispatch} event, but for one controller
-         * action only. Using this event will result in a little less code than {@hook Request.dispatch}.
-         *
-         * @param array &$parameters The arguments passed to the controller action.
-         */
-        \Piwik\Piwik::postEvent(sprintf('Controller.%s.%s', $module, $action), array(&$parameters));
-        $result = call_user_func_array($controller, $parameters);
-        /**
-         * Triggered after a controller action is successfully called.
-         *
-         * This event exists for convenience and is triggered immediately before the {@hook Request.dispatch.end}
-         * event is triggered.
-         *
-         * It can be used to do the same things as the {@hook Request.dispatch.end} event, but for one
-         * controller action only. Using this event will result in a little less code than
-         * {@hook Request.dispatch.end}.
-         *
-         * @param mixed &$result The result of the controller action.
-         * @param array $parameters The arguments passed to the controller action.
-         */
-        \Piwik\Piwik::postEvent(sprintf('Controller.%s.%s.end', $module, $action), array(&$result, $parameters));
-        /**
-         * Triggered after a controller action is successfully called.
-         *
-         * This event can be used to modify controller action output (if any) before the output is returned.
-         *
-         * @param mixed &$result The controller action result.
-         * @param array $parameters The arguments passed to the controller action.
-         */
-        \Piwik\Piwik::postEvent('Request.dispatch.end', array(&$result, $module, $action, $parameters));
+        // an empty action runs the controller's default action, so use the resolved method name
+        $this->enterDispatch((string) $module, (string) ($action ?: $controller[1]));
+        try {
+            /**
+             * Triggered directly before controller actions are dispatched.
+             *
+             * This event exists for convenience and is triggered directly after the {@hook Request.dispatch}
+             * event is triggered.
+             *
+             * It can be used to do the same things as the {@hook Request.dispatch} event, but for one controller
+             * action only. Using this event will result in a little less code than {@hook Request.dispatch}.
+             *
+             * @param array &$parameters The arguments passed to the controller action.
+             */
+            \Piwik\Piwik::postEvent(sprintf('Controller.%s.%s', $module, $action), array(&$parameters));
+            $result = call_user_func_array($controller, $parameters);
+            /**
+             * Triggered after a controller action is successfully called.
+             *
+             * This event exists for convenience and is triggered immediately before the {@hook Request.dispatch.end}
+             * event is triggered.
+             *
+             * It can be used to do the same things as the {@hook Request.dispatch.end} event, but for one
+             * controller action only. Using this event will result in a little less code than
+             * {@hook Request.dispatch.end}.
+             *
+             * @param mixed &$result The result of the controller action.
+             * @param array $parameters The arguments passed to the controller action.
+             */
+            \Piwik\Piwik::postEvent(sprintf('Controller.%s.%s.end', $module, $action), array(&$result, $parameters));
+            /**
+             * Triggered after a controller action is successfully called.
+             *
+             * This event can be used to modify controller action output (if any) before the output is returned.
+             *
+             * @param mixed &$result The controller action result.
+             * @param array $parameters The arguments passed to the controller action.
+             */
+            \Piwik\Piwik::postEvent('Request.dispatch.end', array(&$result, $module, $action, $parameters));
+        } finally {
+            array_pop($this->dispatchStack);
+        }
+        $this->applyResponseHeadersFromAttributes($controller);
         return $result;
+    }
+    /**
+     * Applies response headers declared via attributes on the dispatched controller action.
+     *
+     * This runs after the action has fully returned (and after the dispatch events), so re-sending
+     * the header here guarantees it wins over anything the action did while building its response,
+     * such as rendering a View that resets the Content-Type to text/html.
+     *
+     * @param callable $controller The resolved controller action, an [$object, $method] callable.
+     */
+    private function applyResponseHeadersFromAttributes(callable $controller) : void
+    {
+        // Only array callables built as [$controllerObject, $actionName] can carry an action attribute.
+        if (!is_array($controller) || !is_object($controller[0])) {
+            return;
+        }
+        $method = new \ReflectionMethod($controller[0], $controller[1]);
+        if (count($method->getAttributes(JsonResponse::class)) > 0) {
+            Json::sendHeaderJSON();
+        }
     }
     /**
      * This method ensures that Piwik Platform cannot be running when using a NEWER database.

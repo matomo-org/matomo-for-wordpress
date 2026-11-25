@@ -8,6 +8,7 @@
  */
 namespace Piwik\Plugins\CustomDimensions;
 
+use Piwik\Access;
 use Piwik\API\Request;
 use Piwik\Common;
 use Piwik\DataTable;
@@ -133,16 +134,17 @@ class GetCustomDimension extends Report
     }
     private function getActiveDimensionsForSite($idSite)
     {
-        if (empty($this->dimensionCache[$idSite])) {
-            $this->dimensionCache[$idSite] = array();
+        $cacheKey = Access::getInstance()->getCacheScopeKey() . '.' . $idSite;
+        if (empty($this->dimensionCache[$cacheKey])) {
+            $this->dimensionCache[$cacheKey] = array();
             $dimensions = Request::processRequest('CustomDimensions.getConfiguredCustomDimensions', ['idSite' => $idSite], []);
             foreach ($dimensions as $index => $dimension) {
                 if ($dimension['active']) {
-                    $this->dimensionCache[$idSite][] = $dimension;
+                    $this->dimensionCache[$cacheKey][] = $dimension;
                 }
             }
         }
-        return $this->dimensionCache[$idSite];
+        return $this->dimensionCache[$cacheKey];
     }
     public function initThisReportFromDimension($dimension)
     {

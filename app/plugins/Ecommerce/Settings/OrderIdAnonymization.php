@@ -21,8 +21,7 @@ class OrderIdAnonymization implements CustomSettingInterface, PolicyComparisonIn
     use PolicyComparisonTrait;
     /** @use CustomGetterTrait<bool> */
     use CustomGetterTrait;
-    /** @var bool */
-    private $value;
+    private bool $value;
     private function __construct(bool $value)
     {
         $this->value = $value;
@@ -43,6 +42,14 @@ class OrderIdAnonymization implements CustomSettingInterface, PolicyComparisonIn
     {
         return Piwik::translate('Ecommerce_OrderIdAnonymizationSettingTitle');
     }
+    public static function getWhatItDoes(?int $idSite = null) : string
+    {
+        return Piwik::translate('Ecommerce_OrderIdAnonymizationSettingWhatItDoes');
+    }
+    public static function getImpact(?int $idSite = null) : string
+    {
+        return Piwik::translate('Ecommerce_OrderIdAnonymizationSettingImpact');
+    }
     public static function getComplianceRequirementNote(?int $idSite = null) : string
     {
         return Piwik::translate('Ecommerce_OrderIdAnonymizationSettingRequirementNote');
@@ -50,6 +57,10 @@ class OrderIdAnonymization implements CustomSettingInterface, PolicyComparisonIn
     public static function getInlineHelp() : string
     {
         return '';
+    }
+    public static function getPolicyOrder() : int
+    {
+        return 80;
     }
     public static function getPolicyRequirements() : array
     {

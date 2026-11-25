@@ -27,10 +27,7 @@ class ReportRetention implements OptionSettingInterface, ConfigSettingInterface,
      */
     use PolicyComparisonTrait;
     use OptionGetterTrait;
-    /**
-     * @var int|null
-     */
-    private $value;
+    private ?int $value;
     private function __construct(?int $value)
     {
         $this->value = $value;
@@ -55,6 +52,14 @@ class ReportRetention implements OptionSettingInterface, ConfigSettingInterface,
     {
         return Piwik::translate('PrivacyManager_RetentionPeriodPolicySettingTitle');
     }
+    public static function getWhatItDoes(?int $idSite = null) : string
+    {
+        return Piwik::translate('PrivacyManager_RetentionPeriodPolicySettingWhatItDoes2', [self::getInstance($idSite)->getValue(), self::getPolicyRequirements()[CnilPolicy::class]]);
+    }
+    public static function getImpact(?int $idSite = null) : string
+    {
+        return Piwik::translate('PrivacyManager_RetentionPeriodPolicySettingImpact', [self::getInstance($idSite)->getValue()]);
+    }
     public static function getComplianceRequirementNote(?int $idSite = null) : string
     {
         $currentValue = self::getInstance($idSite)->getValue();
@@ -64,11 +69,20 @@ class ReportRetention implements OptionSettingInterface, ConfigSettingInterface,
     {
         return '';
     }
+    public static function getPolicyOrder() : int
+    {
+        return 100;
+    }
     public static function getPolicyRequirements() : array
     {
         $policyValues = [];
         $policyValues[CnilPolicy::class] = 759;
         return $policyValues;
+    }
+    public static function getPolicyConstraintType(string $policy) : string
+    {
+        // a policy caps how long data may be kept, retaining it for less stays compliant
+        return PolicyComparisonInterface::POLICY_CONSTRAINT_MAX;
     }
     public static function getInstance(?int $idSite = null) : self
     {

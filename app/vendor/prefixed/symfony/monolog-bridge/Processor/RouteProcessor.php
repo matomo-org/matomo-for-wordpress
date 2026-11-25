@@ -10,6 +10,7 @@
  */
 namespace Matomo\Dependencies\Symfony\Bridge\Monolog\Processor;
 
+use Matomo\Dependencies\Monolog\LogRecord;
 use Matomo\Dependencies\Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Matomo\Dependencies\Symfony\Component\HttpKernel\Event\FinishRequestEvent;
 use Matomo\Dependencies\Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -24,25 +25,25 @@ use Matomo\Dependencies\Symfony\Contracts\Service\ResetInterface;
  */
 class RouteProcessor implements EventSubscriberInterface, ResetInterface
 {
-    private $routeData;
-    private $includeParams;
+    private array $routeData = [];
+    private bool $includeParams;
     public function __construct(bool $includeParams = \true)
     {
         $this->includeParams = $includeParams;
         $this->reset();
     }
-    public function __invoke(array $records) : array
+    public function __invoke(array|LogRecord $record) : array|LogRecord
     {
-        if ($this->routeData && !isset($records['extra']['requests'])) {
-            $records['extra']['requests'] = array_values($this->routeData);
+        if ($this->routeData && !isset($record['extra']['requests'])) {
+            $record['extra']['requests'] = array_values($this->routeData);
         }
-        return $records;
+        return $record;
     }
-    public function reset()
+    public function reset() : void
     {
         $this->routeData = [];
     }
-    public function addRouteData(RequestEvent $event)
+    public function addRouteData(RequestEvent $event) : void
     {
         if ($event->isMainRequest()) {
             $this->reset();
@@ -57,7 +58,7 @@ class RouteProcessor implements EventSubscriberInterface, ResetInterface
         }
         $this->routeData[spl_object_id($request)] = $currentRequestData;
     }
-    public function removeRouteData(FinishRequestEvent $event)
+    public function removeRouteData(FinishRequestEvent $event) : void
     {
         $requestId = spl_object_id($event->getRequest());
         unset($this->routeData[$requestId]);

@@ -15,16 +15,16 @@
         }
     ],
     "require": {
-        "php": ">=5.3.0"
+        "php": ">=8.0.0"
     },
     "autoload": {
         "psr-4": {
-            "Matomo\\Dependencies\\Psr\\Log\\": "Psr\/Log\/"
+            "Matomo\\Dependencies\\Psr\\Log\\": "src"
         }
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.1.x-dev"
+            "dev-master": "3.x-dev"
         }
     }
 }

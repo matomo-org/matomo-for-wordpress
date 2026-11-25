@@ -28,6 +28,7 @@ class Menu extends \Piwik\Plugin\Menu
         if (!Piwik::hasUserSuperUserAccess()) {
             return;
         }
+        $menu->addSystemItem('AIProviders_AIProcessing', $this->urlForAction('aiProcessing'), 37);
         /**
          * In a managed environment the provider is
          * forced from configuration and there is nothing to configure, so the

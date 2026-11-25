@@ -193,6 +193,7 @@ import {
   Matomo,
   AjaxHelper,
   SiteSelector,
+  SiteRef,
   debounce,
 } from 'CoreHome';
 import { PasswordConfirmation, Field, SaveButton } from 'CorePluginsAdmin';
@@ -202,13 +203,13 @@ interface Option {
   value: string;
 }
 
-interface AnonymizeLogDataState {
+export interface AnonymizeLogDataState {
   isLoading: boolean;
   isDeleting: boolean;
   anonymizeIp: boolean;
   anonymizeLocation: boolean;
   anonymizeUserId: boolean;
-  site: Record<string, string>;
+  site: SiteRef;
   availableVisitColumns: Option[];
   availableActionColumns: Option[];
   selectedVisitColumns: Record<string, string>[];
@@ -359,7 +360,7 @@ export default defineComponent({
       AjaxHelper.post({
         method: 'PrivacyManager.anonymizeSomeRawData',
       }, params).then(() => {
-        window.location.reload(true);
+        window.location.reload();
       });
     },
     onKeydownStartDate(event: Event) {

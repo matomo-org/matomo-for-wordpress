@@ -6,13 +6,21 @@
  */
 
 import { flushPromises, mount } from '@vue/test-utils';
+import type { Mock } from 'vitest';
 
 // The grid mounts the real SparklineCard -> NoComparison -> MetricValue chain, so the mock
-// provides everything that chain pulls from CoreHome (no jest module mapping): the Tooltips
-// directive (MetricValue), ucfirst (the title helper), MatomoUrl (SparklineCard derives
-// graph-params from the url) and NumberFormatter (NoComparison formats raw numeric values).
-jest.mock('CoreHome', () => ({
+// provides everything that chain pulls from CoreHome: the Tooltips directive (MetricValue),
+// ucfirst (the title helper MetricValue/DateComparison/SegmentComparisonCard use),
+// MatomoUrl (SparklineCard derives graph-params from the url) and NumberFormatter
+// (NoComparison formats raw numeric metric values). CoreHome is aliased to its source by config.
+vi.mock('CoreHome', () => ({
   Tooltips: {},
+  Matomo: {
+    helper: {
+      htmlEntities: (value: string) => value
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'),
+    },
+  },
   // ucfirst is mocked as an identity passthrough; its capitalization is covered by ucfirst.spec.
   ucfirst: (s?: string) => s ?? '',
   Sparkline: { template: '<img class="sparkline-stub" />' },
@@ -25,18 +33,17 @@ jest.mock('CoreHome', () => ({
   NumberFormatter: {
     formatNumber: (value: number) => String(value),
   },
-}), { virtual: true });
+}));
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const SparklinesGrid = require('./SparklinesGrid.vue').default;
+import SparklinesGrid from './SparklinesGrid.vue';
 
 describe('CoreVisualizations/SparklinesGrid', () => {
-  let initializeSparklinesSpy: jest.Mock;
+  let initializeSparklinesSpy: Mock;
 
   beforeEach(() => {
     // sparkline.js (which defines window.initializeSparklines) is loaded on every real
     // Matomo page but not in the test bootstrap, so stub it here.
-    initializeSparklinesSpy = jest.fn();
+    initializeSparklinesSpy = vi.fn();
     window.initializeSparklines = initializeSparklinesSpy;
   });
 

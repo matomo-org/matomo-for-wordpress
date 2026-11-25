@@ -22,6 +22,11 @@ use Zend_Session;
 class Session extends Zend_Session
 {
     public const SESSION_NAME = 'MATOMO_SESSID';
+    /**
+     * Classes that may be restored from stored session data. Anything else is a class the
+     * session was never meant to hold.
+     */
+    public const SESSION_DATA_ALLOWED_CLASSES = [\Piwik\Notification::class];
     public static $sessionName = self::SESSION_NAME;
     protected static $sessionStarted = \false;
     /**
@@ -51,6 +56,8 @@ class Session extends Zend_Session
         }
         // advise browser that session cookie should only be accessible through the HTTP protocol (i.e., not JavaScript)
         @ini_set('session.cookie_httponly', '1');
+        // the session cookie PHP sends itself, on start and on regenerate, needs Matomo's SameSite value too
+        @ini_set('session.cookie_samesite', self::getSameSiteCookieValue());
         // don't use the default: PHPSESSID
         @ini_set('session.name', self::$sessionName);
         // proxies may cause the referer check to fail and
@@ -74,10 +81,14 @@ class Session extends Zend_Session
             // We consider these to be misconfigurations, in that:
             // - user  - we can't verify that user-defined session handler functions have already been set via session_set_save_handler()
             // - mm    - this handler is not recommended, unsupported, not available for Windows, and has a potential concurrency issue
+            // SessionSerializeHandlerCheck reports it when the server does not let us set this
             if (@ini_get('session.serialize_handler') !== 'php_serialize') {
                 @ini_set('session.serialize_handler', 'php_serialize');
             }
             $config = self::getDbTableConfig();
+            // DbTable accepts every session id, so strict mode (default as of PHP 8.6) would only make
+            // session_regenerate_id() treat each new id as a collision
+            @ini_set('session.use_strict_mode', '0');
             $saveHandler = new DbTable($config);
             if ($saveHandler) {
                 self::setSaveHandler($saveHandler);
@@ -200,6 +211,8 @@ class Session extends Zend_Session
     }
     public static function destroyAllSessions() : void
     {
+        // Stamped before the rows are cleared, for the reason given on Model::invalidateUserSessions()
+        \Piwik\Db::query('UPDATE `' . \Piwik\Common::prefixTable('user') . '` SET `ts_sessions_invalidated` = ?', [\Piwik\Date::now()->getDatetime()]);
         $config = self::getDbTableConfig();
         $saveHandler = new DbTable($config);
         $saveHandler->destroyAll();

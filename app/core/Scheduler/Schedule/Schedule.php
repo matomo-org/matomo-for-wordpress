@@ -141,7 +141,7 @@ abstract class Schedule
     {
         if ($this->hour !== null) {
             // Reset the number of minutes and set the scheduled hour to the one specified with setHour()
-            $rescheduledTime = mktime($this->hour, 0, date('s', $rescheduledTime), date('n', $rescheduledTime), date('j', $rescheduledTime), date('Y', $rescheduledTime));
+            $rescheduledTime = mktime($this->hour, 0, (int) date('s', $rescheduledTime), (int) date('n', $rescheduledTime), (int) date('j', $rescheduledTime), (int) date('Y', $rescheduledTime));
         }
         return $rescheduledTime;
     }

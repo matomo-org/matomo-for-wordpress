@@ -11,7 +11,9 @@
 namespace Matomo\Dependencies\Twig\Node\Expression\Binary;
 
 use Matomo\Dependencies\Twig\Compiler;
-class RangeBinary extends AbstractBinary
+use Matomo\Dependencies\Twig\Node\CoercesChildrenToStringInterface;
+use Matomo\Dependencies\Twig\Node\Expression\ReturnArrayInterface;
+class RangeBinary extends AbstractBinary implements ReturnArrayInterface, CoercesChildrenToStringInterface
 {
     public function compile(Compiler $compiler) : void
     {
@@ -20,5 +22,9 @@ class RangeBinary extends AbstractBinary
     public function operator(Compiler $compiler) : Compiler
     {
         return $compiler->raw('..');
+    }
+    public function getStringCoercedChildNames() : array
+    {
+        return ['left', 'right'];
     }
 }

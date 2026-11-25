@@ -17,14 +17,8 @@ use Piwik\Plugins\UserCountry\LocationProvider;
 use Piwik\Plugins\UsersManager\Model as UsersModel;
 class LoginFromDifferentCountryDetection
 {
-    /**
-     * @var Model
-     */
-    private $model;
-    /**
-     * @var UsersModel
-     */
-    private $usersModel;
+    private Model $model;
+    private UsersModel $usersModel;
     public function __construct(Model $model, UsersModel $usersModel)
     {
         $this->model = $model;

@@ -10,7 +10,6 @@ namespace Piwik\Plugins\CustomDimensions\Dimension;
 
 use Exception;
 use Piwik\API\Request;
-use Piwik\Plugins\CustomDimensions\Dao\Configuration;
 use Piwik\Plugins\CustomDimensions\Dao\LogTable;
 class Index
 {
@@ -33,9 +32,5 @@ class Index
     private function getTracking($scope)
     {
         return new LogTable($scope);
-    }
-    private function getConfiguration()
-    {
-        return new Configuration();
     }
 }

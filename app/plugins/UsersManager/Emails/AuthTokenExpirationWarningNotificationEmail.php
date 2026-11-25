@@ -17,14 +17,9 @@ use Piwik\Url;
 use Piwik\View;
 class AuthTokenExpirationWarningNotificationEmail extends Mail
 {
-    /**
-     * @var AuthTokenExpirationWarningEmailNotification
-     */
-    private $notification;
-    /** @var string */
-    private $recipient;
-    /** @var array */
-    private $emailData;
+    private AuthTokenExpirationWarningEmailNotification $notification;
+    private string $recipient;
+    private array $emailData;
     public function __construct(AuthTokenExpirationWarningEmailNotification $notification, string $recipient, array $emailData)
     {
         parent::__construct();

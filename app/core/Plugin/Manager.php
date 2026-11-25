@@ -109,10 +109,7 @@ class Manager
      * @var list<string>
      */
     private $trackerPluginsNotToLoad = [];
-    /**
-     * @var PluginList
-     */
-    private $pluginList;
+    private PluginList $pluginList;
     public function __construct(PluginList $pluginList)
     {
         $this->pluginList = $pluginList;
@@ -209,7 +206,7 @@ class Manager
             $gitModules = file_get_contents(PIWIK_INCLUDE_PATH . '/.gitmodules');
         }
         // All submodules are officially maintained plugins
-        return \false !== strpos($gitModules, "plugins/" . $pluginName . "\n");
+        return str_contains($gitModules, "plugins/" . $pluginName . "\n");
     }
     /**
      * Update Plugins config
@@ -319,7 +316,7 @@ class Manager
     {
         $result = array();
         foreach (self::getPluginsDirectories() as $pluginsDir) {
-            $pluginsName = _glob($pluginsDir . '*', \GLOB_ONLYDIR);
+            $pluginsName = glob($pluginsDir . '*', \GLOB_ONLYDIR);
             if ($pluginsName != \false) {
                 foreach ($pluginsName as $path) {
                     if (self::pluginStructureLooksValid($path)) {
@@ -380,7 +377,7 @@ class Manager
     public static function registerPluginDirAutoload($pluginDirs)
     {
         spl_autoload_register(function ($className) use($pluginDirs) {
-            if (strpos($className, 'Piwik\\Plugins\\') === 0) {
+            if (str_starts_with($className, 'Piwik\\Plugins\\')) {
                 $withoutPrefix = str_replace('Piwik\\Plugins\\', '', $className);
                 $path = str_replace('\\', \DIRECTORY_SEPARATOR, $withoutPrefix) . '.php';
                 foreach ($pluginDirs as $pluginsDirectory) {
@@ -445,7 +442,7 @@ class Manager
     }
     private static function getPluginRealPath(string $path) : string
     {
-        if (strpos($path, '../') !== \false) {
+        if (str_contains($path, '../')) {
             // for tests, only do it when needed re performance etc
             $real = realpath($path);
             if ($real && Common::stringEndsWith($path, '/')) {
@@ -496,7 +493,7 @@ class Manager
         $matomoPath = rtrim(PIWIK_INCLUDE_PATH, '/') . '/';
         $webroots = array_merge(\Piwik\Plugin\Manager::getAlternativeWebRootDirectories(), [$matomoPath => '/']);
         foreach ($webroots as $webrootAbsolute => $webrootRelative) {
-            if (strpos($result, $webrootAbsolute) === 0) {
+            if (str_starts_with($result, $webrootAbsolute)) {
                 $result = str_replace($webrootAbsolute, $webrootRelative, $result);
                 break;
             }
@@ -636,7 +633,7 @@ class Manager
     public static function deletePluginFromFilesystem($plugin)
     {
         $pluginDir = self::getPluginDirectory($plugin);
-        if (strpos($pluginDir, PIWIK_INCLUDE_PATH) === 0) {
+        if (str_starts_with($pluginDir, PIWIK_INCLUDE_PATH)) {
             // only delete files for plugins within matomo directory...
             Filesystem::unlinkRecursive($pluginDir, $deleteRootToo = \true);
         }
@@ -1300,7 +1297,7 @@ class Manager
         $hooks = $plugin->registerEvents();
         $hookNames = array_keys($hooks);
         foreach ($hookNames as $name) {
-            if (strpos($name, self::TRACKER_EVENT_PREFIX) === 0) {
+            if (str_starts_with($name, self::TRACKER_EVENT_PREFIX)) {
                 return \true;
             }
             if ($name === 'Request.initAuthenticationObject') {

@@ -1,0 +1,6 @@
+*.md text eol=lf
+*.yml text eol=lf
+.github/ export-ignore
+.gitignore text eol=lf export-ignore
+.gitattributes text eol=lf export-ignore
+.yamllint text eol=lf export-ignore

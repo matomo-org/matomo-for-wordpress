@@ -463,6 +463,10 @@
         "PickARow": "Vali rida, millega võrrelda",
         "PickAnotherRow": "Vali veel üks rida võrdluseks"
     },
+    "AIProviders": {
+        "DefaultBadge": "Vaikimisi",
+        "Model": "Mudel"
+    },
     "API": {
         "Glossary": "Sõnastik",
         "LoadedAPIs": "Edukalt laetud %s API-id",
@@ -579,21 +583,14 @@
     },
     "CoreHome": {
         "CategoryNoData": "Informatsioon puudub selles kategoorias. Proovi \"Include all population\".",
-        "ChangePeriod": "Muuda ajavahemikku",
-        "ChangeVisualization": "Muuda visualiseerimist",
         "CheckForUpdates": "Kontrolli uuendusi",
         "CheckPiwikOut": "Proovi Matomout!",
         "ChooseWebsite": "Vali veebileht",
         "ChooseX": "Vali %1$s",
         "ClickToEditX": "Muutmiseks klõpsi - %s",
         "ClickToSeeFullInformation": "Kogu teabe lugemiseks klõpsi",
-        "CloseSearch": "Sulge otsing",
         "CloseWidgetDirections": "Sa saad antud vidina sulgeda, valides 'X' vidina ülaservas.",
-        "Default": "vaikimisi",
-        "ExcludeRowsWithLowPopulation": "Kuvatakse kõiki ridu %s Eemalda ebapopulaarsemad",
         "ExternalHelp": "Abi (avaneb uues aknas)",
-        "FlattenDataTable": "Antud raport on hierarhiline %s Tee see lamedaks",
-        "IncludeRowsWithLowPopulation": "Ebapopulaarsed read on peidetud %s Kuva kõik read",
         "Menu": "Menüü",
         "PeriodRange": "vahemik",
         "PresetDateToday": "Täna",
@@ -610,7 +607,6 @@
         "SystemSummaryWidget": "Süsteemi kokkuvõte",
         "TableNoData": "Antud tabeli jaoks andmed puuduvad.",
         "ThereIsNoDataForThisReport": "Raporti jaoks puuduvad antud perioodis andmed.",
-        "UnFlattenDataTable": "Antud raport on lame %s Tee see hierarhiliseks",
         "ViewAllPiwikVideoTutorials": "Vaata kõiki Matomou video õpetusi",
         "WebAnalyticsReports": "Veebi analüüsi raportid",
         "YouAreUsingTheLatestVersion": "Kasutad uusimat Matomou versiooni!"
@@ -853,7 +849,6 @@
         "GoalName": "Eesmärgi nimi",
         "GoalX": "Eesmärk %s",
         "Goals": "Eesmärgid",
-        "GoalsOverview": "Eesmärkide ülevaade",
         "IsExactly": "on täpselt %s",
         "LeftInCart": "%s jäetud ostukorvi",
         "ManageGoals": "Halda eesmärke",
@@ -868,6 +863,8 @@
         "ProductName": "Toote nimi",
         "ProductSKU": "Tootekood",
         "Products": "Tooted",
+        "RecommendationCountOnePage": "1 leht",
+        "RecommendationCountPages": "%s lehte",
         "URL": "URL",
         "UpdateGoal": "Uuenda eesmärki",
         "ViewAndEditGoals": "Vaata ja muuda eesmärke",
@@ -2089,7 +2086,9 @@
         "Browse": "Sirvi",
         "ByXDevelopers": "arendajate %s poolt",
         "CannotInstall": "Ei saa paigaldada",
-        "CreatedBy": "Looja",
+        "CategoryDevelopment": "Arendamine",
+        "CategoryEcommerce": "E-äri",
+        "CategorySecurity": "Turvalisus",
         "Developer": "Arendaja",
         "FeaturedPlugin": "Esiletõstetud lisatarkvara",
         "Free": "Tasuta",
@@ -2098,7 +2097,6 @@
         "LastUpdated": "Viimati uuendatud",
         "Marketplace": "Market",
         "NoPluginsFound": "Lisatarkvara ei leitud",
-        "NoThemesFound": "Kujundusi ei leitud",
         "NumDownloadsLatestVersion": "Viimane versioon: %s allalaadimist",
         "PluginKeywords": "Võtmesõnad",
         "PluginVersionInfo": "%1$s, tuli: %2$s",
@@ -2142,8 +2140,7 @@
     "MultiSites": {
         "AllWebsitesDashboardTitle": "Kõik veebilehed",
         "Evolution": "Muutus ajas",
-        "LoadingWebsites": "Veebilehtede avamine",
-        "TotalPageviews": "Lehe vaatamisi kokku"
+        "LoadingWebsites": "Veebilehtede avamine"
     },
     "Overlay": {
         "Clicks": "%s klikki",
@@ -2220,13 +2217,6 @@
         "Resolutions": "Ekraani resolutsioonid",
         "WidgetGlobalVisitors": "Kohalike külastajate seaded",
         "WidgetResolutions": "Ekraani resolutsioonid"
-    },
-    "SEO": {
-        "Bing_IndexedPages": "Bingi indekseeritud lehti",
-        "DomainAge": "Domeeni vanus",
-        "Rank": "Reiting",
-        "SEORankingsFor": "SEO reiting %s jaoks",
-        "SeoRankings": "SEO reiting"
     },
     "ScheduledReports": {
         "AggregateReportsFormat": "Kuvamise seaded",
@@ -2318,6 +2308,7 @@
         "ComparisonGreaterThan": "on rohkem kui",
         "ComparisonStartsWith": "algab kui",
         "Condition": "Tingimus",
+        "CreatedBy": "Looja",
         "CreatedDate": "Loomise kuupäev",
         "EtrackerConfigurationVariableCustomDimensionsTitle": "Kohandatud mõõdud",
         "EtrackerTagTransactionCurrencyTitle": "vääring",
@@ -2341,7 +2332,6 @@
         "Engagement": "Korduvused"
     },
     "Transitions": {
-        "BouncesInline": "%s põrget",
         "DirectEntries": "Otse sisenemisi",
         "ErrorBack": "Mine tagasi eelmisele tegevusele",
         "ExitsInline": "%s väljumist",
@@ -2362,8 +2352,7 @@
         "ToFollowingSiteSearches": "Sisemised otsingud",
         "ToFollowingSiteSearchesInline": "%s sisemist otsingut",
         "TransitionsSubcategoryHelp2": "Rohkem detaile",
-        "XOfAllPageviews": "%s kõigist antud lehe vaatamistest",
-        "XOutOfYVisits": "%1$s (%2$s kõigist)"
+        "XOfAllPageviews": "%s kõigist antud lehe vaatamistest"
     },
     "UserCountry": {
         "City": "Linn",

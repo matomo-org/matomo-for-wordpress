@@ -18,10 +18,7 @@ use Piwik\Piwik;
  */
 class API extends \Piwik\Plugin\API
 {
-    /**
-     * @var MySQLMetadataProvider
-     */
-    private $metadataProvider;
+    private \Piwik\Plugins\DBStats\MySQLMetadataProvider $metadataProvider;
     public function __construct(\Piwik\Plugins\DBStats\MySQLMetadataProvider $metadataProvider)
     {
         $this->metadataProvider = $metadataProvider;
@@ -203,15 +200,15 @@ class API extends \Piwik\Plugin\API
     }
     private function isNumericArchiveTable(string $name) : bool
     {
-        return strpos($name, Common::prefixTable('archive_numeric_')) === 0;
+        return str_starts_with($name, Common::prefixTable('archive_numeric_'));
     }
     private function isBlobArchiveTable(string $name) : bool
     {
-        return strpos($name, Common::prefixTable('archive_blob_')) === 0;
+        return str_starts_with($name, Common::prefixTable('archive_blob_'));
     }
     private function isTrackerTable(string $name) : bool
     {
-        return strpos($name, Common::prefixTable('log_')) === 0;
+        return str_starts_with($name, Common::prefixTable('log_'));
     }
     /**
      * Gets the year of an archive table from its name.

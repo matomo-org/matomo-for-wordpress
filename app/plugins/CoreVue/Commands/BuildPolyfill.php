@@ -16,7 +16,7 @@ class BuildPolyfill extends ConsoleCommand
     {
         $this->setName('vue:build-polyfill');
         $this->setDescription('Builds the polyfill UMD.');
-        $this->addNoValueOption('clear-webpack-cache');
+        $this->addNoValueOption('clear-cache');
     }
     public function isEnabled()
     {
@@ -24,38 +24,22 @@ class BuildPolyfill extends ConsoleCommand
     }
     protected function doExecute() : int
     {
-        \Piwik\Plugins\CoreVue\Commands\Build::checkVueCliServiceAvailable();
-        $clearWebpackCache = $this->getInput()->getOption('clear-webpack-cache');
-        if ($clearWebpackCache) {
-            $this->clearWebpackCache();
+        \Piwik\Plugins\CoreVue\Commands\Build::checkViteAvailable();
+        if ($this->getInput()->getOption('clear-cache')) {
+            $this->clearViteCache();
         }
-        $this->createDummyPackageJson();
-        $dir = PIWIK_INCLUDE_PATH . '/plugins/CoreVue/polyfills';
-        foreach (['development', 'production'] as $env) {
-            $command = "cd '{$dir}' && BROWSERSLIST_IGNORE_OLD_DATA=1 FORCE_COLOR=1 " . \Piwik\Plugins\CoreVue\Commands\Build::getVueCliServiceBin() . ' build --target app --mode ' . $env . ' --name MatomoPolyfills ./src/index.ts --dest ./dist';
-            if ($env == 'production') {
-                $command .= ' --no-clean';
-            }
+        $configFile = PIWIK_INCLUDE_PATH . '/plugins/CoreVue/polyfills/vite.config.ts';
+        // Two passes: unminified MatomoPolyfills.js, then minified MatomoPolyfills.min.js. The phase
+        // is communicated to the Vite config through MATOMO_VUE_PHASE.
+        foreach (['dev', 'min'] as $phase) {
+            $command = 'cd ' . PIWIK_INCLUDE_PATH . " && FORCE_COLOR=1 MATOMO_VUE_PHASE={$phase} " . 'node ' . \Piwik\Plugins\CoreVue\Commands\Build::getViteBin() . " build --config {$configFile}";
             passthru($command);
         }
-        $this->deleteExtraFiles();
         return self::SUCCESS;
     }
-    private function createDummyPackageJson()
+    private function clearViteCache()
     {
-        $packageJson = file_get_contents(PIWIK_INCLUDE_PATH . '/package.json');
-        $packageJson = json_decode($packageJson, \true);
-        $dummyPackageJson = ['name' => '@matomo/polyfills', 'version' => '1.0.0', 'description' => 'dummy package.json required for vue compilation in subdirectory', 'devDependencies' => $packageJson['devDependencies']];
-        $dummyPackageJson = json_encode($dummyPackageJson, \JSON_PRETTY_PRINT);
-        file_put_contents(PIWIK_INCLUDE_PATH . '/plugins/CoreVue/polyfills/package.json', $dummyPackageJson);
-    }
-    private function deleteExtraFiles()
-    {
-        @unlink(PIWIK_INCLUDE_PATH . "/plugins/CoreVue/polyfills/dist/index.html");
-    }
-    private function clearWebpackCache()
-    {
-        $path = PIWIK_INCLUDE_PATH . '/plugins/CoreVue/polyfills/node_modules/.cache';
+        $path = PIWIK_INCLUDE_PATH . '/node_modules/.vite';
         Filesystem::unlinkRecursive($path, \true);
     }
 }

@@ -14,10 +14,7 @@ use Piwik\Translation\Translator;
  */
 class PhpFunctionsCheck implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnostic
 {
-    /**
-     * @var Translator
-     */
-    private $translator;
+    private Translator $translator;
     public function __construct(Translator $translator)
     {
         $this->translator = $translator;
@@ -29,7 +26,12 @@ class PhpFunctionsCheck implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnos
         foreach ($this->getRequiredFunctions() as $function) {
             if (!self::functionExists($function)) {
                 $status = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_ERROR;
-                $comment = sprintf('%s <br/><br/><em>%s</em><br/><em>%s</em><br/>', $function, $this->getHelpMessage($function), $this->translator->translate('Installation_RestartWebServer'));
+                $help = $this->getHelpMessage($function);
+                $comment = $function . ' <br/><br/>';
+                if ('' !== $help) {
+                    $comment .= '<em>' . $help . '</em><br/>';
+                }
+                $comment .= sprintf('<em>%s</em><br/>', $this->translator->translate('Installation_RestartWebServer'));
             } else {
                 $status = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_OK;
                 $comment = $function;
@@ -43,7 +45,7 @@ class PhpFunctionsCheck implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnos
      */
     private function getRequiredFunctions()
     {
-        return array('debug_backtrace', 'escapeshellarg', 'eval', 'hash', 'gzcompress', 'gzuncompress', 'pack');
+        return array('debug_backtrace', 'escapeshellarg', 'eval', 'file_get_contents', 'fnmatch', 'glob', 'hash', 'gzcompress', 'gzuncompress', 'pack');
     }
     /**
      * Tests if a function exists. Also handles the case where a function is disabled via Suhosin.
@@ -74,6 +76,9 @@ class PhpFunctionsCheck implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnos
     private function getHelpMessage($missingFunction)
     {
         $messages = array('debug_backtrace' => 'Installation_SystemCheckDebugBacktraceHelp', 'eval' => 'Installation_SystemCheckEvalHelp', 'hash' => 'Installation_SystemCheckHashHelp', 'gzcompress' => 'Installation_SystemCheckGzcompressHelp', 'gzuncompress' => 'Installation_SystemCheckGzuncompressHelp', 'pack' => 'Installation_SystemCheckPackHelp');
+        if (!isset($messages[$missingFunction])) {
+            return '';
+        }
         return $this->translator->translate($messages[$missingFunction]);
     }
 }

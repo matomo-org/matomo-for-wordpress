@@ -71,7 +71,6 @@ class UpdateRegionCodes extends ConsoleCommand
             list($countryCode, $regionCode) = explode('-', $region['code']);
             $newRegions[$countryCode][$regionCode] = ['name' => $region['name'], 'altNames' => [], 'current' => \true];
         }
-        ksort($newRegions);
         $currentRegions = (include $regionsFile);
         foreach ($currentRegions as $countryCode => $regions) {
             foreach ($regions as $regionCode => $regionData) {
@@ -94,6 +93,10 @@ class UpdateRegionCodes extends ConsoleCommand
         if (!empty($dbIpCsvFile)) {
             $this->enrichWithDbIpRegions($dbIpCsvFile, $newRegions);
         }
+        // re-sort after DB-IP enrichment, which appends any newly discovered
+        // countries at the end; sorting here (before the up-to-date check) keeps
+        // the generated file stable so an unchanged run produces no diff
+        ksort($newRegions);
         if (json_encode($newRegions) === json_encode($currentRegions)) {
             $output->writeln('');
             $output->writeln('Everything already up to date <fg=green>✓</>');
@@ -150,7 +153,7 @@ CONTENT;
                 continue;
             }
             if (!array_key_exists($countryCode, $regions)) {
-                continue;
+                $regions[$countryCode] = [];
             }
             if (!array_key_exists($regionCode, $regions[$countryCode])) {
                 $output->writeln('');

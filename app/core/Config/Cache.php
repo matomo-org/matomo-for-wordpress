@@ -49,7 +49,7 @@ class Cache extends File
         $host = Url::getHostSanitized($host);
         // Remove any port number to get actual hostname
         $host = Common::sanitizeInputValue($host);
-        if (empty($host) || strpos($host, '..') !== \false || strpos($host, '\\') !== \false || strpos($host, '/') !== \false) {
+        if (empty($host) || str_contains($host, '..') || str_contains($host, '\\') || str_contains($host, '/')) {
             throw new \Exception('Unsupported host');
         }
         $this->host = $host;

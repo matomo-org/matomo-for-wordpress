@@ -23,14 +23,8 @@ use Piwik\Plugins\Marketplace\Marketplace;
  */
 class API extends \Piwik\Plugin\API
 {
-    /**
-     * @var SettingsMetadata
-     */
-    private $settingsMetadata;
-    /**
-     * @var SettingsProvider
-     */
-    private $settingsProvider;
+    private \Piwik\Plugins\CorePluginsAdmin\SettingsMetadata $settingsMetadata;
+    private SettingsProvider $settingsProvider;
     public function __construct(SettingsProvider $settingsProvider, \Piwik\Plugins\CorePluginsAdmin\SettingsMetadata $settingsMetadata)
     {
         $this->settingsProvider = $settingsProvider;
@@ -41,9 +35,8 @@ class API extends \Piwik\Plugin\API
      * @param array<string, array<int, array{name:string, value?:mixed}>> $settingValues
      * @param string|false $passwordConfirmation
      */
-    public function setSystemSettings($settingValues,
-#[\SensitiveParameter]
-$passwordConfirmation = \false) : void
+    public function setSystemSettings($settingValues, #[\SensitiveParameter]
+        $passwordConfirmation = \false) : void
     {
         Piwik::checkUserHasSuperUserAccess();
         $this->confirmCurrentUserPassword($passwordConfirmation);

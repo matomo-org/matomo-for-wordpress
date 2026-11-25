@@ -10,5 +10,5 @@ namespace Matomo\Dependencies\DI\Definition;
  */
 interface ExtendsPreviousDefinition extends Definition
 {
-    public function setExtendedDefinition(Definition $definition);
+    public function setExtendedDefinition(Definition $definition) : void;
 }

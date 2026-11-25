@@ -20,10 +20,7 @@ use Piwik\Widget\WidgetContainerConfig;
  */
 class ReportWidgetFactory
 {
-    /**
-     * @var Report
-     */
-    private $report = null;
+    private Report $report;
     /**
      * Generates a new report widget factory.
      * @param Report $report  A report instance, widgets will be created based on the data provided by this report.

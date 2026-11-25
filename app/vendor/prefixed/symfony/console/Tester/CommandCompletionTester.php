@@ -20,7 +20,7 @@ use Matomo\Dependencies\Symfony\Component\Console\Completion\CompletionSuggestio
  */
 class CommandCompletionTester
 {
-    private $command;
+    private Command $command;
     public function __construct(Command $command)
     {
         $this->command = $command;

@@ -11,6 +11,7 @@ namespace Piwik\Plugins\Diagnostics\Diagnostic;
 use Piwik\Common;
 use Piwik\Config;
 use Piwik\Db;
+use Piwik\Db\Schema;
 use Piwik\SettingsPiwik;
 use Piwik\Translation\Translator;
 /**
@@ -18,10 +19,7 @@ use Piwik\Translation\Translator;
  */
 class DatabaseInformational implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnostic
 {
-    /**
-     * @var Translator
-     */
-    private $translator;
+    private Translator $translator;
     public function __construct(Translator $translator)
     {
         $this->translator = $translator;
@@ -35,12 +33,14 @@ class DatabaseInformational implements \Piwik\Plugins\Diagnostics\Diagnostic\Dia
             $results[] = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::informationalResult('DB Charset', $dbConfig['charset']);
             $results[] = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::informationalResult('DB Collation', $dbConfig['collation']);
             $results[] = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::informationalResult('DB Adapter', $dbConfig['adapter']);
-            $results[] = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::informationalResult('MySQL Version', $this->getServerVersion());
+            $serverVersion = (string) $this->getServerVersion();
+            $databaseType = Schema::getServerTypeFromVersion($serverVersion);
+            $results[] = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::informationalResult($databaseType . ' Version', $serverVersion);
             $results[] = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::informationalResult('Num Tables', $this->getNumMatomoTables());
         }
         return $results;
     }
-    private function getServerVErsion()
+    private function getServerVersion()
     {
         try {
             return Db::get()->getServerVersion();

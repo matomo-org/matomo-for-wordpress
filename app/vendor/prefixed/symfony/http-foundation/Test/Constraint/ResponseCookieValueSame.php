@@ -15,10 +15,10 @@ use Matomo\Dependencies\Symfony\Component\HttpFoundation\Cookie;
 use Matomo\Dependencies\Symfony\Component\HttpFoundation\Response;
 final class ResponseCookieValueSame extends Constraint
 {
-    private $name;
-    private $value;
-    private $path;
-    private $domain;
+    private string $name;
+    private string $value;
+    private string $path;
+    private ?string $domain;
     public function __construct(string $name, string $value, string $path = '/', ?string $domain = null)
     {
         $this->name = $name;
@@ -26,25 +26,20 @@ final class ResponseCookieValueSame extends Constraint
         $this->path = $path;
         $this->domain = $domain;
     }
-    /**
-     * {@inheritdoc}
-     */
     public function toString() : string
     {
-        $str = sprintf('has cookie "%s"', $this->name);
+        $str = \sprintf('has cookie "%s"', $this->name);
         if ('/' !== $this->path) {
-            $str .= sprintf(' with path "%s"', $this->path);
+            $str .= \sprintf(' with path "%s"', $this->path);
         }
         if ($this->domain) {
-            $str .= sprintf(' for domain "%s"', $this->domain);
+            $str .= \sprintf(' for domain "%s"', $this->domain);
         }
-        $str .= sprintf(' with value "%s"', $this->value);
+        $str .= \sprintf(' with value "%s"', $this->value);
         return $str;
     }
     /**
      * @param Response $response
-     *
-     * {@inheritdoc}
      */
     protected function matches($response) : bool
     {
@@ -56,8 +51,6 @@ final class ResponseCookieValueSame extends Constraint
     }
     /**
      * @param Response $response
-     *
-     * {@inheritdoc}
      */
     protected function failureDescription($response) : string
     {
@@ -66,9 +59,7 @@ final class ResponseCookieValueSame extends Constraint
     protected function getCookie(Response $response) : ?Cookie
     {
         $cookies = $response->headers->getCookies();
-        $filteredCookies = array_filter($cookies, function (Cookie $cookie) {
-            return $cookie->getName() === $this->name && $cookie->getPath() === $this->path && $cookie->getDomain() === $this->domain;
-        });
+        $filteredCookies = array_filter($cookies, fn(Cookie $cookie) => $cookie->getName() === $this->name && $cookie->getPath() === $this->path && $cookie->getDomain() === $this->domain);
         return reset($filteredCookies) ?: null;
     }
 }

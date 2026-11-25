@@ -163,15 +163,15 @@ abstract class Base extends VisitDimension
     protected function excludeQueryParamsFromReferrerUrl()
     {
         $parametersToExclude = [];
-        if (!empty($this->referrerHost) && strpos($this->referrerHost, 'instagram.com') !== \false) {
+        if (!empty($this->referrerHost) && str_contains($this->referrerHost, 'instagram.com')) {
             $parametersToExclude[] = 'e';
             $parametersToExclude[] = 's';
         }
-        if (!empty($this->referrerHost) && strpos($this->referrerHost, 'facebook.com') !== \false) {
+        if (!empty($this->referrerHost) && str_contains($this->referrerHost, 'facebook.com')) {
             $parametersToExclude[] = 'h';
             $parametersToExclude[] = 'p';
         }
-        if (!empty($this->referrerHost) && (strpos($this->referrerHost, 'google.') !== \false || strpos($this->referrerHost, 'googleusercontent.') !== \false)) {
+        if (!empty($this->referrerHost) && (str_contains($this->referrerHost, 'google.') || str_contains($this->referrerHost, 'googleusercontent.'))) {
             $parametersToExclude[] = 'ust';
             $parametersToExclude[] = 'usg';
             $parametersToExclude[] = 'usd';
@@ -185,17 +185,17 @@ abstract class Base extends VisitDimension
             $parametersToExclude[] = 'client';
             $parametersToExclude[] = 'channel';
         }
-        if (!empty($this->referrerHost) && strpos($this->referrerHost, 'main.exoclick.com') !== \false) {
+        if (!empty($this->referrerHost) && str_contains($this->referrerHost, 'main.exoclick.com')) {
             $parametersToExclude[] = 'data';
             $parametersToExclude[] = 'wpn';
         }
-        if (!empty($this->referrerHost) && strpos($this->referrerHost, 'youtube.com') !== \false) {
+        if (!empty($this->referrerHost) && str_contains($this->referrerHost, 'youtube.com')) {
             $parametersToExclude[] = 'redir_token';
             $parametersToExclude[] = 'html_redirect';
             $parametersToExclude[] = 'continuation';
             $parametersToExclude[] = 'feature';
         }
-        if (!empty($this->referrerHost) && strpos($this->referrerHost, 'bing.com') !== \false) {
+        if (!empty($this->referrerHost) && str_contains($this->referrerHost, 'bing.com')) {
             $parametersToExclude[] = 'cvid';
             $parametersToExclude[] = 'refig';
             $parametersToExclude[] = 'elv';
@@ -488,7 +488,7 @@ abstract class Base extends VisitDimension
             }
         }
         // Set the keyword, to the hostname found, in a Adsense Referrer URL '&url=' parameter
-        if (empty($this->keywordReferrerAnalyzed) && !empty($this->referrerUrlParse['query']) && !empty($this->referrerHost) && (strpos($this->referrerHost, 'googleads') !== \false || strpos($this->referrerHost, 'doubleclick') !== \false)) {
+        if (empty($this->keywordReferrerAnalyzed) && !empty($this->referrerUrlParse['query']) && !empty($this->referrerHost) && (str_contains($this->referrerHost, 'googleads') || str_contains($this->referrerHost, 'doubleclick'))) {
             // This parameter sometimes is found & contains the page with the adsense ad bringing visitor to our site
             $value = $this->getParameterValueFromReferrerUrl('url');
             if (!empty($value)) {
@@ -592,7 +592,7 @@ abstract class Base extends VisitDimension
         } else {
             Common::printDebug("No referrer attribution found for this user. Current user's visit referrer is used.");
         }
-        if ($type === Common::REFERRER_TYPE_CAMPAIGN && CampaignParameterValuesMasked::isEnabled((int) $request->getIdSite())) {
+        if ($type === Common::REFERRER_TYPE_CAMPAIGN && CampaignParameterValuesMasked::isEnabled($request->getIdSite())) {
             $name = CampaignParameterValuesMasked::getPlaceholderValue();
             $keyword = CampaignParameterValuesMasked::getPlaceholderValue();
         }

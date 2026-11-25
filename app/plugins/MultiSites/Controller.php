@@ -21,8 +21,7 @@ use Piwik\Translation\Translator;
 use Piwik\View;
 class Controller extends \Piwik\Plugin\Controller
 {
-    /** @var Translator */
-    private $translator;
+    private Translator $translator;
     public function __construct(Translator $translator)
     {
         parent::__construct();

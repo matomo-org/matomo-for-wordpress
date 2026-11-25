@@ -3,9 +3,6 @@
 namespace Davaxi\Sparkline;
 
 use InvalidArgumentException;
-/**
- * Trait StyleTrait.
- */
 trait StyleTrait
 {
     /**
@@ -31,6 +28,16 @@ trait StyleTrait
      * @var float
      */
     protected $lineThickness = 1.75;
+    /**
+     * Per-series line dash patterns: [] = solid, [on, off] = dashed
+     * @var int[][]
+     */
+    protected $lineStyle = [];
+    /**
+     * Series indexes for which the line is deactivated.
+     * @var bool[]
+     */
+    protected $lineDeactivated = [];
     /**
      * Set background to transparent.
      */
@@ -82,12 +89,47 @@ trait StyleTrait
         $this->lineThickness = $thickness;
     }
     /**
+     * @param string $style 'solid' or 'dashed'
+     * @param int $seriesIndex
+     */
+    public function setLineStyle(string $style, int $seriesIndex = 0)
+    {
+        $patterns = ['solid' => [], 'dashed' => [1, 1]];
+        if (!array_key_exists($style, $patterns)) {
+            throw new InvalidArgumentException('Invalid line style: ' . $style . '. Must be solid or dashed.');
+        }
+        $this->lineStyle[$seriesIndex] = $patterns[$style];
+    }
+    /**
+     * @param int $seriesIndex
+     * @return array [onPx, offPx] or [] for solid
+     */
+    public function getLineStyle(int $seriesIndex = 0) : array
+    {
+        return $this->lineStyle[$seriesIndex] ?? [];
+    }
+    /**
      * @param int $seriesIndex
      * @return array
      */
     public function getLineColor(int $seriesIndex = 0) : array
     {
         return $this->lineColor[$seriesIndex] ?? $this->lineColor[0];
+    }
+    /**
+     * @param int $seriesIndex
+     */
+    public function deactivateLine(int $seriesIndex = 0)
+    {
+        $this->lineDeactivated[$seriesIndex] = \true;
+    }
+    /**
+     * @param int $seriesIndex
+     * @return bool
+     */
+    public function isLineDeactivated(int $seriesIndex = 0) : bool
+    {
+        return $this->lineDeactivated[$seriesIndex] ?? \false;
     }
     /**
      * Set fill color to transparent.
@@ -143,7 +185,7 @@ trait StyleTrait
      */
     protected function colorHexToRGB(string $color) : array
     {
-        if (!$this->checkColorHex($color)) {
+        if (!self::checkColorHex($color)) {
             throw new InvalidArgumentException('Invalid hexadecimal value ' . $color);
         }
         $color = mb_strtolower($color);

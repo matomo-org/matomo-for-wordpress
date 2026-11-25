@@ -154,7 +154,7 @@ class Factory
      */
     private static function getReport($apiAction)
     {
-        if (strpos($apiAction, '.') === \false) {
+        if (!str_contains($apiAction, '.')) {
             return null;
         }
         list($module, $action) = explode('.', $apiAction);

@@ -10,34 +10,45 @@ namespace Matomo\Dependencies;
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+use Matomo\Dependencies\Symfony\Component\VarDumper\Caster\ScalarStub;
 use Matomo\Dependencies\Symfony\Component\VarDumper\VarDumper;
 if (!\function_exists('Matomo\\Dependencies\\dump')) {
     /**
      * @author Nicolas Grekas <p@tchwork.com>
+     * @author Alexandre Daubois <alex.daubois@gmail.com>
      */
-    function dump($var, ...$moreVars)
+    function dump(mixed ...$vars) : mixed
     {
-        VarDumper::dump($var);
-        foreach ($moreVars as $v) {
-            VarDumper::dump($v);
+        if (!$vars) {
+            VarDumper::dump(new ScalarStub('🐛'));
+            return null;
         }
-        if (1 < \func_num_args()) {
-            return \func_get_args();
+        if (\array_key_exists(0, $vars) && 1 === \count($vars)) {
+            VarDumper::dump($vars[0]);
+            $k = 0;
+        } else {
+            foreach ($vars as $k => $v) {
+                VarDumper::dump($v, \is_int($k) ? 1 + $k : $k);
+            }
         }
-        return $var;
+        if (1 < \count($vars)) {
+            return $vars;
+        }
+        return $vars[$k];
     }
 }
 if (!\function_exists('Matomo\\Dependencies\\dd')) {
-    /**
-     * @return never
-     */
-    function dd(...$vars)
+    function dd(mixed ...$vars) : never
     {
-        if (!\in_array(\PHP_SAPI, ['cli', 'phpdbg'], \true) && !\headers_sent()) {
+        if (!\in_array(\PHP_SAPI, ['cli', 'phpdbg', 'embed'], \true) && !\headers_sent()) {
             \header('HTTP/1.1 500 Internal Server Error');
         }
-        foreach ($vars as $v) {
-            VarDumper::dump($v);
+        if (\array_key_exists(0, $vars) && 1 === \count($vars)) {
+            VarDumper::dump($vars[0]);
+        } else {
+            foreach ($vars as $k => $v) {
+                VarDumper::dump($v, \is_int($k) ? 1 + $k : $k);
+            }
         }
         exit(1);
     }

@@ -20,21 +20,15 @@ class FormatterHelper extends Helper
 {
     /**
      * Formats a message within a section.
-     *
-     * @return string
      */
-    public function formatSection(string $section, string $message, string $style = 'info')
+    public function formatSection(string $section, string $message, string $style = 'info') : string
     {
-        return sprintf('<%s>[%s]</%s> %s', $style, $section, $style, $message);
+        return \sprintf('<%s>[%s]</%s> %s', $style, $section, $style, $message);
     }
     /**
      * Formats a message as a block of text.
-     *
-     * @param string|array $messages The message to write in the block
-     *
-     * @return string
      */
-    public function formatBlock($messages, string $style, bool $large = \false)
+    public function formatBlock(string|array $messages, string $style, bool $large = \false) : string
     {
         if (!\is_array($messages)) {
             $messages = [$messages];
@@ -43,7 +37,7 @@ class FormatterHelper extends Helper
         $lines = [];
         foreach ($messages as $message) {
             $message = OutputFormatter::escape($message);
-            $lines[] = sprintf($large ? '  %s  ' : ' %s ', $message);
+            $lines[] = \sprintf($large ? '  %s  ' : ' %s ', $message);
             $len = max(self::width($message) + ($large ? 4 : 2), $len);
         }
         $messages = $large ? [str_repeat(' ', $len)] : [];
@@ -54,16 +48,14 @@ class FormatterHelper extends Helper
             $messages[] = str_repeat(' ', $len);
         }
         for ($i = 0; isset($messages[$i]); ++$i) {
-            $messages[$i] = sprintf('<%s>%s</%s>', $style, $messages[$i], $style);
+            $messages[$i] = \sprintf('<%s>%s</%s>', $style, $messages[$i], $style);
         }
         return implode("\n", $messages);
     }
     /**
      * Truncates a message to the given length.
-     *
-     * @return string
      */
-    public function truncate(string $message, int $length, string $suffix = '...')
+    public function truncate(string $message, int $length, string $suffix = '...') : string
     {
         $computedLength = $length - self::width($suffix);
         if ($computedLength > self::width($message)) {
@@ -71,10 +63,7 @@ class FormatterHelper extends Helper
         }
         return self::substr($message, 0, $length) . $suffix;
     }
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
+    public function getName() : string
     {
         return 'formatter';
     }

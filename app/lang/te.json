@@ -122,6 +122,9 @@
         "DefaultReportDate": "నివేదిక తేదీ",
         "NoPiwikAccount": "పివిక్ ఖాతా లేదా?"
     },
+    "AIProviders": {
+        "DefaultBadge": "అప్రమేయం"
+    },
     "API": {
         "UserAuthentication": "వాడుకరి అధీకరణ"
     },
@@ -167,7 +170,6 @@
     },
     "CoreHome": {
         "ChooseWebsite": "వెబ్ సైటుని ఎంచుకోండి",
-        "Default": "అప్రమేయం",
         "PresetDateToday": "ఈ రోజు",
         "PresetDateYesterday": "నిన్న"
     },
@@ -216,7 +218,9 @@
         "GoalName": "లక్ష్యపు పేరు",
         "Goals": "లక్ష్యాలు",
         "Optional": "(ఐచ్చికం)",
-        "PageTitles": "పేజీ శీర్షికలు"
+        "PageTitles": "పేజీ శీర్షికలు",
+        "RecommendationCountOnePage": "1 పుట",
+        "RecommendationCountPages": "%s పుటలు"
     },
     "Installation": {
         "Congratulations": "అభినందనలు",
@@ -1428,6 +1432,7 @@
     },
     "Marketplace": {
         "ActivateLicenseKey": "చేతనించు",
+        "CategorySecurity": "భద్రత",
         "PluginKeywords": "కీపదాలు",
         "SubscriptionType": "రకం"
     },
@@ -1464,9 +1469,6 @@
     "Resolution": {
         "ColumnConfiguration": "స్వరూపణం",
         "Configurations": "స్వరూపణలు"
-    },
-    "SEO": {
-        "Rank": "ర్యాంకు"
     },
     "ScheduledReports": {
         "PiwikReports": "పివిక్ నివేదికలు",

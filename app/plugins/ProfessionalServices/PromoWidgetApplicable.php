@@ -13,18 +13,9 @@ use Piwik\Plugin\Manager;
 use Piwik\ProfessionalServices\Advertising;
 class PromoWidgetApplicable
 {
-    /**
-     * @var Manager
-     */
-    private $manager;
-    /**
-     * @var Config
-     */
-    private $config;
-    /**
-     * @var PromoWidgetDismissal
-     */
-    private $promoWidgetDismissal;
+    private Manager $manager;
+    private Config $config;
+    private \Piwik\Plugins\ProfessionalServices\PromoWidgetDismissal $promoWidgetDismissal;
     public function __construct(Manager $manager, Config $config, \Piwik\Plugins\ProfessionalServices\PromoWidgetDismissal $promoWidgetDismissal)
     {
         $this->manager = $manager;

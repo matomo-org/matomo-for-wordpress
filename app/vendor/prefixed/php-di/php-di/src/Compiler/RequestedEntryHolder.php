@@ -9,13 +9,8 @@ use Matomo\Dependencies\DI\Factory\RequestedEntry;
  */
 class RequestedEntryHolder implements RequestedEntry
 {
-    /**
-     * @var string
-     */
-    private $name;
-    public function __construct(string $name)
+    public function __construct(private string $name)
     {
-        $this->name = $name;
     }
     public function getName() : string
     {

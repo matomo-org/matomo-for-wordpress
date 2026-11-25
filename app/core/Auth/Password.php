@@ -20,7 +20,7 @@ class Password
     /**
      * Choose the used algorithm for password_hash depending on the config option
      *
-     * @return string|int depending on PHP version
+     * @return string
      * @throws Exception
      */
     private function preferredAlgorithm()
@@ -34,9 +34,6 @@ class Password
             case "argon2i":
                 return \PASSWORD_ARGON2I;
             case "argon2id":
-                if (version_compare(\PHP_VERSION, '7.3.0', '<')) {
-                    throw new Exception("argon2id needs at leat PHP 7.3.0");
-                }
                 return \PASSWORD_ARGON2ID;
             default:
                 throw new Exception("invalid password_hash_algorithm");
@@ -68,9 +65,8 @@ class Password
      * @param string $password
      * @return string
      */
-    public function hash(
-#[\SensitiveParameter]
-$password)
+    public function hash(#[\SensitiveParameter]
+        $password)
     {
         return password_hash($password, $this->preferredAlgorithm(), $this->algorithmOptions());
     }
@@ -109,11 +105,9 @@ $password)
      * @param string $hash
      * @return boolean
      */
-    public function verify(
-#[\SensitiveParameter]
-$password,
-#[\SensitiveParameter]
-$hash)
+    public function verify(#[\SensitiveParameter]
+        $password, #[\SensitiveParameter]
+            $hash)
     {
         return password_verify($password, $hash);
     }

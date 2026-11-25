@@ -7,12 +7,16 @@ namespace Matomo\Dependencies;
  */
 class Less_Tree_Media extends Less_Tree
 {
+    /** @var Less_Tree_Value */
     public $features;
+    /** @var Less_Tree_Ruleset[] */
     public $rules;
+    /** @var int|null */
     public $index;
+    /** @var array|null */
     public $currentFileInfo;
+    /** @var bool|null */
     public $isReferenced;
-    public $type = 'Media';
     public function __construct($value = [], $features = [], $index = null, $currentFileInfo = null)
     {
         $this->index = $index;
@@ -38,20 +42,20 @@ class Less_Tree_Media extends Less_Tree
     }
     /**
      * @param Less_Environment $env
-     * @return Less_Tree_Media|Less_Tree_Ruleset
+     * @return self|Less_Tree_Ruleset
      * @see less-2.5.3.js#Media.prototype.eval
      */
     public function compile($env)
     {
-        $media = new Less_Tree_Media([], [], $this->index, $this->currentFileInfo);
-        $strictMathBypass = \false;
-        if (Less_Parser::$options['strictMath'] === \false) {
-            $strictMathBypass = \true;
-            Less_Parser::$options['strictMath'] = \true;
+        $media = new self([], [], $this->index, $this->currentFileInfo);
+        $mathBypass = \false;
+        if (!$env->mathOn) {
+            $mathBypass = \true;
+            $env->mathOn = \true;
         }
         $media->features = $this->features->compile($env);
-        if ($strictMathBypass) {
-            Less_Parser::$options['strictMath'] = \false;
+        if ($mathBypass) {
+            $env->mathOn = \false;
         }
         $env->mediaPath[] = $media;
         $env->mediaBlocks[] = $media;
@@ -102,7 +106,7 @@ class Less_Tree_Media extends Less_Tree
     public function compileNested($env)
     {
         $path = \array_merge($env->mediaPath, [$this]);
-        '@phan-var array<Less_Tree_Media> $path';
+        '@phan-var self[] $path';
         // Extract the media-query conditions separated with `,` (OR).
         foreach ($path as $key => $p) {
             $value = $p->features instanceof Less_Tree_Value ? $p->features->value : $p->features;
@@ -117,10 +121,11 @@ class Less_Tree_Media extends Less_Tree
         //	b and c and d
         //	b and c and e
         $permuted = $this->permute($path);
+        '@phan-var (Less_Tree|string)[][] $permuted';
         $expressions = [];
         foreach ($permuted as $path) {
             for ($i = 0, $len = \count($path); $i < $len; $i++) {
-                $path[$i] = Less_Parser::is_method($path[$i], 'toCSS') ? $path[$i] : new Less_Tree_Anonymous($path[$i]);
+                $path[$i] = $path[$i] instanceof Less_Tree ? $path[$i] : new Less_Tree_Anonymous($path[$i]);
             }
             for ($i = \count($path) - 1; $i > 0; $i--) {
                 \array_splice($path, $i, 0, [new Less_Tree_Anonymous('and')]);

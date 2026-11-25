@@ -28,16 +28,12 @@ class LogDataPurger
     public static $selectSegmentSize = 100000;
     /**
      * LogDeleter service used to delete visits.
-     *
-     * @var LogDeleter
      */
-    private $logDeleter;
+    private LogDeleter $logDeleter;
     /**
      * DAO class that is used to delete unused actions.
-     *
-     * @var RawLogDao
      */
-    private $rawLogDao;
+    private RawLogDao $rawLogDao;
     public function __construct(LogDeleter $logDeleter, RawLogDao $rawLogDao)
     {
         $this->logDeleter = $logDeleter;
@@ -124,21 +120,20 @@ class LogDataPurger
         return $result;
     }
     /**
-     * get highest idVisit to delete rows from
-     * @return string|false
+     * get highest idVisit to delete rows from, or 0 when there is nothing to purge
      */
-    private function getDeleteIdVisitOffset($deleteLogsOlderThan)
+    private function getDeleteIdVisitOffset($deleteLogsOlderThan) : int
     {
         $logVisit = Common::prefixTable("log_visit");
         // get max idvisit
-        $maxIdVisit = Db::fetchOne("SELECT MAX(idvisit) FROM `{$logVisit}`");
+        $maxIdVisit = (int) Db::fetchOne("SELECT MAX(idvisit) FROM `{$logVisit}`");
         if (empty($maxIdVisit)) {
-            return \false;
+            return 0;
         }
         // select highest idvisit to delete from
         $dateStart = Date::factory("today")->subDay($deleteLogsOlderThan);
         $sql = "SELECT idvisit\n\t\t          FROM `{$logVisit}`\n\t\t         WHERE '" . $dateStart->toString('Y-m-d H:i:s') . "' > visit_last_action_time\n\t\t           AND idvisit <= ?\n\t\t           AND idvisit > ?\n\t\t      ORDER BY idvisit DESC\n\t\t         LIMIT 1";
-        return Db::segmentedFetchFirst($sql, $maxIdVisit, 0, -self::$selectSegmentSize);
+        return (int) Db::segmentedFetchFirst($sql, $maxIdVisit, 0, -self::$selectSegmentSize);
     }
     private function getLogTableDeleteCount($table, $maxIdVisit)
     {

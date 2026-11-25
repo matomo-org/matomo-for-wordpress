@@ -45,12 +45,10 @@ class SystemSetting extends Setting
         if ($this->hasConfigValue()) {
             return \false;
         }
-        if (isset($this->hasWritePermission)) {
-            return $this->hasWritePermission;
-        }
         // performance improvement, do not detect this in __construct otherwise likely rather "big" query to DB.
-        $this->hasWritePermission = Piwik::hasUserSuperUserAccess();
-        return $this->hasWritePermission;
+        return $this->getWritePermissionForCurrentAccess(function () {
+            return Piwik::hasUserSuperUserAccess();
+        });
     }
     /**
      * @inheritdoc

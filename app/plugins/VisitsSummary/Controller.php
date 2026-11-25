@@ -20,10 +20,7 @@ use Piwik\Translation\Translator;
 use Piwik\Url;
 class Controller extends \Piwik\Plugin\Controller
 {
-    /**
-     * @var Translator
-     */
-    private $translator;
+    private Translator $translator;
     public function __construct(Translator $translator)
     {
         $this->translator = $translator;

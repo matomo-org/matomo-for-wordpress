@@ -27,10 +27,10 @@ use Piwik\Plugins\TagManager\Model\Container as UpstreamContainer;
  */
 class Container extends UpstreamContainer
 {
-    public function createContainerVersion($idSite, $idContainer, $idContainerVersion, $name, $description)
+    public function createContainerVersion($idSite, $idContainer, $idContainerVersion, $name, $description, $createdBy = null)
     {
-        return SecuredTemplateConstraints::suspendedFor(function () use ($idSite, $idContainer, $idContainerVersion, $name, $description) {
-            return parent::createContainerVersion($idSite, $idContainer, $idContainerVersion, $name, $description);
+        return SecuredTemplateConstraints::suspendedFor(function () use ($idSite, $idContainer, $idContainerVersion, $name, $description, $createdBy) {
+            return parent::createContainerVersion($idSite, $idContainer, $idContainerVersion, $name, $description, $createdBy);
         });
     }
 }

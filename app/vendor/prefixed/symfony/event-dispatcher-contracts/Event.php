@@ -28,10 +28,7 @@ use Matomo\Dependencies\Psr\EventDispatcher\StoppableEventInterface;
  */
 class Event implements StoppableEventInterface
 {
-    private $propagationStopped = \false;
-    /**
-     * {@inheritdoc}
-     */
+    private bool $propagationStopped = \false;
     public function isPropagationStopped() : bool
     {
         return $this->propagationStopped;

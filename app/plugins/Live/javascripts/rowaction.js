@@ -62,6 +62,10 @@
         'date',
         'period',
         'segment',
+        // Extra segment intersected at the visit level by Live\Model (see Model::queryLogVisits
+        // $intersectSegment). Like `segment` it is a segment definition validated server-side by
+        // the Segment class, so it grants no capability beyond the already-allowed `segment` key.
+        'intersectSegment',
     ];
 
     // Filter a parsed extraParams object against the allowlist. Returns a new
@@ -89,34 +93,71 @@
     };
 
     DataTable_RowActions_SegmentVisitorLog.prototype.trigger = function (tr, e, subTableLabel) {
-        var segment = getRawSegmentValueFromRow(tr);
+        var clickedSegment = getRawSegmentValueFromRow(tr);
+        var suffix = this.dataTable.props.segmented_visitor_log_segment_suffix || '';
+        var extraParams = {};
 
-        if (this.dataTable.param.segment) {
-            segment = decodeURIComponent(this.dataTable.param.segment) + ';' + segment;
+        // A comparison row belongs to one series, so that series' segment (none for "All visits")
+        // is the context instead of the report's segment
+        var paramOverride = $(tr).data('param-override');
+        var isComparisonRow = typeof paramOverride === 'object' && paramOverride !== null;
+        var contextSegment = isComparisonRow
+            ? (paramOverride.segment || '')
+            : decodeURIComponent(this.dataTable.param.segment || '');
+
+        // The report adds conditions to its rows after the comparison rows are built (e.g. the
+        // referrerType==campaign prefix on Campaigns), so the row the comparison belongs to carries
+        // the complete filter for the clicked value
+        if (isComparisonRow) {
+            var reportRow = $(tr).prevAll('tr.parentComparisonRow').first();
+            clickedSegment = getRawSegmentValueFromRow(reportRow) || clickedSegment;
         }
 
-        if (this.dataTable.props.segmented_visitor_log_segment_suffix) {
-            segment = segment + ';' + this.dataTable.props.segmented_visitor_log_segment_suffix;
+        // The main segment is the context plus any report-defined suffix, ANDed together at the
+        // action level. The clicked row's segment is always intersected at the visit level instead
+        // (see Model::queryLogVisits $intersectSegment), so a same-dimension condition — e.g. context
+        // pageUrl==X with clicked pageUrl==Y — is not collapsed onto a single action row, which
+        // would match nothing.
+        var parts = [];
+        if (contextSegment) {
+            parts.push(contextSegment);
+        }
+        if (suffix) {
+            parts.push(suffix);
+        }
+        var segment = parts.join(';');
+
+        if (segment) {
+            extraParams.intersectSegment = clickedSegment;
+        } else {
+            // No report context at all: the clicked segment is the whole segment. Evaluating it at
+            // the action level is fine here because there is no other condition to collide with.
+            segment = clickedSegment;
         }
 
-        this.performAction(segment, tr, e);
+        this.performAction(segment, tr, e, null, extraParams);
     };
 
-    DataTable_RowActions_SegmentVisitorLog.prototype.performAction = function (segment, tr, e, originalRow) {
+    DataTable_RowActions_SegmentVisitorLog.prototype.performAction = function (segment, tr, e, originalRow, extraParamsOverride) {
 
         var apiMethod = this.dataTable.param.module + '.' + this.dataTable.param.action;
 
-        var extraParams = {};
+        var extraParams = extraParamsOverride || {};
 
         if (this.dataTable.param.date && this.dataTable.param.period) {
-            extraParams = {date: this.dataTable.param.date, period: this.dataTable.param.period};
+            extraParams.date = this.dataTable.param.date;
+            extraParams.period = this.dataTable.param.period;
         }
 
         var paramOverride = $(originalRow || tr).data('param-override');
         if (typeof paramOverride !== 'object') {
             paramOverride = {};
         }
-        $.extend(extraParams, DataTable_RowActions_SegmentVisitorLog.filterAllowedExtraParams(paramOverride));
+        paramOverride = DataTable_RowActions_SegmentVisitorLog.filterAllowedExtraParams(paramOverride);
+        // trigger() already built the segment from the row's series and the report's suffix, so the
+        // series segment in the override must not replace it
+        delete paramOverride.segment;
+        $.extend(extraParams, paramOverride);
 
         this.openPopover(apiMethod, segment, extraParams);
     };

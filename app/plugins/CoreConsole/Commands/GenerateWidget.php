@@ -42,7 +42,7 @@ class GenerateWidget extends \Piwik\Plugins\CoreConsole\Commands\GeneratePluginB
         $methodName = trim($methodName);
         $methodName = str_replace(' ', '', $methodName);
         $methodName = preg_replace("/[^A-Za-z0-9]/", '', $methodName);
-        if (0 !== strpos(strtolower($methodName), 'get')) {
+        if (!str_starts_with(strtolower($methodName), 'get')) {
             $methodName = 'get' . ucfirst($methodName);
         }
         return lcfirst($methodName);

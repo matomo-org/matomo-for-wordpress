@@ -13,6 +13,7 @@ namespace Matomo\Dependencies\Symfony\Component\Console\Helper;
 use Matomo\Dependencies\Symfony\Component\Console\Descriptor\DescriptorInterface;
 use Matomo\Dependencies\Symfony\Component\Console\Descriptor\JsonDescriptor;
 use Matomo\Dependencies\Symfony\Component\Console\Descriptor\MarkdownDescriptor;
+use Matomo\Dependencies\Symfony\Component\Console\Descriptor\ReStructuredTextDescriptor;
 use Matomo\Dependencies\Symfony\Component\Console\Descriptor\TextDescriptor;
 use Matomo\Dependencies\Symfony\Component\Console\Descriptor\XmlDescriptor;
 use Matomo\Dependencies\Symfony\Component\Console\Exception\InvalidArgumentException;
@@ -27,10 +28,10 @@ class DescriptorHelper extends Helper
     /**
      * @var DescriptorInterface[]
      */
-    private $descriptors = [];
+    private array $descriptors = [];
     public function __construct()
     {
-        $this->register('txt', new TextDescriptor())->register('xml', new XmlDescriptor())->register('json', new JsonDescriptor())->register('md', new MarkdownDescriptor());
+        $this->register('txt', new TextDescriptor())->register('xml', new XmlDescriptor())->register('json', new JsonDescriptor())->register('md', new MarkdownDescriptor())->register('rst', new ReStructuredTextDescriptor());
     }
     /**
      * Describes an object if supported.
@@ -39,13 +40,15 @@ class DescriptorHelper extends Helper
      * * format: string, the output format name
      * * raw_text: boolean, sets output type as raw
      *
+     * @return void
+     *
      * @throws InvalidArgumentException when the given format is not supported
      */
     public function describe(OutputInterface $output, ?object $object, array $options = [])
     {
         $options = array_merge(['raw_text' => \false, 'format' => 'txt'], $options);
         if (!isset($this->descriptors[$options['format']])) {
-            throw new InvalidArgumentException(sprintf('Unsupported format "%s".', $options['format']));
+            throw new InvalidArgumentException(\sprintf('Unsupported format "%s".', $options['format']));
         }
         $descriptor = $this->descriptors[$options['format']];
         $descriptor->describe($output, $object, $options);
@@ -55,15 +58,12 @@ class DescriptorHelper extends Helper
      *
      * @return $this
      */
-    public function register(string $format, DescriptorInterface $descriptor)
+    public function register(string $format, DescriptorInterface $descriptor) : static
     {
         $this->descriptors[$format] = $descriptor;
         return $this;
     }
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
+    public function getName() : string
     {
         return 'descriptor';
     }

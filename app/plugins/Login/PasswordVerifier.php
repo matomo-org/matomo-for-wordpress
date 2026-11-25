@@ -17,14 +17,8 @@ class PasswordVerifier
 {
     public const VERIFY_VALID_FOR_MINUTES = 30;
     public const VERIFY_REVALIDATE_X_MINUTES_LEFT = 15;
-    /**
-     * @var Date|null
-     */
-    private $now;
-    /**
-     * @var bool
-     */
-    private $enableRedirect = \true;
+    private ?Date $now = null;
+    private bool $enableRedirect = \true;
     /**
      * @return void
      * @ignore tests only
@@ -42,9 +36,8 @@ class PasswordVerifier
      * @param string $password
      * @return bool
      */
-    public function isPasswordCorrect($userLogin,
-#[\SensitiveParameter]
-$password)
+    public function isPasswordCorrect($userLogin, #[\SensitiveParameter]
+        $password)
     {
         /**
          * @ignore

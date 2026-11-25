@@ -20,9 +20,9 @@ use Matomo\Dependencies\Symfony\Contracts\EventDispatcher\Event;
  */
 class KernelEvent extends Event
 {
-    private $kernel;
-    private $request;
-    private $requestType;
+    private HttpKernelInterface $kernel;
+    private Request $request;
+    private ?int $requestType;
     /**
      * @param int $requestType The request type the kernel is currently processing; one of
      *                         HttpKernelInterface::MAIN_REQUEST or HttpKernelInterface::SUB_REQUEST
@@ -35,19 +35,15 @@ class KernelEvent extends Event
     }
     /**
      * Returns the kernel in which this event was thrown.
-     *
-     * @return HttpKernelInterface
      */
-    public function getKernel()
+    public function getKernel() : HttpKernelInterface
     {
         return $this->kernel;
     }
     /**
      * Returns the request the kernel is currently processing.
-     *
-     * @return Request
      */
-    public function getRequest()
+    public function getRequest() : Request
     {
         return $this->request;
     }
@@ -57,7 +53,7 @@ class KernelEvent extends Event
      * @return int One of HttpKernelInterface::MAIN_REQUEST and
      *             HttpKernelInterface::SUB_REQUEST
      */
-    public function getRequestType()
+    public function getRequestType() : int
     {
         return $this->requestType;
     }
@@ -67,17 +63,5 @@ class KernelEvent extends Event
     public function isMainRequest() : bool
     {
         return HttpKernelInterface::MAIN_REQUEST === $this->requestType;
-    }
-    /**
-     * Checks if this is a master request.
-     *
-     * @return bool
-     *
-     * @deprecated since symfony/http-kernel 5.3, use isMainRequest() instead
-     */
-    public function isMasterRequest()
-    {
-        trigger_deprecation('symfony/http-kernel', '5.3', '"%s()" is deprecated, use "isMainRequest()" instead.', __METHOD__);
-        return $this->isMainRequest();
     }
 }

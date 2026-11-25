@@ -103,42 +103,42 @@ class Logger extends AbstractLogger implements LoggerInterface
         return $level;
     }
 
-    public function emergency($message, array $context = [])
+    public function emergency($message, array $context = []): void
     {
         $this->log(self::EMERGENCY, $message, $context);
     }
 
-    public function alert($message, array $context = [])
+    public function alert($message, array $context = []): void
     {
         $this->log(self::ALERT, $message, $context);
     }
 
-    public function critical($message, array $context = array())
+    public function critical($message, array $context = array()): void
     {
         $this->log(self::CRITICAL, $message, $context);
     }
 
-    public function error($message, array $context = [])
+    public function error($message, array $context = []): void
     {
         $this->log(self::ERROR, $message, $context);
     }
 
-    public function warning($message, array $context = [])
+    public function warning($message, array $context = []): void
     {
         $this->log(self::WARNING, $message, $context);
     }
 
-    public function debug($message, array $context = [])
+    public function debug($message, array $context = []): void
     {
         $this->log(self::DEBUG, $message, $context);
     }
 
-    public function notice($message, array $context = [])
+    public function notice($message, array $context = []): void
     {
         $this->log(self::NOTICE, $message, $context);
     }
 
-    public function info($message, array $context = [])
+    public function info($message, array $context = []): void
     {
         $this->log(self::INFO, $message, $context);
     }
@@ -153,7 +153,7 @@ class Logger extends AbstractLogger implements LoggerInterface
      *
      * @return void
      */
-    public function log( $level, $message, array $context = array() ) {
+    public function log( $level, $message, array $context = array() ): void {
 
         $is_tracker_debug = $this->is_tracker && ((!empty($GLOBALS['PIWIK_TRACKER_DEBUG']) && $GLOBALS['PIWIK_TRACKER_DEBUG'] === true) || StaticContainer::get("ini.Tracker.debug"));
 
@@ -176,7 +176,7 @@ class Logger extends AbstractLogger implements LoggerInterface
             $title = $this->levels[$level] . ': ';
         }
 
-        $record = array('message' => $message, 'context' => $context);
+        $record = new \Matomo\Dependencies\Monolog\LogRecord(new \DateTimeImmutable(), 'wordpress', \Matomo\Dependencies\Monolog\Level::fromValue($level), (string) $message, $context);
         $processors = [
             new SprintfProcessor(),
             new ClassNameProcessor(),

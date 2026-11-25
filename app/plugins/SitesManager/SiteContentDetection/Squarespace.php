@@ -26,6 +26,6 @@ class Squarespace extends \Piwik\Plugins\SitesManager\SiteContentDetection\SiteC
     public function isDetected(?string $data = null, ?array $headers = null) : bool
     {
         $needle = '<!-- This is Squarespace. -->';
-        return strpos($data, $needle) !== \false;
+        return str_contains($data, $needle);
     }
 }

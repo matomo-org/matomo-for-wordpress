@@ -56,7 +56,10 @@ class Pattern extends BaseFilter
         return '/' . str_replace('/', '\\/', $pattern) . '/';
     }
     /**
-     * Performs case insensitive match
+     * Performs a Unicode case-insensitive match.
+     *
+     * ASCII-only `/i` does not fold letters such as å/ä/ö, so a search for
+     * "öppettider" would miss the label "Öppettider".
      *
      * @param string $patternQuoted
      * @param string $string
@@ -66,7 +69,7 @@ class Pattern extends BaseFilter
      */
     public static function match($patternQuoted, $string, $invertedMatch = \false)
     {
-        return preg_match($patternQuoted . "i", $string) == 1 ^ $invertedMatch;
+        return preg_match($patternQuoted . 'iu', $string) == 1 ^ $invertedMatch;
     }
     /**
      * See {@link Pattern}.

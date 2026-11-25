@@ -168,10 +168,13 @@ class SettingsPiwik
         $currentUrl = str_replace("/misc/cron", "", $currentUrl);
         if (empty($url) || $currentUrl !== $url) {
             $host = \Piwik\Url::getHostFromUrl($currentUrl);
-            if (strlen($currentUrl) >= strlen('http://a/') && \Piwik\Url::isValidHost($host) && !\Piwik\Url::isLocalHost($host)) {
+            $isProxyHostValid = \Piwik\Url::isProxyHostValid();
+            if (strlen($currentUrl) >= strlen('http://a/') && \Piwik\Url::isValidHost($host) && !\Piwik\Url::isLocalHost($host) && $isProxyHostValid) {
                 self::overwritePiwikUrl($currentUrl);
             }
-            $url = $currentUrl;
+            if ($isProxyHostValid || empty($url)) {
+                $url = $currentUrl;
+            }
         }
         if (\Piwik\ProxyHttp::isHttps()) {
             $url = str_replace("http://", "https://", $url);
@@ -303,8 +306,8 @@ class SettingsPiwik
         $expectedString = 'misc/user/';
         // see checkPiwikIsNotInstalled()
         $expectedStringAlreadyInstalled = 'piwik-is-already-installed';
-        $expectedStringNotFound = strpos($fetched, $expectedString) === \false && strpos($fetched, $expectedStringAlt) === \false && strpos($fetched, $expectedStringAlreadyInstalled) === \false;
-        $hasError = \false !== strpos($fetched, PAGE_TITLE_WHEN_ERROR);
+        $expectedStringNotFound = !str_contains($fetched, $expectedString) && !str_contains($fetched, $expectedStringAlt) && !str_contains($fetched, $expectedStringAlreadyInstalled);
+        $hasError = str_contains($fetched, PAGE_TITLE_WHEN_ERROR);
         if ($hasError || $expectedStringNotFound) {
             throw new Exception("\nMatomo should be running at: " . $piwikServerUrl . " but this URL returned an unexpected response: '" . $fetched . "'\n\n");
         }

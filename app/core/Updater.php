@@ -34,7 +34,7 @@ class Updater
     /**
      * @var UpdateObserver[]
      */
-    private $updateObservers = array();
+    private array $updateObservers = array();
     /**
      * @var Columns\Updater
      */
@@ -169,7 +169,7 @@ class Updater
      *                                    must be upgraded.
      *
      *                                    Example: `array('core' => '2.11.0')`
-     * @return array( componentName => array( file1 => version1, [...]), [...])
+     * @return array Map of componentName => [file1 => version1, ...]
      */
     public function getComponentsWithUpdateFile($componentsToCheck)
     {
@@ -296,7 +296,7 @@ class Updater
     /**
      * Construct list of update files for the outdated components
      *
-     * @return array( componentName => array( file1 => version1, [...]), [...])
+     * @return array Map of componentName => [file1 => version1, ...]
      */
     private function loadComponentsWithUpdateFile()
     {
@@ -316,7 +316,7 @@ class Updater
                 }
             }
             if (!empty($pathToUpdates)) {
-                $files = _glob($pathToUpdates);
+                $files = glob($pathToUpdates);
                 if ($files == \false) {
                     $files = array();
                 }

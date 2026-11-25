@@ -13,10 +13,7 @@ use Piwik\Plugins\Tour\Dao\DataFinder;
 use Piwik\Url;
 class ChallengeAddedWebsite extends \Piwik\Plugins\Tour\Engagement\Challenge
 {
-    /**
-     * @var DataFinder
-     */
-    private $finder;
+    private DataFinder $finder;
     /**
      * @var null|bool
      */

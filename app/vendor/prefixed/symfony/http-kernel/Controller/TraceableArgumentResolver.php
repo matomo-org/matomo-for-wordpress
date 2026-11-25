@@ -17,21 +17,22 @@ use Symfony\Component\Stopwatch\Stopwatch;
  */
 class TraceableArgumentResolver implements ArgumentResolverInterface
 {
-    private $resolver;
-    private $stopwatch;
+    private ArgumentResolverInterface $resolver;
+    private Stopwatch $stopwatch;
     public function __construct(ArgumentResolverInterface $resolver, Stopwatch $stopwatch)
     {
         $this->resolver = $resolver;
         $this->stopwatch = $stopwatch;
     }
     /**
-     * {@inheritdoc}
+     * @param \ReflectionFunctionAbstract|null $reflector
      */
-    public function getArguments(Request $request, callable $controller)
+    public function getArguments(Request $request, callable $controller) : array
     {
+        $reflector = 2 < \func_num_args() ? func_get_arg(2) : null;
         $e = $this->stopwatch->start('controller.get_arguments');
         try {
-            return $this->resolver->getArguments($request, $controller);
+            return $this->resolver->getArguments($request, $controller, $reflector);
         } finally {
             $e->stop();
         }

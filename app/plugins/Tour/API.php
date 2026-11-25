@@ -18,14 +18,8 @@ use Piwik\Plugins\Tour\Engagement\Challenges;
  */
 class API extends \Piwik\Plugin\API
 {
-    /**
-     * @var Challenges
-     */
-    private $challenges;
-    /**
-     * @var Levels
-     */
-    private $levels;
+    private Challenges $challenges;
+    private Levels $levels;
     public function __construct(Challenges $challenges, Levels $levels)
     {
         $this->challenges = $challenges;

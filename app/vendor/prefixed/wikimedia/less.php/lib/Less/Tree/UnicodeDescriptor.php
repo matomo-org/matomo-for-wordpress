@@ -5,10 +5,10 @@ namespace Matomo\Dependencies;
 /**
  * @private
  */
-class Less_Tree_UnicodeDescriptor extends Less_Tree
+class Less_Tree_UnicodeDescriptor extends Less_Tree implements Less_Tree_HasValueProperty
 {
+    /** @var string */
     public $value;
-    public $type = 'UnicodeDescriptor';
     public function __construct($value)
     {
         $this->value = $value;

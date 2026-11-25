@@ -240,7 +240,7 @@ class AssetManager extends \Piwik\Singleton
                     $files = $chunk->getFiles();
                     $foundInChunk = \false;
                     foreach ($files as $file) {
-                        if (strpos($file, "/{$pluginName}.umd.") !== \false) {
+                        if (str_contains($file, "/{$pluginName}.umd.")) {
                             $foundInChunk = \true;
                         }
                     }

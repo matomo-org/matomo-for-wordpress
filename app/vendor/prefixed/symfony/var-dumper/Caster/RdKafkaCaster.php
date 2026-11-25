@@ -29,36 +29,51 @@ use Matomo\Dependencies\Symfony\Component\VarDumper\Cloner\Stub;
  */
 class RdKafkaCaster
 {
+    /**
+     * @return array
+     */
     public static function castKafkaConsumer(KafkaConsumer $c, array $a, Stub $stub, bool $isNested)
     {
         $prefix = Caster::PREFIX_VIRTUAL;
         try {
             $assignment = $c->getAssignment();
-        } catch (RdKafkaException $e) {
+        } catch (RdKafkaException) {
             $assignment = [];
         }
         $a += [$prefix . 'subscription' => $c->getSubscription(), $prefix . 'assignment' => $assignment];
         $a += self::extractMetadata($c);
         return $a;
     }
+    /**
+     * @return array
+     */
     public static function castTopic(Topic $c, array $a, Stub $stub, bool $isNested)
     {
         $prefix = Caster::PREFIX_VIRTUAL;
         $a += [$prefix . 'name' => $c->getName()];
         return $a;
     }
+    /**
+     * @return array
+     */
     public static function castTopicPartition(TopicPartition $c, array $a)
     {
         $prefix = Caster::PREFIX_VIRTUAL;
         $a += [$prefix . 'offset' => $c->getOffset(), $prefix . 'partition' => $c->getPartition(), $prefix . 'topic' => $c->getTopic()];
         return $a;
     }
+    /**
+     * @return array
+     */
     public static function castMessage(Message $c, array $a, Stub $stub, bool $isNested)
     {
         $prefix = Caster::PREFIX_VIRTUAL;
         $a += [$prefix . 'errstr' => $c->errstr()];
         return $a;
     }
+    /**
+     * @return array
+     */
     public static function castConf(Conf $c, array $a, Stub $stub, bool $isNested)
     {
         $prefix = Caster::PREFIX_VIRTUAL;
@@ -67,6 +82,9 @@ class RdKafkaCaster
         }
         return $a;
     }
+    /**
+     * @return array
+     */
     public static function castTopicConf(TopicConf $c, array $a, Stub $stub, bool $isNested)
     {
         $prefix = Caster::PREFIX_VIRTUAL;
@@ -75,6 +93,9 @@ class RdKafkaCaster
         }
         return $a;
     }
+    /**
+     * @return array
+     */
     public static function castRdKafka(\RdKafka $c, array $a, Stub $stub, bool $isNested)
     {
         $prefix = Caster::PREFIX_VIRTUAL;
@@ -82,35 +103,50 @@ class RdKafkaCaster
         $a += self::extractMetadata($c);
         return $a;
     }
+    /**
+     * @return array
+     */
     public static function castCollectionMetadata(CollectionMetadata $c, array $a, Stub $stub, bool $isNested)
     {
         $a += iterator_to_array($c);
         return $a;
     }
+    /**
+     * @return array
+     */
     public static function castTopicMetadata(TopicMetadata $c, array $a, Stub $stub, bool $isNested)
     {
         $prefix = Caster::PREFIX_VIRTUAL;
         $a += [$prefix . 'name' => $c->getTopic(), $prefix . 'partitions' => $c->getPartitions()];
         return $a;
     }
+    /**
+     * @return array
+     */
     public static function castPartitionMetadata(PartitionMetadata $c, array $a, Stub $stub, bool $isNested)
     {
         $prefix = Caster::PREFIX_VIRTUAL;
         $a += [$prefix . 'id' => $c->getId(), $prefix . 'err' => $c->getErr(), $prefix . 'leader' => $c->getLeader()];
         return $a;
     }
+    /**
+     * @return array
+     */
     public static function castBrokerMetadata(BrokerMetadata $c, array $a, Stub $stub, bool $isNested)
     {
         $prefix = Caster::PREFIX_VIRTUAL;
         $a += [$prefix . 'id' => $c->getId(), $prefix . 'host' => $c->getHost(), $prefix . 'port' => $c->getPort()];
         return $a;
     }
-    private static function extractMetadata($c)
+    /**
+     * @return array
+     */
+    private static function extractMetadata(KafkaConsumer|\RdKafka $c)
     {
         $prefix = Caster::PREFIX_VIRTUAL;
         try {
             $m = $c->getMetadata(\true, null, 500);
-        } catch (RdKafkaException $e) {
+        } catch (RdKafkaException) {
             return [];
         }
         return [$prefix . 'orig_broker_id' => $m->getOrigBrokerId(), $prefix . 'orig_broker_name' => $m->getOrigBrokerName(), $prefix . 'brokers' => $m->getBrokers(), $prefix . 'topics' => $m->getTopics()];

@@ -11,8 +11,11 @@ namespace Piwik;
 use Exception;
 use Piwik\API\Request;
 use Piwik\Container\StaticContainer;
+use Piwik\DataTable\DataTableInterface;
 use Piwik\DataTable\Row;
 use Piwik\DataTable\Simple;
+use Piwik\Http\SecurityHeaders;
+use Piwik\Plugins\CoreHome\Columns\Metrics\PercentOfReportTotal;
 use Piwik\Plugins\ImageGraph\API;
 /**
  * A Report Renderer produces user friendly renderings of any given Piwik report.
@@ -142,6 +145,9 @@ abstract class ReportRenderer extends \Piwik\BaseFactory
      */
     protected static function getOutputPath($filename)
     {
+        // Keep the generated file inside the assets directory: strip any directory components so the
+        // filename can never point outside $baseAssetsDir when it is concatenated below.
+        $filename = basename($filename);
         $baseAssetsDir = StaticContainer::get('path.tmp') . '/assets/';
         $outputFilename = $baseAssetsDir . $filename;
         if (!is_dir($baseAssetsDir)) {
@@ -180,6 +186,7 @@ abstract class ReportRenderer extends \Piwik\BaseFactory
     {
         self::checkStreamingToBrowserIsAllowed();
         $filename = \Piwik\ReportRenderer::makeFilenameWithExtension($filename, $extension);
+        SecurityHeaders::sendForDataResponse();
         \Piwik\ProxyHttp::overrideCacheControlHeaders();
         \Piwik\Common::sendHeader('Content-Description: File Transfer');
         \Piwik\Common::sendHeader('Content-Type: ' . $contentType);
@@ -190,8 +197,21 @@ abstract class ReportRenderer extends \Piwik\BaseFactory
     protected static function inlineToBrowser($contentType, $content)
     {
         self::checkStreamingToBrowserIsAllowed();
+        SecurityHeaders::sendForDataResponse();
         \Piwik\Common::sendHeader('Content-Type: ' . $contentType);
         echo $content;
+    }
+    /**
+     * Whether the report aggregates its rows by a dimension.
+     *
+     * A report without a dimension has a single row of metrics rather than one row per
+     * dimension value.
+     *
+     * @param array $reportMetadata
+     */
+    protected static function isAggregateReport($reportMetadata) : bool
+    {
+        return !empty($reportMetadata['dimension']);
     }
     /**
      * Convert a dimension-less report to a multi-row two-column data table
@@ -205,7 +225,7 @@ abstract class ReportRenderer extends \Piwik\BaseFactory
     protected static function processTableFormat($reportMetadata, $report, $reportColumns)
     {
         $finalReport = $report;
-        if (empty($reportMetadata['dimension'])) {
+        if (!self::isAggregateReport($reportMetadata)) {
             $simpleReportMetrics = $report->getFirstRow();
             if ($simpleReportMetrics) {
                 $finalReport = new Simple();
@@ -219,6 +239,91 @@ abstract class ReportRenderer extends \Piwik\BaseFactory
             $reportColumns = ['label' => \Piwik\Piwik::translate('General_Name'), 'value' => \Piwik\Piwik::translate('General_Value')];
         }
         return [$finalReport, $reportColumns];
+    }
+    /**
+     * Renames the percent of the report total columns of a report to their translation, eg.
+     * `nb_visits_percent_of_total` to `Visits (%)`, and moves each of them next to the metric it
+     * belongs to.
+     *
+     * Renderers that build their header from the column names of the report data itself, instead of
+     * using the translations and the column order in `$processedReport['columns']`, need this to
+     * show those columns the way the other renderers do.
+     *
+     * @param array $reportColumns column name => translation
+     */
+    protected static function translatePercentOfTotalColumns(DataTableInterface $report, array $reportColumns) : void
+    {
+        $percentColumns = [];
+        foreach ($reportColumns as $columnName => $translation) {
+            $metricName = PercentOfReportTotal::getMetricNameFromColumnName($columnName);
+            if (null !== $metricName) {
+                $percentColumns[$metricName] = $translation;
+            }
+        }
+        if (empty($percentColumns)) {
+            return;
+        }
+        $report->filter(function (\Piwik\DataTable $table) use($percentColumns) {
+            foreach ($table->getRows() as $row) {
+                $columns = $row->getColumns();
+                $rebuilt = [];
+                foreach ($columns as $columnName => $value) {
+                    $metricName = PercentOfReportTotal::getMetricNameFromColumnName($columnName);
+                    if (null !== $metricName && isset($percentColumns[$metricName])) {
+                        continue;
+                        // emitted below, right after the metric it belongs to
+                    }
+                    $rebuilt[$columnName] = $value;
+                    $percentColumnName = $columnName . PercentOfReportTotal::COLUMN_NAME_SUFFIX;
+                    if (isset($percentColumns[$columnName]) && array_key_exists($percentColumnName, $columns)) {
+                        $rebuilt[$percentColumns[$columnName]] = $columns[$percentColumnName];
+                    }
+                }
+                $row->setColumns($rebuilt);
+            }
+        });
+    }
+    /**
+     * Replaces the label of the percent of the report total columns with a short `(%)`.
+     *
+     * The renderers that lay a report out on a fixed width page show the percentage directly to
+     * the right of the metric it belongs to, so repeating the metric name in its header only
+     * costs width: `Conversions (%)` needs twice the room `(%)` does and squeezes every other
+     * column. Formats where the header is the only thing identifying a column, such as CSV,
+     * keep the full label instead.
+     *
+     * @param array $reportColumns column name => translation
+     * @return array
+     */
+    protected static function shortenPercentOfTotalColumnLabels(array $reportColumns) : array
+    {
+        foreach ($reportColumns as $columnName => $translation) {
+            if (null !== PercentOfReportTotal::getMetricNameFromColumnName($columnName)) {
+                $reportColumns[$columnName] = \Piwik\Piwik::translate('General_ColumnPercentOfReportTotalSymbol');
+            }
+        }
+        return $reportColumns;
+    }
+    /**
+     * Drops every percent of the report total column.
+     *
+     * For a format that cannot scroll. A portrait page has room for the metrics a report already
+     * carries and no more: interleaving a percentage after each one squeezes every column until
+     * values are truncated, and the report stops being readable. Fitting them would mean changing
+     * the format itself, with landscape pages or a reduced metric set, which is a separate change.
+     * The PDF says so in a note on its front page, and the report scheduling form says so too.
+     *
+     * @param array $reportColumns column name => translation
+     * @return array
+     */
+    protected static function removePercentOfTotalColumns(array $reportColumns) : array
+    {
+        foreach (array_keys($reportColumns) as $columnName) {
+            if (null !== PercentOfReportTotal::getMetricNameFromColumnName($columnName)) {
+                unset($reportColumns[$columnName]);
+            }
+        }
+        return $reportColumns;
     }
     public static function getStaticGraph($reportMetadata, $width, $height, $evolution, $segment)
     {

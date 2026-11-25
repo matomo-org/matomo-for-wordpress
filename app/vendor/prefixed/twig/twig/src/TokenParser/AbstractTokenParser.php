@@ -10,7 +10,12 @@
  */
 namespace Matomo\Dependencies\Twig\TokenParser;
 
+use Matomo\Dependencies\Twig\Lexer;
+use Matomo\Dependencies\Twig\Node\Expression\Variable\AssignContextVariable;
+use Matomo\Dependencies\Twig\Node\NodeDocumentation;
+use Matomo\Dependencies\Twig\Node\Nodes;
 use Matomo\Dependencies\Twig\Parser;
+use Matomo\Dependencies\Twig\Token;
 /**
  * Base class for all token parsers.
  *
@@ -25,5 +30,33 @@ abstract class AbstractTokenParser implements TokenParserInterface
     public function setParser(Parser $parser) : void
     {
         $this->parser = $parser;
+    }
+    public function isAlwaysAllowedInSandbox() : bool
+    {
+        return \false;
+    }
+    /**
+     * Parses an assignment expression like "a, b".
+     */
+    protected function parseAssignmentExpression() : Nodes
+    {
+        $stream = $this->parser->getStream();
+        $targets = [];
+        while (\true) {
+            $token = $stream->getCurrent();
+            if ($stream->test(Token::OPERATOR_TYPE) && preg_match(Lexer::REGEX_NAME, $token->getValue())) {
+                // in this context, string operators are variable names
+                $stream->next();
+            } else {
+                $stream->expect(Token::NAME_TYPE, null, 'Only variables can be assigned to');
+            }
+            $target = new AssignContextVariable($token->getValue(), $token->getLine());
+            NodeDocumentation::add($target, $token);
+            $targets[] = $target;
+            if (!$stream->nextIf(Token::PUNCTUATION_TYPE, ',')) {
+                break;
+            }
+        }
+        return new Nodes($targets);
     }
 }

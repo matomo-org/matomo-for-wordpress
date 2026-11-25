@@ -22,10 +22,7 @@ use Piwik\Translation\Translator;
  */
 class ReportInformational implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnostic
 {
-    /**
-     * @var Translator
-     */
-    private $translator;
+    private Translator $translator;
     private $idSiteCache;
     public function __construct(Translator $translator)
     {

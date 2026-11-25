@@ -24,11 +24,15 @@ abstract class BaseDumper
     protected abstract function formatTemplate(Profile $profile, $prefix) : string;
     protected abstract function formatNonTemplate(Profile $profile, $prefix) : string;
     protected abstract function formatTime(Profile $profile, $percent) : string;
+    protected function formatRoot(Profile $profile) : string
+    {
+        return $profile->getName();
+    }
     private function dumpProfile(Profile $profile, $prefix = '', $sibling = \false) : string
     {
         if ($profile->isRoot()) {
             $this->root = $profile->getDuration();
-            $start = $profile->getName();
+            $start = $this->formatRoot($profile);
         } else {
             if ($profile->isTemplate()) {
                 $start = $this->formatTemplate($profile, $prefix);

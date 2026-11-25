@@ -34,10 +34,7 @@ class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings
     public $sendPluginUpdateEmail;
     /** @var Setting|null */
     public $updateToUtf8mb4 = null;
-    /**
-     * @var ReleaseChannels
-     */
-    private $releaseChannels;
+    private ReleaseChannels $releaseChannels;
     public function __construct(ReleaseChannels $releaseChannels)
     {
         $this->releaseChannels = $releaseChannels;

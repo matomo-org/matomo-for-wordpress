@@ -9,19 +9,14 @@
 namespace Piwik\Translation\Loader;
 
 use Matomo\Cache\Lazy;
+use Piwik\Version;
 /**
  * Caches the translations loaded by another loader.
  */
 class LoaderCache implements \Piwik\Translation\Loader\LoaderInterface
 {
-    /**
-     * @var LoaderInterface
-     */
-    private $loader;
-    /**
-     * @var Lazy
-     */
-    private $cache;
+    private \Piwik\Translation\Loader\LoaderInterface $loader;
+    private Lazy $cache;
     public function __construct(\Piwik\Translation\Loader\LoaderInterface $loader, Lazy $cache)
     {
         $this->loader = $loader;
@@ -47,8 +42,9 @@ class LoaderCache implements \Piwik\Translation\Loader\LoaderInterface
     private function getCacheKey($language, array $directories)
     {
         $cacheKey = 'Translations-' . $language . '-';
-        // in case loaded plugins change (ie Tests vs Tracker vs UI etc)
-        $cacheKey .= sha1(implode('', $directories));
+        // in case loaded plugins change (ie Tests vs Tracker vs UI etc), or the code is updated to a new
+        // version while translations cached by the previous version are still around
+        $cacheKey .= sha1(Version::VERSION . implode('', $directories));
         return $cacheKey;
     }
 }

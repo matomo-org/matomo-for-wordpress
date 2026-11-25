@@ -16,9 +16,8 @@ class SegmentMetadata
 {
     /**
      * Map of category name to order
-     * @var array
      */
-    private $categoryOrder = array();
+    private array $categoryOrder = array();
     public function getSegmentsMetadata($idSites, $_hideImplementationData, $isRegisteredUser, $_showAllSegments = \false)
     {
         /** @var Segment[] $dimensionSegments */

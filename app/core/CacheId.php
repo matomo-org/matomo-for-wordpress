@@ -12,10 +12,16 @@ use Piwik\Container\StaticContainer;
 use Piwik\Plugin\Manager;
 class CacheId
 {
+    /**
+     * @return string
+     */
     public static function languageAware($cacheId)
     {
         return $cacheId . '-' . StaticContainer::get('Piwik\\Translation\\Translator')->getCurrentLanguage();
     }
+    /**
+     * @return string
+     */
     public static function pluginAware($cacheId)
     {
         $pluginManager = Manager::getInstance();

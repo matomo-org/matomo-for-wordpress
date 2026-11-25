@@ -14,7 +14,7 @@ use ReflectionNamedType;
  */
 class ReflectionBasedAutowiring implements DefinitionSource, Autowiring
 {
-    public function autowire(string $name, ObjectDefinition $definition = null)
+    public function autowire(string $name, ?ObjectDefinition $definition = null) : ?ObjectDefinition
     {
         $className = $definition ? $definition->getClassName() : $name;
         if (!class_exists($className) && !interface_exists($className)) {
@@ -30,7 +30,7 @@ class ReflectionBasedAutowiring implements DefinitionSource, Autowiring
         }
         return $definition;
     }
-    public function getDefinition(string $name)
+    public function getDefinition(string $name) : ?ObjectDefinition
     {
         return $this->autowire($name);
     }

@@ -14,7 +14,7 @@ namespace Piwik\Plugins\TagManager\Model\Container;
 class FixedIdGenerator implements \Piwik\Plugins\TagManager\Model\Container\ContainerIdGenerator
 {
     /**
-     * @var string
+     * @var int
      */
     private $startId = 0;
     public function generateId()

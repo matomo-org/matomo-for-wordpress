@@ -144,6 +144,13 @@ class Archive implements ArchiveQuery
      */
     private $idarchives = [];
     /**
+     * Plugins whose archive IDs have been looked up, indexed by done flag. Plugins can share a done flag
+     * (the all plugins one), but each lookup only finds the partial archives of the plugin it was made for.
+     *
+     * @var array<string, array<string, true>>
+     */
+    private $pluginsWithCachedArchiveIds = [];
+    /**
      * List of doneFlag values for archive IDs for the site, periods and segment
      * we are querying with. Archive IDs are indexed by site, done flag and period, ie:
      *
@@ -175,10 +182,7 @@ class Archive implements ArchiveQuery
      * @var bool
      */
     private $forceIndexedByDate;
-    /**
-     * @var Parameters
-     */
-    private $params;
+    private Parameters $params;
     /**
      * If true, this Archive instance will not launch the archiving process, even if the current request
      * is authorized to.
@@ -282,22 +286,6 @@ class Archive implements ArchiveQuery
             // convert to float in case $result is empty
         }
         return $result;
-    }
-    /**
-     * Queries and returns blob records without turning them into DataTables.
-     *
-     * Unlike other methods, this returns a DataCollection instance directly. Use it to directly access
-     * and process blob data.
-     *
-     * @param string|string[] $names One or more archive names, eg, `'nb_visits'`, `'Referrers_distinctKeywords'`, etc.
-     * @param int|string|null $idSubtable
-     * @return DataCollection the queried data.
-     *
-     * @deprecated remove with Matomo 6
-     */
-    public function getBlob($names, $idSubtable = null)
-    {
-        return $this->get($names, 'blob', $idSubtable);
     }
     /**
      * Queries blob data for a single record. Uses a cursor instead of fetching all the data at once,
@@ -571,6 +559,7 @@ class Archive implements ArchiveQuery
         // then we have the archive IDs in $this->idarchives)
         $doneFlags = [];
         $archiveGroups = [];
+        $pluginsMissingFromSharedDoneFlag = [];
         foreach (array_merge($plugins, ['all']) as $plugin) {
             $doneFlag = $this->getDoneStringForPlugin($plugin, $this->params->getIdSites());
             $doneFlags[$doneFlag] = \true;
@@ -580,6 +569,8 @@ class Archive implements ArchiveQuery
                     $archiveGroup = reset($plugins);
                 }
                 $archiveGroups[] = $archiveGroup;
+            } elseif ($plugin !== 'all' && !isset($this->pluginsWithCachedArchiveIds[$doneFlag][$plugin])) {
+                $pluginsMissingFromSharedDoneFlag[] = $plugin;
             }
             $doneFlag = Rules::getDoneFlagArchiveContainsOnePlugin($this->params->getSegment(), $plugin);
             $doneFlags[$doneFlag] = \true;
@@ -593,6 +584,12 @@ class Archive implements ArchiveQuery
             } else {
                 $this->cacheArchiveIdsWithoutLaunching($plugins);
             }
+        } elseif (!empty($pluginsMissingFromSharedDoneFlag)) {
+            // the shared archives are already prepared, so only these plugins' partial archives are left to find
+            $this->cacheArchiveIdsWithoutLaunching($pluginsMissingFromSharedDoneFlag);
+        }
+        foreach ($plugins as $plugin) {
+            $this->pluginsWithCachedArchiveIds[$this->getDoneStringForPlugin($plugin, $this->params->getIdSites())][$plugin] = \true;
         }
         return $this->getArchiveIdsAndStatesByMonth($doneFlags);
     }
@@ -653,6 +650,9 @@ class Archive implements ArchiveQuery
                 foreach ($idarchives as $idarchive) {
                     // idarchives selected can include all plugin archives, plugin specific archives and partial report
                     // archives. only the latest data in all of these archives will be selected.
+                    if (in_array($idarchive, $this->idarchives[$doneFlag][$dateRange] ?? [])) {
+                        continue;
+                    }
                     $this->idarchives[$doneFlag][$dateRange][] = $idarchive;
                 }
             }
@@ -714,7 +714,7 @@ class Archive implements ArchiveQuery
         }
         // If there is no dot, we return as is
         // Note: this could be an integer bigger than 32 bits
-        if (strpos((string) $value, '.') === \false) {
+        if (!str_contains((string) $value, '.')) {
             return (float) $value;
         }
         // Round up the value with 2 decimals
@@ -743,6 +743,7 @@ class Archive implements ArchiveQuery
     {
         $this->idarchives = [];
         $this->idarchiveStates = [];
+        $this->pluginsWithCachedArchiveIds = [];
     }
     /**
      * Returns the archiving group identifier given a plugin.
@@ -856,14 +857,6 @@ class Archive implements ArchiveQuery
             }
         }
         return [$archiveIdsByMonth, $archiveStatesByMonth];
-    }
-    /**
-     * Only kept for BC
-     * @return void
-     * @deprecated Remove with Matomo 6
-     */
-    public static function clearStaticCache()
-    {
     }
     /**
      * @return void

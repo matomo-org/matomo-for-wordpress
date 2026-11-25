@@ -1,17 +1,18 @@
 <?php
 
+/**
+ * Matomo - free/libre analytics platform
+ *
+ * For more information, see README.md
+ *
+ * @license released under BSD License http://www.opensource.org/licenses/bsd-license.php
+ * @link https://matomo.org/docs/tracking-api/
+ *
+ * @category Matomo
+ * @package MatomoTracker
+ */
+declare (strict_types=1);
 namespace {
-    /**
-     * Matomo - free/libre analytics platform
-     *
-     * For more information, see README.md
-     *
-     * @license released under BSD License http://www.opensource.org/licenses/bsd-license.php
-     * @link https://matomo.org/docs/tracking-api/
-     *
-     * @category Matomo
-     * @package MatomoTracker
-     */
     if (!\class_exists('\\MatomoTracker')) {
         include_once 'MatomoTracker.php';
     }
@@ -19,11 +20,11 @@ namespace {
      * Helper function to quickly generate the URL to track a page view.
      *
      * @deprecated
-     * @param $idSite
+     * @param int $idSite
      * @param string $documentTitle
      * @return string
      */
-    function Piwik_getUrlTrackPageView($idSite, $documentTitle = '')
+    function Piwik_getUrlTrackPageView(int $idSite, string $documentTitle = '') : string
     {
         return \Matomo_getUrlTrackPageView($idSite, $documentTitle);
     }
@@ -31,12 +32,12 @@ namespace {
      * Helper function to quickly generate the URL to track a goal.
      *
      * @deprecated
-     * @param $idSite
-     * @param $idGoal
-     * @param float $revenue
+     * @param int $idSite
+     * @param int $idGoal
+     * @param float|null $revenue
      * @return string
      */
-    function Piwik_getUrlTrackGoal($idSite, $idGoal, $revenue = 0.0)
+    function Piwik_getUrlTrackGoal(int $idSite, int $idGoal, ?float $revenue = null) : string
     {
         return \Matomo_getUrlTrackGoal($idSite, $idGoal, $revenue);
     }

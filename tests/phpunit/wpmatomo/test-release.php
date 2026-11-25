@@ -97,7 +97,6 @@ class ReleaseTest extends MatomoAnalytics_SharedFixture_TestCase {
 		}
 
 		$ignored_core_files = [
-			'matomo/AGENTS.md',
 			'matomo/lang/README.md',
 			'matomo/config/manifest.inc.php',
 			'matomo/js/piwik.js',
@@ -114,7 +113,10 @@ class ReleaseTest extends MatomoAnalytics_SharedFixture_TestCase {
 			'matomo/node_modules/jquery.scrollto/jquery.scrollTo.min.js',
 			'matomo/plugins/Morpheus/icons/README.md',
 			'matomo/core/Mail/Transport.php',
-			'matomo/vendor/wikimedia/less.php/lib/Less/.easymin/ignore_prefixes',
+			// Development declarations and PHPStan baselines are not runtime assets.
+			'matomo/node_modules/vue/dist/vue.d.mts',
+			'matomo/plugins/TagManager/phpstan/phpstan.modified.neon',
+			'matomo/plugins/TagManager/phpstan/phpstan.created.neon',
 		];
 
 		$ignored_mwp_files = [
@@ -136,9 +138,6 @@ class ReleaseTest extends MatomoAnalytics_SharedFixture_TestCase {
 			'app/vendor/prefixed/twig/twig/src/Node/Expression/Filter/RawFilter.php',
 			'app/vendor/prefixed/twig/twig/src/Node/NameDeprecation.php',
 			'app/vendor/prefixed/twig/twig/src/Util/ReflectionCallable.php',
-
-			// added via patch
-			'app/plugins/CoreHome/stylesheets/a11y.less',
 		];
 
 		try {
@@ -315,6 +314,17 @@ class ReleaseTest extends MatomoAnalytics_SharedFixture_TestCase {
 	public function test_version_constant_matches_readme_txt() {
 		$plugin_data = get_plugin_data( MATOMO_ANALYTICS_FILE );
 		$this->assertEquals( $plugin_data['Version'], WpMatomo::VERSION );
+	}
+
+	public function test_release_enforces_and_advertises_core_php_requirement() {
+		$requirements = new \WpMatomo\MinimumRequirements();
+		$plugin_data  = get_plugin_data( MATOMO_ANALYTICS_FILE );
+		$readme       = file_get_contents( __DIR__ . '/../../../readme.txt' );
+
+		$this->assertFalse( $requirements->can_this_system_run_plugin_version( WpMatomo::VERSION, '7.4' ) );
+		$this->assertSame( \WpMatomo\MinimumRequirements::REQUIRED_PHP_VERSION, $plugin_data['RequiresPHP'] );
+		$this->assertStringContainsString( 'Requires PHP: ' . \WpMatomo\MinimumRequirements::REQUIRED_PHP_VERSION, $readme );
+		$this->assertStringContainsString( 'Stable tag: ' . WpMatomo::VERSION, $readme );
 	}
 
 	/**

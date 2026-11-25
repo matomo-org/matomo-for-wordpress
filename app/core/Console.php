@@ -18,7 +18,6 @@ use Piwik\Plugins\Monolog\Handler\FailureLogMessageDetector;
 use Piwik\Log\LoggerInterface;
 use Matomo\Dependencies\Symfony\Bridge\Monolog\Handler\ConsoleHandler;
 use Matomo\Dependencies\Symfony\Component\Console\Application;
-use Matomo\Dependencies\Symfony\Component\Console\Command\Command;
 use Matomo\Dependencies\Symfony\Component\Console\Input\InputInterface;
 use Matomo\Dependencies\Symfony\Component\Console\Input\InputOption;
 use Matomo\Dependencies\Symfony\Component\Console\Output\OutputInterface;
@@ -125,7 +124,6 @@ class Console extends Application
         } elseif (!is_subclass_of($command, 'Piwik\\Plugin\\ConsoleCommand')) {
             \Piwik\Log::warning(sprintf('Cannot add command %s, class does not extend Piwik\\Plugin\\ConsoleCommand', $command));
         } else {
-            /** @var Command $commandInstance */
             $commandInstance = new $command();
             // do not add the command if it already exists; this way we can add the command ourselves in tests
             if (!$this->has($commandInstance->getName())) {

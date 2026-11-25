@@ -12,10 +12,7 @@ use Piwik\Common;
 use Piwik\Piwik;
 class GeneratedReport
 {
-    /**
-     * @var array
-     */
-    private $reportDetails;
+    private array $reportDetails;
     /**
      * @var string
      */
@@ -28,10 +25,7 @@ class GeneratedReport
      * @var string
      */
     private $contents;
-    /**
-     * @var array
-     */
-    private $additionalFiles;
+    private array $additionalFiles;
     public function __construct(array $reportDetails, $reportTitle, $prettyDate, $contents, array $additionalFiles)
     {
         $this->reportDetails = $reportDetails;

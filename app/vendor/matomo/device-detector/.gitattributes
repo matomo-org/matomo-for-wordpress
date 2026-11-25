@@ -1,0 +1,14 @@
+Tests/ export-ignore
+misc/ export-ignore
+*.md text eol=lf
+*.php text eol=lf
+*.yml text eol=lf
+.github/ export-ignore
+.coveralls.yml text eol=lf export-ignore
+.travis.yml text eol=lf export-ignore
+phpunit.xml.dist text eol=lf export-ignore
+.gitignore text eol=lf export-ignore
+.gitattributes text eol=lf export-ignore
+phpcs.xml text eol=lf export-ignore
+phpstan.neon text eol=lf export-ignore
+.yamllint text eol=lf export-ignore

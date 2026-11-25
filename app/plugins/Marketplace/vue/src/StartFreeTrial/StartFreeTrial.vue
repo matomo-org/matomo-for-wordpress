@@ -67,7 +67,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, PropType } from 'vue';
 import {
   AjaxHelper,
   externalLink,
@@ -79,11 +79,11 @@ import {
 import { Field } from 'CorePluginsAdmin';
 import KeyPressEvent = JQuery.KeyPressEvent;
 import ModalOptions = M.ModalOptions;
-import { PluginDetails } from '../types';
+import { PluginCard } from '../types';
 
 const { $ } = window;
 
-interface StartFreeTrialState {
+export interface StartFreeTrialState {
   createAccountEmail: string;
   createAccountError: string | null;
   trialStartError: string | null;
@@ -97,8 +97,8 @@ export default defineComponent({
   components: { Field },
   props: {
     modelValue: {
-      type: Object,
-      default: () => ({}),
+      type: Object as PropType<PluginCard | null>,
+      default: () => null,
     },
     currentUserEmail: String,
     isValidConsumer: Boolean,
@@ -145,8 +145,8 @@ export default defineComponent({
     },
   },
   computed: {
-    plugin(): PluginDetails {
-      return this.modelValue as PluginDetails;
+    plugin(): PluginCard {
+      return this.modelValue as PluginCard;
     },
     trialStartNoLicenseAddHereText() {
       const link = `?${MatomoUrl.stringify({

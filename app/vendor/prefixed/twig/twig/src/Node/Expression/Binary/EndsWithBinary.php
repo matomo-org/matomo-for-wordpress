@@ -11,7 +11,8 @@
 namespace Matomo\Dependencies\Twig\Node\Expression\Binary;
 
 use Matomo\Dependencies\Twig\Compiler;
-class EndsWithBinary extends AbstractBinary
+use Matomo\Dependencies\Twig\Node\Expression\ReturnBoolInterface;
+class EndsWithBinary extends AbstractBinary implements ReturnBoolInterface
 {
     public function compile(Compiler $compiler) : void
     {

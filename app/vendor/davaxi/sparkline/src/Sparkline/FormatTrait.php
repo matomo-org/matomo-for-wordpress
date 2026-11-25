@@ -3,19 +3,14 @@
 namespace Davaxi\Sparkline;
 
 use InvalidArgumentException;
-/**
- * Trait FormatTrait.
- */
 trait FormatTrait
 {
     /**
-     * @var int
-     *          Recommended: 50 < 800
+     * @var int Recommended: 50 < 800
      */
     protected $width = 80;
     /**
-     * @var int
-     *          Recommended: 20 < 800
+     * @var int Recommended: 20 < 800
      */
     protected $height = 20;
     /**
@@ -157,7 +152,7 @@ trait FormatTrait
             if ($value <= 0) {
                 $value = 0;
             }
-            if ($value > 0) {
+            if ($value > 0 && $max > 0) {
                 $value = round($value / $max * $height);
             }
             $data[$i] = max($minHeight, min($value, $maxHeight));
@@ -167,37 +162,56 @@ trait FormatTrait
     /**
      * @param array $data
      * @param int $count count of steps in sparkline image (does not have to == count($data))
+     * @param array $originSeries per-point floor values (empty = flat chart bottom)
      * @return array
      */
-    protected function getChartElements(array $data, int $count) : array
+    protected function getChartElements(array $data, int $count, array $originSeries = []) : array
     {
         $step = $this->getStepWidth($count);
         $height = $this->getInnerNormalizedHeight();
-        $width = $this->getInnerNormalizedWidth();
         $normalizedPadding = $this->getNormalizedPadding();
         $data = $this->getDataForChartElements($data, $height);
-        $pictureX1 = $pictureX2 = (int) ceil($normalizedPadding['left']);
-        $pictureY1 = (int) ceil($normalizedPadding['top'] + $height - $data[0]);
+        $hasOriginSeries = !empty($originSeries);
+        if ($hasOriginSeries) {
+            $bottomData = $this->getDataForChartElements($originSeries, $height);
+        }
+        $leftEdge = (int) round($normalizedPadding['left']);
         $polygon = [];
         $line = [];
-        // Initialize
-        $polygon[] = $normalizedPadding['left'];
-        $polygon[] = $normalizedPadding['top'] + $height;
-        // First element
-        $polygon[] = $pictureX1;
-        $polygon[] = $pictureY1;
+        $topPoints = [];
+        $pictureX = $leftEdge;
+        $pictureY = (int) ceil($normalizedPadding['top'] + $height - $data[0]);
+        $topPoints[] = [$pictureX, $pictureY];
         for ($i = 1; $i < count($data); ++$i) {
-            $pictureX2 = min((int) ceil($pictureX1 + $step), $normalizedPadding['right'] + $width);
-            $pictureY2 = min((int) ceil($normalizedPadding['top'] + $height - $data[$i]), $normalizedPadding['top'] + $height);
-            $line[] = [$pictureX1, $pictureY1, $pictureX2, $pictureY2];
-            $polygon[] = $pictureX2;
-            $polygon[] = $pictureY2;
-            $pictureX1 = $pictureX2;
-            $pictureY1 = $pictureY2;
+            $prevX = $pictureX;
+            $prevY = $pictureY;
+            // Compute x directly to avoid accumulated rounding error
+            $pictureX = (int) round($leftEdge + $i * $step);
+            $pictureY = (int) ceil($normalizedPadding['top'] + $height - $data[$i]);
+            $line[] = [$prevX, $prevY, $pictureX, $pictureY];
+            $topPoints[] = [$pictureX, $pictureY];
         }
-        // Last
-        $polygon[] = $pictureX2;
-        $polygon[] = $normalizedPadding['top'] + $height;
+        foreach ($topPoints as [$x, $y]) {
+            $polygon[] = $x;
+            $polygon[] = $y;
+        }
+        if ($hasOriginSeries) {
+            $bottomPoints = [];
+            for ($i = 0; $i < count($bottomData); ++$i) {
+                $bx = (int) round($leftEdge + $i * $step);
+                $by = (int) ceil($normalizedPadding['top'] + $height - $bottomData[$i]);
+                $bottomPoints[] = [$bx, $by];
+            }
+            foreach (array_reverse($bottomPoints) as [$x, $y]) {
+                $polygon[] = $x;
+                $polygon[] = $y;
+            }
+        } else {
+            $polygon[] = $pictureX;
+            $polygon[] = $normalizedPadding['top'] + $height;
+            $polygon[] = $leftEdge;
+            $polygon[] = $normalizedPadding['top'] + $height;
+        }
         return [$polygon, $line];
     }
 }

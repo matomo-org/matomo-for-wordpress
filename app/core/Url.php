@@ -195,11 +195,10 @@ class Url
         return self::getCurrentSchemeFromRequestHeader();
     }
     /**
-     * Validates the **Host** HTTP header (untrusted user input). Used to prevent Host header
-     * attacks.
+     * Checks whether the effective host for the current request is allowed. If proxy host headers are configured,
+     * they take precedence over the Host header.
      *
-     * @param string|null|false $host Contents of Host: header from the HTTP request. If `false`, gets the
-     *                          value from the request.
+     * @param string|null|false $host Hostname to check. If `false`, gets the effective host from the request.
      * @return bool `true` if valid; `false` otherwise.
      */
     public static function isValidHost($host = \false) : bool
@@ -209,7 +208,7 @@ class Url
             return \true;
         }
         if (\false === $host || null === $host) {
-            $host = self::getHostFromServerVariable();
+            $host = self::getCurrentHost('', \false);
             if (empty($host)) {
                 // if no current host, assume valid
                 return \true;
@@ -252,15 +251,6 @@ class Url
     public static function saveTrustedHostnameInConfig($host)
     {
         return self::saveHostsnameInConfig($host, 'General', 'trusted_hosts');
-    }
-    /**
-     * @param string|string[] $host
-     * @return bool
-     * @deprecated no longer in use, will be removed with Matomo 6
-     */
-    public static function saveCORSHostnameInConfig($host)
-    {
-        return self::saveHostsnameInConfig($host, 'General', 'cors_domains');
     }
     /**
      * @param string|string[] $host
@@ -356,9 +346,9 @@ class Url
         unset($_SERVER['SERVER_PORT']);
     }
     /**
-     * Returns the current host.
+     * Returns the current host, preferring the hostname from proxy_host_headers when configured.
      *
-     * @param string $default Default value to return if host unknown
+     * @param string $default Default value to return if no host can be resolved from the request or configuration.
      * @param bool $checkTrustedHost Whether to do trusted host check. Should ALWAYS be true,
      *                               except in Controller.
      * @return string eg, `"example.org"` if the current URL is
@@ -367,13 +357,33 @@ class Url
      */
     public static function getCurrentHost($default = 'unknown', $checkTrustedHost = \true)
     {
-        $hostHeaders = [];
-        $hostHeadersInConfig = GeneralConfig::getConfigValue('proxy_host_headers');
-        if (is_array($hostHeadersInConfig)) {
-            $hostHeaders = $hostHeadersInConfig;
-        }
         $host = self::getHost($checkTrustedHost);
         $default = \Piwik\Common::sanitizeInputValue($host ? $host : $default);
+        $hostFromProxyHeader = self::getHostFromProxyHeaders($default);
+        if ($hostFromProxyHeader === $default) {
+            return $default;
+        }
+        if ($checkTrustedHost && !self::isValidHost($hostFromProxyHeader)) {
+            return $default;
+        }
+        return $hostFromProxyHeader;
+    }
+    /**
+     * @internal
+     */
+    public static function isProxyHostValid() : bool
+    {
+        $host = self::getHost();
+        $default = \Piwik\Common::sanitizeInputValue($host ?: '');
+        $hostFromProxyHeader = self::getHostFromProxyHeaders($default);
+        return $hostFromProxyHeader === $default || self::isValidHost($hostFromProxyHeader);
+    }
+    private static function getHostFromProxyHeaders(string $default) : string
+    {
+        $hostHeaders = GeneralConfig::getConfigValue('proxy_host_headers');
+        if (!is_array($hostHeaders)) {
+            $hostHeaders = [];
+        }
         return \Piwik\IP::getNonProxyIpFromHeader($default, $hostHeaders);
     }
     /**
@@ -483,7 +493,7 @@ class Url
     }
     private static function redirectToUrlNoExit(string $url) : void
     {
-        if (\Piwik\UrlHelper::isLookLikeUrl($url) || strpos($url, 'index.php') === 0) {
+        if (\Piwik\UrlHelper::isLookLikeUrl($url) || str_starts_with($url, 'index.php')) {
             \Piwik\Common::sendResponseCode(302);
             \Piwik\Common::sendHeader("X-Robots-Tag: noindex");
             \Piwik\Common::sendHeader("Location: {$url}");
@@ -776,7 +786,7 @@ class Url
     {
         $host = @$_SERVER['SERVER_NAME'];
         if (!empty($host)) {
-            if (strpos($host, ':') === \false && !empty($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443) {
+            if (!str_contains($host, ':') && !empty($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443) {
                 $host .= ':' . $_SERVER['SERVER_PORT'];
             }
         }
@@ -793,10 +803,13 @@ class Url
      *                              'Matomo_App_Cloud'
      * @param string|null $medium   Optional campaign medium, defaults to App.[module].[action] where module and action are
      *                              taken from the currently viewed application page, eg. 'CoreAdminHome.trackingCodeGenerator'
+     * @param string|null $group     Optional campaign group, omitted when not given
+     * @param string|null $content   Optional campaign content, omitted when not given
+     * @param string|null $placement Optional campaign placement, omitted when not given
      *
      * @return ($url is string ? string : null)      www.matomo.org/faq/123?mtm_campaign=Matomo_App&mtm_source=Matomo_App_OnPremise&mtm_medium=App.CoreAdminHome.trackingCodeGenerator
      */
-    public static function addCampaignParametersToMatomoLink(?string $url = null, ?string $campaign = null, ?string $source = null, ?string $medium = null) : ?string
+    public static function addCampaignParametersToMatomoLink(?string $url = null, ?string $campaign = null, ?string $source = null, ?string $medium = null, ?string $group = null, ?string $content = null, ?string $placement = null) : ?string
     {
         // Ignore if disabled by config setting
         if (GeneralConfig::getConfigValue('disable_tracking_matomo_app_links')) {
@@ -808,7 +821,7 @@ class Url
         }
         // Ignore non-matomo domains
         $domain = self::getHostFromUrl($url);
-        if (!in_array($domain, ['matomo.org', 'www.matomo.org', 'developer.matomo.org', 'plugins.matomo.org'])) {
+        if (!in_array($domain, ['matomo.org', 'www.matomo.org', 'developer.matomo.org', 'plugins.matomo.org', 'shop.matomo.org'])) {
             return $url;
         }
         // Build parameters
@@ -822,6 +835,12 @@ class Url
             $medium = 'App.' . $module . '.' . $action;
         }
         $newParams = ['mtm_campaign' => $campaign ?? 'Matomo_App', 'mtm_source' => $source ?? 'Matomo_App_' . (\Piwik\Plugin\Manager::getInstance()->isPluginActivated('Cloud') ? 'Cloud' : 'OnPremise'), 'mtm_medium' => $medium];
+        // the remaining campaign dimensions are optional; only send the ones a caller asked for
+        foreach (['mtm_group' => $group, 'mtm_content' => $content, 'mtm_placement' => $placement] as $param => $value) {
+            if ($value !== null && $value !== '') {
+                $newParams[$param] = $value;
+            }
+        }
         // Add parameters to the link, overriding any existing campaign parameters while preserving the path and query string
         $pathAndQueryString = \Piwik\UrlHelper::getPathAndQueryFromUrl($url, $newParams, \true);
         return 'https://' . $domain . '/' . $pathAndQueryString;

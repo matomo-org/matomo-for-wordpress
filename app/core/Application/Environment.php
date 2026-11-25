@@ -40,17 +40,14 @@ class Environment
 {
     /**
      * @internal
-     * @var EnvironmentManipulator
+     * @var ?EnvironmentManipulator
      */
     private static $globalEnvironmentManipulator = null;
     /**
      * @var string
      */
     private $environment;
-    /**
-     * @var array
-     */
-    private $definitions;
+    private array $definitions;
     /**
      * @var Container
      */

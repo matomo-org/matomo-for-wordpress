@@ -79,7 +79,7 @@ class VisitorDetails extends VisitorDetailsAbstract
     }
     protected function getKeywordPosition()
     {
-        if ($this->getReferrerType() == 'search' && strpos($this->getReferrerName(), 'Google') !== \false) {
+        if ($this->getReferrerType() == 'search' && str_contains($this->getReferrerName(), 'Google')) {
             $url = @parse_url($this->details['referer_url']);
             if (empty($url['query'])) {
                 return null;

@@ -7,22 +7,22 @@
 
 import { mount } from '@vue/test-utils';
 
-// CoreHome is a package-style cross-plugin import with no jest module mapping, so it must be
-// virtually mocked. Tooltips is a (no-op here) directive; NumberFormatter formats raw numeric
-// values (the mock echoes value + precision so tests can assert both). ucfirst is an identity
-// spy here; its casing behavior is covered by CoreHome's own ucfirst.spec.
-jest.mock('CoreHome', () => ({
+// CoreHome is a package-style cross-plugin import; the vitest config aliases it to its source
+// entry point, so mock it here. Tooltips is a (no-op here) directive; NumberFormatter formats raw
+// numeric values (the mock echoes value + precision so tests can assert both). ucfirst is an
+// identity spy here; its casing behavior is covered by CoreHome's own ucfirst.spec.
+vi.mock('CoreHome', () => ({
   Tooltips: {},
-  ucfirst: jest.fn((text?: string) => text ?? ''),
+  ucfirst: vi.fn((text?: string) => text ?? ''),
   NumberFormatter: {
     formatNumber: (value: number, precision: number) => `${value}#${precision}`,
   },
-}), { virtual: true });
+}));
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const MetricValue = require('./MetricValue.vue').default;
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const ucfirstMock = require('CoreHome').ucfirst as jest.Mock;
+import { ucfirst } from 'CoreHome';
+import MetricValue from './MetricValue.vue';
+
+const ucfirstMock = vi.mocked(ucfirst);
 
 describe('CoreVisualizations/MetricValue', () => {
   const originalDocumentLanguage = document.documentElement.lang;

@@ -15,7 +15,7 @@ namespace Matomo\Dependencies\Twig\Cache;
  *
  * @author Andrew Tch <andrew@noop.lv>
  */
-class FilesystemCache implements CacheInterface
+class FilesystemCache implements CacheInterface, RemovableCacheInterface
 {
     public const FORCE_BYTECODE_INVALIDATION = 1;
     private $directory;
@@ -63,6 +63,13 @@ class FilesystemCache implements CacheInterface
             return;
         }
         throw new \RuntimeException(\sprintf('Failed to write cache file "%s".', $key));
+    }
+    public function remove(string $name, string $cls) : void
+    {
+        $key = $this->generateKey($name, $cls);
+        if (!@unlink($key) && file_exists($key)) {
+            throw new \RuntimeException(\sprintf('Failed to delete cache file "%s".', $key));
+        }
     }
     public function getTimestamp(string $key) : int
     {

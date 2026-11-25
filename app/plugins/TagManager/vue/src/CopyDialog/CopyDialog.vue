@@ -1,3 +1,9 @@
+<!--
+  Matomo - free/libre analytics platform
+  @link https://matomo.org
+  @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+-->
+
 <template>
   <div class="copyMtmObjectDialog">
     <h2>{{ getCopyDialogTitle }}</h2>
@@ -46,7 +52,7 @@ import {
   Form,
   Field,
 } from 'CorePluginsAdmin';
-import { Container } from '../types.ts';
+import { Container } from '../types';
 import TagsStore from '../Tag/Tags.store';
 import ContainersStore from '../Container/Containers.store';
 import TriggersStore from '../Trigger/Triggers.store';

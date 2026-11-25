@@ -14,6 +14,7 @@ use Piwik\Columns\Dimension;
 use Piwik\Common;
 use Piwik\DataTable;
 use Piwik\DataTable\Filter\Sort;
+use Piwik\Exception\NoPrivilegesException;
 use Piwik\Metrics;
 use Piwik\Piwik;
 use Piwik\Plugins\CoreVisualizations\Visualizations\HtmlTable;
@@ -239,7 +240,7 @@ class Report
      * customize the error message. Eg.
      * ```
      * if (!$this->isEnabled()) {
-     * throw new Exception('Setting XYZ is not enabled or the user has not enough permission');
+     * throw new NoPrivilegesException('Setting XYZ is not enabled or the user has not enough permission', 403);
      * }
      * ```
      * @throws \Exception
@@ -248,7 +249,7 @@ class Report
     public function checkIsEnabled()
     {
         if (!$this->isEnabled()) {
-            throw new Exception(Piwik::translate('General_ExceptionReportNotEnabled'));
+            throw new NoPrivilegesException(Piwik::translate('General_ExceptionReportNotEnabled'), 403);
         }
     }
     /**
@@ -779,18 +780,6 @@ class Report
         return $this->getNthLevelTableDimension($level = 1);
     }
     /**
-     * Returns the Dimension instance of the subtable report of this report's subtable report.
-     *
-     * @return Dimension|null The subtable report's dimension or null if there is no subtable report or
-     *                        no dimension for the subtable report.
-     * @deprecated since 5.3.0, use getNthLevelTableDimension(2) instead
-     * @api
-     */
-    public function getThirdLeveltableDimension()
-    {
-        return $this->getNthLevelTableDimension($level = 2);
-    }
-    /**
      * Returns the Dimension instance of the subtable report of this report's subtable report based on level.
      *
      * @param int $level The subTable level for which dimension is to be determined, zero-based
@@ -865,7 +854,7 @@ class Report
     }
     private function getSubtableApiMethod()
     {
-        if (strpos($this->actionToLoadSubTables, '.') !== \false) {
+        if (str_contains($this->actionToLoadSubTables, '.')) {
             return explode('.', $this->actionToLoadSubTables);
         } else {
             return array($this->module, $this->actionToLoadSubTables);

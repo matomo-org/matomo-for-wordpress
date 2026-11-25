@@ -8,14 +8,15 @@
  */
 namespace Piwik\Plugins\Monolog\Formatter;
 
+use Matomo\Dependencies\Monolog\LogRecord;
 use Matomo\Dependencies\Symfony\Bridge\Monolog\Formatter\ConsoleFormatter as SymfonyConsoleFormatter;
 class ConsoleFormatter extends SymfonyConsoleFormatter
 {
-    public function format(array $record)
+    public function format(LogRecord $record) : mixed
     {
         $formatted = parent::format($record);
         foreach ($record['extra'] as $var => $val) {
-            if (\false !== strpos($formatted, '%extra.' . $var . '%')) {
+            if (str_contains($formatted, '%extra.' . $var . '%')) {
                 $formatted = str_replace('%extra.' . $var . '%', $val, $formatted);
                 unset($record['extra'][$var]);
             }

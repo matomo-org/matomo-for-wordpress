@@ -4,17 +4,8 @@ namespace CpChart;
 
 use Exception;
 /**
- *  Draw - class extension with drawing methods
- *
- *  Version     : 2.1.4
- *  Made by     : Jean-Damien POGOLOTTI
- *  Last Update : 19/01/2014
- *
- *  This file can be distributed under the license you can find at :
- *
- *  http://www.pchart.net/license
- *
- *  You can find the whole class documentation on the pChart web site.
+ * @deprecated
+ * @internal
  */
 abstract class Draw extends \CpChart\BaseDraw
 {
@@ -1605,6 +1596,7 @@ abstract class Draw extends \CpChart\BaseDraw
                 $B = $Serie["Color"]["B"];
                 $Ticks = $Serie["Ticks"];
                 $Weight = $Serie["Weight"];
+                $Shape = isset($Serie['Shape']) ? $Serie['Shape'] : SERIE_SHAPE_CIRCLE;
                 if (isset($Serie["Picture"])) {
                     $Picture = $Serie["Picture"];
                     list($PicWidth, $PicHeight) = $this->getPicInfo($Picture);
@@ -1629,6 +1621,8 @@ abstract class Draw extends \CpChart\BaseDraw
                     } elseif ($Family == LEGEND_FAMILY_LINE) {
                         $this->drawLine($X + 1, $Y + 1 + $IconAreaHeight / 2, $X + 1 + $IconAreaWidth, $Y + 1 + $IconAreaHeight / 2, ["R" => 0, "G" => 0, "B" => 0, "Alpha" => 20, "Ticks" => $Ticks, "Weight" => $Weight]);
                         $this->drawLine($X, $Y + $IconAreaHeight / 2, $X + $IconAreaWidth, $Y + $IconAreaHeight / 2, ["R" => $R, "G" => $G, "B" => $B, "Ticks" => $Ticks, "Weight" => $Weight]);
+                    } elseif ($Family == LEGEND_FAMILY_ASDEFINED) {
+                        $this->drawShape($X + $IconAreaWidth / 2, $Y, $Shape, min($IconAreaHeight, $IconAreaWidth) - 1, \true, 1, $R, $G, $B, 100, 0, 0, 0, 100);
                     }
                 }
                 if ($Mode == LEGEND_VERTICAL) {
@@ -2479,7 +2473,7 @@ abstract class Draw extends \CpChart\BaseDraw
     /**
      * Draw an X threshold
      * @param mixed $Value
-     * @param boolean $Format
+     * @param bool $Format
      * @return array|null|integer
      */
     public function drawXThreshold($Value, array $Format = [])

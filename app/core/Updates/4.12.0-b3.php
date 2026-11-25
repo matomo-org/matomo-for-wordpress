@@ -19,10 +19,7 @@ use Piwik\Updater\Migration\Factory as MigrationFactory;
  */
 class Updates_4_12_0_b3 extends PiwikUpdates
 {
-    /**
-     * @var MigrationFactory
-     */
-    private $migration;
+    private MigrationFactory $migration;
     public function __construct(MigrationFactory $factory)
     {
         $this->migration = $factory;
@@ -33,7 +30,7 @@ class Updates_4_12_0_b3 extends PiwikUpdates
     public function getMigrations(Updater $updater)
     {
         $column = Db::fetchRow('SHOW COLUMNS FROM `' . Common::prefixTable('user') . '` LIKE \'idchange_last_viewed\'');
-        if (empty($column) || strpos(strtolower($column['Type']), 'int') !== \false || strpos(strtolower($column['Type']), 'unsigned') !== \false) {
+        if (empty($column) || str_contains(strtolower($column['Type']), 'int') || str_contains(strtolower($column['Type']), 'unsigned')) {
             return [];
         }
         $removeValues = $this->migration->db->sql('UPDATE ' . Common::prefixTable('user') . ' SET idchange_last_viewed = NULL');

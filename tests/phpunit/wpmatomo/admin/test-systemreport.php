@@ -417,17 +417,26 @@ class AdminSystemReportTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$this->assertSame( array(), $this->report->get_missing_tables() );
 	}
 
-	public function test_get_missing_tables_should_return_the_missing_tables() {
+	/**
+	 * @dataProvider missing_table_names
+	 */
+	public function test_get_missing_tables_should_return_the_missing_tables( $table_name ) {
 		global $wpdb;
-		$old_table_name = $this->report->db_settings->prefix_table_name( 'site' );
+		$old_table_name = $this->report->db_settings->prefix_table_name( $table_name );
 		$new_table_name = $old_table_name . '_bkp';
 		$wpdb->query( "ALTER TABLE $old_table_name RENAME $new_table_name" );
 
-		$missing_tables = $this->report->get_missing_tables();
-		$this->assertCount( 1, $missing_tables );
-		$this->assertSame( array( $old_table_name ), array_values( $missing_tables ) );
+		try {
+			$missing_tables = $this->report->get_missing_tables();
+			$this->assertCount( 1, $missing_tables );
+			$this->assertSame( array( $old_table_name ), array_values( $missing_tables ) );
+		} finally {
+			$wpdb->query( "ALTER TABLE $new_table_name RENAME $old_table_name" );
+		}
+	}
 
-		$wpdb->query( "ALTER TABLE $new_table_name RENAME $old_table_name" );
+	public static function missing_table_names() {
+		return array( array( 'site' ), array( 'log_page_view_time' ), array( 'plugin_trial_request' ) );
 	}
 
 	private function render_troubleshooting() {

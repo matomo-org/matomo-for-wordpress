@@ -14,7 +14,7 @@ use Piwik\Date;
  */
 class Mariadb extends \Piwik\Db\Schema\Mysql
 {
-    protected $minimumSupportedVersion = '5.5';
+    protected $minimumSupportedVersion = '10.6';
     public function getDatabaseType() : string
     {
         return 'MariaDB';
@@ -41,9 +41,7 @@ class Mariadb extends \Piwik\Db\Schema\Mysql
     }
     public function isOptimizeInnoDBSupported() : bool
     {
-        $version = strtolower($this->getVersion());
-        $semanticVersion = strstr($version, '-', $beforeNeedle = \true);
-        return version_compare($semanticVersion, '10.1.1', '>=');
+        return \true;
     }
     public function supportsRankingRollupWithoutExtraSorting() : bool
     {
@@ -52,7 +50,7 @@ class Mariadb extends \Piwik\Db\Schema\Mysql
     public function hasReachedEOL() : bool
     {
         $currentVersion = $this->getVersion();
-        $isEnterprise = \false !== strpos($currentVersion, 'enterprise');
+        $isEnterprise = str_contains($currentVersion, 'enterprise');
         // End of security update for certain MariaDb versions as of https://mariadb.org/about/#maintenance-policy
         // Community Support for 10.6 LTS ends on 6th July 2026, Enterprise on 23rd August 2029
         if (version_compare($currentVersion, '10.6', '>=') && version_compare($currentVersion, '10.7', '<') && Date::today()->isEarlier(Date::factory($isEnterprise ? '2029-08-24' : '2026-07-07'))) {

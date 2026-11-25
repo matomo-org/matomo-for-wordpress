@@ -12,7 +12,7 @@ use Matomo\Dependencies\DI\Definition\FactoryDefinition;
 use Matomo\Dependencies\DI\Definition\InstanceDefinition;
 use Matomo\Dependencies\DI\Definition\ObjectDefinition;
 use Matomo\Dependencies\DI\Definition\SelfResolvingDefinition;
-use Matomo\Dependencies\DI\Proxy\ProxyFactory;
+use Matomo\Dependencies\DI\Proxy\ProxyFactoryInterface;
 use Matomo\Dependencies\Psr\Container\ContainerInterface;
 /**
  * Dispatches to more specific resolvers.
@@ -21,27 +21,19 @@ use Matomo\Dependencies\Psr\Container\ContainerInterface;
  *
  * @since 5.0
  * @author Matthieu Napoli <matthieu@mnapoli.fr>
+ *
+ * @psalm-suppress MissingTemplateParam
  */
 class ResolverDispatcher implements DefinitionResolver
 {
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
-    /**
-     * @var ProxyFactory
-     */
-    private $proxyFactory;
-    private $arrayResolver;
-    private $factoryResolver;
-    private $decoratorResolver;
-    private $objectResolver;
-    private $instanceResolver;
-    private $envVariableResolver;
-    public function __construct(ContainerInterface $container, ProxyFactory $proxyFactory)
+    private ?ArrayResolver $arrayResolver = null;
+    private ?FactoryResolver $factoryResolver = null;
+    private ?DecoratorResolver $decoratorResolver = null;
+    private ?ObjectCreator $objectResolver = null;
+    private ?InstanceInjector $instanceResolver = null;
+    private ?EnvironmentVariableResolver $envVariableResolver = null;
+    public function __construct(private ContainerInterface $container, private ProxyFactoryInterface $proxyFactory)
     {
-        $this->container = $container;
-        $this->proxyFactory = $proxyFactory;
     }
     /**
      * Resolve a definition to a value.
@@ -49,11 +41,10 @@ class ResolverDispatcher implements DefinitionResolver
      * @param Definition $definition Object that defines how the value should be obtained.
      * @param array      $parameters Optional parameters to use to build the entry.
      *
-     * @throws InvalidDefinition If the definition cannot be resolved.
-     *
      * @return mixed Value obtained from the definition.
+     * @throws InvalidDefinition If the definition cannot be resolved.
      */
-    public function resolve(Definition $definition, array $parameters = [])
+    public function resolve(Definition $definition, array $parameters = []) : mixed
     {
         // Special case, tested early for speed
         if ($definition instanceof SelfResolvingDefinition) {
@@ -110,7 +101,7 @@ class ResolverDispatcher implements DefinitionResolver
                 }
                 return $this->instanceResolver;
             default:
-                throw new \RuntimeException('No definition resolver was configured for definition of type ' . get_class($definition));
+                throw new \RuntimeException('No definition resolver was configured for definition of type ' . $definition::class);
         }
     }
 }

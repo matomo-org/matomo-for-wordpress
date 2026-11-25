@@ -7,22 +7,22 @@
 
 import { mount } from '@vue/test-utils';
 
-// CoreHome has no jest module mapping, so virtual-mock it: Tooltips the directive the real
-// MetricValue registers, and NumberFormatter to format numbers. The sparkline itself is rendered
-// by the shell, not this body. ucfirst is an identity spy here; its casing behavior is
-// covered by ucfirst.spec.
-jest.mock('CoreHome', () => ({
+// CoreHome is a package-style cross-plugin import; the vitest config aliases it to its source
+// entry point, so mock it here. Tooltips is the directive the real MetricValue registers, and
+// NumberFormatter formats numbers. The sparkline itself is rendered by the shell, not this body.
+// ucfirst is an identity spy here; its casing behavior is covered by ucfirst.spec.
+vi.mock('CoreHome', () => ({
   Tooltips: {},
-  ucfirst: jest.fn((text?: string) => text ?? ''),
+  ucfirst: vi.fn((text?: string) => text ?? ''),
   NumberFormatter: {
     formatNumber: (value: number) => String(value),
   },
-}), { virtual: true });
+}));
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const DateComparison = require('./DateComparison.vue').default;
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const ucfirstMock = require('CoreHome').ucfirst as jest.Mock;
+import { ucfirst } from 'CoreHome';
+import DateComparison from './DateComparison.vue';
+
+const ucfirstMock = vi.mocked(ucfirst);
 
 function createWrapper(overrides = {}) {
   const sparkline = {

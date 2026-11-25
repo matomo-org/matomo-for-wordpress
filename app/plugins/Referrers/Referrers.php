@@ -45,6 +45,7 @@ class Referrers extends \Piwik\Plugin
         $translations[\Piwik\Plugins\Referrers\Archiver::METRIC_DISTINCT_WEBSITE_RECORD_NAME] = ucfirst(Piwik::translate('Referrers_DistinctWebsites'));
         $translations[\Piwik\Plugins\Referrers\Archiver::METRIC_DISTINCT_KEYWORD_RECORD_NAME] = ucfirst(Piwik::translate('Referrers_DistinctKeywords'));
         $translations[\Piwik\Plugins\Referrers\Archiver::METRIC_DISTINCT_CAMPAIGN_RECORD_NAME] = ucfirst(Piwik::translate('Referrers_DistinctCampaigns'));
+        $translations[\Piwik\Plugins\Referrers\Archiver::METRIC_DISTINCT_URLS_RECORD_NAME] = ucfirst(Piwik::translate('Referrers_DistinctWebsiteUrls'));
     }
     public function addMetricSemanticTypes(array &$types) : void
     {
@@ -66,6 +67,7 @@ class Referrers extends \Piwik\Plugin
         $types[\Piwik\Plugins\Referrers\Archiver::METRIC_DISTINCT_WEBSITE_RECORD_NAME] = Dimension::TYPE_NUMBER;
         $types[\Piwik\Plugins\Referrers\Archiver::METRIC_DISTINCT_KEYWORD_RECORD_NAME] = Dimension::TYPE_NUMBER;
         $types[\Piwik\Plugins\Referrers\Archiver::METRIC_DISTINCT_CAMPAIGN_RECORD_NAME] = Dimension::TYPE_NUMBER;
+        $types[\Piwik\Plugins\Referrers\Archiver::METRIC_DISTINCT_URLS_RECORD_NAME] = Dimension::TYPE_NUMBER;
     }
     public function getPagesComparisonsDisabledFor(&$pages)
     {

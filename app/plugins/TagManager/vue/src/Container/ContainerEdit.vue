@@ -10,18 +10,12 @@
     feature="Tag Manager"
     :content-title="editTitle"
   >
-    <p v-show="isLoading">
-      <span class="loadingPiwik">
-        <img src="plugins/Morpheus/images/loading-blue.gif" />
-        {{ translate('General_LoadingData') }}
-      </span>
-    </p>
-    <p v-show="isUpdating">
-      <span class="loadingPiwik">
-        <img src="plugins/Morpheus/images/loading-blue.gif" />
-        {{ translate('TagManager_UpdatingData') }}
-      </span>
-    </p>
+    <ActivityIndicator
+      :loading="isLoading || isUpdating"
+      :loading-message="isUpdating
+        ? translate('TagManager_UpdatingData')
+        : translate('General_LoadingData')"
+    />
     <form @submit="edit ? updateContainer() : createContainer()">
       <div>
         <div>
@@ -122,6 +116,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import {
+  ActivityIndicator,
   translate,
   Matomo,
   ContentBlock,
@@ -138,7 +133,7 @@ import AvailableComparisonsStore from '../AvailableComparisons.store';
 import { Container } from '../types';
 import ContainersStore from './Containers.store';
 
-interface ContainerEditState {
+export interface ContainerEditState {
   isDirty: boolean;
   editTitle: string;
   isUpdatingVersion: boolean;
@@ -152,6 +147,7 @@ export default defineComponent({
     idContainer: String,
   },
   components: {
+    ActivityIndicator,
     ContentBlock,
     Field,
     SaveButton,

@@ -21,7 +21,7 @@ class JsTestPluginTrackerFiles extends \Piwik\Plugins\CustomJsTracker\TrackingCo
     protected function getDirectoriesToLook()
     {
         $dirs = array();
-        $trackerFiles = \_glob(PIWIK_DOCUMENT_ROOT . '/plugins/*/' . self::TRACKER_FILE);
+        $trackerFiles = glob(PIWIK_DOCUMENT_ROOT . '/plugins/*/' . self::TRACKER_FILE) ?: [];
         foreach ($trackerFiles as $trackerFile) {
             $pluginName = $this->getPluginNameFromFile($trackerFile);
             if ($pluginName === 'PrivacyManager') {

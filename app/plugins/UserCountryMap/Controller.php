@@ -22,10 +22,7 @@ class Controller extends \Piwik\Plugin\Controller
 {
     // By default plot up to the last 3 days of visitors on the map, for low traffic sites
     public const REAL_TIME_WINDOW = 'last3';
-    /**
-     * @var Translator
-     */
-    private $translator;
+    private Translator $translator;
     public function __construct(Translator $translator)
     {
         $this->translator = $translator;
@@ -61,7 +58,7 @@ class Controller extends \Piwik\Plugin\Controller
         // some translations containing metric number
         $translations = ['nb_visits' => $this->translator->translate('General_NVisits'), 'no_visit' => $noVisitTranslation, 'nb_actions' => $this->translator->translate('VisitsSummary_NbActionsDescription'), 'nb_actions_per_visit' => $this->translator->translate('VisitsSummary_NbActionsPerVisit'), 'bounce_rate' => $this->translator->translate('VisitsSummary_NbVisitsBounced'), 'avg_time_on_site' => $this->translator->translate('VisitsSummary_AverageVisitDuration'), 'and_n_others' => $this->translator->translate('UserCountryMap_AndNOthers'), 'nb_uniq_visitors' => $this->translator->translate('General_NUniqueVisitors'), 'nb_users' => $this->translator->translate('VisitsSummary_NbUsers')];
         foreach ($translations as &$translation) {
-            if (\false === strpos($translation, '%s') && $translation !== $noVisitTranslation) {
+            if (!str_contains($translation, '%s') && $translation !== $noVisitTranslation) {
                 $translation = '%s ' . $translation;
             }
         }
@@ -140,6 +137,12 @@ class Controller extends \Piwik\Plugin\Controller
         if (!empty($params['segment'])) {
             $params['segment'] = urldecode($params['segment']);
         }
+        // Both maps request their data with their own $.ajax wrapper rather than through
+        // AjaxHelper, so the page's ?language= only reaches them by being baked in here.
+        $language = Common::getRequestVar('language', '', 'string');
+        if (!empty($language)) {
+            $params['language'] = $language;
+        }
         if ($encode) {
             $params = json_encode($params);
         }
@@ -151,9 +154,8 @@ class Controller extends \Piwik\Plugin\Controller
             throw new Exception($this->translator->translate('General_Required', 'Plugin UserCountry'));
         }
     }
-    private function getMetrics($idSite, $period, $date,
-#[\SensitiveParameter]
-$token_auth)
+    private function getMetrics($idSite, $period, $date, #[\SensitiveParameter]
+        $token_auth)
     {
         $request = new Request(['method' => 'API.getMetadata', 'format' => 'json', 'apiModule' => 'UserCountry', 'apiAction' => 'getCountry', 'idSite' => $idSite, 'period' => $period, 'date' => $date, 'token_auth' => $token_auth, 'filter_limit' => -1]);
         $metaData = json_decode($request->process(), \true);
@@ -170,9 +172,8 @@ $token_auth)
         }
         return $metrics;
     }
-    private function getApiRequestUrl($module, $action, $idSite, $period, $date,
-#[\SensitiveParameter]
-$token_auth, $filter_by_country = \false, $segmentOverride = \false)
+    private function getApiRequestUrl($module, $action, $idSite, $period, $date, #[\SensitiveParameter]
+        $token_auth, $filter_by_country = \false, $segmentOverride = \false)
     {
         // use processed reports
         $url = "?module=" . $module . "&method=" . $module . "." . $action . "&format=JSON" . "&idSite=" . $idSite . "&period=" . $period . "&date=" . $date . "&token_auth=" . $token_auth . "&segment=" . ($segmentOverride ?: Request::getRawSegmentFromRequest()) . "&enable_filter_excludelowpop=1" . "&showRawMetrics=1";
@@ -183,9 +184,8 @@ $token_auth, $filter_by_country = \false, $segmentOverride = \false)
         }
         return $url;
     }
-    private function report($module, $action, $idSite, $period, $date,
-#[\SensitiveParameter]
-$token_auth, $filter_by_country = \false, $segmentOverride = \false)
+    private function report($module, $action, $idSite, $period, $date, #[\SensitiveParameter]
+        $token_auth, $filter_by_country = \false, $segmentOverride = \false)
     {
         return $this->getApiRequestUrl('API', 'getProcessedReport&apiModule=' . $module . '&apiAction=' . $action, $idSite, $period, $date, $token_auth, $filter_by_country, $segmentOverride);
     }

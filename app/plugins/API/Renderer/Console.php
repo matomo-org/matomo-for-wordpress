@@ -20,7 +20,7 @@ class Console extends ApiRenderer
     public function renderException($message, $exception)
     {
         self::sendHeader();
-        return 'Error: ' . $message;
+        return 'Error: ' . $this->messageAsPlainText($message);
     }
     public function sendHeader()
     {

@@ -21,10 +21,7 @@ use Piwik\Application\Kernel\GlobalSettingsProvider;
  */
 class IniConfigDefinitionSource implements DefinitionSource
 {
-    /**
-     * @var GlobalSettingsProvider
-     */
-    private $config;
+    private GlobalSettingsProvider $config;
     /**
      * @var string
      */
@@ -40,9 +37,9 @@ class IniConfigDefinitionSource implements DefinitionSource
     /**
      * {@inheritdoc}
      */
-    public function getDefinition($name)
+    public function getDefinition(string $name) : ?\Matomo\Dependencies\DI\Definition\Definition
     {
-        if (strpos($name, $this->prefix) !== 0) {
+        if (!str_starts_with($name, $this->prefix)) {
             return null;
         }
         list($sectionName, $configKey) = $this->parseEntryName($name);

@@ -33,18 +33,9 @@ use Throwable;
  */
 class ConsoleCommand extends SymfonyCommand implements SignalableCommandInterface
 {
-    /**
-     * @var ProgressBar|null
-     */
-    private $progress = null;
-    /**
-     * @var OutputInterface|null
-     */
-    private $output = null;
-    /**
-     * @var InputInterface|null
-     */
-    private $input = null;
+    private ?ProgressBar $progress = null;
+    private ?OutputInterface $output = null;
+    private ?InputInterface $input = null;
     /**
      * Sends the given message(s) as success message(s) to the output interface (surrounded by empty lines)
      *
@@ -158,9 +149,14 @@ class ConsoleCommand extends SymfonyCommand implements SignalableCommandInterfac
      *
      * Will only have an effect if the "SystemSignals" feature flag is enabled.
      */
-    public final function handleSignal(int $signal) : void
+    public final function handleSignal(int $signal) : int|false
     {
         $this->handleSystemSignal($signal);
+        // Returning false keeps the command running after the signal has been handled. Matomo's
+        // signalable commands use signals to request a graceful shutdown (e.g. the scheduler and
+        // archiver finish their current unit of work and then abort), so the process must not be
+        // terminated immediately by Symfony as it would for an int return value.
+        return \false;
     }
     /**
      * Returns the list of system signals to subscribe.
@@ -228,7 +224,7 @@ class ConsoleCommand extends SymfonyCommand implements SignalableCommandInterfac
      *
      * @see addNegatableOption, addOptionalValueOption, addNoValueOption, addRequiredValueOption
      */
-    public function addOption(string $name, $shortcut = null, ?int $mode = null, string $description = '', $default = null)
+    public function addOption(string $name, $shortcut = null, ?int $mode = null, string $description = '', $default = null) : static
     {
         throw new \LogicException('addOption should not be used.');
     }
@@ -262,7 +258,7 @@ class ConsoleCommand extends SymfonyCommand implements SignalableCommandInterfac
      *
      * @see addOptionalArgument, addRequiredArgument
      */
-    public function addArgument(string $name, ?int $mode = null, string $description = '', $default = null)
+    public function addArgument(string $name, ?int $mode = null, string $description = '', $default = null) : static
     {
         throw new \LogicException('addArgument can not be used.');
     }
@@ -330,7 +326,7 @@ class ConsoleCommand extends SymfonyCommand implements SignalableCommandInterfac
      *
      * @see askAndValidate(), askForConfirmation(), ask(), initProgressBar(), startProgressBar(), advanceProgressBar(), finishProgressBar(), renderTable()
      */
-    public function getHelper(string $name)
+    public function getHelper(string $name) : mixed
     {
         throw new \LogicException('getHelper can not be used');
     }

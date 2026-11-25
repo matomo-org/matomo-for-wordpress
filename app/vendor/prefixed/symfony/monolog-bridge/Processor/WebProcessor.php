@@ -28,7 +28,7 @@ class WebProcessor extends BaseWebProcessor implements EventSubscriberInterface
         // Pass an empty array as the default null value would access $_SERVER
         parent::__construct([], $extraFields);
     }
-    public function onKernelRequest(RequestEvent $event)
+    public function onKernelRequest(RequestEvent $event) : void
     {
         if ($event->isMainRequest()) {
             $this->serverData = $event->getRequest()->server->all();

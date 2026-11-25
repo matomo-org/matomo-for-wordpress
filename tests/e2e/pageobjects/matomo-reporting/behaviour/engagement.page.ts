@@ -6,12 +6,11 @@
  *
  */
 
-import { $ } from '@wdio/globals';
 import MatomoReportingPage from '../../matomo-reporting.page.js';
 
 class EngagementPage extends MatomoReportingPage {
-  async open() {
-    return await super.open('General_Actions.VisitorInterest_Engagement');
+  async open(params: Record<string, string> = {}) {
+    return await super.open('General_Actions.VisitorInterest_Engagement', params);
   }
 }
 

@@ -15,22 +15,30 @@ use Symfony\Component\RateLimiter\LimiterInterface;
 use Symfony\Component\RateLimiter\Policy\NoLimiter;
 use Symfony\Component\RateLimiter\RateLimit;
 /**
- * An implementation of RequestRateLimiterInterface that
+ * An implementation of PeekableRequestRateLimiterInterface that
  * fits most use-cases.
  *
  * @author Wouter de Jong <wouter@wouterj.nl>
  */
-abstract class AbstractRequestRateLimiter implements RequestRateLimiterInterface
+abstract class AbstractRequestRateLimiter implements PeekableRequestRateLimiterInterface
 {
     public function consume(Request $request) : RateLimit
     {
+        return $this->doConsume($request, 1);
+    }
+    public function peek(Request $request) : RateLimit
+    {
+        return $this->doConsume($request, 0);
+    }
+    private function doConsume(Request $request, int $tokens) : RateLimit
+    {
         $limiters = $this->getLimiters($request);
-        if (0 === \count($limiters)) {
+        if (!$limiters) {
             $limiters = [new NoLimiter()];
         }
         $minimalRateLimit = null;
         foreach ($limiters as $limiter) {
-            $rateLimit = $limiter->consume(1);
+            $rateLimit = $limiter->consume($tokens);
             $minimalRateLimit = $minimalRateLimit ? self::getMinimalRateLimit($minimalRateLimit, $rateLimit) : $rateLimit;
         }
         return $minimalRateLimit;
