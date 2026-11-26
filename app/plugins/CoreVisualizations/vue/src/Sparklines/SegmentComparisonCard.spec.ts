@@ -8,12 +8,18 @@
 import { mount } from '@vue/test-utils';
 
 // The card mounts the real SegmentComparisonRow -> MetricValue + Sparkline chain and derives its
-// data-graph-params via MatomoUrl.parse. CoreHome has no jest module mapping, so mock everything
-// that chain pulls from it. ucfirst is an identity spy here; its casing behavior is covered by
-// ucfirst.spec.
-jest.mock('CoreHome', () => ({
+// data-graph-params via MatomoUrl.parse. CoreHome is a cross-plugin import the vitest config aliases
+// to its source, so mock everything that chain pulls from it. ucfirst is an identity spy here; its
+// casing behavior is covered by ucfirst.spec.
+vi.mock('CoreHome', () => ({
   Tooltips: {},
-  ucfirst: jest.fn((text?: string) => text ?? ''),
+  Matomo: {
+    helper: {
+      htmlEntities: (value: string) => value
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'),
+    },
+  },
+  ucfirst: vi.fn((text?: string) => text ?? ''),
   Sparkline: {
     name: 'Sparkline',
     props: ['params', 'seriesIndices', 'width', 'height'],
@@ -31,12 +37,12 @@ jest.mock('CoreHome', () => ({
   NumberFormatter: {
     formatNumber: (value: number) => String(value),
   },
-}), { virtual: true });
+}));
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const SegmentComparisonCard = require('./SegmentComparisonCard.vue').default;
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const ucfirstMock = require('CoreHome').ucfirst as jest.Mock;
+import { ucfirst } from 'CoreHome';
+import SegmentComparisonCard from './SegmentComparisonCard.vue';
+
+const ucfirstMock = vi.mocked(ucfirst);
 
 function segment(title: string, seriesIndex: number, value: number) {
   return {

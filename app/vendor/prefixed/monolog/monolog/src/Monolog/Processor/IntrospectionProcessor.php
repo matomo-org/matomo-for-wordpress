@@ -1,5 +1,6 @@
 <?php
 
+declare (strict_types=1);
 /*
  * This file is part of the Monolog package.
  *
@@ -10,7 +11,10 @@
  */
 namespace Matomo\Dependencies\Monolog\Processor;
 
+use Matomo\Dependencies\Monolog\Level;
 use Matomo\Dependencies\Monolog\Logger;
+use Matomo\Dependencies\Psr\Log\LogLevel;
+use Matomo\Dependencies\Monolog\LogRecord;
 /**
  * Injects line/file:class/function where the log message came from
  *
@@ -24,32 +28,34 @@ use Matomo\Dependencies\Monolog\Logger;
  */
 class IntrospectionProcessor implements ProcessorInterface
 {
-    private $level;
-    private $skipClassesPartials;
-    private $skipStackFramesCount;
-    private $skipFunctions = array('call_user_func', 'call_user_func_array');
-    public function __construct($level = Logger::DEBUG, array $skipClassesPartials = array(), $skipStackFramesCount = 0)
+    protected Level $level;
+    /** @var string[] */
+    protected array $skipClassesPartials;
+    protected int $skipStackFramesCount;
+    protected const SKIP_FUNCTIONS = ['call_user_func', 'call_user_func_array'];
+    protected const SKIP_CLASSES = ['Monolog\\'];
+    /**
+     * @param string|int|Level $level               The minimum logging level at which this Processor will be triggered
+     * @param string[]         $skipClassesPartials
+     *
+     * @phpstan-param value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::* $level
+     */
+    public function __construct(int|string|Level $level = Level::Debug, array $skipClassesPartials = [], int $skipStackFramesCount = 0)
     {
         $this->level = Logger::toMonologLevel($level);
-        $this->skipClassesPartials = array_merge(array('Monolog\\'), $skipClassesPartials);
+        $this->skipClassesPartials = array_merge(static::SKIP_CLASSES, $skipClassesPartials);
         $this->skipStackFramesCount = $skipStackFramesCount;
     }
     /**
-     * @param  array $record
-     * @return array
+     * @inheritDoc
      */
-    public function __invoke(array $record)
+    public function __invoke(LogRecord $record) : LogRecord
     {
         // return if the level is not high enough
-        if ($record['level'] < $this->level) {
+        if ($record->level->isLowerThan($this->level)) {
             return $record;
         }
-        /*
-         * http://php.net/manual/en/function.debug-backtrace.php
-         * As of 5.3.6, DEBUG_BACKTRACE_IGNORE_ARGS option was added.
-         * Any version less than 5.3.6 must use the DEBUG_BACKTRACE_IGNORE_ARGS constant value '2'.
-         */
-        $trace = debug_backtrace(\PHP_VERSION_ID < 50306 ? 2 : \DEBUG_BACKTRACE_IGNORE_ARGS);
+        $trace = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS);
         // skip first since it's always the current method
         array_shift($trace);
         // the call_user_func call is also skipped
@@ -63,7 +69,7 @@ class IntrospectionProcessor implements ProcessorInterface
                         continue 2;
                     }
                 }
-            } elseif (in_array($trace[$i]['function'], $this->skipFunctions)) {
+            } elseif (\in_array($trace[$i]['function'], static::SKIP_FUNCTIONS, \true)) {
                 $i++;
                 continue;
             }
@@ -71,14 +77,17 @@ class IntrospectionProcessor implements ProcessorInterface
         }
         $i += $this->skipStackFramesCount;
         // we should have the call source now
-        $record['extra'] = array_merge($record['extra'], array('file' => isset($trace[$i - 1]['file']) ? $trace[$i - 1]['file'] : null, 'line' => isset($trace[$i - 1]['line']) ? $trace[$i - 1]['line'] : null, 'class' => isset($trace[$i]['class']) ? $trace[$i]['class'] : null, 'function' => isset($trace[$i]['function']) ? $trace[$i]['function'] : null));
+        $record->extra = array_merge($record->extra, ['file' => $trace[$i - 1]['file'] ?? null, 'line' => $trace[$i - 1]['line'] ?? null, 'class' => $trace[$i]['class'] ?? null, 'callType' => $trace[$i]['type'] ?? null, 'function' => $trace[$i]['function'] ?? null]);
         return $record;
     }
-    private function isTraceClassOrSkippedFunction(array $trace, $index)
+    /**
+     * @param array<mixed> $trace
+     */
+    private function isTraceClassOrSkippedFunction(array $trace, int $index) : bool
     {
         if (!isset($trace[$index])) {
             return \false;
         }
-        return isset($trace[$index]['class']) || in_array($trace[$index]['function'], $this->skipFunctions);
+        return isset($trace[$index]['class']) || \in_array($trace[$index]['function'], static::SKIP_FUNCTIONS, \true);
     }
 }

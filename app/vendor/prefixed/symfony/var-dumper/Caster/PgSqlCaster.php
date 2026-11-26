@@ -12,7 +12,7 @@ namespace Matomo\Dependencies\Symfony\Component\VarDumper\Caster;
 
 use Matomo\Dependencies\Symfony\Component\VarDumper\Cloner\Stub;
 /**
- * Casts pqsql resources to array representation.
+ * Casts pgsql resources to array representation.
  *
  * @author Nicolas Grekas <p@tchwork.com>
  *
@@ -24,11 +24,17 @@ class PgSqlCaster
     private const TRANSACTION_STATUS = [\PGSQL_TRANSACTION_IDLE => 'PGSQL_TRANSACTION_IDLE', \PGSQL_TRANSACTION_ACTIVE => 'PGSQL_TRANSACTION_ACTIVE', \PGSQL_TRANSACTION_INTRANS => 'PGSQL_TRANSACTION_INTRANS', \PGSQL_TRANSACTION_INERROR => 'PGSQL_TRANSACTION_INERROR', \PGSQL_TRANSACTION_UNKNOWN => 'PGSQL_TRANSACTION_UNKNOWN'];
     private const RESULT_STATUS = [\PGSQL_EMPTY_QUERY => 'PGSQL_EMPTY_QUERY', \PGSQL_COMMAND_OK => 'PGSQL_COMMAND_OK', \PGSQL_TUPLES_OK => 'PGSQL_TUPLES_OK', \PGSQL_COPY_OUT => 'PGSQL_COPY_OUT', \PGSQL_COPY_IN => 'PGSQL_COPY_IN', \PGSQL_BAD_RESPONSE => 'PGSQL_BAD_RESPONSE', \PGSQL_NONFATAL_ERROR => 'PGSQL_NONFATAL_ERROR', \PGSQL_FATAL_ERROR => 'PGSQL_FATAL_ERROR'];
     private const DIAG_CODES = ['severity' => \PGSQL_DIAG_SEVERITY, 'sqlstate' => \PGSQL_DIAG_SQLSTATE, 'message' => \PGSQL_DIAG_MESSAGE_PRIMARY, 'detail' => \PGSQL_DIAG_MESSAGE_DETAIL, 'hint' => \PGSQL_DIAG_MESSAGE_HINT, 'statement position' => \PGSQL_DIAG_STATEMENT_POSITION, 'internal position' => \PGSQL_DIAG_INTERNAL_POSITION, 'internal query' => \PGSQL_DIAG_INTERNAL_QUERY, 'context' => \PGSQL_DIAG_CONTEXT, 'file' => \PGSQL_DIAG_SOURCE_FILE, 'line' => \PGSQL_DIAG_SOURCE_LINE, 'function' => \PGSQL_DIAG_SOURCE_FUNCTION];
+    /**
+     * @return array
+     */
     public static function castLargeObject($lo, array $a, Stub $stub, bool $isNested)
     {
         $a['seek position'] = pg_lo_tell($lo);
         return $a;
     }
+    /**
+     * @return array
+     */
     public static function castLink($link, array $a, Stub $stub, bool $isNested)
     {
         $a['status'] = pg_connection_status($link);
@@ -55,6 +61,9 @@ class PgSqlCaster
         $a['param'] = new EnumStub($a['param']);
         return $a;
     }
+    /**
+     * @return array
+     */
     public static function castResult($result, array $a, Stub $stub, bool $isNested)
     {
         $a['num rows'] = pg_num_rows($result);
@@ -72,7 +81,7 @@ class PgSqlCaster
         $a['last OID'] = pg_last_oid($result);
         $fields = pg_num_fields($result);
         for ($i = 0; $i < $fields; ++$i) {
-            $field = ['name' => pg_field_name($result, $i), 'table' => sprintf('%s (OID: %s)', pg_field_table($result, $i), pg_field_table($result, $i, \true)), 'type' => sprintf('%s (OID: %s)', pg_field_type($result, $i), pg_field_type_oid($result, $i)), 'nullable' => (bool) pg_field_is_null($result, $i), 'storage' => pg_field_size($result, $i) . ' bytes', 'display' => pg_field_prtlen($result, $i) . ' chars'];
+            $field = ['name' => pg_field_name($result, $i), 'table' => \sprintf('%s (OID: %s)', pg_field_table($result, $i), pg_field_table($result, $i, \true)), 'type' => \sprintf('%s (OID: %s)', pg_field_type($result, $i), pg_field_type_oid($result, $i)), 'nullable' => (bool) (\PHP_VERSION_ID >= 80300 ? pg_field_is_null($result, null, $i) : pg_field_is_null($result, $i)), 'storage' => pg_field_size($result, $i) . ' bytes', 'display' => (\PHP_VERSION_ID >= 80300 ? pg_field_prtlen($result, null, $i) : pg_field_prtlen($result, $i)) . ' chars'];
             if (' (OID: )' === $field['table']) {
                 $field['table'] = null;
             }

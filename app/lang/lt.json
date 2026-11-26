@@ -113,7 +113,6 @@
         "ExceptionFileIntegrity": "Nesėkminga vientisumo patikra: %s",
         "ExceptionFileToDelete": "Failas, kurį ištrinti: %s",
         "ExceptionFilesizeMismatch": "Nesutampa failo dydis: %1$s (turi būti: %2$s, rasta: %3$s)",
-        "ExceptionIncompatibleClientServerVersions": "Jūsų %1$s kliento versija yra %2$s, kuri yra nesuderinama su serverio %3$s versija.",
         "ExceptionInvalidArchiveTimeToLive": "Šiandienos archyvo saugojimo laikas turi būti nurodytas sekundėmis ir reikšme didesne už nulį",
         "ExceptionInvalidDateFormat": "Datos formatas turi būti: %1$s ar bet kuris raktažodis palaikomas %2$s funkcijos (žiūrėkite %3$s išsamesnei informacijai gauti)",
         "ExceptionInvalidDateRange": "Data '%1$s' yra iš klaidingo diapazono. Ji turi būti šio formato: %2$s.",
@@ -348,6 +347,10 @@
         "VerifyLoginData": "Įsitikinkite, kad jūsų naudotojo vardo ir slaptažodžio derinys yra teisingas.",
         "YouAreOffline": "Atleiskite, šiuo metu jūs esate atsijungę nuo tinklo"
     },
+    "AIProviders": {
+        "DefaultBadge": "Pagal nutylėjimą",
+        "Model": "Modelis"
+    },
     "API": {
         "KeepTokenSecret": "Šis token_auth yra slaptas kaip ir naudotojo vardas bei slaptažodis, %1$s neviešinkite jo%2$s!",
         "LoadedAPIs": "Sėkmingai įkrautos API sąsajos (%s).",
@@ -407,7 +410,6 @@
         "ChooseWebsite": "Pasirinkti svetainę",
         "ClickToEditX": "Spustelėkite norėdami taisyti %s",
         "ClickToSeeFullInformation": "Spustelėkite, norėdami matyti daugiau informacijos",
-        "CloseSearch": "Užverti paiešką",
         "CloseWidgetDirections": "Galite užverti šį valdiklį, spusteldami ant valdiklio viršuje esančios \"X\" piktogramos.",
         "EndDate": "Pabaigos data",
         "EndShortcut": "Baigti",
@@ -670,7 +672,6 @@
         "GoalName": "Uždavinio pavadinimas",
         "GoalX": "Uždavinys %s",
         "Goals": "Uždaviniai",
-        "GoalsOverview": "Uždavinių apžvalga",
         "IsExactly": "yra tiksliai %s",
         "Manually": "rankiniu būdu",
         "ManuallyTriggeredUsingJavascriptFunction": "Uždavinys paleistas rankiniu būdu naudojantis JavaScript API trackGoal()",
@@ -679,6 +680,8 @@
         "Optional": "(papildoma)",
         "PageTitle": "Puslapio antraštė",
         "Pattern": "Derinys",
+        "RecommendationCountOnePage": "1 puslapis",
+        "RecommendationCountPages": "%s puslapiai",
         "ReturningVisitorsConversionRateIs": "Sugrįžtančių lankytojų konversijos koeficientas yra %s",
         "URL": "URL",
         "UpdateGoal": "Atnaujinti uždavinį",
@@ -2005,6 +2008,7 @@
         "AllowedUploadFormats": "Per šį puslapį galite įkelti papildinį ar temą .zip formatu.",
         "CannotInstall": "Nepavyksta įdiegti",
         "CannotUpdate": "Nepavyksta atnaujinti",
+        "CategorySecurity": "Saugumas",
         "Developer": "Kūrėjas",
         "InstallingPlugin": "Įdiegiama %s",
         "LastUpdated": "Paskutinį kartą atnaujinta",
@@ -2014,11 +2018,9 @@
         "LicenseKeyDeletedSuccess": "Licencijos raktas sėkmingai ištrintas.",
         "LicenseMissing": "Trūksta licencijos",
         "NoPluginsFound": "Papildinių nerasta",
-        "NoThemesFound": "Temų nerasta",
         "PluginKeywords": "Raktiniai žodžiai",
         "PluginWebsite": "Papildinio svetainė",
         "Screenshots": "Ekrano kopijos",
-        "Sort": "Sortas",
         "StepPluginSuccessfullyInstalled": "Jūs sėkmingai įdiegėte papildinį %1$s %2$s.",
         "StepPluginSuccessfullyUpdated": "Jūs sėkmingai atnaujinote papildinį %1$s %2$s.",
         "StepReplaceExistingPlugin": "Pakeičiamas esamas papildinys",
@@ -2119,14 +2121,6 @@
         "WidgetGlobalVisitors": "Lankytojų konfigūracija",
         "WidgetGlobalVisitorsDocumentation": "Ši ataskaita rodo visas dažniausias jūsų lankytojų naudotas konfigūracijas. Konfigūracija - tai operacinės sistemos, naršyklės tipo ir ekrano raiškos kombinacija.",
         "WidgetResolutions": "Ekrano raiška"
-    },
-    "SEO": {
-        "Bing_IndexedPages": "Bing indeksuoti puslapiai",
-        "DomainAge": "Adresų srities amžius",
-        "PluginDescription": "Šis įskiepis išskleidžia ir rodo SEO metriką: Alexa saityno reitingą, Google puslapių reitingą, indeksuotų puslapių skaičių ir atgalines nuorodas į šiuo metu pasirinktą svetainę.",
-        "Rank": "Reitingas",
-        "SEORankingsFor": "SEO reitingai, skirti %s",
-        "SeoRankings": "SEO reitingai"
     },
     "ScheduledReports": {
         "AlsoSendReportToTheseEmails": "Taip pat siųsti šią ataskaitą šiems adresatams (kiekvienam adresui atskira eilutė)",

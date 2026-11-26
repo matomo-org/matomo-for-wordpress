@@ -30,26 +30,19 @@ abstract class DataCollector implements DataCollectorInterface
      * @var array|Data
      */
     protected $data = [];
-    /**
-     * @var ClonerInterface
-     */
-    private $cloner;
+    private ClonerInterface $cloner;
     /**
      * Converts the variable into a serializable Data instance.
      *
      * This array can be displayed in the template using
      * the VarDumper component.
-     *
-     * @param mixed $var
-     *
-     * @return Data
      */
-    protected function cloneVar($var)
+    protected function cloneVar(mixed $var) : Data
     {
         if ($var instanceof Data) {
             return $var;
         }
-        if (null === $this->cloner) {
+        if (!isset($this->cloner)) {
             $this->cloner = new VarCloner();
             $this->cloner->setMaxItems(-1);
             $this->cloner->addCasters($this->getCasters());
@@ -61,7 +54,7 @@ abstract class DataCollector implements DataCollectorInterface
      */
     protected function getCasters()
     {
-        $casters = ['*' => function ($v, array $a, Stub $s, $isNested) {
+        $casters = ['*' => static function ($v, array $a, Stub $s, $isNested) {
             if (!$v instanceof Stub) {
                 $b = $a;
                 foreach ($a as $k => $v) {
@@ -83,26 +76,33 @@ abstract class DataCollector implements DataCollectorInterface
         }] + ReflectionCaster::UNSET_CLOSURE_FILE_INFO;
         return $casters;
     }
-    /**
-     * @return array
-     */
-    public function __sleep()
+    public function __sleep() : array
     {
         return ['data'];
     }
+    /**
+     * @return void
+     */
     public function __wakeup()
     {
     }
     /**
      * @internal to prevent implementing \Serializable
      */
-    protected final function serialize()
+    protected final function serialize() : void
     {
     }
     /**
      * @internal to prevent implementing \Serializable
      */
-    protected final function unserialize($data)
+    protected final function unserialize(string $data) : void
     {
+    }
+    /**
+     * @return void
+     */
+    public function reset()
+    {
+        $this->data = [];
     }
 }

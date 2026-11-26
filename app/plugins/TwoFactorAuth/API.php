@@ -16,10 +16,7 @@ use Piwik\Piwik;
  */
 class API extends \Piwik\Plugin\API
 {
-    /**
-     * @var TwoFactorAuthentication
-     */
-    private $twoFa;
+    private \Piwik\Plugins\TwoFactorAuth\TwoFactorAuthentication $twoFa;
     public function __construct(\Piwik\Plugins\TwoFactorAuth\TwoFactorAuthentication $twoFa)
     {
         $this->twoFa = $twoFa;
@@ -31,9 +28,8 @@ class API extends \Piwik\Plugin\API
      * @param string $passwordConfirmation The current superuser's password confirmation.
      * @return void
      */
-    public function resetTwoFactorAuth(string $userLogin,
-#[\SensitiveParameter]
-string $passwordConfirmation = '')
+    public function resetTwoFactorAuth(string $userLogin, #[\SensitiveParameter]
+        string $passwordConfirmation = '')
     {
         Piwik::checkUserHasSuperUserAccess();
         $this->confirmCurrentUserPassword($passwordConfirmation);

@@ -82,10 +82,7 @@ class Log extends \Piwik\Singleton
      * @var Log|null
      */
     private static $instance;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private LoggerInterface $logger;
     public static function getInstance()
     {
         if (self::$instance === null) {

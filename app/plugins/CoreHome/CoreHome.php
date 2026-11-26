@@ -81,7 +81,7 @@ class CoreHome extends \Piwik\Plugin
         foreach ($metrics as $metric) {
             if ($metric instanceof ArchivedMetric && $metric->getDimension()) {
                 $metricName = $metric->getName();
-                if ($metric->getDbTableName() === 'log_visit' && $metricName !== 'nb_uniq_visitors' && $metricName !== 'nb_visits' && strpos($metricName, ArchivedMetric::AGGREGATION_SUM_PREFIX) === 0) {
+                if ($metric->getDbTableName() === 'log_visit' && $metricName !== 'nb_uniq_visitors' && $metricName !== 'nb_visits' && str_starts_with($metricName, ArchivedMetric::AGGREGATION_SUM_PREFIX)) {
                     $metric = $computedMetricFactory->createComputedMetric($metric->getName(), 'nb_visits', ComputedMetric::AGGREGATION_AVG);
                     $list->addMetric($metric);
                 }
@@ -101,7 +101,6 @@ class CoreHome extends \Piwik\Plugin
         $stylesheets[] = "plugins/Morpheus/stylesheets/base/icons.css";
         $stylesheets[] = "plugins/Morpheus/stylesheets/base.less";
         $stylesheets[] = "plugins/Morpheus/stylesheets/main.less";
-        $stylesheets[] = "plugins/CoreHome/stylesheets/a11y.less";
         $stylesheets[] = "plugins/CoreHome/stylesheets/coreHome.less";
         $stylesheets[] = "plugins/CoreHome/stylesheets/dataTable.less";
         $stylesheets[] = "plugins/CoreHome/stylesheets/cloud.less";
@@ -128,6 +127,7 @@ class CoreHome extends \Piwik\Plugin
         $stylesheets[] = "plugins/CoreHome/vue/src/MultiPairField/MultiPairField.less";
         $stylesheets[] = "plugins/CoreHome/vue/src/DropdownMenu/DropdownMenu.less";
         $stylesheets[] = "plugins/CoreHome/vue/src/DraggableList/DraggableList.less";
+        $stylesheets[] = "plugins/CoreHome/vue/src/DragHandle/DragHandle.less";
         $stylesheets[] = "plugins/CoreHome/vue/src/Sparkline/Sparkline.less";
         $stylesheets[] = "plugins/CoreHome/vue/src/FieldArray/FieldArray.less";
         $stylesheets[] = "plugins/CoreHome/vue/src/Comparisons/Comparisons.less";
@@ -172,7 +172,6 @@ class CoreHome extends \Piwik\Plugin
     }
     public function getClientSideTranslationKeys(&$translationKeys)
     {
-        $translationKeys[] = 'CoreHome_ReportConfiguration';
         $translationKeys[] = 'General_Export';
         $translationKeys[] = 'General_InvalidDateRange';
         $translationKeys[] = 'General_Loading';
@@ -189,27 +188,13 @@ class CoreHome extends \Piwik\Plugin
         $translationKeys[] = 'CoreHome_ChooseX';
         $translationKeys[] = 'CoreHome_ClickToSeeFullInformation';
         $translationKeys[] = 'CoreHome_YouAreUsingTheLatestVersion';
-        $translationKeys[] = 'CoreHome_IncludeRowsWithLowPopulation';
-        $translationKeys[] = 'CoreHome_ExcludeRowsWithLowPopulation';
-        $translationKeys[] = 'CoreHome_DataTableIncludeAggregateRows';
-        $translationKeys[] = 'CoreHome_DataTableExcludeAggregateRows';
-        $translationKeys[] = 'CoreHome_DataTableCombineDimensions';
-        $translationKeys[] = 'CoreHome_DataTableShowDimensions';
-        $translationKeys[] = 'CoreHome_Default';
         $translationKeys[] = 'CoreHome_FormatMetrics';
         $translationKeys[] = 'CoreHome_ShowExportUrl';
         $translationKeys[] = 'CoreHome_HideExportUrl';
-        $translationKeys[] = 'CoreHome_FlattenDataTable';
-        $translationKeys[] = 'CoreHome_UnFlattenDataTable';
         $translationKeys[] = 'CoreHome_ExternalHelp';
         $translationKeys[] = 'CoreHome_ClickToEditX';
         $translationKeys[] = 'CoreHome_Menu';
-        $translationKeys[] = 'CoreHome_AddTotalsRowDataTable';
-        $translationKeys[] = 'CoreHome_RemoveTotalsRowDataTable';
-        $translationKeys[] = 'CoreHome_ShowPercentageValuesDataTable';
-        $translationKeys[] = 'CoreHome_ShowAbsoluteValuesDataTable';
         $translationKeys[] = 'CoreHome_ShowPercentageValues';
-        $translationKeys[] = 'CoreHome_ShowAbsoluteValues';
         $translationKeys[] = 'CoreHome_PeriodHasOnlyRawData';
         $translationKeys[] = 'CoreHome_PeriodHasOnlyRawDataNoVisitsLog';
         $translationKeys[] = 'SitesManager_NotFound';
@@ -305,8 +290,6 @@ class CoreHome extends \Piwik\Plugin
         $translationKeys[] = 'General_LearnMore';
         $translationKeys[] = 'General_ChooseDate';
         $translationKeys[] = 'General_ReadThisToLearnMore';
-        $translationKeys[] = 'CoreHome_UndoPivotBySubtable';
-        $translationKeys[] = 'CoreHome_PivotBySubtable';
         $translationKeys[] = 'General_LearnMore';
         $translationKeys[] = 'CoreHome_NoSuchPage';
         $translationKeys[] = 'CoreHome_QuickAccessTitle';
@@ -380,13 +363,19 @@ class CoreHome extends \Piwik\Plugin
         $translationKeys[] = 'CoreHome_EndDate';
         $translationKeys[] = 'CoreHome_InvalidComparisonDateRange';
         $translationKeys[] = 'CoreHome_DataForThisReportHasBeenDisabled';
-        $translationKeys[] = 'CoreHome_ChangeVisualization';
-        $translationKeys[] = 'CoreHome_ReportConfigure';
+        $translationKeys[] = 'CoreHome_ReportActions';
         $translationKeys[] = 'General_ExportThisReport';
-        $translationKeys[] = 'Annotations_Annotations';
-        $translationKeys[] = 'CoreHome_CloseSearch';
-        $translationKeys[] = 'CoreHome_DataTableHowToSearch';
-        $translationKeys[] = 'CoreHome_ChangePeriod';
+        $translationKeys[] = 'Annotations_ShowAnnotations';
+        $translationKeys[] = 'Annotations_HideAnnotations';
+        $translationKeys[] = 'CoreHome_ShowPeriod';
+        $translationKeys[] = 'CoreHome_ExportData';
+        $translationKeys[] = 'CoreHome_ExportImage';
+        $translationKeys[] = 'CoreHome_ShowAggregateRows';
+        $translationKeys[] = 'CoreHome_MakeItFlat';
+        $translationKeys[] = 'CoreHome_ShowTotalsRow';
+        $translationKeys[] = 'CoreHome_ShowDimensionsSeparately';
+        $translationKeys[] = 'CoreHome_ExcludeLowPopulation';
+        $translationKeys[] = 'CoreHome_PivotBy';
         $translationKeys[] = 'General_NewUpdatePiwikX';
         $translationKeys[] = 'CoreHome_SeeAvailableVersions';
         $translationKeys[] = 'CoreHome_OneClickUpdateNotPossibleAsMultiServerEnvironment';
@@ -417,11 +406,11 @@ class CoreHome extends \Piwik\Plugin
             Access::doAsSuperUser(function () use(&$translationKeys) {
                 $menu = MenuAdmin::getInstance()->getMenu();
                 foreach ($menu as $level1 => $level2) {
-                    if (strpos($level1, '_') !== \false) {
+                    if (str_contains($level1, '_')) {
                         $translationKeys[] = $level1;
                     }
                     foreach ($level2 as $name => $params) {
-                        if (strpos($name, '_') !== \false) {
+                        if (str_contains($name, '_')) {
                             $translationKeys[] = $name;
                         }
                     }

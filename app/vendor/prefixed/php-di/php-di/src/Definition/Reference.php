@@ -11,28 +11,19 @@ use Matomo\Dependencies\Psr\Container\ContainerInterface;
  */
 class Reference implements Definition, SelfResolvingDefinition
 {
-    /**
-     * Entry name.
-     * @var string
-     */
-    private $name = '';
-    /**
-     * Name of the target entry.
-     * @var string
-     */
-    private $targetEntryName;
+    /** Entry name. */
+    private string $name = '';
     /**
      * @param string $targetEntryName Name of the target entry
      */
-    public function __construct(string $targetEntryName)
+    public function __construct(private string $targetEntryName)
     {
-        $this->targetEntryName = $targetEntryName;
     }
     public function getName() : string
     {
         return $this->name;
     }
-    public function setName(string $name)
+    public function setName(string $name) : void
     {
         $this->name = $name;
     }
@@ -40,7 +31,7 @@ class Reference implements Definition, SelfResolvingDefinition
     {
         return $this->targetEntryName;
     }
-    public function resolve(ContainerInterface $container)
+    public function resolve(ContainerInterface $container) : mixed
     {
         return $container->get($this->getTargetEntryName());
     }
@@ -48,11 +39,11 @@ class Reference implements Definition, SelfResolvingDefinition
     {
         return $container->has($this->getTargetEntryName());
     }
-    public function replaceNestedDefinitions(callable $replacer)
+    public function replaceNestedDefinitions(callable $replacer) : void
     {
         // no nested definitions
     }
-    public function __toString()
+    public function __toString() : string
     {
         return sprintf('get(%s)', $this->targetEntryName);
     }

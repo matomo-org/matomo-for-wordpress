@@ -14,46 +14,51 @@ use Matomo\Dependencies\Monolog\Formatter\FormatterInterface;
 use Matomo\Dependencies\Monolog\Formatter\HtmlFormatter;
 use Matomo\Dependencies\Monolog\Formatter\LineFormatter;
 use Matomo\Dependencies\Monolog\Handler\AbstractProcessingHandler;
+use Matomo\Dependencies\Monolog\Level;
 use Matomo\Dependencies\Monolog\Logger;
+use Matomo\Dependencies\Monolog\LogRecord;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 /**
  * @author Alexander Borisov <boshurik@gmail.com>
+ *
+ * @final since Symfony 6.1
  */
 class MailerHandler extends AbstractProcessingHandler
 {
-    private $mailer;
-    private $messageTemplate;
-    /**
-     * @param callable|Email $messageTemplate
-     * @param string|int     $level           The minimum logging level at which this handler will be triggered
-     */
-    public function __construct(MailerInterface $mailer, $messageTemplate, $level = Logger::DEBUG, bool $bubble = \true)
+    use CompatibilityProcessingHandler;
+    private MailerInterface $mailer;
+    private \Closure|Email $messageTemplate;
+    public function __construct(MailerInterface $mailer, callable|Email $messageTemplate, string|int|Level $level = Logger::DEBUG, bool $bubble = \true)
     {
         parent::__construct($level, $bubble);
         $this->mailer = $mailer;
-        $this->messageTemplate = $messageTemplate;
+        $this->messageTemplate = $messageTemplate instanceof Email ? $messageTemplate : $messageTemplate(...);
     }
-    /**
-     * {@inheritdoc}
-     */
     public function handleBatch(array $records) : void
     {
         $messages = [];
-        foreach ($records as $record) {
-            if ($record['level'] < $this->level) {
-                continue;
+        if (Logger::API >= 3) {
+            /** @var LogRecord $record */
+            foreach ($records as $record) {
+                if ($record->level->isLowerThan($this->level)) {
+                    continue;
+                }
+                $messages[] = $this->processRecord($record);
             }
-            $messages[] = $this->processRecord($record);
+        } else {
+            foreach ($records as $record) {
+                if ($record['level'] < $this->level) {
+                    continue;
+                }
+                $messages[] = $this->processRecord($record);
+            }
         }
-        if (!empty($messages)) {
+        if ($messages) {
             $this->send((string) $this->getFormatter()->formatBatch($messages), $messages);
         }
     }
-    /**
-     * {@inheritdoc}
-     */
-    protected function write(array $record) : void
+    private function doWrite(array|LogRecord $record) : void
     {
         $this->send((string) $record['formatted'], [$record]);
     }
@@ -62,6 +67,8 @@ class MailerHandler extends AbstractProcessingHandler
      *
      * @param string $content formatted email body to be sent
      * @param array  $records the array of log records that formed this content
+     *
+     * @return void
      */
     protected function send(string $content, array $records)
     {
@@ -84,13 +91,12 @@ class MailerHandler extends AbstractProcessingHandler
      */
     protected function buildMessage(string $content, array $records) : Email
     {
-        $message = null;
         if ($this->messageTemplate instanceof Email) {
             $message = clone $this->messageTemplate;
         } elseif (\is_callable($this->messageTemplate)) {
-            $message = \call_user_func($this->messageTemplate, $content, $records);
+            $message = ($this->messageTemplate)($content, $records);
             if (!$message instanceof Email) {
-                throw new \InvalidArgumentException(sprintf('Could not resolve message from a callable. Instance of "%s" is expected.', Email::class));
+                throw new \InvalidArgumentException(\sprintf('Could not resolve message from a callable. Instance of "%s" is expected.', Email::class));
             }
         } else {
             throw new \InvalidArgumentException('Could not resolve message as instance of Email or a callable returning it.');
@@ -114,7 +120,7 @@ class MailerHandler extends AbstractProcessingHandler
         }
         return $message;
     }
-    protected function getHighestRecord(array $records) : array
+    protected function getHighestRecord(array $records) : array|LogRecord
     {
         $highestRecord = null;
         foreach ($records as $record) {

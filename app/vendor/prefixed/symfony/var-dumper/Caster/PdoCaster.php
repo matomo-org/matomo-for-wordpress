@@ -21,6 +21,9 @@ use Matomo\Dependencies\Symfony\Component\VarDumper\Cloner\Stub;
 class PdoCaster
 {
     private const PDO_ATTRIBUTES = ['CASE' => [\PDO::CASE_LOWER => 'LOWER', \PDO::CASE_NATURAL => 'NATURAL', \PDO::CASE_UPPER => 'UPPER'], 'ERRMODE' => [\PDO::ERRMODE_SILENT => 'SILENT', \PDO::ERRMODE_WARNING => 'WARNING', \PDO::ERRMODE_EXCEPTION => 'EXCEPTION'], 'TIMEOUT', 'PREFETCH', 'AUTOCOMMIT', 'PERSISTENT', 'DRIVER_NAME', 'SERVER_INFO', 'ORACLE_NULLS' => [\PDO::NULL_NATURAL => 'NATURAL', \PDO::NULL_EMPTY_STRING => 'EMPTY_STRING', \PDO::NULL_TO_STRING => 'TO_STRING'], 'CLIENT_VERSION', 'SERVER_VERSION', 'STATEMENT_CLASS', 'EMULATE_PREPARES', 'CONNECTION_STATUS', 'STRINGIFY_FETCHES', 'DEFAULT_FETCH_MODE' => [\PDO::FETCH_ASSOC => 'ASSOC', \PDO::FETCH_BOTH => 'BOTH', \PDO::FETCH_LAZY => 'LAZY', \PDO::FETCH_NUM => 'NUM', \PDO::FETCH_OBJ => 'OBJ']];
+    /**
+     * @return array
+     */
     public static function castPdo(\PDO $c, array $a, Stub $stub, bool $isNested)
     {
         $attr = [];
@@ -36,7 +39,7 @@ class PdoCaster
                 if ($v && isset($v[$attr[$k]])) {
                     $attr[$k] = new ConstStub($v[$attr[$k]], $attr[$k]);
                 }
-            } catch (\Exception $e) {
+            } catch (\Exception) {
             }
         }
         if (isset($attr[$k = 'STATEMENT_CLASS'][1])) {
@@ -58,6 +61,9 @@ class PdoCaster
         $c->setAttribute(\PDO::ATTR_ERRMODE, $errmode);
         return $a;
     }
+    /**
+     * @return array
+     */
     public static function castPdoStatement(\PDOStatement $c, array $a, Stub $stub, bool $isNested)
     {
         $prefix = Caster::PREFIX_VIRTUAL;

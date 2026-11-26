@@ -11,6 +11,7 @@ namespace Piwik\Plugins\API;
 use Exception;
 use Piwik\API\Request;
 use Piwik\Archive\DataTableFactory;
+use Piwik\ArchiveProcessor\Rules;
 use Piwik\CacheId;
 use Piwik\Cache as PiwikCache;
 use Piwik\Category\CategoryList;
@@ -27,8 +28,11 @@ use Piwik\Metrics\Formatter;
 use Piwik\Period;
 use Piwik\Piwik;
 use Piwik\Plugin\ReportsProvider;
+use Piwik\Plugins\CoreHome\Columns\Metrics\PercentOfReportTotal;
+use Piwik\SettingsPiwik;
 use Piwik\Site;
 use Piwik\Timer;
+use Piwik\Tracker\GoalManager;
 /**
  * @phpstan-type ProcessedReportData array{
  *     website: string,
@@ -43,10 +47,16 @@ use Piwik\Timer;
  */
 class ProcessedReport
 {
+    private ReportsProvider $reportsProvider;
     /**
-     * @var ReportsProvider
+     * Retired report unique ids mapped to their replacements, preferred first. The ecommerce order
+     * report is only advertised for sites with ecommerce enabled.
      */
-    private $reportsProvider;
+    private const RENAMED_REPORT_UNIQUE_IDS = ['Goals_get_idGoal--0' => ['Goals_get_idGoal--ecommerceOrder', 'Goals_get'], 'Goals_getVisitsUntilConversion_idGoal--0' => ['Goals_getVisitsUntilConversion'], 'Goals_getDaysToConversion_idGoal--0' => ['Goals_getDaysToConversion']];
+    /**
+     * The `idGoal` replacing `idGoal=0` per API method; `null` drops it (all goals).
+     */
+    private const RETIRED_GOAL_OVERVIEW_ID_GOALS = ['Goals.get' => Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_ORDER, 'Goals.getVisitsUntilConversion' => null, 'Goals.getDaysToConversion' => null];
     private const PERFORMANCE_METRICS_TO_FORMAT = ['avg_time_network', 'avg_time_server', 'avg_time_transfer', 'avg_time_dom_processing', 'avg_time_dom_completion', 'avg_time_on_load', 'avg_page_load_time'];
     public function __construct(ReportsProvider $reportsProvider)
     {
@@ -72,12 +82,17 @@ class ProcessedReport
                 $apiParameters[$entityName] = $idEntity;
             }
         }
+        $isMultiSiteRequest = count(Site::getIdSitesFromIdSitesString($idSite)) > 1;
+        $isNonDayPeriod = $period && $period != 'day';
+        // Unique visitors / users can't be summed across days, so on non-day periods they only exist
+        // for aggregate (dimensionless) reports where archiving computed them. Strip them from
+        // per-dimension reports, and from unprocessed periods/scopes (year/range, multi-site).
+        $aggregateUniquesUnavailable = !SettingsPiwik::isUniqueVisitorsEnabled($period) || $isMultiSiteRequest && Rules::shouldSkipUniqueVisitorsCalculationForMultipleSites();
+        $apiParameters = self::withRetiredGoalOverviewParameters($apiModule, $apiAction, $apiParameters);
         foreach ($reportsMetadata as $report) {
-            // See ArchiveProcessor/Aggregator.php - unique visitors are not processed for period != day
-            // todo: should use SettingsPiwik::isUniqueVisitorsEnabled instead
-            if ($period && $period != 'day' && !($apiModule == 'VisitsSummary' && $apiAction == 'get')) {
-                unset($report['metrics']['nb_uniq_visitors']);
-                unset($report['metrics']['nb_users']);
+            $isPerDimensionReport = !empty($report['dimension']) || !empty($report['dimensions']);
+            if ($isNonDayPeriod && ($aggregateUniquesUnavailable || $isPerDimensionReport)) {
+                unset($report['metrics']['nb_uniq_visitors'], $report['metrics']['nb_users']);
             }
             if ($report['module'] == $apiModule && $report['action'] == $apiAction) {
                 // No custom parameters
@@ -122,12 +137,124 @@ class ProcessedReport
         $translation = $this->translateMetric($metric, $idSite, $apiMethodUniqueId);
         return !empty($translation);
     }
+    /**
+     * @param string $apiModule
+     * @param string $apiAction
+     * @param mixed $apiParameters
+     * @return mixed
+     */
+    private static function withRetiredGoalOverviewParameters($apiModule, $apiAction, $apiParameters)
+    {
+        if (!is_array($apiParameters) || !isset($apiParameters['idGoal']) || !is_scalar($apiParameters['idGoal']) || (string) $apiParameters['idGoal'] !== (string) GoalManager::IDGOAL_ORDER) {
+            return $apiParameters;
+        }
+        $apiMethod = $apiModule . '.' . $apiAction;
+        if (!array_key_exists($apiMethod, self::RETIRED_GOAL_OVERVIEW_ID_GOALS)) {
+            return $apiParameters;
+        }
+        $idGoal = self::RETIRED_GOAL_OVERVIEW_ID_GOALS[$apiMethod];
+        if (null === $idGoal) {
+            unset($apiParameters['idGoal']);
+        } else {
+            $apiParameters['idGoal'] = $idGoal;
+        }
+        return $apiParameters;
+    }
+    /**
+     * @param int|string $idSite
+     * @param string $apiModule
+     * @param string $apiAction
+     * @param mixed $apiParameters
+     * @ignore
+     */
+    public static function getReportNotFoundMessage($idSite, $apiModule, $apiAction, $apiParameters) : string
+    {
+        $message = "Requested report {$apiModule}.{$apiAction} for Website id={$idSite} not found in the list of available reports.";
+        $resolvedParameters = self::withRetiredGoalOverviewParameters($apiModule, $apiAction, $apiParameters);
+        if ($resolvedParameters !== $apiParameters && is_array($resolvedParameters) && ($resolvedParameters['idGoal'] ?? null) === Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_ORDER) {
+            $message .= ' idGoal=0 is the ecommerce order goal (idGoal=' . Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_ORDER . '), whose report is only available for a single website with ecommerce enabled.';
+        }
+        return $message . " \n";
+    }
+    /**
+     * @param mixed $apiMethodUniqueId
+     * @return list<mixed>
+     */
+    private static function getRenamedReportUniqueIdCandidates($apiMethodUniqueId)
+    {
+        if (!is_string($apiMethodUniqueId)) {
+            return [$apiMethodUniqueId];
+        }
+        return self::RENAMED_REPORT_UNIQUE_IDS[$apiMethodUniqueId] ?? [$apiMethodUniqueId];
+    }
+    /**
+     * Without `$availableUniqueIds`, the last (always-available) candidate is returned.
+     *
+     * @param mixed $apiMethodUniqueId
+     * @param list<string>|null $availableUniqueIds
+     * @return mixed
+     */
+    private static function getRenamedReportUniqueId($apiMethodUniqueId, ?array $availableUniqueIds = null)
+    {
+        if (!is_string($apiMethodUniqueId) || !isset(self::RENAMED_REPORT_UNIQUE_IDS[$apiMethodUniqueId])) {
+            return $apiMethodUniqueId;
+        }
+        $candidates = self::RENAMED_REPORT_UNIQUE_IDS[$apiMethodUniqueId];
+        if (null !== $availableUniqueIds) {
+            foreach ($candidates as $candidate) {
+                if (in_array($candidate, $availableUniqueIds, \true)) {
+                    return $candidate;
+                }
+            }
+        }
+        return end($candidates);
+    }
+    /**
+     * Collapses only duplicates the resolution produces.
+     *
+     * @param array<mixed> $apiMethodUniqueIds
+     * @param list<string>|null $availableUniqueIds
+     * @return array<mixed>
+     * @ignore
+     */
+    public static function getRenamedReportUniqueIds($apiMethodUniqueIds, ?array $availableUniqueIds = null)
+    {
+        $renamed = [];
+        $emitted = [];
+        $fromRenamed = [];
+        foreach ($apiMethodUniqueIds as $apiMethodUniqueId) {
+            if (!is_string($apiMethodUniqueId)) {
+                $renamed[] = $apiMethodUniqueId;
+                continue;
+            }
+            $wasRenamed = isset(self::RENAMED_REPORT_UNIQUE_IDS[$apiMethodUniqueId]);
+            $apiMethodUniqueId = self::getRenamedReportUniqueId($apiMethodUniqueId, $availableUniqueIds);
+            // a resolved id absorbs at most one later entry naming the same report
+            if (isset($emitted[$apiMethodUniqueId])) {
+                if ($wasRenamed) {
+                    continue;
+                }
+                if (isset($fromRenamed[$apiMethodUniqueId])) {
+                    unset($fromRenamed[$apiMethodUniqueId]);
+                    continue;
+                }
+            }
+            if ($wasRenamed) {
+                $fromRenamed[$apiMethodUniqueId] = \true;
+            }
+            $renamed[] = $apiMethodUniqueId;
+            $emitted[$apiMethodUniqueId] = \true;
+        }
+        return $renamed;
+    }
     public function getReportMetadataByUniqueId($idSite, $apiMethodUniqueId)
     {
         $metadata = $this->getReportMetadata($idSite);
-        foreach ($metadata as $report) {
-            if ($report['uniqueId'] == $apiMethodUniqueId) {
-                return $report;
+        foreach (self::getRenamedReportUniqueIdCandidates($apiMethodUniqueId) as $candidate) {
+            foreach ($metadata as $report) {
+                if ($report['uniqueId'] == $candidate) {
+                    return $report;
+                }
             }
         }
     }
@@ -335,9 +462,11 @@ class ProcessedReport
         // Is this report found in the Metadata available reports?
         $reportMetadata = $this->getMetadata($idSite, $apiModule, $apiAction, $apiParameters, $language, $period, $date, $hideMetricsDoc, $showSubtableReports = \true);
         if (empty($reportMetadata)) {
-            throw new Exception("Requested report {$apiModule}.{$apiAction} for Website id={$idSite} not found in the list of available reports. \n");
+            throw new Exception(self::getReportNotFoundMessage($idSite, $apiModule, $apiAction, $apiParameters));
         }
         $reportMetadata = reset($reportMetadata);
+        // Goals.get does not read the HTTP string "0" as the ecommerce order goal, so request the resolved report
+        $apiParameters = self::withRetiredGoalOverviewParameters($apiModule, $apiAction, $apiParameters);
         // Generate Api call URL passing custom parameters
         $parameters = array_merge($apiParameters, array('method' => $apiModule . '.' . $apiAction, 'idSite' => $idSite, 'period' => $period, 'date' => $date, 'format' => 'original', 'serialize' => '0', 'language' => $language, 'idSubtable' => $idSubtable));
         if (!empty($segment)) {
@@ -447,6 +576,7 @@ class ProcessedReport
                 }
             }
         }
+        $columns = $this->addPercentOfTotalColumns($dataTable, $columns, $reportMetadata);
         $columns = $this->hideShowMetrics($columns);
         $totals = [];
         // $dataTable is an instance of Set when multiple periods requested
@@ -476,23 +606,103 @@ class ProcessedReport
         return [$newReport, $columns, $rowsMetadata, $totals];
     }
     /**
+     * Adds column translations, metric types and metric documentation for the percent-of-total
+     * metrics the DataTablePostProcessor registered on the table (eg,
+     * 'nb_visits_percent_of_total'), so their values are kept in the processed report data
+     * and described in its metadata. Each one is placed directly after the metric it belongs to.
+     *
+     * @param DataTable|DataTable\Map $dataTable
+     * @param array $columns
+     * @param array $reportMetadata
+     * @return array
+     */
+    private function addPercentOfTotalColumns($dataTable, $columns, &$reportMetadata)
+    {
+        $tables = $dataTable instanceof DataTable\Map ? $dataTable->getDataTables() : [$dataTable];
+        $percentMetrics = [];
+        foreach ($tables as $table) {
+            $extraProcessedMetrics = $table->getMetadata(DataTable::EXTRA_PROCESSED_METRICS_METADATA_NAME) ?: [];
+            foreach ($extraProcessedMetrics as $metric) {
+                if ($metric instanceof PercentOfReportTotal) {
+                    $percentMetrics[$metric->getName()] = $metric;
+                }
+            }
+        }
+        $percentColumns = [];
+        foreach ($percentMetrics as $name => $metric) {
+            $percentColumns[$name] = $metric->getTranslatedName();
+        }
+        $columns = self::insertPercentOfTotalColumns($columns, $percentColumns);
+        // only describe the columns that made it into the report
+        foreach ($percentMetrics as $name => $metric) {
+            if (!isset($columns[$name])) {
+                continue;
+            }
+            $reportMetadata['metricTypes'][$name] = $metric->getSemanticType();
+            // hideMetricsDoc=1 removes the documentation from the metadata entirely,
+            // recreating the key here would undo that
+            if (isset($reportMetadata['metricsDocumentation'])) {
+                $reportMetadata['metricsDocumentation'][$name] = $metric->getDocumentation();
+            }
+        }
+        return $columns;
+    }
+    /**
+     * Inserts each percent of the report total column directly after the metric it belongs to,
+     * leaving the position of every other column untouched. Columns whose metric is not part of
+     * $columns are left out: a percentage on its own, without the value it is computed from,
+     * only makes the table wider.
+     *
+     * @param array $columns column name => value
+     * @param array $percentColumns percent of total column name => value
+     * @return array
+     */
+    private static function insertPercentOfTotalColumns(array $columns, array $percentColumns) : array
+    {
+        if (empty($percentColumns)) {
+            return $columns;
+        }
+        $withPercentages = [];
+        foreach ($columns as $columnName => $value) {
+            if (isset($percentColumns[$columnName])) {
+                continue;
+                // already in place from an earlier call
+            }
+            $withPercentages[$columnName] = $value;
+            $percentColumnName = $columnName . PercentOfReportTotal::COLUMN_NAME_SUFFIX;
+            if (isset($percentColumns[$percentColumnName])) {
+                $withPercentages[$percentColumnName] = $percentColumns[$percentColumnName];
+            }
+        }
+        return $withPercentages;
+    }
+    /**
      * Removes metrics from the list of columns and the report meta data if they are marked empty
-     * in the data table meta data.
+     * in the data table meta data, then drops the percent of the report total columns left
+     * without the metric they belong to.
      */
     private function removeEmptyColumns(&$columns, &$reportMetadata, $dataTable)
     {
         $emptyColumns = $dataTable->getMetadata(DataTable::EMPTY_COLUMNS_METADATA_NAME);
-        if (!is_array($emptyColumns)) {
-            return;
+        if (is_array($emptyColumns)) {
+            $columnsToRemove = $this->getColumnsToRemove();
+            $columnsToKeep = $this->getColumnsToKeep();
+            $columns = $this->hideShowMetricsWithParams($columns, $columnsToRemove, $columnsToKeep, $emptyColumns);
+            if (isset($reportMetadata['metrics'])) {
+                $reportMetadata['metrics'] = $this->hideShowMetricsWithParams($reportMetadata['metrics'], $columnsToRemove, $columnsToKeep, $emptyColumns);
+            }
+            if (isset($reportMetadata['metricsDocumentation'])) {
+                $reportMetadata['metricsDocumentation'] = $this->hideShowMetricsWithParams($reportMetadata['metricsDocumentation'], $columnsToRemove, $columnsToKeep, $emptyColumns);
+            }
         }
-        $columnsToRemove = $this->getColumnsToRemove();
-        $columnsToKeep = $this->getColumnsToKeep();
-        $columns = $this->hideShowMetricsWithParams($columns, $columnsToRemove, $columnsToKeep, $emptyColumns);
-        if (isset($reportMetadata['metrics'])) {
-            $reportMetadata['metrics'] = $this->hideShowMetricsWithParams($reportMetadata['metrics'], $columnsToRemove, $columnsToKeep, $emptyColumns);
-        }
-        if (isset($reportMetadata['metricsDocumentation'])) {
-            $reportMetadata['metricsDocumentation'] = $this->hideShowMetricsWithParams($reportMetadata['metricsDocumentation'], $columnsToRemove, $columnsToKeep, $emptyColumns);
+        foreach (array_keys($columns) as $columnName) {
+            $metricName = PercentOfReportTotal::getMetricNameFromColumnName($columnName);
+            if (null === $metricName || isset($columns[$metricName])) {
+                continue;
+            }
+            unset($columns[$columnName]);
+            unset($reportMetadata['metricTypes'][$columnName]);
+            unset($reportMetadata['metricsDocumentation'][$columnName]);
         }
     }
     /**
@@ -661,7 +871,7 @@ class ProcessedReport
     private function calculateTotals($simpleTotals, $totals)
     {
         foreach ($simpleTotals as $metric => $value) {
-            if (0 === strpos($metric, 'avg_') || '_rate' === substr($metric, -5) || '_evolution' === substr($metric, -10)) {
+            if (str_starts_with($metric, 'avg_') || str_ends_with($metric, '_rate') || str_ends_with($metric, '_evolution')) {
                 continue;
                 // skip average, rate and evolution metrics
             }
@@ -677,9 +887,9 @@ class ProcessedReport
             }
             if (!array_key_exists($metric, $totals)) {
                 $totals[$metric] = $value;
-            } elseif (0 === strpos($metric, 'min_')) {
+            } elseif (str_starts_with($metric, 'min_')) {
                 $totals[$metric] = min($totals[$metric], $value);
-            } elseif (0 === strpos($metric, 'max_')) {
+            } elseif (str_starts_with($metric, 'max_')) {
                 $totals[$metric] = max($totals[$metric], $value);
             } elseif ($value) {
                 $totals[$metric] += $value;
@@ -746,25 +956,30 @@ class ProcessedReport
         if (!is_numeric($value)) {
             return $value;
         }
-        if (strpos($columnName, '_change') !== \false) {
+        if (str_contains($columnName, '_change')) {
             // comparison change columns are formatted by DataComparisonFilter
             return $value == '0' ? '+0%' : $value;
         }
+        // percent-of-total metrics are quotients, this must be checked before the money/time
+        // formatting below so eg 'revenue_percent_of_total' is not formatted as money
+        if (str_contains($columnName, PercentOfReportTotal::COLUMN_NAME_SUFFIX)) {
+            return $formatter->getPrettyPercentFromQuotient($value);
+        }
         // Display time in human readable
-        if (in_array($columnName, self::PERFORMANCE_METRICS_TO_FORMAT) || strpos($columnName, 'time_generation') !== \false) {
+        if (in_array($columnName, self::PERFORMANCE_METRICS_TO_FORMAT) || str_contains($columnName, 'time_generation')) {
             return $formatter->getPrettyTimeFromSeconds($value, \true);
         }
-        if (strpos($columnName, 'time') !== \false) {
+        if (str_contains($columnName, 'time')) {
             return $formatter->getPrettyTimeFromSeconds($value);
         }
         // Add revenue symbol to revenues
-        $isMoneyMetric = strpos($columnName, 'revenue') !== \false || strpos($columnName, 'price') !== \false;
-        if ($isMoneyMetric && strpos($columnName, 'evolution') === \false) {
+        $isMoneyMetric = str_contains($columnName, 'revenue') || str_contains($columnName, 'price');
+        if ($isMoneyMetric && !str_contains($columnName, 'evolution')) {
             return $formatter->getPrettyMoney($value, $idSite);
         }
         // Add % symbol to rates
-        if (strpos($columnName, '_rate') !== \false) {
-            if (strpos($value, "%") === \false) {
+        if (str_contains($columnName, '_rate')) {
+            if (!str_contains($value, "%")) {
                 return 100 * $value . "%";
             }
         }

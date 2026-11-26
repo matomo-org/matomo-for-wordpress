@@ -10,6 +10,7 @@
  */
 namespace Matomo\Dependencies\Symfony\Component\VarDumper\Caster;
 
+use Matomo\Dependencies\Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Matomo\Dependencies\Symfony\Component\ErrorHandler\Exception\SilencedErrorContext;
 use Matomo\Dependencies\Symfony\Component\VarDumper\Cloner\Stub;
 use Matomo\Dependencies\Symfony\Component\VarDumper\Exception\ThrowingCasterException;
@@ -22,18 +23,27 @@ use Matomo\Dependencies\Symfony\Component\VarDumper\Exception\ThrowingCasterExce
  */
 class ExceptionCaster
 {
-    public static $srcContext = 1;
-    public static $traceArgs = \true;
-    public static $errorTypes = [\E_DEPRECATED => 'E_DEPRECATED', \E_USER_DEPRECATED => 'E_USER_DEPRECATED', \E_RECOVERABLE_ERROR => 'E_RECOVERABLE_ERROR', \E_ERROR => 'E_ERROR', \E_WARNING => 'E_WARNING', \E_PARSE => 'E_PARSE', \E_NOTICE => 'E_NOTICE', \E_CORE_ERROR => 'E_CORE_ERROR', \E_CORE_WARNING => 'E_CORE_WARNING', \E_COMPILE_ERROR => 'E_COMPILE_ERROR', \E_COMPILE_WARNING => 'E_COMPILE_WARNING', \E_USER_ERROR => 'E_USER_ERROR', \E_USER_WARNING => 'E_USER_WARNING', \E_USER_NOTICE => 'E_USER_NOTICE', 2048 => 'E_STRICT'];
-    private static $framesCache = [];
+    public static int $srcContext = 1;
+    public static bool $traceArgs = \true;
+    public static array $errorTypes = [\E_DEPRECATED => 'E_DEPRECATED', \E_USER_DEPRECATED => 'E_USER_DEPRECATED', \E_RECOVERABLE_ERROR => 'E_RECOVERABLE_ERROR', \E_ERROR => 'E_ERROR', \E_WARNING => 'E_WARNING', \E_PARSE => 'E_PARSE', \E_NOTICE => 'E_NOTICE', \E_CORE_ERROR => 'E_CORE_ERROR', \E_CORE_WARNING => 'E_CORE_WARNING', \E_COMPILE_ERROR => 'E_COMPILE_ERROR', \E_COMPILE_WARNING => 'E_COMPILE_WARNING', \E_USER_ERROR => 'E_USER_ERROR', \E_USER_WARNING => 'E_USER_WARNING', \E_USER_NOTICE => 'E_USER_NOTICE', 2048 => 'E_STRICT'];
+    private static array $framesCache = [];
+    /**
+     * @return array
+     */
     public static function castError(\Error $e, array $a, Stub $stub, bool $isNested, int $filter = 0)
     {
         return self::filterExceptionArray($stub->class, $a, "\x00Error\x00", $filter);
     }
+    /**
+     * @return array
+     */
     public static function castException(\Exception $e, array $a, Stub $stub, bool $isNested, int $filter = 0)
     {
         return self::filterExceptionArray($stub->class, $a, "\x00Exception\x00", $filter);
     }
+    /**
+     * @return array
+     */
     public static function castErrorException(\ErrorException $e, array $a, Stub $stub, bool $isNested)
     {
         if (isset($a[$s = Caster::PREFIX_PROTECTED . 'severity'], self::$errorTypes[$a[$s]])) {
@@ -41,6 +51,9 @@ class ExceptionCaster
         }
         return $a;
     }
+    /**
+     * @return array
+     */
     public static function castThrowingCasterException(ThrowingCasterException $e, array $a, Stub $stub, bool $isNested)
     {
         $trace = Caster::PREFIX_VIRTUAL . 'trace';
@@ -55,6 +68,9 @@ class ExceptionCaster
         unset($a[$xPrefix . 'previous'], $a[$prefix . 'code'], $a[$prefix . 'file'], $a[$prefix . 'line']);
         return $a;
     }
+    /**
+     * @return array
+     */
     public static function castSilencedErrorContext(SilencedErrorContext $e, array $a, Stub $stub, bool $isNested)
     {
         $sPrefix = "\x00" . SilencedErrorContext::class . "\x00";
@@ -72,6 +88,9 @@ class ExceptionCaster
         $a[Caster::PREFIX_VIRTUAL . 'trace'] = new TraceStub($trace, self::$traceArgs);
         return $a;
     }
+    /**
+     * @return array
+     */
     public static function castTraceStub(TraceStub $trace, array $a, Stub $stub, bool $isNested)
     {
         if (!$isNested) {
@@ -123,7 +142,7 @@ class ExceptionCaster
             } else {
                 $label = substr_replace($prefix, "title=Stack level {$j}.", 2, 0) . $lastCall;
             }
-            $a[substr_replace($label, sprintf('separator=%s&', $frame instanceof EnumStub ? ' ' : ':'), 2, 0)] = $frame;
+            $a[substr_replace($label, \sprintf('separator=%s&', $frame instanceof EnumStub ? ' ' : ':'), 2, 0)] = $frame;
             $lastCall = $call;
         }
         if (null !== $trace->sliceLength) {
@@ -131,6 +150,9 @@ class ExceptionCaster
         }
         return $a;
     }
+    /**
+     * @return array
+     */
     public static function castFrameStub(FrameStub $frame, array $a, Stub $stub, bool $isNested)
     {
         if (!$isNested) {
@@ -139,10 +161,7 @@ class ExceptionCaster
         $f = $frame->value;
         $prefix = Caster::PREFIX_VIRTUAL;
         if (isset($f['file'], $f['line'])) {
-            $cacheKey = $f;
-            unset($cacheKey['object'], $cacheKey['args']);
-            $cacheKey[] = self::$srcContext;
-            $cacheKey = implode('-', $cacheKey);
+            $cacheKey = "{$f['file']}-{$f['line']}-" . ($f['class'] ?? '') . '-' . ($f['type'] ?? '') . '-' . ($f['function'] ?? '') . '-' . self::$srcContext;
             if (isset(self::$framesCache[$cacheKey])) {
                 $a[$prefix . 'src'] = self::$framesCache[$cacheKey];
             } else {
@@ -162,7 +181,7 @@ class ExceptionCaster
                         if (isset($f['object'])) {
                             $template = $f['object'];
                         } elseif ((new \ReflectionClass($f['class']))->isInstantiable()) {
-                            $template = unserialize(sprintf('O:%d:"%s":0:{}', \strlen($f['class']), $f['class']));
+                            $template = unserialize(\sprintf('O:%d:"%s":0:{}', \strlen($f['class']), $f['class']), ['allowed_classes' => \true]);
                         }
                         if (null !== $template) {
                             $ellipsis = 0;
@@ -186,7 +205,7 @@ class ExceptionCaster
                             $ellipsis += 1 + \strlen($f['line']);
                         }
                     }
-                    $srcAttr .= sprintf('&separator= &file=%s&line=%d', rawurlencode($f['file']), $f['line']);
+                    $srcAttr .= \sprintf('&separator= &file=%s&line=%d', rawurlencode($f['file']), $f['line']);
                 } else {
                     $srcAttr .= '&separator=:';
                 }
@@ -208,6 +227,17 @@ class ExceptionCaster
         }
         return $a;
     }
+    /**
+     * @return array
+     */
+    public static function castFlattenException(FlattenException $e, array $a, Stub $stub, bool $isNested)
+    {
+        if ($isNested) {
+            $k = \sprintf(Caster::PATTERN_PRIVATE, FlattenException::class, 'traceAsString');
+            $a[$k] = new CutStub($a[$k]);
+        }
+        return $a;
+    }
     private static function filterExceptionArray(string $xClass, array $a, string $xPrefix, int $filter) : array
     {
         if (isset($a[$xPrefix . 'trace'])) {
@@ -226,11 +256,9 @@ class ExceptionCaster
         if (empty($a[$xPrefix . 'previous'])) {
             unset($a[$xPrefix . 'previous']);
         }
-        unset($a[$xPrefix . 'string'], $a[Caster::PREFIX_DYNAMIC . 'xdebug_message'], $a[Caster::PREFIX_DYNAMIC . '__destructorException']);
+        unset($a[$xPrefix . 'string'], $a[Caster::PREFIX_DYNAMIC . 'xdebug_message']);
         if (isset($a[Caster::PREFIX_PROTECTED . 'message']) && str_contains($a[Caster::PREFIX_PROTECTED . 'message'], "@anonymous\x00")) {
-            $a[Caster::PREFIX_PROTECTED . 'message'] = preg_replace_callback('/[a-zA-Z_\\x7f-\\xff][\\\\a-zA-Z0-9_\\x7f-\\xff]*+@anonymous\\x00.*?\\.php(?:0x?|:[0-9]++\\$)?[0-9a-fA-F]++/', function ($m) {
-                return class_exists($m[0], \false) ? ((get_parent_class($m[0]) ?: key(class_implements($m[0]))) ?: 'class') . '@anonymous' : $m[0];
-            }, $a[Caster::PREFIX_PROTECTED . 'message']);
+            $a[Caster::PREFIX_PROTECTED . 'message'] = preg_replace_callback('/[a-zA-Z_\\x7f-\\xff][\\\\a-zA-Z0-9_\\x7f-\\xff]*+@anonymous\\x00.*?\\.php(?:0x?|:[0-9]++\\$)?[0-9a-fA-F]++/', static fn($m) => class_exists($m[0], \false) ? ((get_parent_class($m[0]) ?: key(class_implements($m[0]))) ?: 'class') . '@anonymous' : $m[0], $a[Caster::PREFIX_PROTECTED . 'message']);
         }
         if (isset($a[Caster::PREFIX_PROTECTED . 'file'], $a[Caster::PREFIX_PROTECTED . 'line'])) {
             $a[Caster::PREFIX_PROTECTED . 'file'] = new LinkStub($a[Caster::PREFIX_PROTECTED . 'file'], $a[Caster::PREFIX_PROTECTED . 'line']);
@@ -246,7 +274,7 @@ class ExceptionCaster
     }
     private static function extractSource(string $srcLines, int $line, int $srcContext, string $lang, ?string $file, array $frame) : EnumStub
     {
-        $srcLines = explode("\n", $srcLines);
+        $srcLines = explode("\n", str_replace(["\r\n", "\r"], "\n", $srcLines));
         $src = [];
         for ($i = $line - 1 - $srcContext; $i <= $line - 1 + $srcContext; ++$i) {
             $src[] = ($srcLines[$i] ?? '') . "\n";
@@ -265,7 +293,7 @@ class ExceptionCaster
                     $stub->attr['file'] = $f;
                     $stub->attr['line'] = $caller->getStartLine();
                 }
-            } catch (\ReflectionException $e) {
+            } catch (\ReflectionException) {
                 // ignore fake class/function
             }
             $srcLines = ["\x00~separator=\x00" => $stub];
@@ -277,10 +305,8 @@ class ExceptionCaster
         do {
             $pad = null;
             for ($i = $srcContext << 1; $i >= 0; --$i) {
-                if (isset($src[$i][$ltrim]) && "\r" !== ($c = $src[$i][$ltrim]) && "\n" !== $c) {
-                    if (null === $pad) {
-                        $pad = $c;
-                    }
+                if (isset($src[$i][$ltrim]) && "\n" !== ($c = $src[$i][$ltrim])) {
+                    $pad ??= $c;
                     if (' ' !== $c && "\t" !== $c || $pad !== $c) {
                         break;
                     }
@@ -291,7 +317,7 @@ class ExceptionCaster
         --$ltrim;
         foreach ($src as $i => $c) {
             if ($ltrim) {
-                $c = isset($c[$ltrim]) && "\r" !== $c[$ltrim] ? substr($c, $ltrim) : ltrim($c, " \t");
+                $c = isset($c[$ltrim]) ? substr($c, $ltrim) : ltrim($c, " \t");
             }
             $c = substr($c, 0, -1);
             if ($i !== $srcContext) {
@@ -304,7 +330,7 @@ class ExceptionCaster
                 }
             }
             $c->attr['lang'] = $lang;
-            $srcLines[sprintf("\x00~separator=› &%d\x00", $i + $line - $srcContext)] = $c;
+            $srcLines[\sprintf("\x00~separator=› &%d\x00", $i + $line - $srcContext)] = $c;
         }
         return new EnumStub($srcLines);
     }

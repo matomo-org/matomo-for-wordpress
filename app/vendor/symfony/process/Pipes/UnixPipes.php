@@ -20,21 +20,21 @@ use Symfony\Component\Process\Process;
  */
 class UnixPipes extends \Symfony\Component\Process\Pipes\AbstractPipes
 {
-    private $ttyMode;
-    private $ptyMode;
-    private $haveReadSupport;
-    public function __construct(?bool $ttyMode, bool $ptyMode, $input, bool $haveReadSupport)
+    private ?bool $ttyMode;
+    private bool $ptyMode;
+    private bool $haveReadSupport;
+    public function __construct(?bool $ttyMode, bool $ptyMode, mixed $input, bool $haveReadSupport)
     {
         $this->ttyMode = $ttyMode;
         $this->ptyMode = $ptyMode;
         $this->haveReadSupport = $haveReadSupport;
         parent::__construct($input);
     }
-    public function __sleep() : array
+    public function __serialize() : array
     {
         throw new \BadMethodCallException('Cannot serialize ' . __CLASS__);
     }
-    public function __wakeup()
+    public function __unserialize(array $data) : void
     {
         throw new \BadMethodCallException('Cannot unserialize ' . __CLASS__);
     }
@@ -42,9 +42,6 @@ class UnixPipes extends \Symfony\Component\Process\Pipes\AbstractPipes
     {
         $this->close();
     }
-    /**
-     * {@inheritdoc}
-     */
     public function getDescriptors() : array
     {
         if (!$this->haveReadSupport) {
@@ -55,7 +52,7 @@ class UnixPipes extends \Symfony\Component\Process\Pipes\AbstractPipes
             return [['file', '/dev/tty', 'r'], ['file', '/dev/tty', 'w'], ['file', '/dev/tty', 'w']];
         }
         if ($this->ptyMode && Process::isPtySupported()) {
-            return [['pty'], ['pty'], ['pty']];
+            return [['pty'], ['pty'], ['pipe', 'w']];
         }
         return [
             ['pipe', 'r'],
@@ -64,16 +61,10 @@ class UnixPipes extends \Symfony\Component\Process\Pipes\AbstractPipes
             ['pipe', 'w'],
         ];
     }
-    /**
-     * {@inheritdoc}
-     */
     public function getFiles() : array
     {
         return [];
     }
-    /**
-     * {@inheritdoc}
-     */
     public function readAndWrite(bool $blocking, bool $close = \false) : array
     {
         $this->unblock();
@@ -82,7 +73,7 @@ class UnixPipes extends \Symfony\Component\Process\Pipes\AbstractPipes
         $r = $this->pipes;
         unset($r[0]);
         // let's have a look if something changed in streams
-        set_error_handler([$this, 'handleError']);
+        set_error_handler($this->handleError(...));
         if (($r || $w) && \false === stream_select($r, $w, $e, 0, $blocking ? Process::TIMEOUT_PRECISION * 1000000.0 : 0)) {
             restore_error_handler();
             // if a system call has been interrupted, forget about it, let's try again
@@ -111,16 +102,10 @@ class UnixPipes extends \Symfony\Component\Process\Pipes\AbstractPipes
         }
         return $read;
     }
-    /**
-     * {@inheritdoc}
-     */
     public function haveReadSupport() : bool
     {
         return $this->haveReadSupport;
     }
-    /**
-     * {@inheritdoc}
-     */
     public function areOpen() : bool
     {
         return (bool) $this->pipes;

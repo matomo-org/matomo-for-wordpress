@@ -12,57 +12,147 @@ class Less_Environment
      *
      * - rootpath: rootpath to append to URLs
      *
-     * @var array|null $currentFileInfo;
+     * @var array|null
      */
     public $currentFileInfo;
-    /* Whether we are currently importing multiple copies */
+    /** @var bool Whether we are currently importing multiple copies */
     public $importMultiple = \false;
     /**
      * @var array
      */
     public $frames = [];
-    /**
-     * @var array
-     */
+    /** @var array */
+    public $importantScope = [];
+    /** @var bool */
+    public $inCalc = \false;
+    /** @var bool */
+    public $mathOn = \true;
+    /** @var true[] */
+    private $calcStack = [];
+    /** @var Less_Tree_Media[] */
     public $mediaBlocks = [];
-    /**
-     * @var array
-     */
+    /** @var Less_Tree_Media[] */
     public $mediaPath = [];
-    public static $parensStack = 0;
+    /** @var string[] */
+    public $imports = [];
+    /**
+     * This is the equivalent of `importVisitor.onceFileDetectionMap`
+     * as used by the dynamic `importNode.skip` function.
+     *
+     * @see less-2.5.3.js#ImportVisitor.prototype.onImported
+     * @var array<string,true>
+     */
+    public $importVisitorOnceMap = [];
+    /** @var int */
     public static $tabLevel = 0;
+    /** @var bool */
     public static $lastRule = \false;
-    public static $_outputMap;
+    /** @var array<string,true> */
+    public static $_noSpaceCombinators;
+    /** @var int */
     public static $mixin_stack = 0;
+    /** @var int */
+    public $math = self::MATH_PARENS_DIVISION;
+    /** @var true[] */
+    public $parensStack = [];
+    public const MATH_ALWAYS = 0;
+    public const MATH_PARENS_DIVISION = 1;
+    public const MATH_PARENS = 2;
     /**
      * @var array
      */
     public $functions = [];
     public function Init()
     {
-        self::$parensStack = 0;
         self::$tabLevel = 0;
         self::$lastRule = \false;
         self::$mixin_stack = 0;
-        if (Less_Parser::$options['compress']) {
-            self::$_outputMap = [',' => ',', ': ' => ':', '' => '', ' ' => ' ', ':' => ' :', '+' => '+', '~' => '~', '>' => '>', '|' => '|', '^' => '^', '^^' => '^^'];
-        } else {
-            self::$_outputMap = [',' => ', ', ': ' => ': ', '' => '', ' ' => ' ', ':' => ' :', '+' => ' + ', '~' => ' ~ ', '>' => ' > ', '|' => '|', '^' => ' ^ ', '^^' => ' ^^ '];
-        }
+        self::$_noSpaceCombinators = ['' => \true, ' ' => \true, '|' => \true];
+    }
+    /**
+     * @param string $file
+     * @return void
+     */
+    public function addParsedFile($file)
+    {
+        $this->imports[] = $file;
+    }
+    public function clone()
+    {
+        $new_env = clone $this;
+        // NOTE: Match JavaScript by-ref behaviour for arrays
+        $new_env->imports =& $this->imports;
+        $new_env->importVisitorOnceMap =& $this->importVisitorOnceMap;
+        return $new_env;
+    }
+    /**
+     * @param string $file
+     * @return bool
+     */
+    public function isFileParsed($file)
+    {
+        return \in_array($file, $this->imports);
     }
     public function copyEvalEnv($frames = [])
     {
-        $new_env = new Less_Environment();
+        $new_env = new self();
         $new_env->frames = $frames;
+        $new_env->importantScope = $this->importantScope;
+        $new_env->math = $this->math;
         return $new_env;
     }
-    public static function isMathOn()
+    /**
+     * @return bool
+     * @see less-3.13.1.js#Eval.prototype.isMathOn
+     */
+    public function isMathOn($op = "")
     {
-        return !Less_Parser::$options['strictMath'] || self::$parensStack;
+        if (!$this->mathOn) {
+            return \false;
+        }
+        if ($op === '/' && $this->math !== $this::MATH_ALWAYS && !$this->parensStack) {
+            return \false;
+        }
+        if ($this->math > $this::MATH_PARENS_DIVISION) {
+            return (bool) $this->parensStack;
+        }
+        return \true;
     }
+    /**
+     * @see less-3.13.1.js#Eval.prototype.inParenthesis
+     */
+    public function inParenthesis()
+    {
+        // Optimization: We don't need undefined/null, always have an array
+        $this->parensStack[] = \true;
+    }
+    /**
+     * @see less-3.13.1.js#Eval.prototype.inParenthesis
+     */
+    public function outOfParenthesis()
+    {
+        \array_pop($this->parensStack);
+    }
+    /**
+     * @param string $path
+     * @return bool
+     * @see less-2.5.3.js#Eval.isPathRelative
+     */
     public static function isPathRelative($path)
     {
-        return !\preg_match('/^(?:[a-z-]+:|\\/)/', $path);
+        return !\preg_match('/^(?:[a-z-]+:|\\/|#)/', $path);
+    }
+    public function enterCalc()
+    {
+        $this->calcStack[] = \true;
+        $this->inCalc = \true;
+    }
+    public function exitCalc()
+    {
+        \array_pop($this->calcStack);
+        if (!$this->calcStack) {
+            $this->inCalc = \false;
+        }
     }
     /**
      * Canonicalize a path by resolving references to '/./', '/../'

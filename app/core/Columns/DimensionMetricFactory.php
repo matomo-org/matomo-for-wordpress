@@ -18,10 +18,7 @@ use Piwik\Plugin\ComputedMetric;
  */
 class DimensionMetricFactory
 {
-    /**
-     * @var Dimension
-     */
-    private $dimension = null;
+    private \Piwik\Columns\Dimension $dimension;
     /**
      * Generates a new dimension metric factory.
      * @param Dimension $dimension A dimension instance the created metrics should be based on.

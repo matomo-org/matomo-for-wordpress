@@ -11,7 +11,10 @@
 namespace Matomo\Dependencies\Twig\Extension;
 
 use Matomo\Dependencies\Twig\ExpressionParser;
-use Matomo\Dependencies\Twig\Node\Expression\AbstractExpression;
+use Matomo\Dependencies\Twig\ExpressionParser\ExpressionParserInterface;
+use Matomo\Dependencies\Twig\ExpressionParser\PrecedenceChange;
+use Matomo\Dependencies\Twig\Node\Expression\Binary\AbstractBinary;
+use Matomo\Dependencies\Twig\Node\Expression\Unary\AbstractUnary;
 use Matomo\Dependencies\Twig\NodeVisitor\NodeVisitorInterface;
 use Matomo\Dependencies\Twig\TokenParser\TokenParserInterface;
 use Matomo\Dependencies\Twig\TwigFilter;
@@ -21,6 +24,8 @@ use Matomo\Dependencies\Twig\TwigTest;
  * Interface implemented by extension classes.
  *
  * @author Fabien Potencier <fabien@symfony.com>
+ *
+ * @method array<ExpressionParserInterface> getExpressionParsers()
  */
 interface ExtensionInterface
 {
@@ -57,11 +62,11 @@ interface ExtensionInterface
     /**
      * Returns a list of operators to add to the existing list.
      *
-     * @return array<array> First array of unary operators, second array of binary operators
+     * @return array<array>
      *
      * @psalm-return array{
-     *     array<string, array{precedence: int, class: class-string<AbstractExpression>}>,
-     *     array<string, array{precedence: int, class?: class-string<AbstractExpression>, associativity: ExpressionParser::OPERATOR_*}>
+     *     array<string, array{precedence: int, precedence_change?: PrecedenceChange, class: class-string<AbstractUnary>}>,
+     *     array<string, array{precedence: int, precedence_change?: PrecedenceChange, class?: class-string<AbstractBinary>, associativity: ExpressionParser::OPERATOR_*}>
      * }
      */
     public function getOperators();

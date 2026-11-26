@@ -102,7 +102,7 @@ class SiteUrls
             if (isset($urlsGroupedByHost[$host])) {
                 $paths = $urlsGroupedByHost[$host];
                 foreach ($paths as $path => $idSites) {
-                    if (0 === strpos($urlPath, $path)) {
+                    if (str_starts_with($urlPath, $path)) {
                         return $idSites;
                     }
                 }
@@ -123,7 +123,7 @@ class SiteUrls
         if (isset($urlsGroupedByHost[$urlHost])) {
             $paths = $urlsGroupedByHost[$urlHost];
             foreach ($paths as $path => $idSites) {
-                if (0 === strpos($urlPath, $path)) {
+                if (str_starts_with($urlPath, $path)) {
                     return $path;
                 }
             }
@@ -179,7 +179,7 @@ class SiteUrls
     private function toCanonicalHost($host)
     {
         $host = mb_strtolower($host);
-        if (strpos($host, 'www.') === 0) {
+        if (str_starts_with($host, 'www.')) {
             $host = substr($host, 4);
         }
         return $host;

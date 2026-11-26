@@ -17,7 +17,7 @@ class UpdaterException extends Exception
     /**
      * @var string[]
      */
-    private $updateLogMessages;
+    private array $updateLogMessages;
     public function __construct(Exception $exception, array $updateLogMessages)
     {
         parent::__construct($exception->getMessage(), 0, $exception);

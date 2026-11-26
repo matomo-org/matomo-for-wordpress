@@ -1,3 +1,10 @@
+/*
+ * Matomo - free/libre analytics platform
+ *
+ * @link https://matomo.org
+ * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ */
+
 (function ($) {
     var tagManagerHelper = {};
     tagManagerHelper.editTrigger = function (idContainer, idContainerVersion, idTag, callback) {
@@ -309,12 +316,12 @@
     window.tagManagerHelper = tagManagerHelper;
 
     $(function () {
-      $('body').on('click', 'a.disablePreviewDebug', function (event) {
+      $('body').on('click', '.disablePreviewDebug', function (event) {
         event.preventDefault();
 
         var idContainer = $(event.target).data('idcontainer');
         tagManagerHelper.disablePreviewMode(idContainer);
-      }).on('click', '.preview-debug-url-div button', function (event) {
+      }).on('click', '.previewDebugNotification__debugAction button', function (event) {
         var idContainer = $(event.target).data('idcontainer');
         var debugSiteUrl = $(event.target).data('debug-site-url');
         tagManagerHelper.changeDebugUrl(idContainer, debugSiteUrl);

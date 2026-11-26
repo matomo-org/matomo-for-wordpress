@@ -82,22 +82,13 @@ class ArchiveProcessor
      * @var bool
      */
     public static $isRootArchivingRequest = \true;
-    /**
-     * @var \Piwik\DataAccess\ArchiveWriter
-     */
-    private $archiveWriter;
-    /**
-     * @var \Piwik\DataAccess\LogAggregator
-     */
-    private $logAggregator;
+    private ArchiveWriter $archiveWriter;
+    private LogAggregator $logAggregator;
     /**
      * @var \Piwik\Archive\ArchiveQuery|null
      */
     public $archive = null;
-    /**
-     * @var Parameters
-     */
-    private $params;
+    private Parameters $params;
     /**
      * @var int|false
      */
@@ -113,6 +104,8 @@ class ArchiveProcessor
     protected function getArchive()
     {
         if (empty($this->archive)) {
+            // a day period has no subperiods, so getSubPeriods() returns the period itself; an archive can
+            // also aggregate several sites for the same period (eg for roll-up day archives)
             $subPeriods = $this->params->getSubPeriods();
             $idSites = $this->params->getIdSites();
             $this->archive = \Piwik\Archive::factory($this->params->getSegment(), $subPeriods, $idSites);
@@ -122,6 +115,19 @@ class ArchiveProcessor
             \Piwik\Piwik::postEvent('ArchiveProcessor.getArchive', [$this->archive]);
         }
         return $this->archive;
+    }
+    /**
+     * Queries the blob rows of a single record from the archives of the subperiods this archive aggregates.
+     * Record builders must read through this rather than building their own Archive: a second instance
+     * launches archiving for the subperiods again, which can replace an archive this build already resolved.
+     *
+     * @return iterable<array{idsite: int|string, name: string, date1: string, date2: string, value: string,
+     *     ts_archived: string}>
+     * @internal
+     */
+    public function querySingleBlobRecord(string $recordName) : iterable
+    {
+        return $this->getArchive()->querySingleBlob($recordName);
     }
     public function setNumberOfVisits($visits, $visitsConverted)
     {
@@ -364,8 +370,6 @@ class ArchiveProcessor
         return $result;
     }
     /**
-     * Note: public only for use in closure in PHP 5.3.
-     *
      * @param DataTable $table
      * @return bool
      */
@@ -436,10 +440,10 @@ class ArchiveProcessor
     }
     protected function guessOperationForColumn($column)
     {
-        if (strpos($column, 'max_') === 0) {
+        if (str_starts_with($column, 'max_')) {
             return 'max';
         }
-        if (strpos($column, 'min_') === 0) {
+        if (str_starts_with($column, 'min_')) {
             return 'min';
         }
         return 'sum';
@@ -518,9 +522,6 @@ class ArchiveProcessor
             }
         }
     }
-    /**
-     * Note: public only for use in closure in PHP 5.3.
-     */
     public function renameColumnsAfterAggregation(\Piwik\DataTable $table, $columnsToRenameAfterAggregation = null)
     {
         // Rename columns after aggregation

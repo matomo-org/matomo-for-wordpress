@@ -42,11 +42,11 @@ class Mysqli extends Db
      */
     public function __construct($dbInfo)
     {
-        if (isset($dbInfo['unix_socket']) && substr($dbInfo['unix_socket'], 0, 1) == '/') {
+        if (isset($dbInfo['unix_socket']) && str_starts_with($dbInfo['unix_socket'], '/')) {
             $this->host = null;
             $this->port = null;
             $this->socket = $dbInfo['unix_socket'];
-        } elseif (isset($dbInfo['port']) && substr($dbInfo['port'], 0, 1) == '/') {
+        } elseif (isset($dbInfo['port']) && str_starts_with($dbInfo['port'], '/')) {
             $this->host = null;
             $this->port = null;
             $this->socket = $dbInfo['port'];
@@ -352,6 +352,10 @@ class Mysqli extends Db
             return $queryResult->affected_rows;
         }
         return mysqli_affected_rows($this->connection);
+    }
+    public function isInTransaction() : bool
+    {
+        return $this->activeTransaction !== null;
     }
     /**
      * Start Transaction

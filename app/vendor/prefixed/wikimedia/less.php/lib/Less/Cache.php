@@ -7,14 +7,19 @@ namespace Matomo\Dependencies;
  */
 class Less_Cache
 {
-    // directory less.php can use for storing data
+    /** @var string|false Directory less.php can use for storing data */
     public static $cache_dir = \false;
-    // prefix for the storing data
+    /** @var string Prefix for the storing data */
     public static $prefix = 'lessphp_';
-    // prefix for the storing vars
+    /** @var string Prefix for the storing vars */
     public static $prefix_vars = 'lessphpvars_';
-    // specifies the number of seconds after which data created by less.php will be seen as 'garbage' and potentially cleaned up
+    /**
+     * @var int Specifies the number of seconds after which data created by less.php will be seen
+     *  as 'garbage' and potentially cleaned up
+     */
     public static $gc_lifetime = 604800;
+    /** @var bool */
+    private static $gc_done = \false;
     /**
      * Save and reuse the results of compiled less files.
      * The first call to Get() will generate css and save it.
@@ -46,7 +51,7 @@ class Less_Cache
         if (empty(self::$prefix_vars)) {
             throw new \Exception('prefix_vars not set');
         }
-        self::CheckCacheDir();
+        self::$cache_dir = self::CheckCacheDir();
         $less_files = (array) $less_files;
         // create a file for variables
         if (!empty($modify_vars)) {
@@ -90,7 +95,12 @@ class Less_Cache
         // save the css
         \file_put_contents($output_file, $compiled);
         // clean up
-        self::CleanCache();
+        // Garbage collection can be slow, so run it only on cache misses,
+        // and at most once per process.
+        if (!self::$gc_done) {
+            self::$gc_done = \true;
+            self::CleanCache();
+        }
         return \basename($output_file);
     }
     /**
@@ -113,14 +123,14 @@ class Less_Cache
         // combine files
         foreach ($less_files as $file_path => $uri_or_less) {
             // treat as less markup if there are newline characters
-            if (\strpos($uri_or_less, "\n") !== \false) {
+            if (\str_contains($uri_or_less, "\n")) {
                 $parser->Parse($uri_or_less);
                 continue;
             }
             $parser->ParseFile($file_path, $uri_or_less);
         }
         $compiled = $parser->getCss();
-        $less_files = $parser->allParsedFiles();
+        $less_files = $parser->getParsedFiles();
         return $compiled;
     }
     private static function OutputFile($compiled_name, $parser_options)
@@ -146,44 +156,47 @@ class Less_Cache
     }
     public static function SetCacheDir($dir)
     {
-        self::$cache_dir = $dir;
-        self::CheckCacheDir();
-    }
-    public static function CheckCacheDir()
-    {
-        self::$cache_dir = \str_replace('\\', '/', self::$cache_dir);
-        self::$cache_dir = \rtrim(self::$cache_dir, '/') . '/';
-        if (!\file_exists(self::$cache_dir)) {
-            if (!\mkdir(self::$cache_dir)) {
-                throw new Less_Exception_Parser('Less.php cache directory couldn\'t be created: ' . self::$cache_dir);
-            }
-        } elseif (!\is_dir(self::$cache_dir)) {
-            throw new Less_Exception_Parser('Less.php cache directory doesn\'t exist: ' . self::$cache_dir);
-        } elseif (!\is_writable(self::$cache_dir)) {
-            throw new Less_Exception_Parser('Less.php cache directory isn\'t writable: ' . self::$cache_dir);
-        }
+        self::$cache_dir = self::CheckCacheDir($dir);
     }
     /**
-     * Delete unused less.php files
+     * @deprecated since 5.3.0 Internal for use by Less_Cache and Less_Parser only.
      */
-    public static function CleanCache()
+    public static function CheckCacheDir($dir = null)
     {
-        static $clean = \false;
-        if ($clean || empty(self::$cache_dir)) {
+        $dir ??= self::$cache_dir;
+        $dir = Less_Parser::WinPath($dir);
+        $dir = \rtrim($dir, '/') . '/';
+        if (!\file_exists($dir)) {
+            if (!\mkdir($dir)) {
+                throw new Less_Exception_Parser('Less.php cache directory couldn\'t be created: ' . $dir);
+            }
+        } elseif (!\is_dir($dir)) {
+            throw new Less_Exception_Parser('Less.php cache directory doesn\'t exist: ' . $dir);
+        } elseif (!\is_writable($dir)) {
+            throw new Less_Exception_Parser('Less.php cache directory isn\'t writable: ' . $dir);
+        }
+        return $dir;
+    }
+    /**
+     * @deprecated since 5.3.0 Called automatically. Internal for use by Less_Cache and Less_Parser only.
+     */
+    public static function CleanCache($dir = null)
+    {
+        $dir ??= self::$cache_dir;
+        if (!$dir) {
             return;
         }
-        $clean = \true;
         // only remove files with extensions created by less.php
         // css files removed based on the list files
         $remove_types = ['lesscache' => 1, 'list' => 1, 'less' => 1, 'map' => 1];
-        $files = \scandir(self::$cache_dir);
+        $files = \scandir($dir);
         if (!$files) {
             return;
         }
         $check_time = \time() - self::$gc_lifetime;
         foreach ($files as $file) {
             // don't delete if the file wasn't created with less.php
-            if (\strpos($file, self::$prefix) !== 0) {
+            if (!\str_starts_with($file, self::$prefix)) {
                 continue;
             }
             $parts = \explode('.', $file);
@@ -191,29 +204,29 @@ class Less_Cache
             if (!isset($remove_types[$type])) {
                 continue;
             }
-            $full_path = self::$cache_dir . $file;
-            $mtime = \filemtime($full_path);
+            $fullPath = $dir . $file;
+            $mtime = \filemtime($fullPath);
             // don't delete if it's a relatively new file
             if ($mtime > $check_time) {
                 continue;
             }
             // delete the list file and associated css file
             if ($type === 'list') {
-                self::ListFiles($full_path, $list, $css_file_name);
+                self::ListFiles($fullPath, $list, $css_file_name);
                 if ($css_file_name) {
-                    $css_file = self::$cache_dir . $css_file_name;
+                    $css_file = $dir . $css_file_name;
                     if (\file_exists($css_file)) {
                         \unlink($css_file);
                     }
                 }
             }
-            \unlink($full_path);
+            \unlink($fullPath);
         }
     }
     /**
      * Get the list of less files and generated css file from a list file
      */
-    static function ListFiles($list_file, &$list, &$css_file_name)
+    public static function ListFiles($list_file, &$list, &$css_file_name)
     {
         $list = \explode("\n", \file_get_contents($list_file));
         // pop the cached name that should match $compiled_name

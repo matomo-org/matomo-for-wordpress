@@ -14,10 +14,7 @@ use Piwik\Segment;
 use Piwik\Segment\SegmentExpression;
 class SegmentFormatter
 {
-    /**
-     * @var Segment\SegmentsList
-     */
-    private $segmentList;
+    private Segment\SegmentsList $segmentList;
     private $matchesMetric = array(SegmentExpression::MATCH_EQUAL => 'General_OperationEquals', SegmentExpression::MATCH_NOT_EQUAL => 'General_OperationNotEquals', SegmentExpression::MATCH_LESS_OR_EQUAL => 'General_OperationAtMost', SegmentExpression::MATCH_GREATER_OR_EQUAL => 'General_OperationAtLeast', SegmentExpression::MATCH_LESS => 'General_OperationLessThan', SegmentExpression::MATCH_GREATER => 'General_OperationGreaterThan');
     private $matchesDimension = array(SegmentExpression::MATCH_EQUAL => 'General_OperationIs', SegmentExpression::MATCH_NOT_EQUAL => 'General_OperationIsNot', SegmentExpression::MATCH_CONTAINS => 'General_OperationContains', SegmentExpression::MATCH_DOES_NOT_CONTAIN => 'General_OperationDoesNotContain', SegmentExpression::MATCH_STARTS_WITH => 'General_OperationStartsWith', SegmentExpression::MATCH_ENDS_WITH => 'General_OperationEndsWith');
     private $operators = array(SegmentExpression::BOOL_OPERATOR_AND => 'General_And', SegmentExpression::BOOL_OPERATOR_OR => 'General_Or', SegmentExpression::BOOL_OPERATOR_END => '');

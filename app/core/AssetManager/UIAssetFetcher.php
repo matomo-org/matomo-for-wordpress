@@ -85,7 +85,7 @@ abstract class UIAssetFetcher
                 continue;
             }
             $found = \false;
-            if (strpos($fileAbsolute, $pluginBaseDir) === 0) {
+            if (str_starts_with($fileAbsolute, $pluginBaseDir)) {
                 // we iterate over all custom plugin directories only for plugin files, not libs files (not needed there)
                 foreach ($pluginWebDirectories as $pluginDirectory => $relative) {
                     $fileTest = str_replace($pluginBaseDir, $pluginDirectory, $fileAbsolute);

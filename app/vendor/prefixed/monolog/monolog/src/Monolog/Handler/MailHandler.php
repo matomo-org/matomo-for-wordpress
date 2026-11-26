@@ -1,5 +1,6 @@
 <?php
 
+declare (strict_types=1);
 /*
  * This file is part of the Monolog package.
  *
@@ -10,6 +11,9 @@
  */
 namespace Matomo\Dependencies\Monolog\Handler;
 
+use Matomo\Dependencies\Monolog\Formatter\FormatterInterface;
+use Matomo\Dependencies\Monolog\Formatter\HtmlFormatter;
+use Matomo\Dependencies\Monolog\LogRecord;
 /**
  * Base class for all mail handlers
  *
@@ -18,18 +22,19 @@ namespace Matomo\Dependencies\Monolog\Handler;
 abstract class MailHandler extends AbstractProcessingHandler
 {
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
-    public function handleBatch(array $records)
+    public function handleBatch(array $records) : void
     {
-        $messages = array();
+        $messages = [];
         foreach ($records as $record) {
-            if ($record['level'] < $this->level) {
+            if ($record->level->isLowerThan($this->level)) {
                 continue;
             }
-            $messages[] = $this->processRecord($record);
+            $message = $this->processRecord($record);
+            $messages[] = $message;
         }
-        if (!empty($messages)) {
+        if (\count($messages) > 0) {
             $this->send((string) $this->getFormatter()->formatBatch($messages), $messages);
         }
     }
@@ -38,23 +43,39 @@ abstract class MailHandler extends AbstractProcessingHandler
      *
      * @param string $content formatted email body to be sent
      * @param array  $records the array of log records that formed this content
+     *
+     * @phpstan-param non-empty-array<LogRecord> $records
      */
-    protected abstract function send($content, array $records);
+    protected abstract function send(string $content, array $records) : void;
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
-    protected function write(array $record)
+    protected function write(LogRecord $record) : void
     {
-        $this->send((string) $record['formatted'], array($record));
+        $this->send((string) $record->formatted, [$record]);
     }
-    protected function getHighestRecord(array $records)
+    /**
+     * @phpstan-param non-empty-array<LogRecord> $records
+     */
+    protected function getHighestRecord(array $records) : LogRecord
     {
         $highestRecord = null;
         foreach ($records as $record) {
-            if ($highestRecord === null || $highestRecord['level'] < $record['level']) {
+            if ($highestRecord === null || $record->level->isHigherThan($highestRecord->level)) {
                 $highestRecord = $record;
             }
         }
         return $highestRecord;
+    }
+    protected function isHtmlBody(string $body) : bool
+    {
+        return ($body[0] ?? null) === '<';
+    }
+    /**
+     * Gets the default formatter.
+     */
+    protected function getDefaultFormatter() : FormatterInterface
+    {
+        return new HtmlFormatter();
     }
 }

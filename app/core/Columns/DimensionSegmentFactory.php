@@ -17,10 +17,7 @@ use Piwik\Plugin\Segment;
  */
 class DimensionSegmentFactory
 {
-    /**
-     * @var Dimension
-     */
-    private $dimension = null;
+    private \Piwik\Columns\Dimension $dimension;
     /**
      * Generates a new dimension segment factory.
      * @param Dimension $dimension A dimension instance the created segments should be based on.

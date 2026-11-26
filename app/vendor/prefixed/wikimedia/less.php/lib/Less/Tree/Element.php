@@ -5,7 +5,7 @@ namespace Matomo\Dependencies;
 /**
  * @private
  */
-class Less_Tree_Element extends Less_Tree
+class Less_Tree_Element extends Less_Tree implements Less_Tree_HasValueProperty
 {
     /** @var string */
     public $combinator;
@@ -13,10 +13,10 @@ class Less_Tree_Element extends Less_Tree
     public $combinatorIsEmptyOrWhitespace;
     /** @var string|Less_Tree */
     public $value;
+    /** @var int|null */
     public $index;
+    /** @var array|null */
     public $currentFileInfo;
-    public $type = 'Element';
-    public $value_is_object = \false;
     /**
      * @param null|string $combinator
      * @param string|Less_Tree $value
@@ -26,7 +26,6 @@ class Less_Tree_Element extends Less_Tree
     public function __construct($combinator, $value, $index = null, $currentFileInfo = null)
     {
         $this->value = $value;
-        $this->value_is_object = \is_object($value);
         // see less-2.5.3.js#Combinator
         $this->combinator = $combinator ?? '';
         $this->combinatorIsEmptyOrWhitespace = $combinator === null || \trim($combinator) === '';
@@ -35,14 +34,13 @@ class Less_Tree_Element extends Less_Tree
     }
     public function accept($visitor)
     {
-        if ($this->value_is_object) {
-            // object or string
+        if ($this->value instanceof Less_Tree) {
             $this->value = $visitor->visitObj($this->value);
         }
     }
     public function compile($env)
     {
-        return new Less_Tree_Element($this->combinator, $this->value_is_object ? $this->value->compile($env) : $this->value, $this->index, $this->currentFileInfo);
+        return new self($this->combinator, $this->value instanceof Less_Tree ? $this->value->compile($env) : $this->value, $this->index, $this->currentFileInfo);
     }
     /**
      * @see Less_Tree::genCSS
@@ -53,14 +51,15 @@ class Less_Tree_Element extends Less_Tree
     }
     public function toCSS()
     {
-        if ($this->value_is_object) {
+        if ($this->value instanceof Less_Tree) {
             $value = $this->value->toCSS();
         } else {
             $value = $this->value;
         }
-        if ($value === '' && $this->combinator && $this->combinator === '&') {
-            return '';
+        $spaceOrEmpty = ' ';
+        if (Less_Parser::$options['compress'] || isset(Less_Environment::$_noSpaceCombinators[$this->combinator]) && Less_Environment::$_noSpaceCombinators[$this->combinator]) {
+            $spaceOrEmpty = '';
         }
-        return Less_Environment::$_outputMap[$this->combinator] . $value;
+        return $spaceOrEmpty . $this->combinator . $spaceOrEmpty . $value;
     }
 }

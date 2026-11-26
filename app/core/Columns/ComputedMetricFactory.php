@@ -17,10 +17,7 @@ use Piwik\Plugin\ComputedMetric;
  */
 class ComputedMetricFactory
 {
-    /**
-     * @var MetricsList
-     */
-    private $metricsList = null;
+    private \Piwik\Columns\MetricsList $metricsList;
     /**
      * Generates a new report metric factory.
      * @param MetricsList $list A report list instance

@@ -45,7 +45,7 @@ class CliMulti
     /**
      * @var Process[]|ProcessSymfony[]
      */
-    private $processes = [];
+    private array $processes = [];
     /**
      * If set it will issue at most concurrentProcessesLimit requests
      * @var int|null
@@ -54,7 +54,7 @@ class CliMulti
     /**
      * @var OutputInterface[]
      */
-    private $outputs = [];
+    private array $outputs = [];
     private $acceptInvalidSSLCertificate = \false;
     /**
      * @var bool
@@ -80,10 +80,7 @@ class CliMulti
      * @var LoggerInterface
      */
     private $logger;
-    /**
-     * @var int|null
-     */
-    private $signal = null;
+    private ?int $signal = null;
     public function __construct(?LoggerInterface $logger = null)
     {
         $this->supportsAsync = $this->supportsAsync();
@@ -226,7 +223,7 @@ class CliMulti
             // Remove output that can be ignored in climulti . works around some WordPress setups where the hash bang may
             // be printed
             $search = '#!/usr/bin/env php';
-            if (!empty($content) && is_string($content) && mb_substr(trim($content), 0, strlen($search)) === $search) {
+            if (!empty($content) && is_string($content) && str_starts_with(trim($content), $search)) {
                 $content = trim(mb_substr(trim($content), strlen($search)));
             }
             $response[] = $content;
@@ -378,7 +375,7 @@ class CliMulti
     public static function cleanupNotRemovedFiles()
     {
         $timeOneWeekAgo = strtotime('-1 week');
-        $files = _glob(self::getTmpPath() . '/*');
+        $files = glob(self::getTmpPath() . '/*');
         if (empty($files)) {
             return;
         }
@@ -449,7 +446,7 @@ class CliMulti
         $requestBody = null;
         if ($this->runAsSuperUser) {
             $tokenAuth = self::getSuperUserTokenAuth();
-            if (strpos($url, '?') === \false) {
+            if (!str_contains($url, '?')) {
                 $url .= '?';
             } else {
                 $url .= '&';
@@ -475,7 +472,7 @@ class CliMulti
     private function appendTestmodeParamToUrlIfNeeded($url)
     {
         $isTestMode = defined('PIWIK_TEST_MODE');
-        if ($isTestMode && \false === strpos($url, '?')) {
+        if ($isTestMode && !str_contains($url, '?')) {
             $url .= "?testmode=1";
         } elseif ($isTestMode) {
             $url .= "&testmode=1";

@@ -27,10 +27,7 @@ class DisallowRobotsIndexingListener implements EventSubscriberInterface
             $event->getResponse()->headers->set(static::HEADER_NAME, 'noindex');
         }
     }
-    /**
-     * {@inheritdoc}
-     */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents() : array
     {
         return [KernelEvents::RESPONSE => ['onResponse', -255]];
     }

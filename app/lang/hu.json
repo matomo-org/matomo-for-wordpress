@@ -153,7 +153,6 @@
         "ExceptionFileIntegrity": "Integritás ellenőrzés sikertelen: %s",
         "ExceptionFileToDelete": "Törölni kívánt fájl: %s",
         "ExceptionFilesizeMismatch": "Fájlméret nem egyezik %1$s (várt hossz: %2$s, ehelyett a talált: %3$s)",
-        "ExceptionIncompatibleClientServerVersions": "A %1$s kliens verzió: %2$s, mely inkompatibilis a következő szerver verzióval: %3$s.",
         "ExceptionInvalidArchiveTimeToLive": "A mai archívum élettartamának nullánál nagyobbnak kell lennie másodpercekben mérve.",
         "ExceptionInvalidDateFormat": "A dátumformátumnak a következőnek kell lennie: %1$s vagy bármely, a %2$s funkció által támogatott kulcsszó (további információ: %3$s)",
         "ExceptionInvalidDateRange": "A '%1$s' időintervallum nem megfelelő. Kérjük, próbáld meg helyette a következőket: %2$s.",
@@ -495,6 +494,9 @@
         "PickARow": "Válasszon egy sort az összehasonlításhoz",
         "PickAnotherRow": "Válasszon egy másik sort az összehasonlításhoz"
     },
+    "AIProviders": {
+        "DefaultBadge": "Alapértelmezett"
+    },
     "API": {
         "KeepTokenSecret": "Ez a token_auth nevű kód pontosan annyira érzékeny adat mint a felhasználói neved és jelszavad, ezért %1$s ne oszd meg mindenkivel%2$s!",
         "LoadedAPIs": "A(z) %s API sikeresen betöltődött.",
@@ -789,7 +791,6 @@
         "GoalName": "Cél elnevezése",
         "GoalX": "%s nevű cél",
         "Goals": "Célok",
-        "GoalsOverview": "Célok áttekintése",
         "IsExactly": "megegyezik ezzel: %s",
         "Manually": "nem következik be automatikusan, csak ott",
         "ManuallyTriggeredUsingJavascriptFunction": "Nem automatikusan történő célteljesülést a JavaScript API trackGoal() funkciójával lehet létrehozni",
@@ -798,6 +799,8 @@
         "Optional": "(opcionális)",
         "PageTitles": "Oldalak címe",
         "Pattern": "Egyezési minta",
+        "RecommendationCountOnePage": "1 oldal",
+        "RecommendationCountPages": "%s oldal",
         "ReturningVisitorsConversionRateIs": "A visszatérő látogatók konverziós aránya %s",
         "URL": "URL",
         "UpdateGoal": "Cél frissítése",
@@ -848,7 +851,6 @@
         "SystemCheckFileIntegrity": "Fájlitegritás",
         "SystemCheckFunctions": "Szükséges funkciók",
         "SystemCheckGDHelp": "A szikravonalak (mini grafikonok) nem fognak működni.",
-        "SystemCheckGlobHelp": "Ez a beépített funkció le van tiltva a szervereden. Matomo megpróbálja emulálni ezt a funkciót, de további biztonsági korlátozások akadályozhatják ezt. A Matomo működésére kihatással lehet mindez.",
         "SystemCheckGzcompressHelp": "Engedélyezned kell a zlib kiterjesztést és a gzcompress funkciót.",
         "SystemCheckGzuncompressHelp": "Engedélyezned kell a zlib kiterjesztést és a gzuncompress funkciót.",
         "SystemCheckMailHelp": "A Matomo fejlesztőknek szóló visszajelzés és az elveszett jelszó pótlása céljából generált e-mail üzenetek nem lesznek elküldve a mail() nélkül.",
@@ -1986,6 +1988,8 @@
     },
     "Marketplace": {
         "ActivateLicenseKey": "Bekapcsol",
+        "CategoryDevelopment": "Fejlesztés",
+        "CategorySecurity": "Biztonság",
         "PluginKeywords": "Kulcsszavak",
         "SubscriptionType": "Típus"
     },
@@ -1996,8 +2000,7 @@
     },
     "MultiSites": {
         "AllWebsitesDashboardTitle": "Összes weboldal",
-        "Evolution": "Trendek",
-        "TotalPageviews": "Összes oldalnézet"
+        "Evolution": "Trendek"
     },
     "Overlay": {
         "Location": "Hely"
@@ -2048,13 +2051,6 @@
         "WidgetGlobalVisitors": "Globális látogatói beállítások",
         "WidgetGlobalVisitorsDocumentation": "Ez a jelentés megmutatja, az általános beállításokat, melyet a látogatók használnak. A beállítás egy kombináció, amely tartalmazza a látogató operációs rendszerét, böngészőjének típusát és a képernyőfelbontását.",
         "WidgetResolutions": "Képernyőfelbontások"
-    },
-    "SEO": {
-        "Bing_IndexedPages": "Bing által indexelt oldalak",
-        "DomainAge": "Domain életkor",
-        "Rank": "Rangsor",
-        "SEORankingsFor": "%s oldalhoz tartozó keresőoptimalizálási adatok",
-        "SeoRankings": "Keresőoptimalizálási rangsor"
     },
     "ScheduledReports": {
         "AggregateReportsFormat": "Kijelző opciók",

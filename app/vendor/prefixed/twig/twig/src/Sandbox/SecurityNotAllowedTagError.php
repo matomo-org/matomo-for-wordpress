@@ -17,7 +17,7 @@ namespace Matomo\Dependencies\Twig\Sandbox;
  */
 final class SecurityNotAllowedTagError extends SecurityError
 {
-    private $tagName;
+    private string $tagName;
     public function __construct(string $message, string $tagName)
     {
         parent::__construct($message);

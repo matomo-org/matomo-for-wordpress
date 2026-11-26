@@ -21,14 +21,8 @@ use Piwik\Piwik;
  */
 class API extends \Piwik\Plugin\API
 {
-    /**
-     * @var Dashboard
-     */
-    private $dashboard;
-    /**
-     * @var Model
-     */
-    private $model;
+    private \Piwik\Plugins\Dashboard\Dashboard $dashboard;
+    private \Piwik\Plugins\Dashboard\Model $model;
     public function __construct(\Piwik\Plugins\Dashboard\Dashboard $dashboard, \Piwik\Plugins\Dashboard\Model $model)
     {
         $this->dashboard = $dashboard;
@@ -158,6 +152,11 @@ class API extends \Piwik\Plugin\API
         return $dashboards;
     }
     /**
+     * Unlike the layout the controller serves, this is deliberately not filtered against the widgets
+     * available to the user: the method runs inside the building of the widget list itself, reached
+     * through {@see Dashboard::addWidgetConfigs()}, so consulting that list here would recurse. It
+     * reports widget names only, never renders one.
+     *
      * @param DashboardRecord $dashboard
      * @return list<DashboardWidget>
      */

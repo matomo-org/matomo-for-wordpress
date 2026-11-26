@@ -38,7 +38,7 @@ class Validate extends \Piwik\Plugins\LanguagesManager\Commands\TranslationBase
             $output->writeln("");
             // fetch base or specific plugin
             $this->fetchTranslations($plugin);
-            $files = _glob(\Piwik\Plugins\LanguagesManager\Commands\FetchTranslations::getDownloadPath() . \DIRECTORY_SEPARATOR . '*.json');
+            $files = glob(\Piwik\Plugins\LanguagesManager\Commands\FetchTranslations::getDownloadPath() . \DIRECTORY_SEPARATOR . '*.json') ?: [];
             if (count($files) == 0) {
                 $output->writeln("No translation updates available! Skipped.");
                 continue;

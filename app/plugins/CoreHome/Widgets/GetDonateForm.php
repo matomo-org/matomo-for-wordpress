@@ -15,10 +15,7 @@ use Piwik\Widget\WidgetConfig;
 use Piwik\Translation\Translator;
 class GetDonateForm extends Widget
 {
-    /**
-     * @var Translator
-     */
-    private $translator;
+    private Translator $translator;
     public function __construct(Translator $translator)
     {
         $this->translator = $translator;

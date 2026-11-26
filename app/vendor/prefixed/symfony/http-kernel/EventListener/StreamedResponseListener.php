@@ -14,6 +14,7 @@ use Matomo\Dependencies\Symfony\Component\EventDispatcher\EventSubscriberInterfa
 use Matomo\Dependencies\Symfony\Component\HttpFoundation\StreamedResponse;
 use Matomo\Dependencies\Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Matomo\Dependencies\Symfony\Component\HttpKernel\KernelEvents;
+trigger_deprecation('symfony/http-kernel', '6.1', 'The "%s" class is deprecated.', StreamedResponseListener::class);
 /**
  * StreamedResponseListener is responsible for sending the Response
  * to the client.
@@ -21,13 +22,15 @@ use Matomo\Dependencies\Symfony\Component\HttpKernel\KernelEvents;
  * @author Fabien Potencier <fabien@symfony.com>
  *
  * @final
+ *
+ * @deprecated since Symfony 6.1
  */
 class StreamedResponseListener implements EventSubscriberInterface
 {
     /**
      * Filters the Response.
      */
-    public function onKernelResponse(ResponseEvent $event)
+    public function onKernelResponse(ResponseEvent $event) : void
     {
         if (!$event->isMainRequest()) {
             return;

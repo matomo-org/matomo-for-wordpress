@@ -107,7 +107,7 @@ class TagsDao extends \Piwik\Plugins\TagManager\Dao\BaseDao implements \Piwik\Pl
         $bind = [self::STATUS_DELETED, $idSite, $idContainerVersion, $tagType];
         $table = $this->tablePrefixed;
         $tags = Db::fetchAll("SELECT idtag FROM {$table} WHERE status != ? AND idsite = ? and idcontainerversion = ? and type = ? ORDER BY priority, created_date ASC", $bind);
-        return is_array($tags) && count($tags) ? array_column($tags, 'idtag') : [];
+        return count($tags) ? array_column($tags, 'idtag') : [];
     }
     /**
      * @param $idSite
@@ -193,7 +193,7 @@ class TagsDao extends \Piwik\Plugins\TagManager\Dao\BaseDao implements \Piwik\Pl
         foreach ($tags as $index => $tag) {
             $tags[$index] = $this->enrichTag($tag);
         }
-        usort($tags, function ($tagA, $tagB) use($tags) {
+        usort($tags, function ($tagA, $tagB) {
             return strcasecmp($tagA['priority'], $tagB['priority']);
         });
         return $tags;

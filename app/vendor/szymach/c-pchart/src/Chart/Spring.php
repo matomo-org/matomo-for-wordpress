@@ -3,19 +3,6 @@
 namespace CpChart\Chart;
 
 use CpChart\Image;
-/**
- *  Spring - class to draw spring graphs
- *
- *  Version     : 2.1.4
- *  Made by     : Jean-Damien POGOLOTTI
- *  Last Update : 19/01/2014
- *
- *  This file can be distributed under the license you can find at :
- *
- *  http://www.pchart.net/license
- *
- *  You can find the whole class documentation on the pChart web site.
- */
 class Spring
 {
     /**
@@ -59,7 +46,7 @@ class Spring
      */
     public $Y2;
     /**
-     * @var boolean
+     * @var bool
      */
     public $AutoComputeFreeZone = \false;
     /**
@@ -77,6 +64,7 @@ class Spring
     public function __construct()
     {
         /* Set nodes defaults */
+        // @FIXME instantiate as an array
         $this->Default["R"] = 255;
         $this->Default["G"] = 255;
         $this->Default["B"] = 255;
@@ -99,6 +87,7 @@ class Spring
         $this->Default["LinkG"] = 0;
         $this->Default["LinkB"] = 0;
         $this->Default["LinkAlpha"] = 0;
+        // @FIXME instantiate as an array
         $this->Labels["Type"] = LABEL_CLASSIC;
         $this->Labels["R"] = 0;
         $this->Labels["G"] = 0;
@@ -318,7 +307,7 @@ class Spring
     }
     /**
      * Set color attribute for a list of nodes
-     * @param array|string $Nodes
+     * @param array|string|number $Nodes
      * @param array $Settings
      */
     public function setNodesColor($Nodes, array $Settings = [])
@@ -401,7 +390,7 @@ class Spring
      * Check if a connection exists and create it if required
      * @param string|int $SourceID
      * @param string|int $TargetID
-     * @return boolean|null
+     * @return bool|null
      */
     public function checkConnection($SourceID, $TargetID)
     {
@@ -970,7 +959,7 @@ class Spring
      * @param int $Y3
      * @param int $X4
      * @param int $Y4
-     * @return boolean
+     * @return bool
      */
     public function intersect($X1, $Y1, $X2, $Y2, $X3, $Y3, $X4, $Y4)
     {

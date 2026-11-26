@@ -19,9 +19,9 @@ use Matomo\Dependencies\Twig\Compiler;
  */
 class ParentExpression extends AbstractExpression
 {
-    public function __construct(string $name, int $lineno, ?string $tag = null)
+    public function __construct(string $name, int $lineno)
     {
-        parent::__construct([], ['output' => \false, 'name' => $name], $lineno, $tag);
+        parent::__construct([], ['output' => \false, 'name' => $name], $lineno);
     }
     public function compile(Compiler $compiler) : void
     {

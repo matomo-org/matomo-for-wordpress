@@ -28,7 +28,10 @@ class TrackingTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$error_log_before = ini_get( 'error_log' );
 		ini_set( 'error_log', 'syslog' );
 		try {
-			self::assert_not_tracking_response( $tracker->doTrackPageView( 'page title' ) );
+			// Matomo 6 returns the same GIF for rejected requests; verify rejection
+			// through the logged-request count and the unchanged database assertion below.
+			self::assert_tracking_response( $tracker->doTrackPageView( 'page title' ) );
+			$this->assertSame( 0, $tracker->get_last_logged_requests() );
 		} finally {
 			ini_set( 'error_log', $error_log_before );
 		}
@@ -47,7 +50,10 @@ class TrackingTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$error_log_before = ini_get( 'error_log' );
 		ini_set( 'error_log', 'syslog' );
 		try {
-			self::assert_not_tracking_response( $tracker->doTrackPageView( 'page title' ) );
+			// Matomo 6 returns the same GIF for rejected requests; verify rejection
+			// through the logged-request count and the unchanged database assertion below.
+			self::assert_tracking_response( $tracker->doTrackPageView( 'page title' ) );
+			$this->assertSame( 0, $tracker->get_last_logged_requests() );
 		} finally {
 			ini_set( 'error_log', $error_log_before );
 		}
@@ -67,7 +73,10 @@ class TrackingTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$error_log_before = ini_get( 'error_log' );
 		ini_set( 'error_log', 'syslog' );
 		try {
-			self::assert_not_tracking_response( $tracker->doTrackPageView( 'page title' ) );
+			// Matomo 6 returns the same GIF for rejected requests; verify rejection
+			// through the logged-request count and the unchanged database assertion below.
+			self::assert_tracking_response( $tracker->doTrackPageView( 'page title' ) );
+			$this->assertSame( 0, $tracker->get_last_logged_requests() );
 		} finally {
 			ini_set( 'error_log', $error_log_before );
 		}

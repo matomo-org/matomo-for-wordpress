@@ -24,10 +24,7 @@ use Piwik\Url;
 class CronArchivingLastRunCheck implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnostic
 {
     public const SECONDS_IN_DAY = 86400;
-    /**
-     * @var Translator
-     */
-    private $translator;
+    private Translator $translator;
     public function __construct(Translator $translator)
     {
         $this->translator = $translator;

@@ -1,5 +1,6 @@
 <?php
 
+declare (strict_types=1);
 /*
  * This file is part of the Monolog package.
  *
@@ -10,6 +11,7 @@
  */
 namespace Matomo\Dependencies\Monolog\Processor;
 
+use Matomo\Dependencies\Monolog\LogRecord;
 /**
  * An optional interface to allow labelling Monolog processors.
  *
@@ -18,7 +20,7 @@ namespace Matomo\Dependencies\Monolog\Processor;
 interface ProcessorInterface
 {
     /**
-     * @return array The processed records
+     * @return LogRecord The processed record
      */
-    public function __invoke(array $records);
+    public function __invoke(LogRecord $record);
 }

@@ -336,17 +336,18 @@ final class Iconv
             }
         }
         $pos = isset($needle[0]) ? strrpos($haystack, $needle) : \false;
-        return \false === $pos ? \false : self::iconv_strlen($pos ? substr($haystack, 0, $pos) : $haystack, 'utf-8');
+        return \false === $pos ? \false : self::iconv_strlen(substr($haystack, 0, $pos), 'utf-8');
     }
     public static function iconv_substr($s, $start, $length = 2147483647, $encoding = null)
     {
         if (null === $encoding) {
             $encoding = self::$internalEncoding;
         }
-        if (0 !== stripos($encoding, 'utf-8')) {
-            $encoding = null;
-        } elseif (\false === ($s = self::iconv($encoding, 'utf-8', $s))) {
+        if (\false === ($s = self::iconv($encoding, 'utf-8', $s))) {
             return \false;
+        }
+        if (0 === stripos($encoding, 'utf-8')) {
+            $encoding = null;
         }
         $s = (string) $s;
         $slen = self::iconv_strlen($s, 'utf-8');
@@ -470,15 +471,6 @@ final class Iconv
             } elseif ($translit) {
                 if (isset(self::$translitMap[$uchr])) {
                     $uchr = self::$translitMap[$uchr];
-                } elseif ($uchr >= "À") {
-                    $uchr = \Normalizer::normalize($uchr, \Normalizer::NFD);
-                    if ($uchr[0] < "\x80") {
-                        $uchr = $uchr[0];
-                    } elseif ($ignore) {
-                        continue;
-                    } else {
-                        return \false;
-                    }
                 } elseif ($ignore) {
                     continue;
                 } else {
@@ -509,7 +501,7 @@ final class Iconv
     }
     private static function getData($file)
     {
-        if (file_exists($file = __DIR__ . '/Resources/charset/' . $file . '.php')) {
+        if (preg_match('/^[a-z0-9._-]++$/D', $file) && file_exists($file = __DIR__ . '/Resources/charset/' . $file . '.php')) {
             return require $file;
         }
         return \false;

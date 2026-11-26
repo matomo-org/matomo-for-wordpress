@@ -12,25 +12,34 @@
 namespace Matomo\Dependencies\Twig\Node\Expression;
 
 use Matomo\Dependencies\Twig\Compiler;
+use Matomo\Dependencies\Twig\Node\CoercesChildrenToStringInterface;
 use Matomo\Dependencies\Twig\Node\Node;
 /**
  * Represents a block call node.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class BlockReferenceExpression extends AbstractExpression
+class BlockReferenceExpression extends AbstractExpression implements SupportDefinedTestInterface, CoercesChildrenToStringInterface
 {
-    public function __construct(Node $name, ?Node $template, int $lineno, ?string $tag = null)
+    use SupportDefinedTestDeprecationTrait;
+    use SupportDefinedTestTrait;
+    /**
+     * @param AbstractExpression $name
+     */
+    public function __construct(Node $name, ?Node $template, int $lineno)
     {
+        if (!$name instanceof AbstractExpression) {
+            trigger_deprecation('twig/twig', '3.15', 'Not passing a "%s" instance to the "node" argument of "%s" is deprecated ("%s" given).', AbstractExpression::class, static::class, $name::class);
+        }
         $nodes = ['name' => $name];
         if (null !== $template) {
             $nodes['template'] = $template;
         }
-        parent::__construct($nodes, ['is_defined_test' => \false, 'output' => \false], $lineno, $tag);
+        parent::__construct($nodes, ['output' => \false], $lineno);
     }
     public function compile(Compiler $compiler) : void
     {
-        if ($this->getAttribute('is_defined_test')) {
+        if ($this->definedTest) {
             $this->compileTemplateCall($compiler, 'hasBlock');
         } else {
             if ($this->getAttribute('output')) {
@@ -42,12 +51,17 @@ class BlockReferenceExpression extends AbstractExpression
             }
         }
     }
+    public function getStringCoercedChildNames() : array
+    {
+        // the template expression is resolved through the loader, which coerces it to a string
+        return $this->hasNode('template') ? ['template'] : [];
+    }
     private function compileTemplateCall(Compiler $compiler, string $method) : Compiler
     {
         if (!$this->hasNode('template')) {
             $compiler->write('$this');
         } else {
-            $compiler->write('$this->loadTemplate(')->subcompile($this->getNode('template'))->raw(', ')->repr($this->getTemplateName())->raw(', ')->repr($this->getTemplateLine())->raw(')');
+            $compiler->write('$this->load(')->subcompile($this->getNode('template'))->raw(', ')->repr($this->getTemplateLine())->raw(')');
         }
         $compiler->raw(\sprintf('->unwrap()->%s', $method));
         return $this->compileBlockArguments($compiler);

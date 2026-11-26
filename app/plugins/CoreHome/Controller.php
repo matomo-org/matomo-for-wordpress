@@ -14,7 +14,7 @@ use Piwik\Category\CategoryList;
 use Piwik\Common;
 use Piwik\Config;
 use Piwik\Container\StaticContainer;
-use Piwik\DataTable\Renderer\Json;
+use Piwik\Http\JsonResponse;
 use Piwik\Date;
 use Piwik\FrontController;
 use Piwik\Log\LoggerInterface;
@@ -38,14 +38,8 @@ use Piwik\ViewDataTable\Manager as ViewDataTableManager;
 use Piwik\Widget\WidgetConfig;
 class Controller extends \Piwik\Plugin\Controller
 {
-    /**
-     * @var Translator
-     */
-    private $translator;
-    /**
-     * @var FeatureFlagManager
-     */
-    private $featureFlagManager;
+    private Translator $translator;
+    private FeatureFlagManager $featureFlagManager;
     public function __construct(Translator $translator)
     {
         $this->translator = $translator;
@@ -75,6 +69,11 @@ class Controller extends \Piwik\Plugin\Controller
         $view = new View('@CoreHome/widgetContainer');
         $view->isWidgetized = (bool) Common::getRequestVar('widget', 0, 'int');
         $view->containerId = Common::getRequestVar('containerId', null, 'string');
+        // On a dashboard the widget chrome renders the report header; in an iframe nothing does,
+        // so the children have to render their own. Read from the route, which stays on Widgetize
+        // through the inner dispatch, rather than from `widget` - a dashboard sets that too.
+        $request = \Piwik\Request::fromRequest();
+        $view->childrenOwnTheirHeader = $request->getStringParameter('module', '') === 'Widgetize' && $request->getStringParameter('action', '') === 'iframe';
         return $view->render();
     }
     /**
@@ -89,11 +88,11 @@ class Controller extends \Piwik\Plugin\Controller
         $widget::configure($config);
         $content = $widget->render();
         if ($config->getName() && Common::getRequestVar('showtitle', '', 'string') === '1') {
-            if (strpos($content, '<h2') !== \false || strpos($content, ' content-title=') !== \false || strpos($content, 'CoreHome.EnrichedHeadline') !== \false || strpos($content, '<h1') !== \false) {
+            if (str_contains($content, '<h2') || str_contains($content, ' content-title=') || str_contains($content, 'CoreHome.EnrichedHeadline') || str_contains($content, 'CoreHome.ReportHeader') || str_contains($content, '<h1')) {
                 // already includes title
                 return $content;
             }
-            if (strpos($content, '<!-- has-content-block -->') === \false && strpos($content, 'class="card"') === \false && strpos($content, "class='card'") === \false && strpos($content, 'class="card-content"') === \false && strpos($content, "class='card-content'") === \false) {
+            if (!str_contains($content, '<!-- has-content-block -->') && !str_contains($content, 'class="card"') && !str_contains($content, "class='card'") && !str_contains($content, 'class="card-content"') && !str_contains($content, "class='card-content'")) {
                 $view = new View('@CoreHome/_singleWidget');
                 $view->title = $config->getName();
                 $view->content = $content;
@@ -130,13 +129,13 @@ class Controller extends \Piwik\Plugin\Controller
         $view->content = FrontController::getInstance()->fetchDispatch($controllerName, $actionName);
         return $view->render();
     }
-    public function markNotificationAsRead()
+    #[JsonResponse]
+    public function markNotificationAsRead() : string
     {
         Piwik::checkUserHasSomeViewAccess();
         $this->checkTokenInUrl();
         $notificationId = Common::getRequestVar('notificationId');
         NotificationManager::cancel($notificationId);
-        Json::sendHeaderJSON();
         return json_encode(\true);
     }
     protected function getDefaultIndexView()
@@ -198,7 +197,7 @@ class Controller extends \Piwik\Plugin\Controller
     {
         if (empty($rowEvolution)) {
             $label = Common::getRequestVar('label', '', 'string');
-            $isMultiRowEvolution = strpos($label, ',') !== \false;
+            $isMultiRowEvolution = str_contains($label, ',');
             $rowEvolution = $this->makeRowEvolution($isMultiRowEvolution, $graphType = 'graphEvolution');
             $rowEvolution->useAvailableMetrics();
         }

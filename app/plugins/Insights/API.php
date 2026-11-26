@@ -30,10 +30,7 @@ class API extends \Piwik\Plugin\API
      * Include only 'disappeared' rows which were existing in the past report but no longer in the current report.
      */
     public const FILTER_BY_DISAPPEARED = 'disappeared';
-    /**
-     * @var Model
-     */
-    private $model;
+    private \Piwik\Plugins\Insights\Model $model;
     public function __construct(\Piwik\Plugins\Insights\Model $model)
     {
         $this->model = $model;

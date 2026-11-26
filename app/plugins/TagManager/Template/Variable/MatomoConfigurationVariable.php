@@ -72,7 +72,7 @@ class MatomoConfigurationVariable extends \Piwik\Plugins\TagManager\Template\Var
                 if (is_numeric($value)) {
                     if ($matomoUrl->getValue() === $url) {
                         try {
-                            new Site($value);
+                            new Site((int) $value);
                             // we validate idSite when it points to this url
                         } catch (NoAccessException $e) {
                             $request = \Piwik\Request::fromRequest();

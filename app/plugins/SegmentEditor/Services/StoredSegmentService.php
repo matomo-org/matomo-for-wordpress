@@ -15,14 +15,8 @@ use Matomo\Cache\Transient as TransientCache;
  */
 class StoredSegmentService
 {
-    /**
-     * @var Model
-     */
-    private $model;
-    /**
-     * @var TransientCache
-     */
-    private $transientCache;
+    private Model $model;
+    private TransientCache $transientCache;
     public function __construct(Model $model, TransientCache $transientCache)
     {
         $this->model = $model;

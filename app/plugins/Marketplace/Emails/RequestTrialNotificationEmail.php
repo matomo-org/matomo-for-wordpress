@@ -9,28 +9,19 @@
 declare (strict_types=1);
 namespace Piwik\Plugins\Marketplace\Emails;
 
+use Piwik\Container\StaticContainer;
+use Piwik\Email\ContentGenerator;
 use Piwik\Mail;
 use Piwik\Piwik;
+use Piwik\Plugins\Marketplace\PluginTrial\UnsubscribeToken;
 use Piwik\SettingsPiwik;
 use Piwik\View;
 class RequestTrialNotificationEmail extends Mail
 {
-    /**
-     * @var string
-     */
-    private $emailAddress;
-    /**
-     * @var string
-     */
-    private $login;
-    /**
-     * @var string
-     */
-    private $pluginName;
-    /**
-     * @var string
-     */
-    private $pluginDisplayName;
+    private string $emailAddress;
+    private string $login;
+    private string $pluginName;
+    private string $pluginDisplayName;
     public function __construct(string $login, string $emailAddress, string $pluginName, string $pluginDisplayName)
     {
         parent::__construct();
@@ -61,6 +52,10 @@ class RequestTrialNotificationEmail extends Mail
         $this->addTo($this->emailAddress);
         $this->setSubject($this->getDefaultSubject());
         $this->addReplyTo($this->getFrom(), $this->getFromName());
-        $this->setWrappedHtmlBody($this->getDefaultBodyView());
+        $this->setBodyHtml(StaticContainer::get(ContentGenerator::class)->generateHtmlContent($this->getDefaultBodyView(), $this->getUnsubscribeLink(), 'Marketplace_RequestTrialUnsubscribeFooter'));
+    }
+    private function getUnsubscribeLink() : string
+    {
+        return SettingsPiwik::getPiwikUrl() . 'index.php?' . http_build_query(['module' => 'Marketplace', 'action' => 'unsubscribeTrialRequestEmails', 'login' => $this->login, 'token' => StaticContainer::get(UnsubscribeToken::class)->generate($this->login)]);
     }
 }

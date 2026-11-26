@@ -9,6 +9,7 @@
 namespace Piwik\Plugins\Monolog\Handler;
 
 use Matomo\Dependencies\Monolog\Handler\AbstractProcessingHandler;
+use Matomo\Dependencies\Monolog\LogRecord;
 use Piwik\Log\Logger;
 use Piwik\Common;
 use Piwik\Notification;
@@ -20,14 +21,14 @@ use Zend_Session_Exception;
 class WebNotificationHandler extends AbstractProcessingHandler
 {
     public const MAX_NOTIFICATION_MESSAGE_LENGTH = 512;
-    public function isHandling(array $record)
+    public function isHandling(LogRecord $record) : bool
     {
         if (!empty($record['context']['ignoreInScreenWriter'])) {
             return \false;
         }
         return parent::isHandling($record);
     }
-    protected function write(array $record)
+    protected function write(LogRecord $record) : void
     {
         switch ($record['level']) {
             case Logger::EMERGENCY:

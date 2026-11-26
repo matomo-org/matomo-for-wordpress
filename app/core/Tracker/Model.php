@@ -134,7 +134,7 @@ class Model
         try {
             $this->getDb()->query($sql, $bind);
         } catch (Exception $e) {
-            if ($e->getCode() == 23000 || \false !== strpos($e->getMessage(), 'Duplicate entry') || \false !== strpos($e->getMessage(), 'Integrity constraint violation')) {
+            if ($e->getCode() == 23000 || str_contains($e->getMessage(), 'Duplicate entry') || str_contains($e->getMessage(), 'Integrity constraint violation')) {
                 Common::printDebug('Did not create ecommerce item as item was already created');
             } else {
                 throw $e;

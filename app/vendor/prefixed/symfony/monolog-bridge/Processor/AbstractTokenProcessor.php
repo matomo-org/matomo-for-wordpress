@@ -10,6 +10,7 @@
  */
 namespace Matomo\Dependencies\Symfony\Bridge\Monolog\Processor;
 
+use Matomo\Dependencies\Monolog\LogRecord;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 /**
@@ -17,9 +18,12 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
  *
  * @author Dany Maillard <danymaillard93b@gmail.com>
  * @author Igor Timoshenko <igor.timoshenko@i.ua>
+ *
+ * @internal since Symfony 6.1
  */
 abstract class AbstractTokenProcessor
 {
+    use CompatibilityProcessor;
     /**
      * @var TokenStorageInterface
      */
@@ -30,17 +34,22 @@ abstract class AbstractTokenProcessor
     }
     protected abstract function getKey() : string;
     protected abstract function getToken() : ?TokenInterface;
-    public function __invoke(array $record) : array
+    private bool $processing = \false;
+    private function doInvoke(array|LogRecord $record) : array|LogRecord
     {
-        $record['extra'][$this->getKey()] = null;
-        if (null !== ($token = $this->getToken())) {
-            $record['extra'][$this->getKey()] = ['authenticated' => method_exists($token, 'isAuthenticated') ? $token->isAuthenticated(\false) : (bool) $token->getUser(), 'roles' => $token->getRoleNames()];
-            // @deprecated since Symfony 5.3, change to $token->getUserIdentifier() in 6.0
-            if (method_exists($token, 'getUserIdentifier')) {
-                $record['extra'][$this->getKey()]['username'] = $record['extra'][$this->getKey()]['user_identifier'] = $token->getUserIdentifier();
-            } else {
-                $record['extra'][$this->getKey()]['username'] = $token->getUsername();
+        if ($this->processing) {
+            return $record;
+        }
+        $this->processing = \true;
+        try {
+            $record['extra'][$this->getKey()] = null;
+            if (null !== ($token = $this->getToken())) {
+                $record['extra'][$this->getKey()] = ['authenticated' => (bool) $token->getUser(), 'roles' => $token->getRoleNames()];
+                // @deprecated since Symfony 5.3, change to $token->getUserIdentifier() in 7.0
+                $record['extra'][$this->getKey()]['user_identifier'] = method_exists($token, 'getUserIdentifier') ? $token->getUserIdentifier() : $token->getUsername();
             }
+        } finally {
+            $this->processing = \false;
         }
         return $record;
     }

@@ -14,22 +14,17 @@ use PHPUnit\Framework\Constraint\Constraint;
 use Matomo\Dependencies\Symfony\Component\HttpFoundation\Response;
 final class ResponseStatusCodeSame extends Constraint
 {
-    private $statusCode;
+    private int $statusCode;
     public function __construct(int $statusCode)
     {
         $this->statusCode = $statusCode;
     }
-    /**
-     * {@inheritdoc}
-     */
     public function toString() : string
     {
         return 'status code is ' . $this->statusCode;
     }
     /**
      * @param Response $response
-     *
-     * {@inheritdoc}
      */
     protected function matches($response) : bool
     {
@@ -37,8 +32,6 @@ final class ResponseStatusCodeSame extends Constraint
     }
     /**
      * @param Response $response
-     *
-     * {@inheritdoc}
      */
     protected function failureDescription($response) : string
     {
@@ -46,8 +39,6 @@ final class ResponseStatusCodeSame extends Constraint
     }
     /**
      * @param Response $response
-     *
-     * {@inheritdoc}
      */
     protected function additionalFailureDescription($response) : string
     {

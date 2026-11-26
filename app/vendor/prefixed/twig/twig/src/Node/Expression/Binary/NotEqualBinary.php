@@ -11,7 +11,9 @@
 namespace Matomo\Dependencies\Twig\Node\Expression\Binary;
 
 use Matomo\Dependencies\Twig\Compiler;
-class NotEqualBinary extends AbstractBinary
+use Matomo\Dependencies\Twig\Node\CoercesChildrenToStringInterface;
+use Matomo\Dependencies\Twig\Node\Expression\ReturnBoolInterface;
+class NotEqualBinary extends AbstractBinary implements ReturnBoolInterface, CoercesChildrenToStringInterface
 {
     public function compile(Compiler $compiler) : void
     {
@@ -24,5 +26,9 @@ class NotEqualBinary extends AbstractBinary
     public function operator(Compiler $compiler) : Compiler
     {
         return $compiler->raw('!=');
+    }
+    public function getStringCoercedChildNames() : array
+    {
+        return ['left', 'right'];
     }
 }

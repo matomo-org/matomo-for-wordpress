@@ -30,9 +30,13 @@ class Caster
     public const EXCLUDE_EMPTY = 128;
     public const EXCLUDE_NOT_IMPORTANT = 256;
     public const EXCLUDE_STRICT = 512;
+    public const EXCLUDE_UNINITIALIZED = 1024;
     public const PREFIX_VIRTUAL = "\x00~\x00";
     public const PREFIX_DYNAMIC = "\x00+\x00";
     public const PREFIX_PROTECTED = "\x00*\x00";
+    // usage: sprintf(Caster::PATTERN_PRIVATE, $class, $property)
+    public const PATTERN_PRIVATE = "\x00%s\x00%s";
+    private static array $classProperties = [];
     /**
      * Casts objects to arrays and adds the dynamic property prefix.
      *
@@ -43,7 +47,7 @@ class Caster
         if ($hasDebugInfo) {
             try {
                 $debugInfo = $obj->__debugInfo();
-            } catch (\Throwable $e) {
+            } catch (\Throwable) {
                 // ignore failing __debugInfo()
                 $hasDebugInfo = \false;
             }
@@ -52,19 +56,15 @@ class Caster
         if ($obj instanceof \__PHP_Incomplete_Class) {
             return $a;
         }
+        $classProperties = self::$classProperties[$class] ??= self::getClassProperties(new \ReflectionClass($class));
+        $a = array_replace($classProperties, $a);
         if ($a) {
-            static $publicProperties = [];
-            $debugClass = $debugClass ?? get_debug_type($obj);
+            $debugClass ??= get_debug_type($obj);
             $i = 0;
             $prefixedKeys = [];
             foreach ($a as $k => $v) {
                 if ("\x00" !== ($k[0] ?? '')) {
-                    if (!isset($publicProperties[$class])) {
-                        foreach ((new \ReflectionClass($class))->getProperties(\ReflectionProperty::IS_PUBLIC) as $prop) {
-                            $publicProperties[$class][$prop->name] = \true;
-                        }
-                    }
-                    if (!isset($publicProperties[$class][$k])) {
+                    if (!isset($classProperties[$k])) {
                         $prefixedKeys[$i] = self::PREFIX_DYNAMIC . $k;
                     }
                 } elseif ($debugClass !== $class && 1 === strpos($k, $class)) {
@@ -115,6 +115,8 @@ class Caster
                 $type |= self::EXCLUDE_EMPTY & $filter;
             } elseif (\false === $v || '' === $v || '0' === $v || 0 === $v || 0.0 === $v || [] === $v) {
                 $type |= self::EXCLUDE_EMPTY & $filter;
+            } elseif ($v instanceof UninitializedStub) {
+                $type |= self::EXCLUDE_UNINITIALIZED & $filter;
             }
             if (self::EXCLUDE_NOT_IMPORTANT & $filter && !\in_array($k, $listedProperties, \true)) {
                 $type |= self::EXCLUDE_NOT_IMPORTANT;
@@ -147,5 +149,24 @@ class Caster
             unset($a['__PHP_Incomplete_Class_Name']);
         }
         return $a;
+    }
+    private static function getClassProperties(\ReflectionClass $class) : array
+    {
+        $classProperties = [];
+        $className = $class->name;
+        if ($parent = $class->getParentClass()) {
+            $classProperties += self::$classProperties[$parent->name] ??= self::getClassProperties($parent);
+        }
+        foreach ($class->getProperties() as $p) {
+            if ($p->isStatic()) {
+                continue;
+            }
+            $classProperties[match (\true) {
+                $p->isPublic() => $p->name,
+                $p->isProtected() => self::PREFIX_PROTECTED . $p->name,
+                default => "\x00" . $className . "\x00" . $p->name,
+            }] = new UninitializedStub($p);
+        }
+        return $classProperties;
     }
 }

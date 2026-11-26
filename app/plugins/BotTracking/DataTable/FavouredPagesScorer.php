@@ -51,9 +51,6 @@ class FavouredPagesScorer
             }
             return;
         }
-        if (!$table instanceof DataTable) {
-            return;
-        }
         $strongColumn = $this->variant === DiscrepancyScore::VARIANT_HUMAN_FAVOURED ? Metrics::COLUMN_UNIQUE_HUMAN_PAGEVIEWS : Metrics::COLUMN_AI_CHATBOT_REQUESTS;
         // Volume anchor = the busiest page's strong-side value. Exclude the "Others" summary row,
         // whose aggregate tail would otherwise hijack the anchor and deflate every real score.

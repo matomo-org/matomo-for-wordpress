@@ -106,30 +106,23 @@ class Mysql extends Zend_Db_Adapter_Pdo_Mysql implements AdapterInterface
         $this->_config = array();
     }
     /**
-     * Return default port.
-     *
-     * @deprecated Use Schema::getDefaultPortForSchema instead
-     * @return int
-     */
-    public static function getDefaultPort()
-    {
-        return 3306;
-    }
-    /**
-     * Check MySQL version
+     * Checks the database server version against the required minimum for the
+     * detected server type (MySQL or MariaDB).
      *
      * @throws Exception
      */
     public function checkServerVersion()
     {
-        $requiredVersion = Schema::getInstance()->getMinimumSupportedVersion();
-        $serverVersion = $this->getServerVersion();
-        if (version_compare($serverVersion, $requiredVersion) === -1) {
-            throw new Exception(Piwik::translate('General_ExceptionDatabaseVersion', array('MySQL', $serverVersion, $requiredVersion)));
+        $serverVersion = (string) $this->getServerVersion();
+        $requiredVersion = Schema::getMinimumSupportedVersionForServer($serverVersion);
+        $comparableVersion = Schema::getComparableVersion($serverVersion);
+        $databaseType = Schema::getServerTypeFromVersion($serverVersion);
+        if (version_compare($comparableVersion, $requiredVersion) === -1) {
+            throw new Exception(Piwik::translate('General_ExceptionDatabaseVersion', array($databaseType, $comparableVersion, $requiredVersion)));
         }
     }
     /**
-     * Returns the MySQL server version
+     * Returns the raw database server version
      *
      * @return null|string
      */
@@ -142,20 +135,6 @@ class Mysql extends Zend_Db_Adapter_Pdo_Mysql implements AdapterInterface
             return $versionInfo[0]['@@VERSION'];
         }
         return parent::getServerVersion();
-    }
-    /**
-     * Check client version compatibility against database server
-     *
-     * @throws Exception
-     */
-    public function checkClientVersion()
-    {
-        $serverVersion = $this->getServerVersion();
-        $clientVersion = $this->getClientVersion();
-        // incompatible change to DECIMAL implementation in 5.0.3
-        if (version_compare($serverVersion, '5.0.3') >= 0 && version_compare($clientVersion, '5.0.3') < 0) {
-            throw new Exception(Piwik::translate('General_ExceptionIncompatibleClientServerVersions', array('MySQL', $clientVersion, $serverVersion)));
-        }
     }
     /**
      * Returns true if this adapter's required extensions are enabled
@@ -221,7 +200,7 @@ class Mysql extends Zend_Db_Adapter_Pdo_Mysql implements AdapterInterface
             return \false;
         }
         $charset = $charsetInfo[0]['Value'];
-        return strpos($charset, 'utf8') === 0;
+        return str_starts_with($charset, 'utf8');
     }
     /**
      * Return number of affected rows in last query

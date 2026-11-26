@@ -19,10 +19,7 @@ use Piwik\Translation\Translator;
  */
 class ConfigInformational implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnostic
 {
-    /**
-     * @var Translator
-     */
-    private $translator;
+    private Translator $translator;
     public function __construct(Translator $translator)
     {
         $this->translator = $translator;
@@ -36,8 +33,8 @@ class ConfigInformational implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagn
             $results[] = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::informationalResult('Internet Enabled', SettingsPiwik::isInternetEnabled());
             $results[] = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::informationalResult('Multi Server Environment', SettingsPiwik::isMultiServerEnvironment());
             $results[] = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::informationalResult('Auto Update Enabled', SettingsPiwik::isAutoUpdateEnabled());
-            $results[] = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::informationalResult('Custom User Path', PIWIK_USER_PATH != PIWIK_DOCUMENT_ROOT);
-            $results[] = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::informationalResult('Custom Include Path', PIWIK_INCLUDE_PATH != PIWIK_DOCUMENT_ROOT);
+            $results[] = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::informationalResult('Custom User Path', realpath(PIWIK_USER_PATH) !== realpath(PIWIK_DOCUMENT_ROOT));
+            $results[] = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::informationalResult('Custom Include Path', realpath(PIWIK_INCLUDE_PATH) !== realpath(PIWIK_DOCUMENT_ROOT));
             $results[] = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::informationalResult('Release Channel', Config::getInstance()->General['release_channel']);
             $pluginsActivated = array();
             $pluginsDeactivated = array();

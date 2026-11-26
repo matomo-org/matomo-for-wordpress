@@ -10,48 +10,37 @@
  */
 namespace Matomo\Dependencies\Symfony\Bridge\Monolog;
 
+trigger_deprecation('symfony/monolog-bridge', '6.4', 'The "%s" class is deprecated, use HttpKernel\'s DebugLoggerConfigurator instead.', Logger::class);
 use Matomo\Dependencies\Monolog\Logger as BaseLogger;
 use Matomo\Dependencies\Monolog\ResettableInterface;
 use Matomo\Dependencies\Symfony\Component\HttpFoundation\Request;
 use Matomo\Dependencies\Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
 use Matomo\Dependencies\Symfony\Contracts\Service\ResetInterface;
 /**
- * @author Fabien Potencier <fabien@symfony.com>
+ * @deprecated since Symfony 6.4, use HttpKernel's DebugLoggerConfigurator instead
  */
 class Logger extends BaseLogger implements DebugLoggerInterface, ResetInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getLogs(?Request $request = null)
+    public function getLogs(?Request $request = null) : array
     {
         if ($logger = $this->getDebugLogger()) {
             return $logger->getLogs($request);
         }
         return [];
     }
-    /**
-     * {@inheritdoc}
-     */
-    public function countErrors(?Request $request = null)
+    public function countErrors(?Request $request = null) : int
     {
         if ($logger = $this->getDebugLogger()) {
             return $logger->countErrors($request);
         }
         return 0;
     }
-    /**
-     * {@inheritdoc}
-     */
-    public function clear()
+    public function clear() : void
     {
         if ($logger = $this->getDebugLogger()) {
             $logger->clear();
         }
     }
-    /**
-     * {@inheritdoc}
-     */
     public function reset() : void
     {
         $this->clear();
@@ -59,6 +48,9 @@ class Logger extends BaseLogger implements DebugLoggerInterface, ResetInterface
             parent::reset();
         }
     }
+    /**
+     * @return void
+     */
     public function removeDebugLogger()
     {
         foreach ($this->processors as $k => $processor) {

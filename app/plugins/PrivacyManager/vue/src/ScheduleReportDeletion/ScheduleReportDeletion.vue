@@ -101,9 +101,11 @@
       />
       <PasswordConfirmation
         v-model="showPasswordConfirmModalForPurge"
+        :require-delete-confirmation="true"
         @confirmed="executePurgeNow"
       >
-        <h2>{{ translate('PrivacyManager_PurgeNowConfirm') }}</h2>
+        <h2>{{ translate('PrivacyManager_PurgeNowConfirmTitle') }}</h2>
+        <p>{{ translate('PrivacyManager_PurgeNowConfirmBody') }}</p>
       </PasswordConfirmation>
     </ContentBlock>
   </div>
@@ -129,7 +131,7 @@ import {
 } from 'CorePluginsAdmin';
 import ReportDeletionSettingsStore from '../ReportDeletionSettings/ReportDeletionSettings.store';
 
-interface ScheduleReportDeletionState {
+export interface ScheduleReportDeletionState {
   isLoading: boolean;
   loadingDataPurge: boolean;
   dataWasPurged: boolean;

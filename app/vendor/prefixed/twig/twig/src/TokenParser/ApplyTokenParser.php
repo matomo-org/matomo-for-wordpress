@@ -10,8 +10,10 @@
  */
 namespace Matomo\Dependencies\Twig\TokenParser;
 
-use Matomo\Dependencies\Twig\Node\Expression\TempNameExpression;
+use Matomo\Dependencies\Twig\ExpressionParser\Infix\FilterExpressionParser;
+use Matomo\Dependencies\Twig\Node\Expression\Variable\LocalVariable;
 use Matomo\Dependencies\Twig\Node\Node;
+use Matomo\Dependencies\Twig\Node\Nodes;
 use Matomo\Dependencies\Twig\Node\PrintNode;
 use Matomo\Dependencies\Twig\Node\SetNode;
 use Matomo\Dependencies\Twig\Token;
@@ -29,14 +31,20 @@ final class ApplyTokenParser extends AbstractTokenParser
     public function parse(Token $token) : Node
     {
         $lineno = $token->getLine();
-        $name = $this->parser->getVarName();
-        $ref = new TempNameExpression($name, $lineno);
-        $ref->setAttribute('always_defined', \true);
-        $filter = $this->parser->getExpressionParser()->parseFilterExpressionRaw($ref, $this->getTag());
+        $ref = new LocalVariable(null, $lineno);
+        $filter = $ref;
+        $op = $this->parser->getEnvironment()->getExpressionParsers()->getByClass(FilterExpressionParser::class);
+        while (\true) {
+            $filter = $op->parse($this->parser, $filter, $this->parser->getCurrentToken());
+            if (!$this->parser->getStream()->test(Token::OPERATOR_TYPE, '|')) {
+                break;
+            }
+            $this->parser->getStream()->next();
+        }
         $this->parser->getStream()->expect(Token::BLOCK_END_TYPE);
         $body = $this->parser->subparse([$this, 'decideApplyEnd'], \true);
         $this->parser->getStream()->expect(Token::BLOCK_END_TYPE);
-        return new Node([new SetNode(\true, $ref, $body, $lineno, $this->getTag()), new PrintNode($filter, $lineno, $this->getTag())]);
+        return new Nodes([new SetNode(\true, $ref, $body, $lineno), new PrintNode($filter, $lineno)], $lineno);
     }
     public function decideApplyEnd(Token $token) : bool
     {

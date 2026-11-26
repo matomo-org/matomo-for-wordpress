@@ -24,7 +24,7 @@ class VariablesProvider
      */
     private $configuration;
     /**
-     * @var BaseVariable[]
+     * @var BaseVariable[]|null
      */
     private $cached;
     /**
@@ -54,6 +54,7 @@ class VariablesProvider
                 return $variable;
             }
         }
+        return null;
     }
     /**
      * @param string $variableId  eg "click"
@@ -67,6 +68,7 @@ class VariablesProvider
                 return $variable;
             }
         }
+        return null;
     }
     /**
      * @return BaseVariable[]
@@ -127,7 +129,17 @@ class VariablesProvider
         return $this->cached;
     }
     /**
-     * @return BaseVariable
+     * Whether the variable type is disabled in the configuration, for example a pre-configured variable.
+     * @param string $variableId
+     * @return bool
+     */
+    public function isDisabledInConfig($variableId)
+    {
+        $disabled = array_map('strtolower', $this->configuration->getDisabledVariables());
+        return in_array(strtolower($variableId), $disabled, \true);
+    }
+    /**
+     * @return BaseVariable|null
      */
     public function getPreConfiguredVariable($variableId)
     {
@@ -136,6 +148,7 @@ class VariablesProvider
                 return $variable;
             }
         }
+        return null;
     }
     /**
      * @return BaseVariable[]

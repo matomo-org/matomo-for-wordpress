@@ -10,14 +10,15 @@
  */
 namespace Matomo\Dependencies\Twig\TokenParser;
 
-use Matomo\Dependencies\Twig\Node\Expression\AssignNameExpression;
+use Matomo\Dependencies\Twig\Node\Expression\Variable\AssignMacroVariable;
+use Matomo\Dependencies\Twig\Node\Expression\Variable\MacroVariable;
 use Matomo\Dependencies\Twig\Node\ImportNode;
 use Matomo\Dependencies\Twig\Node\Node;
 use Matomo\Dependencies\Twig\Token;
 /**
  * Imports macros.
  *
- *   {% import 'forms.html' as forms %}
+ *   {% import 'forms.html.twig' as forms %}
  *
  * @internal
  */
@@ -25,22 +26,13 @@ final class ImportTokenParser extends AbstractTokenParser
 {
     public function parse(Token $token) : Node
     {
-        $macro = $this->parser->getExpressionParser()->parseExpression();
-        $this->parser->getStream()->expect(
-            /* Token::NAME_TYPE */
-            5,
-            'as'
-        );
-        $var = new AssignNameExpression($this->parser->getStream()->expect(
-            /* Token::NAME_TYPE */
-            5
-        )->getValue(), $token->getLine());
-        $this->parser->getStream()->expect(
-            /* Token::BLOCK_END_TYPE */
-            3
-        );
-        $this->parser->addImportedSymbol('template', $var->getAttribute('name'));
-        return new ImportNode($macro, $var, $token->getLine(), $this->getTag(), $this->parser->isMainScope());
+        $macro = $this->parser->parseExpression();
+        $this->parser->getStream()->expect(Token::NAME_TYPE, 'as');
+        $name = $this->parser->getStream()->expect(Token::NAME_TYPE)->getValue();
+        $var = new AssignMacroVariable(new MacroVariable($name, $token->getLine()), $this->parser->isMainScope());
+        $this->parser->getStream()->expect(Token::BLOCK_END_TYPE);
+        $this->parser->addImportedSymbol('template', $name);
+        return new ImportNode($macro, $var, $token->getLine());
     }
     public function getTag() : string
     {

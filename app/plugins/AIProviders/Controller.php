@@ -38,4 +38,9 @@ class Controller extends ControllerAdmin
         }
         return $this->renderTemplate('index');
     }
+    public function aiProcessing() : string
+    {
+        Piwik::checkUserHasSuperUserAccess();
+        return $this->renderTemplate('aiProcessing');
+    }
 }

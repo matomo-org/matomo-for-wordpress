@@ -4,13 +4,15 @@ namespace Matomo\Dependencies;
 
 /**
  * @private
+ * @see less-2.5.3.js#Assignment.prototype
  */
-class Less_Tree_Assignment extends Less_Tree
+class Less_Tree_Assignment extends Less_Tree implements Less_Tree_HasValueProperty
 {
+    /** @var string */
     public $key;
+    /** @var Less_Tree */
     public $value;
-    public $type = 'Assignment';
-    public function __construct($key, $val)
+    public function __construct(string $key, Less_Tree $val)
     {
         $this->key = $key;
         $this->value = $val;
@@ -21,18 +23,13 @@ class Less_Tree_Assignment extends Less_Tree
     }
     public function compile($env)
     {
-        return new Less_Tree_Assignment($this->key, $this->value->compile($env));
+        // NOTE: Less.js has a conditional for $this->value,
+        // but this appears unreachable ($val is not optional).
+        return new self($this->key, $this->value->compile($env));
     }
-    /**
-     * @see Less_Tree::genCSS
-     */
     public function genCSS($output)
     {
         $output->add($this->key . '=');
         $this->value->genCSS($output);
-    }
-    public function toCss()
-    {
-        return $this->key . '=' . $this->value->toCSS();
     }
 }

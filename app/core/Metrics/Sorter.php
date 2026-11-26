@@ -14,10 +14,7 @@ use Piwik\Metrics;
 use Piwik\Plugin\Metric;
 class Sorter
 {
-    /**
-     * @var Sorter\Config
-     */
-    private $config;
+    private \Piwik\Metrics\Sorter\Config $config;
     public function __construct(\Piwik\Metrics\Sorter\Config $config)
     {
         $this->config = $config;

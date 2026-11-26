@@ -15,11 +15,8 @@ class FeatureFlagManager
     /**
      * @var FeatureFlagStorageInterface[]
      */
-    private $storages;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private array $storages;
+    private LoggerInterface $logger;
     public function __construct(array $storages, LoggerInterface $logger)
     {
         $this->storages = $storages;

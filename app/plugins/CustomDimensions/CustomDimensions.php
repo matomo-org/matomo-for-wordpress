@@ -22,10 +22,7 @@ class CustomDimensions extends Plugin
     public const SCOPE_ACTION = 'action';
     public const SCOPE_VISIT = 'visit';
     public const SCOPE_CONVERSION = 'conversion';
-    /**
-     * @var Configuration
-     */
-    private $configuration;
+    private Configuration $configuration;
     public function __construct()
     {
         parent::__construct();

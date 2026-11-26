@@ -14,10 +14,7 @@ use Piwik\Translation\Translator;
  */
 class PhpExtensionsCheck implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnostic
 {
-    /**
-     * @var Translator
-     */
-    private $translator;
+    private Translator $translator;
     public function __construct(Translator $translator)
     {
         $this->translator = $translator;
@@ -47,12 +44,12 @@ class PhpExtensionsCheck implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagno
      */
     private function getRequiredExtensions()
     {
-        $requiredExtensions = array('zlib', 'json', 'filter', 'hash', 'session');
+        $requiredExtensions = array('zlib', 'filter', 'session');
         return $requiredExtensions;
     }
     private function getHelpMessage($missingExtension)
     {
-        $messages = array('zlib' => 'Installation_SystemCheckZlibHelp', 'json' => 'Installation_SystemCheckWarnJsonHelp', 'filter' => 'Installation_SystemCheckFilterHelp', 'hash' => 'Installation_SystemCheckHashHelp', 'session' => 'Installation_SystemCheckSessionHelp');
+        $messages = array('zlib' => 'Installation_SystemCheckZlibHelp', 'filter' => 'Installation_SystemCheckFilterHelp', 'session' => 'Installation_SystemCheckSessionHelp');
         return $this->translator->translate($messages[$missingExtension]);
     }
 }

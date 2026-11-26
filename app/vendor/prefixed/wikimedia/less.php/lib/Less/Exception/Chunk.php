@@ -7,8 +7,11 @@ namespace Matomo\Dependencies;
  */
 class Less_Exception_Chunk extends Less_Exception_Parser
 {
+    /** @var int */
     protected $parserCurrentIndex = 0;
+    /** @var int */
     protected $emitFrom = 0;
+    /** @var int */
     protected $input_len;
     /**
      * @param string $input
@@ -17,7 +20,7 @@ class Less_Exception_Chunk extends Less_Exception_Parser
      * @param array|null $currentFile The file
      * @param int $code The exception code
      */
-    public function __construct($input, \Exception $previous = null, $index = null, $currentFile = null, $code = 0)
+    public function __construct($input, ?\Exception $previous = null, $index = null, $currentFile = null, $code = 0)
     {
         $this->message = 'ParseError: Unexpected input';
         // default message
@@ -27,6 +30,7 @@ class Less_Exception_Chunk extends Less_Exception_Parser
         $this->input_len = \strlen($input);
         $this->Chunks();
         $this->genMessage();
+        $this->getFinalMessage();
     }
     /**
      * See less.js chunks()
@@ -40,6 +44,7 @@ class Less_Exception_Chunk extends Less_Exception_Parser
         $lastOpening = null;
         $lastMultiComment = null;
         $lastParen = null;
+        // phpcs:ignore Generic.CodeAnalysis.JumbledIncrementer
         for ($this->parserCurrentIndex = 0; $this->parserCurrentIndex < $this->input_len; $this->parserCurrentIndex++) {
             $cc = $this->CharCode($this->parserCurrentIndex);
             if ($cc >= 97 && $cc <= 122 || $cc < 34) {

@@ -21,10 +21,7 @@ class Response extends Tracker\Response
      * @var bool
      */
     private $isAuthenticated = \false;
-    /**
-     * @var bool
-     */
-    private $shouldSendResponse = \true;
+    private bool $shouldSendResponse = \true;
     /**
      * Echos an error message & other information, then exits.
      *

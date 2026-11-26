@@ -11,75 +11,68 @@
 namespace Matomo\Dependencies\Symfony\Bridge\Monolog\Processor;
 
 use Matomo\Dependencies\Monolog\Logger;
+use Matomo\Dependencies\Monolog\LogRecord;
 use Matomo\Dependencies\Symfony\Component\HttpFoundation\Request;
 use Matomo\Dependencies\Symfony\Component\HttpFoundation\RequestStack;
 use Matomo\Dependencies\Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
 use Matomo\Dependencies\Symfony\Contracts\Service\ResetInterface;
 class DebugProcessor implements DebugLoggerInterface, ResetInterface
 {
-    private $records = [];
-    private $errorCount = [];
-    private $requestStack;
+    use CompatibilityProcessor;
+    private array $records = [];
+    private array $errorCount = [];
+    private ?RequestStack $requestStack;
     public function __construct(?RequestStack $requestStack = null)
     {
         $this->requestStack = $requestStack;
     }
-    public function __invoke(array $record)
+    private function doInvoke(array|LogRecord $record) : array|LogRecord
     {
-        $hash = $this->requestStack && ($request = $this->requestStack->getCurrentRequest()) ? spl_object_hash($request) : '';
-        $timestamp = $timestampRfc3339 = \false;
+        $key = $this->requestStack && ($request = $this->requestStack->getCurrentRequest()) ? spl_object_id($request) : '';
+        $timestampRfc3339 = \false;
         if ($record['datetime'] instanceof \DateTimeInterface) {
             $timestamp = $record['datetime']->getTimestamp();
             $timestampRfc3339 = $record['datetime']->format(\DateTimeInterface::RFC3339_EXTENDED);
         } elseif (\false !== ($timestamp = strtotime($record['datetime']))) {
             $timestampRfc3339 = (new \DateTimeImmutable($record['datetime']))->format(\DateTimeInterface::RFC3339_EXTENDED);
         }
-        $this->records[$hash][] = ['timestamp' => $timestamp, 'timestamp_rfc3339' => $timestampRfc3339, 'message' => $record['message'], 'priority' => $record['level'], 'priorityName' => $record['level_name'], 'context' => $record['context'], 'channel' => $record['channel'] ?? ''];
-        if (!isset($this->errorCount[$hash])) {
-            $this->errorCount[$hash] = 0;
+        $this->records[$key][] = ['timestamp' => $timestamp, 'timestamp_rfc3339' => $timestampRfc3339, 'message' => $record['message'], 'priority' => $record['level'], 'priorityName' => $record['level_name'], 'context' => $record['context'], 'channel' => $record['channel'] ?? ''];
+        if (!isset($this->errorCount[$key])) {
+            $this->errorCount[$key] = 0;
         }
         switch ($record['level']) {
             case Logger::ERROR:
             case Logger::CRITICAL:
             case Logger::ALERT:
             case Logger::EMERGENCY:
-                ++$this->errorCount[$hash];
+                ++$this->errorCount[$key];
         }
         return $record;
     }
-    /**
-     * {@inheritdoc}
-     */
-    public function getLogs(?Request $request = null)
+    public function getLogs(?Request $request = null) : array
     {
         if (null !== $request) {
-            return $this->records[spl_object_hash($request)] ?? [];
+            return $this->records[spl_object_id($request)] ?? [];
         }
-        if (0 === \count($this->records)) {
+        if (!$this->records) {
             return [];
         }
         return array_merge(...array_values($this->records));
     }
-    /**
-     * {@inheritdoc}
-     */
-    public function countErrors(?Request $request = null)
+    public function countErrors(?Request $request = null) : int
     {
         if (null !== $request) {
-            return $this->errorCount[spl_object_hash($request)] ?? 0;
+            return $this->errorCount[spl_object_id($request)] ?? 0;
         }
         return array_sum($this->errorCount);
     }
-    /**
-     * {@inheritdoc}
-     */
-    public function clear()
+    public function clear() : void
     {
         $this->records = [];
         $this->errorCount = [];
     }
     /**
-     * {@inheritdoc}
+     * @return void
      */
     public function reset()
     {

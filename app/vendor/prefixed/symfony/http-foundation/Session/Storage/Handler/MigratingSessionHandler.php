@@ -21,14 +21,8 @@ namespace Matomo\Dependencies\Symfony\Component\HttpFoundation\Session\Storage\H
  */
 class MigratingSessionHandler implements \SessionHandlerInterface, \SessionUpdateTimestampHandlerInterface
 {
-    /**
-     * @var \SessionHandlerInterface&\SessionUpdateTimestampHandlerInterface
-     */
-    private $currentHandler;
-    /**
-     * @var \SessionHandlerInterface&\SessionUpdateTimestampHandlerInterface
-     */
-    private $writeOnlyHandler;
+    private \SessionHandlerInterface&\SessionUpdateTimestampHandlerInterface $currentHandler;
+    private \SessionHandlerInterface&\SessionUpdateTimestampHandlerInterface $writeOnlyHandler;
     public function __construct(\SessionHandlerInterface $currentHandler, \SessionHandlerInterface $writeOnlyHandler)
     {
         if (!$currentHandler instanceof \SessionUpdateTimestampHandlerInterface) {
@@ -40,79 +34,67 @@ class MigratingSessionHandler implements \SessionHandlerInterface, \SessionUpdat
         $this->currentHandler = $currentHandler;
         $this->writeOnlyHandler = $writeOnlyHandler;
     }
+    public function __serialize() : array
+    {
+        throw new \BadMethodCallException('Cannot serialize ' . __CLASS__);
+    }
+    public function __unserialize(array $data) : void
+    {
+        throw new \BadMethodCallException('Cannot unserialize ' . __CLASS__);
+    }
     /**
-     * @return bool
+     * @return string
      */
-    #[\ReturnTypeWillChange]
-    public function close()
+    public function create_sid()
+    {
+        return session_create_id() ?: throw new \RuntimeException('Unable to create a session ID.');
+    }
+    public function close() : bool
     {
         $result = $this->currentHandler->close();
         $this->writeOnlyHandler->close();
         return $result;
     }
-    /**
-     * @return bool
-     */
-    #[\ReturnTypeWillChange]
-    public function destroy($sessionId)
+    public function destroy(#[\SensitiveParameter]
+        string $sessionId) : bool
     {
         $result = $this->currentHandler->destroy($sessionId);
         $this->writeOnlyHandler->destroy($sessionId);
         return $result;
     }
-    /**
-     * @return int|false
-     */
-    #[\ReturnTypeWillChange]
-    public function gc($maxlifetime)
+    public function gc(int $maxlifetime) : int|false
     {
         $result = $this->currentHandler->gc($maxlifetime);
         $this->writeOnlyHandler->gc($maxlifetime);
         return $result;
     }
-    /**
-     * @return bool
-     */
-    #[\ReturnTypeWillChange]
-    public function open($savePath, $sessionName)
+    public function open(string $savePath, string $sessionName) : bool
     {
         $result = $this->currentHandler->open($savePath, $sessionName);
         $this->writeOnlyHandler->open($savePath, $sessionName);
         return $result;
     }
-    /**
-     * @return string
-     */
-    #[\ReturnTypeWillChange]
-    public function read($sessionId)
+    public function read(#[\SensitiveParameter]
+        string $sessionId) : string|false
     {
         // No reading from new handler until switch-over
         return $this->currentHandler->read($sessionId);
     }
-    /**
-     * @return bool
-     */
-    #[\ReturnTypeWillChange]
-    public function write($sessionId, $sessionData)
+    public function write(#[\SensitiveParameter]
+        string $sessionId, string $sessionData) : bool
     {
         $result = $this->currentHandler->write($sessionId, $sessionData);
         $this->writeOnlyHandler->write($sessionId, $sessionData);
         return $result;
     }
-    /**
-     * @return bool
-     */
-    #[\ReturnTypeWillChange]
-    public function validateId($sessionId)
+    public function validateId(#[\SensitiveParameter]
+        string $sessionId) : bool
     {
         // No reading from new handler until switch-over
         return $this->currentHandler->validateId($sessionId);
     }
-    /**
-     * @return bool
-     */
-    #[\ReturnTypeWillChange]
-    public function updateTimestamp($sessionId, $sessionData)
+    public function updateTimestamp(#[\SensitiveParameter]
+        string $sessionId, string $sessionData) : bool
     {
         $result = $this->currentHandler->updateTimestamp($sessionId, $sessionData);
         $this->writeOnlyHandler->updateTimestamp($sessionId, $sessionData);

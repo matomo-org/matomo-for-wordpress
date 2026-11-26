@@ -37,6 +37,8 @@
               :title="environmentTranslatedText">{{ translate('TagManager_Environments') }}</th>
             <th class="created"
               :title="createdTranslatedText">{{ translate('TagManager_Created') }}</th>
+            <th class="createdBy" v-if="hasWriteAccess"
+              :title="createdByTranslatedText">{{ translate('TagManager_CreatedBy') }}</th>
             <th class="action"
               :title="actionTranslatedText">{{ translate('General_Actions') }}</th>
           </tr>
@@ -44,10 +46,12 @@
         <tbody>
           <tr v-show="isLoading || isUpdating">
             <td colspan="7">
-              <span class="loadingPiwik">
-                <img src="plugins/Morpheus/images/loading-blue.gif" />
-                {{ translate('General_LoadingData') }}
-              </span>
+              <ActivityIndicator
+                :loading="isLoading || isUpdating"
+                :loading-message="isUpdating
+                  ? translate('TagManager_UpdatingData')
+                  : translate('General_LoadingData')"
+              />
             </td>
           </tr>
           <tr v-show="!isLoading && versions.length === 0">
@@ -82,20 +86,27 @@
                 :key="index"
                 :title="translate(
                   'TagManager_ReleaseInfo',
-                  release.release_login,
+                  loginOrUnknown(release.release_login),
                   release.release_date_pretty
                 )"
               >
-                {{ ucfirst(release.environment) }}<span
+                {{ ucfirst(release.environment) }}
+                ({{ loginOrUnknown(release.release_login) }})<span
                   v-show="index !== version.releases.length - 1">, </span>
               </span>
             </td>
             <td class="created"><span>{{ version.created_date_pretty }}</span></td>
+            <td class="createdBy" v-if="hasWriteAccess">
+              <span v-if="version.created_by">{{ version.created_by }}</span>
+              <span v-else :title="translate('TagManager_UnknownUserHelp')">
+                {{ translate('General_Unknown') }}
+              </span>
+            </td>
             <td class="action">
               <a
                 class="table-action icon-rocket"
                 v-show="hasWriteAccess && (hasCustomTemplatesCapability || canPublishToLive)"
-                @click="publishVersion(version)"
+                @click="publishVersion(version as Version)"
                 :title="translate('TagManager_PublishVersion', version.name)"
               />
               <a
@@ -108,7 +119,7 @@
                 target="_blank"
                 class="table-action icon-export"
                 @click.prevent="exportVersion(version.idcontainerversion, version.name);"
-                :href="getExportUrl(version)"
+                :href="getExportUrl(version as Version)"
                 :title="translate('TagManager_ExportX', translate('TagManager_Version'))"
               />
               <a
@@ -121,7 +132,7 @@
                 class="table-action icon-delete"
                 v-show="version.releases.length === 0 && hasWriteAccess
                 && hasCustomTemplatesCapability"
-                @click="deleteVersion(version)"
+                @click="deleteVersion(version as Version)"
                 :title="translate('TagManager_DeleteX', translate('TagManager_Version'))"
               />
             </td>
@@ -175,7 +186,7 @@
       id="confirmPublishVersion"
       ref="confirmPublishVersion"
     >
-      <h2>{{ translate('TagManager_PublishVersion', versionToBePublished?.name) }}</h2>
+      <h2>{{ translate('TagManager_PublishVersion', versionToBePublished?.name || '') }}</h2>
       <div v-show="availableEnvironmentsToPublish.environnments.length">
         <div>
           <Field
@@ -222,6 +233,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import {
+  ActivityIndicator,
   Matomo,
   AjaxHelper,
   ContentBlock,
@@ -232,7 +244,7 @@ import VersionsStore from './Versions.store';
 import { Release, Version } from '../types';
 import AvailableEnvironmentsStore from '../AvailableEnvironments.store';
 
-interface VersionListState {
+export interface VersionListState {
   versionToBePublished: Version|null;
   versionSearch: string;
 }
@@ -248,6 +260,7 @@ export default defineComponent({
     versionsHelpText: String,
   },
   components: {
+    ActivityIndicator,
     ContentBlock,
     Field,
   },
@@ -291,7 +304,7 @@ export default defineComponent({
     enableDebugMode(idContainerVersion: number) {
       tagManagerHelper.enablePreviewMode(this.idContainer, idContainerVersion);
     },
-    exportVersion(idContainerVersion: number, versionName: string) {
+    exportVersion(idContainerVersion: number | null, versionName: string) {
       const params: QueryParameters = {
         module: 'API',
         method: 'TagManager.exportContainerVersion',
@@ -332,6 +345,9 @@ export default defineComponent({
       Matomo.helper.modalConfirm(this.$refs.confirmDeleteVersion as HTMLElement, {
         yes: doDelete,
       });
+    },
+    loginOrUnknown(login: string) {
+      return login || this.translate('General_Unknown');
     },
     ucfirst(s: string) {
       return `${s.substring(0, 1).toUpperCase()}${s.substring(1)}`;
@@ -397,6 +413,9 @@ export default defineComponent({
             if (value.environment) {
               propValue += `${value.environment} `;
             }
+            if (value.release_login) {
+              propValue += `${value.release_login} `;
+            }
           });
         }
         return propValue.toLowerCase().indexOf(searchFilter) !== -1;
@@ -432,6 +451,9 @@ export default defineComponent({
     },
     createdTranslatedText(): string {
       return this.translate('TagManager_VersionsCreatedDescription');
+    },
+    createdByTranslatedText(): string {
+      return this.translate('TagManager_VersionsCreatedByDescription');
     },
     actionTranslatedText(): string {
       return this.translate('TagManager_VersionsActionDescription');

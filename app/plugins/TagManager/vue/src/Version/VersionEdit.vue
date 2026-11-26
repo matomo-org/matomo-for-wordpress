@@ -10,18 +10,12 @@
       feature="Tag Manager"
       :content-title="editTitle"
     >
-      <p v-show="isLoading">
-        <span class="loadingPiwik">
-          <img src="plugins/Morpheus/images/loading-blue.gif"/>
-          {{ translate('General_LoadingData') }}
-        </span>
-      </p>
-      <p v-show="isUpdating">
-        <span class="loadingPiwik">
-          <img src="plugins/Morpheus/images/loading-blue.gif"/>
-          {{ translate('TagManager_UpdatingData') }}
-        </span>
-      </p>
+      <ActivityIndicator
+        :loading="isLoading || isUpdating"
+        :loading-message="isUpdating
+          ? translate('TagManager_UpdatingData')
+          : translate('General_LoadingData')"
+      />
       <form @submit="edit ? updateVersion() : createVersion()">
         <div>
           <div v-if="hasPublishCapability() ||
@@ -49,6 +43,16 @@
                 :inline-help="translate('TagManager_VersionDescriptionHelpText')"
                 :ui-control-attributes="{ class: 'compact-textarea' }"
                 :placeholder="translate('TagManager_VersionDescriptionPlaceholderV2')"
+              />
+            </div>
+            <div v-if="edit">
+              <Field
+                uicontrol="text"
+                name="created_by"
+                :model-value="version.created_by || translate('General_Unknown')"
+                :disabled="true"
+                :title="translate('TagManager_CreatedBy')"
+                :inline-help="version.created_by ? '' : translate('TagManager_UnknownUserHelp')"
               />
             </div>
             <SaveButton
@@ -160,7 +164,7 @@ import VersionsStore from './Versions.store';
 import VersionNameHelpText from './VersionNameHelpText.vue';
 import SelectTagManagerEnvironmentHelpText from './SelectTagManagerEnvironmentHelpText.vue';
 
-interface VersionEditState {
+export interface VersionEditState {
   isDirty: boolean;
   lastVersion: string | null;
   versionChanges: SingleDiff[];

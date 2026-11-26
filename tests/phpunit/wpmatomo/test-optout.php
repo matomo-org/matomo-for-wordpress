@@ -24,12 +24,12 @@ class OptOutTest extends MatomoAnalytics_SharedFixture_TestCase {
 	public function test_matomo_opt_out_classic_all_options() {
 		$result = do_shortcode( '[matomo_opt_out language=de]' );
 		$this->assertSame(
-			'<p id="matomo_opted_out_intro" style="display:none;">Opt-out abgeschlossen; Ihre Besuche auf dieser Webseite werden nicht vom Webanalysetool erfasst. Bitte beachten Sie, dass auch der Matomo-Deaktivierungs-Cookie dieser Webseite gelöscht wird, wenn Sie die in Ihrem Browser abgelegten Cookies entfernen. Außerdem müssen Sie, wenn Sie einen anderen Computer oder einen anderen Webbrowser verwenden, die Deaktivierungsprozedur nochmals absolvieren.</p><p id="matomo_opted_in_intro" >Sie haben die Möglichkeit zu verhindern, dass von Ihnen hier getätigte Aktionen analysiert und verknüpft werden. Dies wird Ihre Privatsphäre schützen, aber wird auch den Besitzer daran hindern, aus Ihren Aktionen zu lernen und die Bedienbarkeit für Sie und andere Benutzer zu verbessern.</p><form>
+			'<p id="matomo_opted_out_intro" style="display:none;">Widerspruch (Opt-out) abgeschlossen; Ihre Besuche auf dieser Webseite werden nicht vom Webanalysetool erfasst. Bitte beachten Sie, dass auch der Matomo-Deaktivierungs-Cookie dieser Webseite gelöscht wird, wenn Sie die in Ihrem Browser abgelegten Cookies entfernen. Außerdem müssen Sie, wenn Sie einen anderen Computer oder einen anderen Webbrowser verwenden, die Deaktivierungsprozedur nochmals absolvieren.</p><p id="matomo_opted_in_intro" >Sie haben die Möglichkeit zu verhindern, dass von Ihnen hier getätigte Aktionen analysiert und verknüpft werden. Dies wird Ihre Privatsphäre schützen, aber wird auch den Besitzer daran hindern, aus Ihren Aktionen zu lernen und die Bedienbarkeit für Sie und andere Benutzer zu verbessern.</p><form>
         <input type="checkbox" id="matomo_optout_checkbox" checked="checked"/>
         <label for="matomo_optout_checkbox"><strong>
-        <span id="matomo_opted_in_label" >Ihr Besuch dieser Webseite wird aktuell von der Matomo Webanalyse erfasst. Diese Checkbox abwählen für Opt-Out.</span>
-		<span id="matomo_opted_out_label" style="display:none;">Ihr Besuch dieser Webseite wird aktuell von der Matomo Webanalyse nicht erfasst. Diese Checkbox aktivieren für Opt-In.</span>
-        </strong></label></form><noscript><p><strong style="color: #ff0000;">This opt out feature requires JavaScript.</strong></p></noscript><p id="matomo_outout_err_cookies" style="display: none;"><strong>Die Tracking opt-out Funktion benötigt aktivierte Cookies.</strong></p>',
+        <span id="matomo_opted_in_label" >Ihr Besuch dieser Webseite wird aktuell von der Matomo-Webanalyse erfasst. Diese Checkbox abwählen zum Widersprechen (Opt-Out).</span>
+		<span id="matomo_opted_out_label" style="display:none;">Ihr Besuch dieser Webseite wird aktuell von der Matomo-Webanalyse nicht erfasst. Diese Checkbox aktivieren für Opt-In.</span>
+        </strong></label></form><noscript><p><strong style="color: #ff0000;">This opt out feature requires JavaScript.</strong></p></noscript><p id="matomo_outout_err_cookies" style="display: none;"><strong>Die Tracking-opt-out-Funktion benötigt aktivierte Cookies.</strong></p>',
 			$result
 		);
 	}

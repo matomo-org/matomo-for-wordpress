@@ -19,7 +19,7 @@
             class="reportDimension"
             v-for="widget in category.widgets"
             :key="widget.uniqueId"
-            :class="{ activeDimension: selectedWidget.uniqueId === widget.uniqueId }"
+            :class="{ activeDimension: selectedWidget?.uniqueId === widget.uniqueId }"
             @click="selectWidget(widget)"
           >
             <span class="dimension">{{ widget.name }}</span>
@@ -29,7 +29,7 @@
     </div>
     <div class="reportContainer">
       <WidgetLoader
-        v-if="selectedWidget.parameters"
+        v-if="selectedWidget?.parameters"
         :widget-params="selectedWidget.parameters"
         class="dimensionReport"
       />
@@ -44,11 +44,11 @@ import WidgetLoader from '../WidgetLoader/WidgetLoader.vue';
 import { Widget } from '../Widget/types';
 import { sortOrderables } from '../Orderable';
 
-interface WidgetByDimensionContainerState {
+export interface WidgetByDimensionContainerState {
   selectedWidget: Widget|null;
 }
 
-interface WidgetCategory {
+export interface WidgetCategory {
   name: string;
   order: number;
   widgets: Widget[];
@@ -74,7 +74,7 @@ export default defineComponent({
       return sortOrderables(this.widgets as Widget[]);
     },
     widgetsByCategory() {
-      const byCategory: Record<string, WidgetCategory> = {};
+      const byCategory: Record<string, WidgetCategory> = Object.create(null);
 
       this.widgetsSorted.forEach((widget) => {
         const category = widget.subcategory?.name;

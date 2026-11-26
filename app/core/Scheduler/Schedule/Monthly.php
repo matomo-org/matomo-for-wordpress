@@ -53,7 +53,7 @@ class Monthly extends \Piwik\Scheduler\Schedule\Schedule
     {
         $currentTime = $this->getTime();
         // Adds one month
-        $rescheduledTime = mktime(date('H', $currentTime), date('i', $currentTime), date('s', $currentTime), date('n', $currentTime) + 1, 1, date('Y', $currentTime));
+        $rescheduledTime = mktime((int) date('H', $currentTime), (int) date('i', $currentTime), (int) date('s', $currentTime), (int) date('n', $currentTime) + 1, 1, (int) date('Y', $currentTime));
         $nextMonthLength = date('t', $rescheduledTime);
         // Sets scheduled day
         $scheduledDay = date('j', $currentTime);

@@ -18,11 +18,8 @@ abstract class BaseActivity extends Activity
     protected $entityType = '';
     protected function hasRequestedApiMethod($method)
     {
-        if (method_exists('Piwik\\API\\Request', 'getRootApiRequestMethod')) {
-            $method = 'TagManager.' . $method;
-            return $method === Request::getRootApiRequestMethod();
-        }
-        return \false;
+        $method = 'TagManager.' . $method;
+        return $method === Request::getRootApiRequestMethod();
     }
     protected function getContainerNameFromActivityData($activityData)
     {
@@ -54,10 +51,13 @@ abstract class BaseActivity extends Activity
         }
         return '';
     }
+    /**
+     * @return array|false False drops the activity instead of logging it.
+     */
     protected function formatActivityData($idSite, $idContainer, $idContainerVersion, $idEntity)
     {
         if (!is_numeric($idSite) || !is_numeric($idEntity)) {
-            return;
+            return \false;
         }
         $params = array('site' => $this->getSiteData($idSite), 'version' => 'v1', 'container' => $this->getContainerData($idSite, $idContainer));
         if ($this->entityType) {

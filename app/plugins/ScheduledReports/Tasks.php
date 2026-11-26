@@ -15,9 +15,14 @@ class Tasks extends \Piwik\Plugin\Tasks
     {
         foreach (\Piwik\Plugins\ScheduledReports\API::getInstance()->getReports() as $report) {
             if (!$report['deleted'] && $report['period'] != Schedule::PERIOD_NEVER) {
-                $schedule = Schedule::getScheduledTimeForPeriod($report['period']);
+                if (\Piwik\Plugins\ScheduledReports\ReportSchedule::isScheduledOnSiteCalendar((string) $report['period'])) {
+                    // keep the delivery on the site's local Monday / first day of the month
+                    $schedule = new \Piwik\Plugins\ScheduledReports\ReportSchedule((string) $report['period'], (int) $report['idsite']);
+                } else {
+                    $schedule = Schedule::getScheduledTimeForPeriod($report['period']);
+                    $schedule->setTimezone('UTC');
+                }
                 $schedule->setHour($report['hour']);
-                $schedule->setTimezone('UTC');
                 // saved hour is UTC always
                 $this->custom(\Piwik\Plugins\ScheduledReports\API::getInstance(), 'sendReport', $report['idreport'], $schedule);
             }

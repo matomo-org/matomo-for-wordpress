@@ -38,33 +38,36 @@ class Normalizer
     private static $rawKD;
     private static $ulenMask = ["\xc0" => 2, "\xd0" => 2, "\xe0" => 3, "\xf0" => 4];
     private static $ASCII = " eiasntrolud][cmp'\ng|hv.fb,:=-q10C2*yx)(L9AS/P\"EjMIk3>5T<D4}B{8FwR67UGN;JzV#HOW_&!K?XQ%Y\\\tZ+~^\$@`\x00\x01\x02\x03\x04\x05\x06\x07\x08\v\f\r\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f";
-    public static function isNormalized(string $s, int $form = self::FORM_C)
+    public static function isNormalized(string $string, int $form = self::FORM_C)
     {
         if (!\in_array($form, [self::NFD, self::NFKD, self::NFC, self::NFKC])) {
-            return \false;
+            if (80000 > \PHP_VERSION_ID) {
+                return \false;
+            }
+            throw new \ValueError('normalizer_is_normalized(): Argument #2 ($form) must be a ' . (80600 > \PHP_VERSION_ID ? 'a ' : '') . 'valid normalization form');
         }
-        if (!isset($s[strspn($s, self::$ASCII)])) {
+        if (!isset($string[strspn($string, self::$ASCII)])) {
             return \true;
         }
-        if (self::NFC == $form && preg_match('//u', $s) && !preg_match('/[^\\x00-\\x{2FF}]/u', $s)) {
+        if (self::NFC == $form && preg_match('//u', $string) && !preg_match('/[^\\x00-\\x{2FF}]/u', $string)) {
             return \true;
         }
-        return self::normalize($s, $form) === $s;
+        return self::normalize($string, $form) === $string;
     }
-    public static function getRawDecomposition(string $s, int $form = self::FORM_C)
+    public static function getRawDecomposition(string $string, int $form = self::FORM_C)
     {
-        if ('' === $s || !preg_match('//u', $s)) {
+        if ('' === $string || !preg_match('//u', $string)) {
             return null;
         }
-        $ulen = $s[0] < "\x80" ? 1 : self::$ulenMask[$s[0] & "\xf0"] ?? 0;
-        if (!$ulen || \strlen($s) !== $ulen) {
+        $ulen = $string[0] < "\x80" ? 1 : self::$ulenMask[$string[0] & "\xf0"] ?? 0;
+        if (!$ulen || \strlen($string) !== $ulen) {
             return null;
         }
         if (self::NFC !== $form && self::NFD !== $form && self::NFKC !== $form && self::NFKD !== $form) {
             return '';
         }
-        if ($s >= "가" && $s <= "힣") {
-            $u = unpack('C*', $s);
+        if ($string >= "가" && $string <= "힣") {
+            $u = unpack('C*', $string);
             $j = ($u[1] - 224 << 12) + ($u[2] - 128 << 6) + $u[3] - 0xac80;
             if ($t = $j % 28) {
                 $j -= $t;
@@ -78,22 +81,19 @@ class Normalizer
         if (null === self::$rawD) {
             self::$rawD = self::getData('rawCanonicalDecomposition');
         }
-        if (isset(self::$rawD[$s])) {
-            return self::$rawD[$s];
+        if (isset(self::$rawD[$string])) {
+            return self::$rawD[$string];
         }
         if (self::NFKC === $form || self::NFKD === $form) {
             if (null === self::$rawKD) {
                 self::$rawKD = self::getData('rawCompatibilityDecomposition');
             }
-            return self::$rawKD[$s] ?? null;
+            return self::$rawKD[$string] ?? null;
         }
         return null;
     }
-    public static function normalize(string $s, int $form = self::FORM_C)
+    public static function normalize(string $string, int $form = self::FORM_C)
     {
-        if (!preg_match('//u', $s)) {
-            return \false;
-        }
         switch ($form) {
             case self::NFC:
                 $C = \true;
@@ -113,14 +113,18 @@ class Normalizer
                 break;
             default:
                 if (\defined('Normalizer::NONE') && \Normalizer::NONE == $form) {
-                    return $s;
+                    return preg_match('//u', $string) ? $string : \false;
                 }
                 if (80000 > \PHP_VERSION_ID) {
                     return \false;
                 }
-                throw new \ValueError('normalizer_normalize(): Argument #2 ($form) must be a a valid normalization form');
+                // the doubled article was fixed in PHP 8.6
+                throw new \ValueError('normalizer_normalize(): Argument #2 ($form) must be a ' . (80600 > \PHP_VERSION_ID ? 'a ' : '') . 'valid normalization form');
         }
-        if ('' === $s) {
+        if (!preg_match('//u', $string)) {
+            return \false;
+        }
+        if ('' === $string) {
             return '';
         }
         if ($K && null === self::$KD) {
@@ -133,7 +137,7 @@ class Normalizer
         if (null !== ($mbEncoding = 2 & (int) \ini_get('mbstring.func_overload') ? mb_internal_encoding() : null)) {
             mb_internal_encoding('8bit');
         }
-        $r = self::decompose($s, $K);
+        $r = self::decompose($string, $K);
         if ($C) {
             if (null === self::$C) {
                 self::$C = self::getData('canonicalComposition');

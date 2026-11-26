@@ -9,6 +9,7 @@
 namespace Piwik\Plugins\Monolog\Handler;
 
 use Matomo\Dependencies\Monolog\Handler\AbstractHandler;
+use Matomo\Dependencies\Monolog\LogRecord;
 use Piwik\Log\Logger;
 /**
  * Handler used to detect whether a certain level of log has been emitted.
@@ -18,12 +19,12 @@ class FailureLogMessageDetector extends AbstractHandler
     /**
      * @var boolean
      */
-    private $hasEncounteredImportantLog = \false;
+    private bool $hasEncounteredImportantLog = \false;
     public function __construct($level = Logger::WARNING)
     {
         parent::__construct($level, $bubble = \true);
     }
-    public function handle(array $record)
+    public function handle(LogRecord $record) : bool
     {
         if ($this->isHandling($record)) {
             $this->hasEncounteredImportantLog = \true;
@@ -40,7 +41,7 @@ class FailureLogMessageDetector extends AbstractHandler
     /**
      * for tests
      */
-    public function reset()
+    public function reset() : void
     {
         $this->hasEncounteredImportantLog = \false;
     }

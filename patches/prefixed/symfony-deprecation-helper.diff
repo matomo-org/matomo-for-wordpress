@@ -1,0 +1,17 @@
+--- a/app/vendor/autoload.php
++++ b/app/vendor/autoload.php
+@@ -24,4 +24,13 @@
+     }
+ }
+
++// Scoped dependencies still contain calls to Symfony's global deprecation helper,
++// including calls emitted into compiled Twig templates. Preserve another plugin's helper.
++if (!function_exists('trigger_deprecation')) {
++    function trigger_deprecation(string $package, string $version, string $message, ...$args): void
++    {
++        \Matomo\Dependencies\trigger_deprecation($package, $version, $message, ...$args);
++    }
++}
++
+ return $originalLoader;
+\ No newline at end of file

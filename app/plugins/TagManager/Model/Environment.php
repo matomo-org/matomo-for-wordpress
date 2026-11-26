@@ -10,7 +10,6 @@ namespace Piwik\Plugins\TagManager\Model;
 
 use Piwik\Common;
 use Piwik\Piwik;
-use Piwik\Plugins\TagManager\Configuration;
 use Exception;
 use Piwik\Plugins\TagManager\SystemSettings;
 class Environment
@@ -20,7 +19,7 @@ class Environment
     public const MAX_LENGTH = 40;
     public const MIN_LENGTH = 2;
     /**
-     * @var Configuration
+     * @var SystemSettings
      */
     private $settings;
     public function __construct(SystemSettings $settings)

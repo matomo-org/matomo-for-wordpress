@@ -18,14 +18,8 @@ use Piwik\Log\LoggerInterface;
  */
 class PageSpeedCheck implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnostic
 {
-    /**
-     * @var Translator
-     */
-    private $translator;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private Translator $translator;
+    private LoggerInterface $logger;
     public function __construct(Translator $translator, LoggerInterface $logger)
     {
         $this->translator = $translator;

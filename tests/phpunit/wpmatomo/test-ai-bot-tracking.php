@@ -210,6 +210,7 @@ class AIBotTrackingTest extends \MatomoUnit_TestCase {
 
 	public function test_do_ai_bot_tracking_should_do_nothing_if_current_user_agent_is_not_for_ai_bot() {
 		$this->enable_ai_bot_tracking();
+		$this->tracker->setUserAgent( 'Mozilla/5.0' );
 
 		$this->set_current_url( 'https://somesite.com/some/page' );
 
@@ -285,7 +286,7 @@ class AIBotTrackingTest extends \MatomoUnit_TestCase {
 
 		$expected = [
 			[
-				'https://matomo.mysite.com/matomo.php?idsite=1&rec=1&apiv=1&_idts=&_id=&url=' . rawurlencode( 'https://somesite.com/some/page' ) . '&urlref=&recMode=1&http_status=200&pf_srv=REMOVED&source=wordpress&bots=1',
+				'https://matomo.mysite.com/matomo.php?idsite=1&rec=1&apiv=1&_id=REMOVED&url=' . rawurlencode( 'https://somesite.com/some/page' ) . '&urlref=&recMode=1&http_status=200&pf_srv=REMOVED&source=wordpress&bots=1',
 				[
 					'method'   => 'GET',
 					'headers'  => [
@@ -328,7 +329,7 @@ class AIBotTrackingTest extends \MatomoUnit_TestCase {
 
 		$expected = [
 			[
-				'https://matomo.mysite.com/matomo.php?idsite=1&rec=1&apiv=1&_idts=&_id=&url=' . rawurlencode( 'https://somesite.com/some/page2' ) . '&urlref=&recMode=1&http_status=200&pf_srv=10000&source=wordpress&bots=1',
+				'https://matomo.mysite.com/matomo.php?idsite=1&rec=1&apiv=1&_id=REMOVED&url=' . rawurlencode( 'https://somesite.com/some/page2' ) . '&urlref=&recMode=1&http_status=200&pf_srv=10000&source=wordpress&bots=1',
 				[
 					'method'   => 'GET',
 					'headers'  => [
@@ -357,7 +358,7 @@ class AIBotTrackingTest extends \MatomoUnit_TestCase {
 
 		$expected = [
 			[
-				'https://matomo.mysite.com/matomo.php?idsite=1&rec=1&apiv=1&_idts=&_id=&url=' . rawurlencode( 'https://anothersite.com/page' ) . '&urlref=&recMode=1&http_status=200&pf_srv=REMOVED&source=wordpress&bots=1',
+				'https://matomo.mysite.com/matomo.php?idsite=1&rec=1&apiv=1&_id=REMOVED&url=' . rawurlencode( 'https://anothersite.com/page' ) . '&urlref=&recMode=1&http_status=200&pf_srv=REMOVED&source=wordpress&bots=1',
 				[
 					'method'   => 'GET',
 					'headers'  => [
@@ -381,9 +382,11 @@ class AIBotTrackingTest extends \MatomoUnit_TestCase {
 	}
 
 	private function make_mock_tracker() {
+		\WpMatomo\Site::map_matomo_site_id( get_current_blog_id(), 1 );
 		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 		MatomoTracker::$URL = 'https://matomo.mysite.com/';
 		$tracker            = new TestAjaxTracker( $this->settings );
+		$tracker->setApiUrl( 'https://matomo.mysite.com/' );
 		$tracker->setIdSite( 1 );
 		return $tracker;
 	}
@@ -416,7 +419,7 @@ class AIBotTrackingTest extends \MatomoUnit_TestCase {
 		$_SERVER['PATH_INFO']    = $url_parts['path'];
 		$_SERVER['QUERY_STRING'] = isset( $url_parts['query'] ) ? $url_parts['query'] : '';
 
-		$_SERVER['REQUEST_URI'] = $url;
+		$_SERVER['REQUEST_URI'] = ( $url_parts['path'] ?? '/' ) . ( isset( $url_parts['query'] ) ? '?' . $url_parts['query'] : '' );
 	}
 
 	private function unset_current_url() {

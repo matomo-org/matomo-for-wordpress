@@ -93,7 +93,7 @@ class Menu extends \Piwik\Plugin\Menu
             } else {
                 $menu->addItem('TagManager_TagManager', 'TagManager_EnablePreviewDebug', array(), $orderId = 130, \false, 'icon-bug', "tagManagerHelper.enablePreviewMode(" . json_encode($container['idcontainer']) . ")");
             }
-            if ($this->accessValidator->hasUseCustomTemplatesCapability($idSite) || $this->accessValidator->hasWriteCapability($idSite) && $this->accessValidator->hasPublishLiveEnvironmentCapability($idSite)) {
+            if ($this->accessValidator->hasUseCustomTemplatesCapability($idSite) || $this->accessValidator->hasPublishLiveEnvironmentCapability($idSite)) {
                 $menu->addItem('TagManager_TagManager', 'TagManager_Publish', array(), $orderId = 135, \false, 'icon-rocket', "tagManagerHelper.editVersion(" . json_encode($container['idcontainer']) . ", 0, '')");
             }
         }

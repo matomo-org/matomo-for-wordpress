@@ -99,7 +99,6 @@
         "ExceptionDatabaseVersion": "Ваша %1$s версія %2$s, але Matomo патрабуе па меншай меры версію %3$s.",
         "ExceptionFileIntegrity": "Праверка цэласнасці не ўдалася: %s",
         "ExceptionFilesizeMismatch": "Неадпаведнасць памеру файла: %1$s (чаканы памер: %2$s, атрыманы памер: %3$s)",
-        "ExceptionIncompatibleClientServerVersions": "Ваш кліент %1$s версіі %2$s несумяшчальнs з версіяй сервера %3$s.",
         "ExceptionInvalidAggregateReportsFormat": "Сукупны фармат справаздач '%1$s' несапраўдныя. Паспрабуйце любы з наступных замест: %2$s.",
         "ExceptionInvalidArchiveTimeToLive": "Сённяшни архіўны час павинен быць колькасцю секунд больш за нуль",
         "ExceptionInvalidDateFormat": "Фармат даты павінен быць: %1$s, або на любое ключавое слова, падтрымліваемае функцыяй %2$s (глядзі %3$s для больш падрабязнай інфармацыі)",
@@ -259,6 +258,9 @@
         "Yes": "Так",
         "YouMustBeLoggedIn": "Каб атрымаць доступ да гэтай функцыянальнасці, Вы павінны аўтарызавацца.",
         "YourChangesHaveBeenSaved": "Вашы змены былі захаваныя."
+    },
+    "AIProviders": {
+        "DefaultBadge": "Пазмаўчанні"
     },
     "API": {
         "KeepTokenSecret": "Гэта ідэнтыфікацыйны токэн, ён такі жа сакрэтны, як ваш лагін і пароль, %1$s не дзеліцеся ім ня з кім%2$s!",
@@ -486,7 +488,6 @@
         "GoalName": "Імя Мэты",
         "GoalX": "Мэта %s",
         "Goals": "Мэты",
-        "GoalsOverview": "Аглят Мэт",
         "GoalsOverviewDocumentation": "Гэта агляд вашых дасягнутых мэт канверсій. Першапачаткова, графік паказвае суму ўсіх канверсій. %s Ніжэй графік, на якім можна ўбачыць справаздачы канверсій для кожнай з вашых мэтаў. Спарклайны можна павялічыць, націснуўшы на іх.",
         "HelpOneConversionPerVisit": "Калі старонка, якая адпавядае гэтай Мэце абнаўляецца ці наведваецца больш чым адзін раз, Мэта будзе адсочвацца толькі ў ходзе першага наведвання.",
         "IsExactly": "дакладна %s",
@@ -501,6 +502,8 @@
         "ProductName": "Імя прадукта",
         "ProductSKU": "Прадукт SKU",
         "Products": "Прадукты",
+        "RecommendationCountOnePage": "1 старонка",
+        "RecommendationCountPages": "%s старонак",
         "ReturningVisitorsConversionRateIs": "Канверсія вяртаючыхя наведвальнікаў - %s",
         "SingleGoalOverviewDocumentation": "Гэта агляд канверсій для адной мэты. %s Спарклайны можна павялічыць, націснуўшы на іх.",
         "URL": "URL",
@@ -552,7 +555,6 @@
         "SystemCheckFileIntegrity": "Цэласнасць файлаў",
         "SystemCheckFunctions": "Патрабаваныя функцыі",
         "SystemCheckGDHelp": "Адлюстраванне тонкіх (маленькіх) графікаў не будзе працаваць.",
-        "SystemCheckGlobHelp": "Гэтая убудаваная функцыя адключана на вашым хосце. Matomo паспрабуе эмуляваць гэтую функцыю, але могуць паўстаць дадатковыя абмежаванні бяспекі. Функцыянальныя магчымасці могуць быць закрануты.",
         "SystemCheckGzcompressHelp": "Вам неабходна ўключыць пашырэнне zlib і функцыю gzcompress.",
         "SystemCheckGzuncompressHelp": "Вам неабходна ўключыць пашырэнне zlib і функцыю gzuncompress.",
         "SystemCheckMailHelp": "Функцыі водгукаў о Matomo і аднаўленне пароляў не будуць працаваць без mail().",
@@ -1784,6 +1786,8 @@
     },
     "Marketplace": {
         "ActivateLicenseKey": "Актываваць",
+        "CategoryEcommerce": "Электронная камерцыя",
+        "CategorySecurity": "Бяспека",
         "PluginKeywords": "Ключавыя словы",
         "SubscriptionType": "Тып"
     },
@@ -1856,12 +1860,6 @@
         "WidgetGlobalVisitors": "Глабальная канфігурацыя",
         "WidgetGlobalVisitorsDocumentation": "Гэтая справаздача паказвае найбольш распаўсюджаныя агульныя канфігурацыі, якія мелі вашы наведвальнікі. Канфігурацыя - гэта спалучэнне аперацыйнай сістэмы, тыпу браўзэра і дазволу экрана.",
         "WidgetResolutions": "Дазвол манітораў"
-    },
-    "SEO": {
-        "DomainAge": "Узрост дамена",
-        "Rank": "Ранг",
-        "SEORankingsFor": "SEO рэйтынгі для %s",
-        "SeoRankings": "SEO рэйтынгі"
     },
     "ScheduledReports": {
         "AlsoSendReportToTheseEmails": "Акрамя таго, адправіць справаздачу на гэтыя электронныя адрасы (па аднаму ў радку):",

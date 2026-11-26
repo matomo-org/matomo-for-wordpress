@@ -78,6 +78,7 @@ class ProxyHttp
         $lastModified = gmdate('D, d M Y H:i:s', $fileModifiedTime) . ' GMT';
         // set some HTTP response headers
         self::overrideCacheControlHeaders('public');
+        \Piwik\Common::stripHeader('Set-Cookie');
         \Piwik\Common::sendHeader('Vary: Accept-Encoding');
         if (\false === $filename) {
             $filename = basename($file);
@@ -151,7 +152,7 @@ class ProxyHttp
         // clearing all output buffers combined with output compressions had bugs on certain PHP versions
         // manually removing the Content-Encoding header fixes this
         // See https://github.com/php/php-src/issues/8218
-        if ($phpOutputCompressionEnabled && (version_compare(\PHP_VERSION, '8.0.17', '=') || version_compare(\PHP_VERSION, '8.0.18', '=') || version_compare(\PHP_VERSION, '8.1.4', '=') || version_compare(\PHP_VERSION, '8.1.5', '='))) {
+        if ($phpOutputCompressionEnabled && (version_compare(\PHP_VERSION, '8.1.4', '=') || version_compare(\PHP_VERSION, '8.1.5', '='))) {
             header_remove("Content-Encoding");
         }
         if (!_readfile($file, $byteStart, $byteEnd)) {

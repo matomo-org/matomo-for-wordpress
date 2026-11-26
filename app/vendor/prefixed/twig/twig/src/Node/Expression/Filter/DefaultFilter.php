@@ -10,14 +10,20 @@
  */
 namespace Matomo\Dependencies\Twig\Node\Expression\Filter;
 
+use Matomo\Dependencies\Twig\Attribute\FirstClassTwigCallableReady;
 use Matomo\Dependencies\Twig\Compiler;
-use Matomo\Dependencies\Twig\Node\Expression\ConditionalExpression;
+use Matomo\Dependencies\Twig\Extension\CoreExtension;
+use Matomo\Dependencies\Twig\Node\EmptyNode;
+use Matomo\Dependencies\Twig\Node\Expression\AbstractExpression;
 use Matomo\Dependencies\Twig\Node\Expression\ConstantExpression;
 use Matomo\Dependencies\Twig\Node\Expression\FilterExpression;
 use Matomo\Dependencies\Twig\Node\Expression\GetAttrExpression;
-use Matomo\Dependencies\Twig\Node\Expression\NameExpression;
+use Matomo\Dependencies\Twig\Node\Expression\Ternary\ConditionalTernary;
 use Matomo\Dependencies\Twig\Node\Expression\Test\DefinedTest;
+use Matomo\Dependencies\Twig\Node\Expression\Variable\ContextVariable;
 use Matomo\Dependencies\Twig\Node\Node;
+use Matomo\Dependencies\Twig\TwigFilter;
+use Matomo\Dependencies\Twig\TwigTest;
 /**
  * Returns the value or the default value when it is undefined or empty.
  *
@@ -27,17 +33,30 @@ use Matomo\Dependencies\Twig\Node\Node;
  */
 class DefaultFilter extends FilterExpression
 {
-    public function __construct(Node $node, ConstantExpression $filterName, Node $arguments, int $lineno, ?string $tag = null)
+    /**
+     * @param AbstractExpression $node
+     */
+    #[FirstClassTwigCallableReady]
+    public function __construct(Node $node, TwigFilter|ConstantExpression $filter, Node $arguments, int $lineno)
     {
-        $default = new FilterExpression($node, new ConstantExpression('default', $node->getTemplateLine()), $arguments, $node->getTemplateLine());
-        if ('default' === $filterName->getAttribute('value') && ($node instanceof NameExpression || $node instanceof GetAttrExpression)) {
-            $test = new DefinedTest(clone $node, 'defined', new Node(), $node->getTemplateLine());
-            $false = \count($arguments) ? $arguments->getNode('0') : new ConstantExpression('', $node->getTemplateLine());
-            $node = new ConditionalExpression($test, $default, $false, $node->getTemplateLine());
+        if (!$node instanceof AbstractExpression) {
+            trigger_deprecation('twig/twig', '3.15', 'Not passing a "%s" instance to the "node" argument of "%s" is deprecated ("%s" given).', AbstractExpression::class, static::class, $node::class);
+        }
+        if ($filter instanceof TwigFilter) {
+            $name = $filter->getName();
+            $default = new FilterExpression($node, $filter, $arguments, $node->getTemplateLine());
+        } else {
+            $name = $filter->getAttribute('value');
+            $default = new FilterExpression($node, new TwigFilter('default', [CoreExtension::class, 'default']), $arguments, $node->getTemplateLine());
+        }
+        if ('default' === $name && ($node instanceof ContextVariable || $node instanceof GetAttrExpression)) {
+            $test = new DefinedTest(clone $node, new TwigTest('defined', null, ['always_allowed_in_sandbox' => \true]), new EmptyNode(), $node->getTemplateLine());
+            $false = \count($arguments) ? clone $arguments->getNode('0') : new ConstantExpression('', $node->getTemplateLine());
+            $node = new ConditionalTernary($test, $default, $false, $node->getTemplateLine());
         } else {
             $node = $default;
         }
-        parent::__construct($node, $filterName, $arguments, $lineno, $tag);
+        parent::__construct($node, $filter, $arguments, $lineno);
     }
     public function compile(Compiler $compiler) : void
     {

@@ -43,10 +43,12 @@
         <tbody>
           <tr v-show="isLoading || isUpdating">
             <td colspan="6">
-              <span class="loadingPiwik">
-                <img src="plugins/Morpheus/images/loading-blue.gif" />
-                {{ translate('General_LoadingData') }}
-              </span>
+              <ActivityIndicator
+                :loading="isLoading || isUpdating"
+                :loading-message="isUpdating
+                  ? translate('TagManager_UpdatingData')
+                  : translate('General_LoadingData')"
+              />
             </td>
           </tr>
           <tr v-show="!isLoading && tags.length === 0">
@@ -74,9 +76,13 @@
             </td>
             <td
               class="type"
-              :title="tag.typeMetadata.description"
+              :title="tag.typeMetadata
+                ? tag.typeMetadata.description
+                : translate('TagManager_TypeNotAvailableHelp')"
             >
-              {{ tag.typeMetadata.name }}
+              {{ tag.typeMetadata
+                ? tag.typeMetadata.name
+                : translate('TagManager_TypeNotAvailable', tag.type) }}
             </td>
             <td class="triggers">
               <span
@@ -87,19 +93,19 @@
                 <a
                   style="display: inline-block;vertical-align: top !important;"
                   class="chip"
-                  v-if="hasWriteAccess"
+                  v-if="canEditTrigger(fireTriggerId)"
                   href=""
                   @click.prevent="editTrigger(fireTriggerId)"
-                  :title="this.triggers[fireTriggerId]"
+                  :title="triggers[fireTriggerId]"
                 >
-                  {{ truncateText(this.triggers[fireTriggerId], triggerTruncateLength) }}
+                  {{ truncateText(triggers[fireTriggerId], triggerTruncateLength) }}
                 </a>
                 <span
                   class="chip"
-                  v-if="!hasWriteAccess"
-                  :title="this.triggers[fireTriggerId]"
+                  v-if="!canEditTrigger(fireTriggerId)"
+                  :title="triggers[fireTriggerId]"
                 >
-                  {{ truncateText(this.triggers[fireTriggerId], triggerTruncateLength) }}
+                  {{ truncateText(triggers[fireTriggerId], triggerTruncateLength) }}
                 </span>
               </span>
               <span v-show="tag.block_trigger_ids.length">
@@ -111,26 +117,26 @@
                 >
                   <a
                     class="chip"
-                    v-show="hasWriteAccess"
+                    v-show="canEditTrigger(blockTriggerId)"
                     href=""
                     @click.prevent="editTrigger(blockTriggerId)"
-                    :title="this.triggers[blockTriggerId]"
+                    :title="triggers[blockTriggerId]"
                   >
-                    {{ truncateText(this.triggers[blockTriggerId], triggerTruncateLength) }}
+                    {{ truncateText(triggers[blockTriggerId], triggerTruncateLength) }}
                   </a>
                   <span
                     class="chip"
-                    v-show="!hasWriteAccess"
-                    :title="this.triggers[blockTriggerId]"
+                    v-show="!canEditTrigger(blockTriggerId)"
+                    :title="triggers[blockTriggerId]"
                   >
-                    {{ truncateText(this.triggers[blockTriggerId], triggerTruncateLength) }}
+                    {{ truncateText(triggers[blockTriggerId], triggerTruncateLength) }}
                   </span>
                 </span>
               </span>
             </td>
             <td
               class="lastUpdated"
-              :title="translate('TagManager_CreatedOnX', tag.created_date_pretty)"
+              :title="translate('TagManager_CreatedOnX', tag.created_date_pretty || '')"
             >
               <span>{{ tag.updated_date_pretty }}</span>
             </td>
@@ -142,25 +148,26 @@
                 v-show="tag.status === 'active'
                 && (!tag.typeMetadata?.isCustomTemplate || canUseCustomTemplates)"
                 class="table-action icon-pause"
-                @click="pauseTag(tag)"
+                @click="pauseTag(tag as Tag)"
                 :title="translate('TagManager_PauseX', translate('TagManager_Tag'))"
               />
               <a
                 v-show="tag.status === 'paused'
                 && (!tag.typeMetadata?.isCustomTemplate || canUseCustomTemplates)"
                 class="table-action icon-play"
-                @click="resumeTag(tag)"
+                @click="resumeTag(tag as Tag)"
                 :title="translate('TagManager_ResumeX', translate('TagManager_Tag'))"
               />
               <a
                 class="table-action icon-edit"
-                @click="editTag(tag.idtag, tag.type)"
+                v-show="tag.typeMetadata"
+                @click="editTag(tag.idtag)"
                 :title="translate('TagManager_EditTag')"
               />
               <a
                 class="table-action icon-content-copy"
-                v-show="hasPublishCapability()"
-                @click="openCopyDialog(tag)"
+                v-show="hasPublishCapability() && tag.typeMetadata"
+                @click="openCopyDialog(tag as Tag)"
                 :title="translate(
                   'TagManager_CopyX',
                   translate('TagManager_Tag'),
@@ -169,7 +176,7 @@
               <a
                 v-show="!tag.typeMetadata?.isCustomTemplate || canUseCustomTemplates"
                 class="table-action icon-delete"
-                @click="deleteTag(tag)"
+                @click="deleteTag(tag as Tag)"
                 :title="translate('TagManager_DeleteX', translate('TagManager_Tag'))"
               />
             </td>
@@ -246,6 +253,7 @@
 <script lang="ts">
 import { defineComponent, watch } from 'vue';
 import {
+  ActivityIndicator,
   ContentBlock,
   ContentTable,
   Matomo,
@@ -256,7 +264,7 @@ import TagsStore from './Tags.store';
 import TriggersStore from '../Trigger/Triggers.store';
 import { Tag, TagType } from '../types';
 
-interface TagListState {
+export interface TagListState {
   hasWriteAccess: boolean;
   triggerTruncateLength: number;
   tagSearch: string;
@@ -279,6 +287,7 @@ export default defineComponent({
     tagsHelpText: String,
   },
   components: {
+    ActivityIndicator,
     ContentBlock,
     Field,
   },
@@ -307,6 +316,10 @@ export default defineComponent({
     },
     createTag() {
       this.editTag(0);
+    },
+    canEditTrigger(idTrigger: number) {
+      // the trigger editor cannot be used when the trigger type is not available
+      return this.hasWriteAccess && !this.unavailableTriggerIds.includes(idTrigger);
     },
     editTrigger(idTrigger: number) {
       tagManagerHelper.editTrigger(
@@ -414,6 +427,11 @@ export default defineComponent({
     },
   },
   computed: {
+    unavailableTriggerIds() {
+      return TriggersStore.triggers.value
+        .filter((t) => !t.typeMetadata)
+        .map((t) => t.idtrigger);
+    },
     triggers() {
       const triggers: Record<string, string> = {};
       TriggersStore.triggers.value.forEach((t) => {
@@ -441,8 +459,8 @@ export default defineComponent({
         if (typeof entity[propName] === 'string') {
           propValue = (entity[propName] as string);
         } else if (propName === 'typeMetadata') {
-          const propTypeMeta = (entity.typeMetadata as TagType);
-          propValue = (propTypeMeta.name as string);
+          const propTypeMeta = (entity.typeMetadata as TagType|null);
+          propValue = (propTypeMeta?.name || '');
         } else if (propName === 'fire_trigger_ids') {
           if (this.triggers && entity.fire_trigger_ids) {
             Object.values((entity.fire_trigger_ids) as number[]).forEach((value) => {

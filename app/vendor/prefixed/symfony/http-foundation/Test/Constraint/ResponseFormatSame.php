@@ -20,24 +20,19 @@ use Matomo\Dependencies\Symfony\Component\HttpFoundation\Response;
  */
 final class ResponseFormatSame extends Constraint
 {
-    private $request;
-    private $format;
+    private Request $request;
+    private ?string $format;
     public function __construct(Request $request, ?string $format)
     {
         $this->request = $request;
         $this->format = $format;
     }
-    /**
-     * {@inheritdoc}
-     */
     public function toString() : string
     {
         return 'format is ' . ($this->format ?? 'null');
     }
     /**
      * @param Response $response
-     *
-     * {@inheritdoc}
      */
     protected function matches($response) : bool
     {
@@ -45,8 +40,6 @@ final class ResponseFormatSame extends Constraint
     }
     /**
      * @param Response $response
-     *
-     * {@inheritdoc}
      */
     protected function failureDescription($response) : string
     {
@@ -54,8 +47,6 @@ final class ResponseFormatSame extends Constraint
     }
     /**
      * @param Response $response
-     *
-     * {@inheritdoc}
      */
     protected function additionalFailureDescription($response) : string
     {

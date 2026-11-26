@@ -9,6 +9,7 @@
 namespace Piwik\Plugins\UsersManager;
 
 use Exception;
+use Piwik\Access;
 use Piwik\Access\Role\Admin;
 use Piwik\Access\Role\Write;
 use Piwik\API\Request;
@@ -46,6 +47,29 @@ class UsersManager extends \Piwik\Plugin
             throw new \Exception('Creating, updating, and deleting users has been disabled.');
         }
     }
+    /**
+     * Rejects issuing a token that would be less restricted than the token authenticating this request.
+     *
+     * Without this a scoped token escapes its own scope by minting a fresh one. Deliberately not in
+     * {@see Model::addTokenAuth()}, which also writes system tokens mid-request
+     * ({@see \Piwik\Piwik::requestTemporarySystemAuthToken()}) that a request-scope rule would refuse.
+     *
+     * @param string|null $accessLevel Access level the new token would carry, null meaning unscoped.
+     * @throws Exception
+     */
+    public static function checkTokenScopeOfRequestAllowsIssuing(?string $accessLevel) : void
+    {
+        $requestAccessLevel = Access::getInstance()->getTokenAccessLevel();
+        if ($requestAccessLevel === null || $requestAccessLevel === 'superuser') {
+            return;
+        }
+        $rankings = Access::getTokenAccessLevelRankings();
+        // An unscoped token is the least restricted outcome there is, so rank it above every level.
+        $requestedRanking = $accessLevel === null ? $rankings['superuser'] : $rankings[$accessLevel] ?? $rankings['superuser'];
+        if ($requestedRanking > ($rankings[$requestAccessLevel] ?? 0)) {
+            throw new Exception(Piwik::translate('UsersManager_ExceptionCreateTokenAuthAboveRequestTokenScope'));
+        }
+    }
     public function addSystemSummaryItems(&$systemSummary)
     {
         if (!self::isUsersAdminEnabled()) {
@@ -77,7 +101,7 @@ class UsersManager extends \Piwik\Plugin
         $logins = $model->getUsersLoginWithSiteAccess($idSite, Admin::ID);
         $writeLogins = $model->getUsersLoginWithSiteAccess($idSite, Write::ID);
         $logins = array_merge($logins, $writeLogins);
-        $token_auths = $model->getAllHashedTokensForLogins($logins);
+        $token_auths = $model->getAllHashedTokensForTrackerCacheForLogins($logins);
         $attributes['tracking_token_auth'] = array();
         if (!empty($token_auths)) {
             foreach ($token_auths as $token_auth) {
@@ -85,9 +109,8 @@ class UsersManager extends \Piwik\Plugin
             }
         }
     }
-    public static function hashTrackingToken(
-#[\SensitiveParameter]
-$tokenAuth, $idSite)
+    public static function hashTrackingToken(#[\SensitiveParameter]
+        $tokenAuth, $idSite)
     {
         return sha1($idSite . $tokenAuth . SettingsPiwik::getSalt());
     }
@@ -156,9 +179,8 @@ $tokenAuth, $idSite)
         $l = strlen($input);
         return $l >= self::PASSWORD_MIN_LENGTH;
     }
-    public static function checkPassword(
-#[\SensitiveParameter]
-$password)
+    public static function checkPassword(#[\SensitiveParameter]
+        $password)
     {
         /**
          * Triggered before core password validator check password.
@@ -184,9 +206,8 @@ $password)
             throw new Exception(Piwik::translate('UsersManager_ExceptionInvalidPasswordTooLong', array(self::PASSWORD_MAX_LENGTH)));
         }
     }
-    public static function getPasswordHash(
-#[\SensitiveParameter]
-$password)
+    public static function getPasswordHash(#[\SensitiveParameter]
+        $password)
     {
         if (SettingsPiwik::isUserCredentialsSanityCheckEnabled()) {
             self::checkBasicPasswordStrength($password);
@@ -195,9 +216,8 @@ $password)
         // to change how the root pwd is saved in the config file
         return md5($password);
     }
-    public static function checkBasicPasswordStrength(
-#[\SensitiveParameter]
-$password)
+    public static function checkBasicPasswordStrength(#[\SensitiveParameter]
+        $password)
     {
         $ex = new \Exception('This password is too weak, please supply another value or reset it.');
         $numDistinctCharacters = strlen(count_chars($password, 3));
@@ -215,9 +235,8 @@ $password)
      * @param string $exceptionMessage Message of the exception thrown.
      * @throws Exception if the password hash length is incorrect.
      */
-    public static function checkPasswordHash(
-#[\SensitiveParameter]
-$passwordHash, $exceptionMessage)
+    public static function checkPasswordHash(#[\SensitiveParameter]
+        $passwordHash, $exceptionMessage)
     {
         if (strlen($passwordHash) != 32 || !ctype_xdigit($passwordHash)) {
             // MD5 hash length
@@ -431,5 +450,8 @@ $passwordHash, $exceptionMessage)
         $translationKeys[] = 'UsersManager_SignOutUser';
         $translationKeys[] = 'UsersManager_SignOutUserConfirm';
         $translationKeys[] = 'UsersManager_SignOutUserSuccess';
+        $translationKeys[] = 'UsersManager_TokenAccessLevel';
+        $translationKeys[] = 'UsersManager_TokenAccessLevelHelp';
+        $translationKeys[] = 'UsersManager_InvalidTokenAccessLevel';
     }
 }

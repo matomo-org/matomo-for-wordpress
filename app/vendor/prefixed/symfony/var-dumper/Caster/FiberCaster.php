@@ -18,6 +18,9 @@ use Matomo\Dependencies\Symfony\Component\VarDumper\Cloner\Stub;
  */
 final class FiberCaster
 {
+    /**
+     * @return array
+     */
     public static function castFiber(\Fiber $fiber, array $a, Stub $stub, bool $isNested, int $filter = 0)
     {
         $prefix = Caster::PREFIX_VIRTUAL;

@@ -20,10 +20,8 @@ abstract class TokenEmailNotification extends \Piwik\Plugins\UsersManager\TokenN
     private $recipients;
     /**
      * Data in the format of ['email@example.com' => ['item1' => 'value1'], ...] that will be passed to the email class
-     *
-     * @var array
      */
-    private $emailData;
+    private array $emailData;
     /**
      * @param array{login: string, tokenId: string, tokenName: string, tokenDate: string} $tokens
      * @param array $recipients

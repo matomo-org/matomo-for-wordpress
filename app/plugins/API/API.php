@@ -34,7 +34,6 @@ use Piwik\Translation\Translator;
 use Piwik\Measurable\Type\TypeManager;
 use Piwik\Version;
 use Piwik\Widget\WidgetsList;
-require_once PIWIK_INCLUDE_PATH . '/core/Config.php';
 /**
  * This API is the <a href='https://matomo.org/docs/analytics-api/metadata/' rel='noreferrer' target='_blank'>Metadata API</a>: it gives information about all other available APIs methods, as well as providing
  * human readable and more complete outputs than normal API methods.
@@ -57,14 +56,8 @@ require_once PIWIK_INCLUDE_PATH . '/core/Config.php';
  */
 class API extends \Piwik\Plugin\API
 {
-    /**
-     * @var SettingsProvider
-     */
-    private $settingsProvider;
-    /**
-     * @var ProcessedReport
-     */
-    private $processedReport;
+    private SettingsProvider $settingsProvider;
+    private \Piwik\Plugins\API\ProcessedReport $processedReport;
     /**
      * For Testing purpose only
      * @var int
@@ -116,16 +109,6 @@ class API extends \Piwik\Plugin\API
     {
         Piwik::checkUserHasSomeViewAccess();
         return IP::getIpFromHeader();
-    }
-    /**
-     * Returns the `[APISettings]` section from `config.ini.php`.
-     *
-     * @return array<string, mixed>
-     * @deprecated May be removed in one of the next major releases
-     */
-    public function getSettings()
-    {
-        return Config::getInstance()->APISettings;
     }
     /**
      * Returns all available measurable types.
@@ -461,9 +444,8 @@ class API extends \Piwik\Plugin\API
      * @param bool $rootIsSessionToken Whether the outer request authenticated via a session token.
      * @param string $rootTokenAuth The token the outer request authenticated with.
      */
-    private function checkNestedRequestAuthMatchesRoot(\Piwik\Request $nestedRequest, bool $rootIsSessionToken,
-#[\SensitiveParameter]
-string $rootTokenAuth) : void
+    private function checkNestedRequestAuthMatchesRoot(\Piwik\Request $nestedRequest, bool $rootIsSessionToken, #[\SensitiveParameter]
+        string $rootTokenAuth) : void
     {
         $params = $nestedRequest->getParameters();
         if (array_key_exists('force_api_session', $params) && $nestedRequest->getBoolParameter('force_api_session', \false) !== $rootIsSessionToken) {
@@ -727,7 +709,7 @@ string $rootTokenAuth) : void
      */
     private function doesSuggestedValuesCallbackNeedData($suggestedValuesCallback) : bool
     {
-        if (is_string($suggestedValuesCallback) && strpos($suggestedValuesCallback, '::') !== \false) {
+        if (is_string($suggestedValuesCallback) && str_contains($suggestedValuesCallback, '::')) {
             $suggestedValuesCallback = explode('::', $suggestedValuesCallback);
         }
         if (is_array($suggestedValuesCallback)) {
@@ -755,7 +737,7 @@ class Plugin extends \Piwik\Plugin
     }
     public function detectIsApiRequest() : void
     {
-        Request::setIsRootRequestApiRequest(Request::getMethodIfApiRequest($request = null));
+        Request::setIsRootRequestApiRequest(Request::isApiHttpRequest() ? Request::getMethodIfApiRequest($request = null) : null);
     }
     /**
      * @param list<string> $stylesheets

@@ -12,7 +12,6 @@ use Exception;
 use Piwik\Common;
 use Piwik\Config;
 use Piwik\Container\StaticContainer;
-use Piwik\Date;
 use Piwik\Log;
 use Piwik\Option;
 use Piwik\Period;
@@ -58,7 +57,7 @@ class ScheduledReports extends \Piwik\Plugin
      */
     public function registerEvents()
     {
-        return array('AssetManager.getJavaScriptFiles' => 'getJsFiles', 'AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'MobileMessaging.deletePhoneNumber' => 'deletePhoneNumber', 'ScheduledReports.getReportParameters' => 'getReportParameters', 'ScheduledReports.validateReportParameters' => 'validateReportParameters', 'ScheduledReports.getReportMetadata' => 'getReportMetadata', 'ScheduledReports.getReportTypes' => 'getReportTypes', 'ScheduledReports.getReportFormats' => 'getReportFormats', 'ScheduledReports.getRendererInstance' => 'getRendererInstance', 'ScheduledReports.getReportRecipients' => 'getReportRecipients', 'ScheduledReports.processReports' => 'processReports', 'ScheduledReports.allowMultipleReports' => 'allowMultipleReports', 'ScheduledReports.sendReport' => 'sendReport', 'Template.reportParametersScheduledReports' => 'templateReportParametersScheduledReports', 'UsersManager.deleteUser' => 'deleteUserReport', 'UsersManager.removeSiteAccess' => 'deleteUserReportForSites', 'SitesManager.deleteSite.end' => 'deleteSiteReport', 'SegmentEditor.deactivate' => 'segmentDeactivation', 'SegmentEditor.update' => 'segmentUpdated', 'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys', 'Request.getRenamedModuleAndAction' => 'renameDeprecatedModuleAndAction', 'Db.getTablesInstalled' => 'getTablesInstalled');
+        return array('AssetManager.getJavaScriptFiles' => 'getJsFiles', 'AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'MobileMessaging.deletePhoneNumber' => 'deletePhoneNumber', 'ScheduledReports.getReportParameters' => 'getReportParameters', 'ScheduledReports.validateReportParameters' => 'validateReportParameters', 'ScheduledReports.getReportMetadata' => 'getReportMetadata', 'ScheduledReports.getReportTypes' => 'getReportTypes', 'ScheduledReports.getReportFormats' => 'getReportFormats', 'ScheduledReports.getRendererInstance' => 'getRendererInstance', 'ScheduledReports.getReportRecipients' => 'getReportRecipients', 'ScheduledReports.processReports' => 'processReports', 'ScheduledReports.allowMultipleReports' => 'allowMultipleReports', 'ScheduledReports.sendReport' => 'sendReport', 'Template.reportParametersScheduledReports' => 'templateReportParametersScheduledReports', 'UsersManager.createUser' => 'deleteUserReport', 'UsersManager.deleteUser' => 'deleteUserReport', 'UsersManager.removeSiteAccess' => 'deleteUserReportForSites', 'SitesManager.deleteSite.end' => 'deleteSiteReport', 'SegmentEditor.deactivate' => 'segmentDeactivation', 'SegmentEditor.update' => 'segmentUpdated', 'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys', 'Request.getRenamedModuleAndAction' => 'renameDeprecatedModuleAndAction', 'Db.getTablesInstalled' => 'getTablesInstalled');
     }
     /**
      * Register the new tables, so Matomo knows about them.
@@ -78,12 +77,14 @@ class ScheduledReports extends \Piwik\Plugin
     }
     public function getClientSideTranslationKeys(&$translationKeys)
     {
+        $translationKeys[] = "ScheduledReports_ReorderReport";
         $translationKeys[] = "ScheduledReports_ReportSent";
         $translationKeys[] = "ScheduledReports_ReportUpdated";
         $translationKeys[] = "ScheduledReports_ReportHourWithUtcOnly";
         $translationKeys[] = "ScheduledReports_EvolutionGraphsShowForEachInPeriod";
         $translationKeys[] = "ScheduledReports_EvolutionGraphsShowForPreviousN";
         $translationKeys[] = 'ScheduledReports_ReportFormat';
+        $translationKeys[] = 'ScheduledReports_ReportFormatHelpText';
         $translationKeys[] = 'ScheduledReports_SendReportTo';
         $translationKeys[] = 'ScheduledReports_MustBeLoggedIn';
         $translationKeys[] = 'Login_LogIn';
@@ -307,7 +308,7 @@ class ScheduledReports extends \Piwik\Plugin
         // duplicate-send safeguard must therefore compare against the schedule cadence,
         // not the data range, otherwise it suppresses every same-cadence-window dispatch
         // after the first.
-        $schedulePeriod = Period\Factory::build($report['period'], Date::today());
+        $schedulePeriod = Period\Factory::build($report['period'], \Piwik\Plugins\ScheduledReports\ReportSchedule::getToday((string) $report['period'], (int) $report['idsite']));
         // Safeguard against sending the same report twice for the same scheduled cadence (unless $force is true)
         if (!$force && $this->reportAlreadySent($report, $schedulePeriod)) {
             Log::warning('Preventing the same scheduled report from being sent again (report #%s for period "%s")', $report['idreport'], $prettyDate);
@@ -480,6 +481,11 @@ class ScheduledReports extends \Piwik\Plugin
         $errorMessage = Piwik::translate('ScheduledReports_Segment_Deletion_Error', $reportList);
         throw new Exception($errorMessage);
     }
+    /**
+     * Removes every report owned by the given login.
+     *
+     * Also runs when a user is created, so a login that is reused starts without reports.
+     */
     public function deleteUserReport($userLogin)
     {
         $this->getModel()->deleteAllReportForUser($userLogin);

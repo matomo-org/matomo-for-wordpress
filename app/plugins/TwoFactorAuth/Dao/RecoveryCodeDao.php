@@ -14,10 +14,7 @@ class RecoveryCodeDao
 {
     protected $table = 'twofactor_recovery_code';
     protected $tablePrefixed = '';
-    /**
-     * @var RecoveryCodeRandomGenerator $generator
-     */
-    private $generator;
+    private \Piwik\Plugins\TwoFactorAuth\Dao\RecoveryCodeRandomGenerator $generator;
     public function __construct(\Piwik\Plugins\TwoFactorAuth\Dao\RecoveryCodeRandomGenerator $generator)
     {
         $this->tablePrefixed = Common::prefixTable($this->table);

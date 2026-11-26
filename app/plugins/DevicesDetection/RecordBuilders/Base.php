@@ -16,18 +16,9 @@ use Piwik\DataTable;
 use Piwik\Metrics;
 abstract class Base extends RecordBuilder
 {
-    /**
-     * @var string
-     */
-    private $recordName;
-    /**
-     * @var string
-     */
-    private $labelSql;
-    /**
-     * @var bool
-     */
-    private $enrichWithConversionMetrics;
+    private string $recordName;
+    private string $labelSql;
+    private bool $enrichWithConversionMetrics;
     public function __construct(string $recordName, string $labelSql, bool $enrichWithConversionMetrics = \false)
     {
         parent::__construct();

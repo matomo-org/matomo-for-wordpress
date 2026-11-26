@@ -20,8 +20,8 @@ use Matomo\Dependencies\Symfony\Component\VarDumper\Server\Connection;
  */
 class ServerDumper implements DataDumperInterface
 {
-    private $connection;
-    private $wrappedDumper;
+    private Connection $connection;
+    private ?DataDumperInterface $wrappedDumper;
     /**
      * @param string                     $host             The server host
      * @param DataDumperInterface|null   $wrappedDumper    A wrapped instance used whenever we failed contacting the server
@@ -37,12 +37,13 @@ class ServerDumper implements DataDumperInterface
         return $this->connection->getContextProviders();
     }
     /**
-     * {@inheritdoc}
+     * @return string|null
      */
     public function dump(Data $data)
     {
         if (!$this->connection->write($data) && $this->wrappedDumper) {
-            $this->wrappedDumper->dump($data);
+            return $this->wrappedDumper->dump($data);
         }
+        return null;
     }
 }

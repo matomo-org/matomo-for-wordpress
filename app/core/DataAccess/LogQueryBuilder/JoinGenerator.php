@@ -18,18 +18,9 @@ class JoinGenerator
      * @var JoinTables
      */
     protected $tables;
-    /**
-     * @var bool
-     */
-    private $joinWithSubSelect = \false;
-    /**
-     * @var string
-     */
-    private $joinString = '';
-    /**
-     * @var array
-     */
-    private $nonVisitJoins = array();
+    private bool $joinWithSubSelect = \false;
+    private string $joinString = '';
+    private array $nonVisitJoins = array();
     public function __construct(\Piwik\DataAccess\LogQueryBuilder\JoinTables $tables)
     {
         $this->tables = $tables;
@@ -163,7 +154,7 @@ class JoinGenerator
                     continue;
                 }
                 $joinName = 'LEFT JOIN';
-                if ($i > 0 && $this->tables[$i - 1] && is_string($this->tables[$i - 1]) && strpos($this->tables[$i - 1], LogAggregator::LOG_TABLE_SEGMENT_TEMPORARY_PREFIX) === 0) {
+                if ($i > 0 && $this->tables[$i - 1] && is_string($this->tables[$i - 1]) && str_starts_with($this->tables[$i - 1], LogAggregator::LOG_TABLE_SEGMENT_TEMPORARY_PREFIX)) {
                     $joinName = 'INNER JOIN';
                     // when we archive a segment there will be eg `logtmpsegment$HASH` as first table.
                     // then we join log_conversion for example... if we didn't use INNER JOIN we would as a result
@@ -196,6 +187,13 @@ class JoinGenerator
         $alternativeJoin = null;
         $table = $logTable->getName();
         foreach ($availableLogTables as $availableLogTable) {
+            // A declared join beats the generic per-visit one: joining two tables that each hold
+            // many rows per visit on idvisit alone would multiply their rows.
+            $declaredJoin = $this->findDeclaredWayToJoin($logTable, $availableLogTable);
+            if ($declaredJoin !== null) {
+                $join = $declaredJoin;
+                break;
+            }
             if ($logTable->getColumnToJoinOnIdVisit() && $availableLogTable->getColumnToJoinOnIdVisit()) {
                 $join = sprintf("%s.%s = %s.%s", $table, $logTable->getColumnToJoinOnIdVisit(), $availableLogTable->getName(), $availableLogTable->getColumnToJoinOnIdVisit());
                 $alternativeJoin = sprintf("%s.%s = %s.%s", $availableLogTable->getName(), $availableLogTable->getColumnToJoinOnIdVisit(), $table, $logTable->getColumnToJoinOnIdVisit());
@@ -210,20 +208,6 @@ class JoinGenerator
                 }
                 break;
             }
-            $otherJoins = $logTable->getWaysToJoinToOtherLogTables();
-            foreach ($otherJoins as $joinTable => $column) {
-                if ($availableLogTable->getName() == $joinTable) {
-                    $join = sprintf("`%s`.`%s` = `%s`.`%s`", $table, $column, $availableLogTable->getName(), $column);
-                    break;
-                }
-            }
-            $otherJoins = $availableLogTable->getWaysToJoinToOtherLogTables();
-            foreach ($otherJoins as $joinTable => $column) {
-                if ($table == $joinTable) {
-                    $join = sprintf("`%s`.`%s` = `%s`.`%s`", $table, $column, $availableLogTable->getName(), $column);
-                    break;
-                }
-            }
         }
         if (!isset($join)) {
             throw new Exception("Table '{$table}' can't be joined for segmentation");
@@ -237,6 +221,24 @@ class JoinGenerator
             $join .= sprintf(' AND `%s`.deleted = 0', $table);
         }
         return $join;
+    }
+    /**
+     * Returns the join condition declared between the two tables via getWaysToJoinToOtherLogTables()
+     * (in either direction), or null when none is declared.
+     */
+    private function findDeclaredWayToJoin(LogTable $logTable, LogTable $availableLogTable) : ?string
+    {
+        foreach ($logTable->getWaysToJoinToOtherLogTables() as $joinTable => $column) {
+            if ($availableLogTable->getName() == $joinTable) {
+                return sprintf("`%s`.`%s` = `%s`.`%s`", $logTable->getName(), $column, $availableLogTable->getName(), $column);
+            }
+        }
+        foreach ($availableLogTable->getWaysToJoinToOtherLogTables() as $joinTable => $column) {
+            if ($logTable->getName() == $joinTable) {
+                return sprintf("`%s`.`%s` = `%s`.`%s`", $logTable->getName(), $column, $availableLogTable->getName(), $column);
+            }
+        }
+        return null;
     }
     /**
      * This code is a bit tricky. We have to execute this right at the beginning before actually iterating over all the

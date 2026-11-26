@@ -12,26 +12,32 @@ namespace Matomo\Dependencies\Symfony\Component\HttpKernel\Controller\ArgumentRe
 
 use Matomo\Dependencies\Symfony\Component\HttpFoundation\Request;
 use Matomo\Dependencies\Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
+use Matomo\Dependencies\Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Matomo\Dependencies\Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 /**
  * Yields the same instance as the request object passed along.
  *
  * @author Iltar van der Berg <kjarli@gmail.com>
  */
-final class RequestValueResolver implements ArgumentValueResolverInterface
+final class RequestValueResolver implements ArgumentValueResolverInterface, ValueResolverInterface
 {
     /**
-     * {@inheritdoc}
+     * @deprecated since Symfony 6.2, use resolve() instead
      */
     public function supports(Request $request, ArgumentMetadata $argument) : bool
     {
+        @trigger_deprecation('symfony/http-kernel', '6.2', 'The "%s()" method is deprecated, use "resolve()" instead.', __METHOD__);
         return Request::class === $argument->getType() || is_subclass_of($argument->getType(), Request::class);
     }
-    /**
-     * {@inheritdoc}
-     */
-    public function resolve(Request $request, ArgumentMetadata $argument) : iterable
+    public function resolve(Request $request, ArgumentMetadata $argument) : array
     {
-        (yield $request);
+        $type = $argument->getType();
+        if (Request::class !== $type && !is_subclass_of($type, Request::class)) {
+            return [];
+        }
+        if ($request->attributes->has($argument->getName())) {
+            return [];
+        }
+        return [$request];
     }
 }

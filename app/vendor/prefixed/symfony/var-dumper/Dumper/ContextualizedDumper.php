@@ -17,8 +17,8 @@ use Matomo\Dependencies\Symfony\Component\VarDumper\Dumper\ContextProvider\Conte
  */
 class ContextualizedDumper implements DataDumperInterface
 {
-    private $wrappedDumper;
-    private $contextProviders;
+    private DataDumperInterface $wrappedDumper;
+    private array $contextProviders;
     /**
      * @param ContextProviderInterface[] $contextProviders
      */
@@ -27,12 +27,15 @@ class ContextualizedDumper implements DataDumperInterface
         $this->wrappedDumper = $wrappedDumper;
         $this->contextProviders = $contextProviders;
     }
+    /**
+     * @return string|null
+     */
     public function dump(Data $data)
     {
-        $context = [];
+        $context = $data->getContext();
         foreach ($this->contextProviders as $contextProvider) {
-            $context[\get_class($contextProvider)] = $contextProvider->getContext();
+            $context[$contextProvider::class] = $contextProvider->getContext();
         }
-        $this->wrappedDumper->dump($data->withContext($context));
+        return $this->wrappedDumper->dump($data->withContext($context));
     }
 }

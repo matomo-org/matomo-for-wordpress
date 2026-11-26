@@ -39,23 +39,31 @@
     }
 
     (function createTabs() {
+        /* the accessibility options of this component have been defined according to: */
+        /* www.w3.org/WAI/ARIA/apg/example-index/tabs/tabs-manual.html */
         var tabGroups = document.querySelectorAll('.sf-tabs:not([data-processed=true])');
 
         /* create the tab navigation for each group of tabs */
         for (var i = 0; i < tabGroups.length; i++) {
             var tabs = tabGroups[i].querySelectorAll(':scope > .tab');
-            var tabNavigation = document.createElement('ul');
+            var tabNavigation = document.createElement('div');
             tabNavigation.className = 'tab-navigation';
+            tabNavigation.setAttribute('role', 'tablist');
 
             var selectedTabId = 'tab-' + i + '-0'; /* select the first tab by default */
             for (var j = 0; j < tabs.length; j++) {
                 var tabId = 'tab-' + i + '-' + j;
                 var tabTitle = tabs[j].querySelector('.tab-title').innerHTML;
 
-                var tabNavigationItem = document.createElement('li');
+                var tabNavigationItem = document.createElement('button');
+                addClass(tabNavigationItem, 'tab-control');
                 tabNavigationItem.setAttribute('data-tab-id', tabId);
+                tabNavigationItem.setAttribute('role', 'tab');
+                tabNavigationItem.setAttribute('aria-controls', tabId);
                 if (hasClass(tabs[j], 'active')) { selectedTabId = tabId; }
-                if (hasClass(tabs[j], 'disabled')) { addClass(tabNavigationItem, 'disabled'); }
+                if (hasClass(tabs[j], 'disabled')) {
+                    addClass(tabNavigationItem, 'disabled');
+                }
                 tabNavigationItem.innerHTML = tabTitle;
                 tabNavigation.appendChild(tabNavigationItem);
 
@@ -69,24 +77,31 @@
 
         /* display the active tab and add the 'click' event listeners */
         for (i = 0; i < tabGroups.length; i++) {
-            tabNavigation = tabGroups[i].querySelectorAll(':scope >.tab-navigation li');
+            tabNavigation = tabGroups[i].querySelectorAll(':scope > .tab-navigation .tab-control');
 
             for (j = 0; j < tabNavigation.length; j++) {
                 tabId = tabNavigation[j].getAttribute('data-tab-id');
-                document.getElementById(tabId).querySelector('.tab-title').className = 'hidden';
+                var tabPanel = document.getElementById(tabId);
+                tabPanel.setAttribute('role', 'tabpanel');
+                tabPanel.setAttribute('aria-labelledby', tabId);
+                tabPanel.querySelector('.tab-title').className = 'hidden';
 
                 if (hasClass(tabNavigation[j], 'active')) {
-                    document.getElementById(tabId).className = 'block';
+                    tabPanel.className = 'block';
+                    tabNavigation[j].setAttribute('aria-selected', 'true');
+                    tabNavigation[j].removeAttribute('tabindex');
                 } else {
-                    document.getElementById(tabId).className = 'hidden';
+                    tabPanel.className = 'hidden';
+                    tabNavigation[j].removeAttribute('aria-selected');
+                    tabNavigation[j].setAttribute('tabindex', '-1');
                 }
 
                 tabNavigation[j].addEventListener('click', function(e) {
                     var activeTab = e.target || e.srcElement;
 
                     /* needed because when the tab contains HTML contents, user can click */
-                    /* on any of those elements instead of their parent '<li>' element */
-                    while (activeTab.tagName.toLowerCase() !== 'li') {
+                    /* on any of those elements instead of their parent '<button>' element */
+                    while (activeTab.tagName.toLowerCase() !== 'button') {
                         activeTab = activeTab.parentNode;
                     }
 
@@ -96,9 +111,13 @@
                         var tabId = tabNavigation[k].getAttribute('data-tab-id');
                         document.getElementById(tabId).className = 'hidden';
                         removeClass(tabNavigation[k], 'active');
+                        tabNavigation[k].removeAttribute('aria-selected');
+                        tabNavigation[k].setAttribute('tabindex', '-1');
                     }
 
                     addClass(activeTab, 'active');
+                    activeTab.setAttribute('aria-selected', 'true');
+                    activeTab.removeAttribute('tabindex');
                     var activeTabId = activeTab.getAttribute('data-tab-id');
                     document.getElementById(activeTabId).className = 'block';
                 });
@@ -126,19 +145,17 @@
             }
 
             addEventListener(toggles[i], 'click', function(e) {
+                var toggle = e.currentTarget;
+
+                if (e.target.closest('a, span[data-clipboard-text], .sf-toggle') !== toggle) {
+                    return;
+                }
+
                 e.preventDefault();
 
                 if ('' !== window.getSelection().toString()) {
                     /* Don't do anything on text selection */
                     return;
-                }
-
-                var toggle = e.target || e.srcElement;
-
-                /* needed because when the toggle contains HTML contents, user can click */
-                /* on any of those elements instead of their parent '.sf-toggle' element */
-                while (!hasClass(toggle, 'sf-toggle')) {
-                    toggle = toggle.parentNode;
                 }
 
                 var element = document.querySelector(toggle.getAttribute('data-toggle-selector'));
@@ -162,22 +179,6 @@
                 var altContent = toggle.getAttribute('data-toggle-alt-content');
                 toggle.innerHTML = currentContent !== altContent ? altContent : originalContent;
             });
-
-            /* Prevents from disallowing clicks on links inside toggles */
-            var toggleLinks = toggles[i].querySelectorAll('a');
-            for (var j = 0; j < toggleLinks.length; j++) {
-                addEventListener(toggleLinks[j], 'click', function(e) {
-                    e.stopPropagation();
-                });
-            }
-
-            /* Prevents from disallowing clicks on "copy to clipboard" elements inside toggles */
-            var copyToClipboardElements = toggles[i].querySelectorAll('span[data-clipboard-text]');
-            for (var k = 0; k < copyToClipboardElements.length; k++) {
-                addEventListener(copyToClipboardElements[k], 'click', function(e) {
-                    e.stopPropagation();
-                });
-            }
 
             toggles[i].setAttribute('data-processed', 'true');
         }

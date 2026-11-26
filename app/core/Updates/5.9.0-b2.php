@@ -14,10 +14,7 @@ use Piwik\Updater\Migration\Factory as MigrationFactory;
 use Piwik\Updates;
 class Updates_5_9_0_b2 extends Updates
 {
-    /**
-     * @var MigrationFactory
-     */
-    private $migration;
+    private MigrationFactory $migration;
     public function __construct(MigrationFactory $factory)
     {
         $this->migration = $factory;
@@ -49,7 +46,7 @@ class Updates_5_9_0_b2 extends Updates
         $databaseType = $this->getDatabaseType();
         $version = $this->getDatabaseVersion();
         // fallback if database type isn't configured correctly
-        if ($databaseType === 'MySQL' && strpos(strtolower($version), 'mariadb') !== \false) {
+        if ($databaseType === 'MySQL' && str_contains(strtolower($version), 'mariadb')) {
             $databaseType = 'MariaDB';
         }
         $databaseVersion = $this->extractSemanticVersion($version);

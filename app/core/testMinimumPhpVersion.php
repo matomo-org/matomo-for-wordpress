@@ -13,13 +13,13 @@ namespace {
      * This file must be compatible with PHP 5.3.
      */
     $piwik_errorMessage = '';
-    // Minimum requirement: stream_resolve_include_path, working json_encode in 5.3.3, namespaces in 5.3
+    // Minimum requirement: PHP 8.1 is required by our dependencies (Symfony, Twig, etc.)
     // NOTE: when changing this variable, we also need to update
     // 1) api.matomo.org
     // 2) composer.json (in two places)
     // 3) tests/PHPUnit/Integration/ReleaseCheckListTest.php
     global $piwik_minimumPHPVersion;
-    $piwik_minimumPHPVersion = '7.2.5';
+    $piwik_minimumPHPVersion = '8.1.0';
     $piwik_currentPHPVersion = \PHP_VERSION;
     $minimumPhpInvalid = \version_compare($piwik_minimumPHPVersion, $piwik_currentPHPVersion) > 0;
     if ($minimumPhpInvalid) {
@@ -29,13 +29,10 @@ namespace {
             $piwik_errorMessage .= "<p><strong>Matomo and Zend_Session require the session extension</strong></p>\n\t\t\t\t\t<p>It appears your PHP was compiled with <pre>--disable-session</pre>.\n\t\t\t\t\tTo enjoy Matomo, you need PHP compiled without that configure option.</p>";
         }
         if (!\function_exists('ini_set')) {
-            $piwik_errorMessage .= "<p><strong>Matomo and Zend_Session require the <code>ini_set()</code> function</strong></p>\n\t\t\t\t\t<p>It appears your PHP has disabled this function.\n\t\t\t\t\tTo enjoy Matomo, you need remove <pre>ini_set</pre> from your <pre>disable_functions</pre> directive in php.ini, and restart your webserver.</p>";
+            $piwik_errorMessage .= "<p><strong>Matomo and Zend_Session require the <code>ini_set()</code> function</strong></p>\n\t\t\t\t\t<p>It appears your PHP has disabled this function.\n\t\t\t\t\tTo enjoy Matomo, you need to remove <pre>ini_set</pre> from your <pre>disable_functions</pre> directive in php.ini, and restart your webserver.</p>";
         }
-        if (\ini_get('mbstring.func_overload')) {
-            $piwik_errorMessage .= "<p><strong>Matomo does not work when PHP is configured with <pre>mbstring.func_overload = " . \ini_get('mbstring.func_overload') . "</pre></strong></p>\n\t\t\t\t\t<p>It appears your mbstring extension in PHP is configured to override string functions.\n\t\t\t\t\tTo enjoy Matomo, you need to modify php.ini <pre>mbstring.func_overload = 0</pre>, and restart your webserver.</p>";
-        }
-        if (!\function_exists('json_encode')) {
-            $piwik_errorMessage .= "<p><strong>Matomo requires the php-json extension which provides the functions <code>json_encode()</code> and <code>json_decode()</code></strong></p>\n\t\t\t\t\t<p>It appears your PHP has not yet installed the php-json extension.\n\t\t\t\t\tTo use Matomo, please ask your web host to install php-json or install it yourself, for example on debian system: <code>sudo apt-get install php-json</code>. <br/>Then restart your webserver and refresh this page.</p>";
+        if (!\function_exists('glob')) {
+            $piwik_errorMessage .= "<p><strong>Matomo requires the <code>glob()</code> function</strong></p>\n\t\t\t\t\t<p>It appears your PHP has disabled this function. Matomo uses it to discover plugins and update scripts, so it cannot run without it.\n\t\t\t\t\tTo enjoy Matomo, you need to remove <pre>glob</pre> from your <pre>disable_functions</pre> directive in php.ini, and restart your webserver.</p>";
         }
         if (!\file_exists(\PIWIK_VENDOR_PATH . '/autoload.php')) {
             $composerInstall = "In the matomo directory, run in the command line the following (eg. via ssh): \n\n" . "<pre> curl -sS https://getcomposer.org/installer | php \n\n php composer.phar install\n\n</pre> ";

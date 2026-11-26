@@ -16,10 +16,7 @@ use Piwik\Translation\Translator;
  */
 class FileIntegrityCheck implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnostic
 {
-    /**
-     * @var Translator
-     */
-    private $translator;
+    private Translator $translator;
     public function __construct(Translator $translator)
     {
         $this->translator = $translator;
@@ -32,7 +29,9 @@ class FileIntegrityCheck implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagno
         }
         list($ok, $messages) = FileIntegrity::getFileIntegrityInformation();
         if ($ok) {
-            return array(\Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::singleResult($label, \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_OK, implode('<br/>', $messages)));
+            // A passing check can still carry notes, such as leftover developer docs
+            $comment = empty($messages) ? '' : $this->formatMessages($messages);
+            return array(\Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::singleResult($label, \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_OK, $comment));
         }
         $comment = $this->translator->translate('General_FileIntegrityWarning');
         // Keep only the 20 first lines else it becomes unmanageable
@@ -40,7 +39,11 @@ class FileIntegrityCheck implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagno
             $messages = array_slice($messages, 0, 20);
             $messages[] = '...';
         }
-        $comment .= '<br/><br/><pre style="overflow-x: scroll;max-width: 600px;">' . implode("\n", $messages) . '</pre>';
+        $comment .= '<br/><br/>' . $this->formatMessages($messages);
         return array(\Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::singleResult($label, \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_WARNING, $comment));
+    }
+    private function formatMessages(array $messages) : string
+    {
+        return '<pre style="overflow-x: scroll;max-width: 600px;">' . implode("\n", $messages) . '</pre>';
     }
 }

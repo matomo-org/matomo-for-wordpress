@@ -12,9 +12,10 @@ use Exception;
 use Piwik\API\ResponseBuilder;
 use Piwik\Common;
 use Piwik\Config;
-use Piwik\DataTable\Renderer\Json;
+use Piwik\Http\JsonResponse;
 use Piwik\Piwik;
 use Piwik\Plugin\Manager;
+use Piwik\Policy\PolicyManager;
 use Piwik\Plugins\SitesManager\SiteContentDetection\Matomo;
 use Piwik\Plugins\SitesManager\SiteContentDetection\SiteContentDetectionAbstract;
 use Piwik\Plugins\SitesManager\SiteContentDetection\WordPress;
@@ -25,8 +26,7 @@ use Piwik\Url;
 use Piwik\View;
 class Controller extends \Piwik\Plugin\ControllerAdmin
 {
-    /** @var SiteContentDetector */
-    private $siteContentDetector;
+    private SiteContentDetector $siteContentDetector;
     public function __construct(SiteContentDetector $siteContentDetector)
     {
         $this->siteContentDetector = $siteContentDetector;
@@ -64,6 +64,8 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         $globalSettings['excludedUserAgentsGlobal'] = \Piwik\Plugins\SitesManager\API::getInstance()->getExcludedUserAgentsGlobal();
         $globalSettings['excludedReferrersGlobal'] = \Piwik\Plugins\SitesManager\API::getInstance()->getExcludedReferrersGlobal();
         $globalSettings['exclusionTypeForQueryParams'] = \Piwik\Plugins\SitesManager\API::getInstance()->getExclusionTypeForQueryParams();
+        // stored as an instance-wide option, so it is never site specific
+        $globalSettings['exclusionTypeForQueryParamsPolicyControlled'] = PolicyManager::getCompliancePoliciesControllingASetting(\Piwik\Plugins\SitesManager\API::OPTION_EXCLUDE_TYPE_QUERY_PARAMS_GLOBAL, null, PolicyManager::SETTING_TYPE_OPTION);
         return $response->getResponse($globalSettings);
     }
     /**
@@ -99,37 +101,51 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         }
         return $toReturn;
     }
+    /**
+     * Dismisses the no-data message and redirects back to the dashboard. Used by the standalone
+     * empty-site page's link (a full-page navigation) and as the reporting UI's fallback when its
+     * Ajax dismissal fails. The reporting UI itself dismisses via {@see self::dismissNoDataMessage()}.
+     */
     public function ignoreNoDataMessage()
     {
         Piwik::checkUserHasSomeViewAccess();
+        $this->markNoDataMessageIgnored();
+        $url = Url::getCurrentUrlWithoutQueryString() . Url::getCurrentQueryStringWithParametersModified(array('module' => 'CoreHome', 'action' => 'index'));
+        Url::redirectToUrl($url);
+    }
+    /**
+     * Dismisses the no-data message for the reporting UI, which stays on the page. Returns JSON.
+     */
+    #[JsonResponse]
+    public function dismissNoDataMessage() : string
+    {
+        Piwik::checkUserHasSomeViewAccess();
+        $this->markNoDataMessageIgnored();
+        return json_encode(['result' => 'success']);
+    }
+    private function markNoDataMessageIgnored() : void
+    {
         $session = new Session\SessionNamespace('siteWithoutData');
         $session->ignoreMessage = \true;
         $session->setExpirationSeconds($oneHour = 60 * 60);
-        // The reporting UI dismisses via Ajax and stays in place; only non-Ajax (bookmarked) requests
-        // still need redirecting back to the dashboard.
-        if (Common::isXmlHttpRequest()) {
-            Json::sendHeaderJSON();
-            return json_encode(['result' => 'success']);
-        }
-        $url = Url::getCurrentUrlWithoutQueryString() . Url::getCurrentQueryStringWithParametersModified(array('module' => 'CoreHome', 'action' => 'index'));
-        Url::redirectToUrl($url);
     }
     public function siteWithoutData()
     {
         $this->checkSitePermission();
-        return $this->renderTemplateAs('siteWithoutData', ['inviteUserLink' => $this->getInviteUserLink(), 'hideWhatIsNew' => \true], $viewType = 'basic');
+        return $this->renderTemplateAs('siteWithoutData', ['inviteUserLink' => $this->getInviteUserLink(), 'showInviteTeamMemberLink' => $this->shouldShowInviteTeamMemberLink(), 'afterTrackingMethodsContent' => $this->getAfterTrackingMethodsContent(), 'hideWhatIsNew' => \true], $viewType = 'basic');
     }
     /**
      * Ajax endpoint for the reporting UI gate: returns a JSON boolean (true = show the tracker-setup
      * screen). Requires view access. See SitesManager::shouldShowEmptySiteMessage().
      */
-    public function getSiteEmptyState()
+    #[JsonResponse]
+    public function getSiteEmptyState() : string
     {
         $this->checkSitePermission();
-        Json::sendHeaderJSON();
         return json_encode(\Piwik\Plugins\SitesManager\SitesManager::shouldShowEmptySiteMessage((int) $this->idSite));
     }
-    public function getTrackingMethodsForSite()
+    #[JsonResponse]
+    public function getTrackingMethodsForSite() : string
     {
         $this->checkSitePermission();
         $this->siteContentDetector->detectContent([], $this->idSite);
@@ -201,20 +217,51 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
             $recommendedMethod = $trackingMethods[$matomoIndex];
             unset($trackingMethods[$matomoIndex]);
         }
-        Json::sendHeaderJSON();
         return json_encode([
             'trackingMethods' => $trackingMethods,
             'recommendedMethod' => $recommendedMethod,
-            // The standalone page gets this as a template variable; the SPA gate has to fetch it.
+            // The standalone page gets these as template variables; the SPA gate has to fetch them.
             'ctaContent' => $this->renderSiteWithoutDataCta(),
+            'afterTrackingMethodsContent' => $this->getAfterTrackingMethodsContent(),
         ]);
     }
     private function renderSiteWithoutDataCta() : string
     {
         $view = new View('@SitesManager/_siteWithoutDataCta');
         $view->inviteUserLink = $this->getInviteUserLink();
+        $view->showInviteTeamMemberLink = $this->shouldShowInviteTeamMemberLink();
         $view->sendHeadersWhenRendering = \false;
         return $view->render();
+    }
+    private function getAfterTrackingMethodsContent() : string
+    {
+        $content = '';
+        /**
+         * Triggered on the no data page after the list of tracking methods and the section
+         * allowing users to temporarily hide the page.
+         *
+         * This event can be used to render additional content at the bottom of the no data page.
+         * The content is shown on the standalone page as well as when the page is embedded in the
+         * reporting UI.
+         *
+         * @param string $content Additional HTML content to render after the tracking methods.
+         */
+        Piwik::postEvent('Template.siteWithoutData.afterTrackingMethods', [&$content]);
+        return $content;
+    }
+    private function shouldShowInviteTeamMemberLink() : bool
+    {
+        $showInviteTeamMemberLink = \true;
+        /**
+         * Triggered before rendering the invite team member link on the no data page.
+         *
+         * This event can be used to hide the link, for example if inviting users is handled
+         * outside of Matomo.
+         *
+         * @param bool $showInviteTeamMemberLink Whether the invite team member link should be shown. Defaults to `true`.
+         */
+        Piwik::postEvent('SitesManager.siteWithoutData.showInviteTeamMemberLink', [&$showInviteTeamMemberLink]);
+        return $showInviteTeamMemberLink;
     }
     private function getGoogleAnalyticsImporterInstruction()
     {
@@ -276,6 +323,6 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         if (!$idSite || !Piwik::isUserHasAdminAccess($idSite)) {
             return Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/general/manage-users/#imanadmin-creating-users');
         }
-        return SettingsPiwik::getPiwikUrl() . 'index.php?' . Url::getQueryStringFromParameters(['idSite' => $idSite, 'module' => 'UsersManager', 'action' => 'index']);
+        return SettingsPiwik::getPiwikUrl() . 'index.php?' . Url::getQueryStringFromParameters(['idSite' => $idSite, 'module' => 'UsersManager', 'action' => 'index', 'showadduser' => 1]);
     }
 }

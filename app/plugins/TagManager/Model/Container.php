@@ -186,17 +186,20 @@ class Container extends \Piwik\Plugins\TagManager\Model\BaseModel
             throw new Exception(Piwik::translate('TagManager_ErrorContainerVersionDoesNotExist'));
         }
     }
-    public function createContainerVersion($idSite, $idContainer, $idContainerVersion, $name, $description)
+    public function createContainerVersion($idSite, $idContainer, $idContainerVersion, $name, $description, $createdBy = null)
     {
         $this->checkContainerVersionExists($idSite, $idContainer, $idContainerVersion);
         $this->validateContainerVersion($idSite, $name, $description);
         $createdDate = $this->getCurrentDateTime();
-        // create a new version
-        $newIdContainerVersion = $this->versionsDao->createVersion($idSite, $idContainer, $name, $description, $createdDate);
         // we need to use staticContainer and not in constructor as they would require each other in the constructor and result in a loop
         $export = $this->getExport();
         $exported = $export->exportContainerVersion($idSite, $idContainer, $idContainerVersion);
         $import = StaticContainer::get('Piwik\\Plugins\\TagManager\\API\\Import');
+        // validate before creating the version so a failed import does not leave an empty version behind
+        $import->checkVersionTypesAreAvailable($exported);
+        $import->checkImportContainerIsPossible($exported, $idSite, $idContainer);
+        // create a new version
+        $newIdContainerVersion = $this->versionsDao->createVersion($idSite, $idContainer, $name, $description, $createdDate, $createdBy);
         $import->importContainerVersion($exported, $idSite, $idContainer, $newIdContainerVersion);
         return $newIdContainerVersion;
     }
@@ -356,6 +359,8 @@ class Container extends \Piwik\Plugins\TagManager\Model\BaseModel
         if (empty($containerVersion)) {
             return $containerVersion;
         }
+        // absent until the update adding the column has run
+        $containerVersion['created_by'] = $containerVersion['created_by'] ?? null;
         $containerVersion['created_date_pretty'] = $this->formatDate($containerVersion['created_date'], $containerVersion['idsite']);
         $containerVersion['updated_date_pretty'] = $this->formatDate($containerVersion['updated_date'], $containerVersion['idsite']);
         unset($containerVersion['deleted_date']);

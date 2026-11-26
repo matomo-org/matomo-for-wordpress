@@ -4,19 +4,6 @@ namespace CpChart\Chart;
 
 use CpChart\Data;
 use CpChart\Image;
-/**
- * Radar - class to draw radar charts
- *
- *  Version     : 2.1.4
- *  Made by     : Jean-Damien POGOLOTTI
- *  Last Update : 19/01/2014
- *
- *  This file can be distributed under the license you can find at :
- *
- *  http://www.pchart.net/license
- *
- *  You can find the whole class documentation on the pChart web site.
- */
 class Radar
 {
     /**
@@ -286,6 +273,8 @@ class Radar
         $Plot = [];
         foreach ($Data["Series"] as $SerieName => $DataS) {
             if ($SerieName != $LabelSerie) {
+                $Series[$ID] =& $Data["Series"][$SerieName];
+                // Map $ID to series to allow customisation
                 $Color = ["R" => $Palette[$ID]["R"], "G" => $Palette[$ID]["G"], "B" => $Palette[$ID]["B"], "Alpha" => $Palette[$ID]["Alpha"], "Surrounding" => $PointSurrounding];
                 foreach ($DataS["Data"] as $Key => $Value) {
                     $Angle = 360 / $Points * $Key;
@@ -326,15 +315,15 @@ class Radar
             }
             /* Loop to the starting points if asked */
             if ($LineLoopStart && $DrawLines) {
-                $Object->drawLine($Points[count($Points) - 1][0], $Points[count($Points) - 1][1], $Points[0][0], $Points[0][1], $Color);
+                $Object->drawLine($Points[count($Points) - 1][0], $Points[count($Points) - 1][1], $Points[0][0], $Points[0][1], $Color + (isset($Format['LineWeight']) ? ['Weight' => $Format['LineWeight']] : []));
             }
             /* Draw the lines & points */
             for ($i = 0; $i < count($Points); $i++) {
                 if ($DrawLines && $i < count($Points) - 1) {
-                    $Object->drawLine($Points[$i][0], $Points[$i][1], $Points[$i + 1][0], $Points[$i + 1][1], $Color);
+                    $Object->drawLine($Points[$i][0], $Points[$i][1], $Points[$i + 1][0], $Points[$i + 1][1], $Color + (isset($Format['LineWeight']) ? ['Weight' => $Format['LineWeight']] : []));
                 }
                 if ($DrawPoints) {
-                    $Object->drawFilledCircle($Points[$i][0], $Points[$i][1], $PointRadius, $Color);
+                    $Object->drawShape($Points[$i][0], $Points[$i][1], isset($Series[$ID]['Shape']) ? $Series[$ID]['Shape'] : SERIE_SHAPE_CIRCLE, $PointRadius, \true, 1, $Color['R'], $Color['G'], $Color['B'], $Color['Alpha'], 0, 0, 0, 100);
                 }
                 if ($WriteValuesInBubble && $WriteValues) {
                     $TxtPos = $this->pChartObject->getTextBox($Points[$i][0], $Points[$i][1], $ValueFontName, $ValueFontSize, 0, $Points[$i][2]);

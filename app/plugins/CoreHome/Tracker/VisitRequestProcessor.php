@@ -51,18 +51,9 @@ use Piwik\Plugins\PrivacyManager\Config as PrivacyManagerConfig;
 class VisitRequestProcessor extends RequestProcessor
 {
     // TODO: much of the logic in this class should be moved to new service class
-    /**
-     * @var EventDispatcher
-     */
-    private $eventDispatcher;
-    /**
-     * @var VisitorRecognizer
-     */
-    private $visitorRecognizer;
-    /**
-     * @var Settings
-     */
-    private $userSettings;
+    private EventDispatcher $eventDispatcher;
+    private VisitorRecognizer $visitorRecognizer;
+    private Settings $userSettings;
     /**
      * @var int
      */

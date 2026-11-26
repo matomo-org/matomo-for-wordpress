@@ -13,7 +13,7 @@ use Piwik\API\ResponseBuilder;
 use Piwik\ArchiveProcessor\Rules;
 use Piwik\Common;
 use Piwik\Config;
-use Piwik\DataTable\Renderer\Json;
+use Piwik\Http\JsonResponse;
 use Piwik\Mail;
 use Piwik\Menu\MenuTop;
 use Piwik\Piwik;
@@ -39,14 +39,9 @@ use Piwik\Plugins\UsersManager\Model as UsersModel;
 use Piwik\Plugins\UsersManager\UserPreferences;
 class Controller extends ControllerAdmin
 {
-    /**
-     * @var Translator
-     */
-    private $translator;
-    /** @var OptOutManager */
-    private $optOutManager;
-    /** @var PasswordVerifier */
-    private $passwordVerify;
+    private Translator $translator;
+    private \Piwik\Plugins\CoreAdminHome\OptOutManager $optOutManager;
+    private PasswordVerifier $passwordVerify;
     public function __construct(Translator $translator, \Piwik\Plugins\CoreAdminHome\OptOutManager $optOutManager, PasswordVerifier $passwordVerify)
     {
         $this->translator = $translator;
@@ -223,7 +218,8 @@ class Controller extends ControllerAdmin
         Common::sendHeader('Cache-Control: no-store');
         return $this->optOutManager->getOptOutJS();
     }
-    public function uploadCustomLogo()
+    #[JsonResponse]
+    public function uploadCustomLogo() : string
     {
         Piwik::checkUserHasSuperUserAccess();
         $this->checkTokenInUrl();
@@ -240,7 +236,6 @@ class Controller extends ControllerAdmin
         if ($successFavicon) {
             $response['favicon'] = $logo->getTempUserFaviconBase64();
         }
-        Json::sendHeaderJSON();
         return json_encode($response);
     }
     public static function isGeneralSettingsAdminEnabled()
@@ -329,7 +324,7 @@ class Controller extends ControllerAdmin
         }
         // Use a path relative to the current Matomo install so subdirectory installs
         // don't resolve internal "What's New" links against the web root.
-        if (strpos($link, '/index.php') === 0) {
+        if (str_starts_with($link, '/index.php')) {
             $link = substr($link, 1);
         }
         $parsedLink = @parse_url($link);
@@ -349,10 +344,10 @@ class Controller extends ControllerAdmin
     {
         $fragmentPrefix = '';
         $fragmentQuery = '';
-        if (strpos($fragment, '/?') === 0) {
+        if (str_starts_with($fragment, '/?')) {
             $fragmentPrefix = '/?';
             $fragmentQuery = substr($fragment, 2);
-        } elseif (strpos($fragment, '?') === 0) {
+        } elseif (str_starts_with($fragment, '?')) {
             $fragmentPrefix = '?';
             $fragmentQuery = substr($fragment, 1);
         }
@@ -372,6 +367,6 @@ class Controller extends ControllerAdmin
     }
     private function isInternalWhatIsNewLink(string $link) : bool
     {
-        return strpos($link, 'index.php') === 0 || strpos($link, '/index.php') === 0;
+        return str_starts_with($link, 'index.php') || str_starts_with($link, '/index.php');
     }
 }

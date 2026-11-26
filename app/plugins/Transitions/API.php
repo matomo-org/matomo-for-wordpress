@@ -432,14 +432,8 @@ class API extends \Piwik\Plugin\API
         }
         return 'url';
     }
-    /**
-     * @var int
-     */
-    private $limitBeforeGrouping = 5;
-    /**
-     * @var int
-     */
-    private $totalTransitionsToFollowingPages = 0;
+    private int $limitBeforeGrouping = 5;
+    private int $totalTransitionsToFollowingPages = 0;
     /**
      * Get the sum of all transitions to following actions (pages, outlinks, downloads).
      * Only works if queryFollowingActions() has been used directly before.
@@ -490,28 +484,20 @@ class API extends \Piwik\Plugin\API
     {
         switch ($referrerId) {
             case Common::REFERRER_TYPE_DIRECT_ENTRY:
-                return \Piwik\Plugins\Transitions\Controller::getTranslation('directEntries');
+                return Piwik::translate('Transitions_DirectEntries');
             case Common::REFERRER_TYPE_SEARCH_ENGINE:
-                return \Piwik\Plugins\Transitions\Controller::getTranslation('fromSearchEngines');
+                return Piwik::translate('Transitions_FromSearchEngines');
             case Common::REFERRER_TYPE_SOCIAL_NETWORK:
-                return \Piwik\Plugins\Transitions\Controller::getTranslation('fromSocialNetworks');
+                return Piwik::translate('Transitions_FromSocialNetworks');
             case Common::REFERRER_TYPE_AI_ASSISTANT:
-                return \Piwik\Plugins\Transitions\Controller::getTranslation('fromAIAssistants');
+                return Piwik::translate('Transitions_FromAIAssistants');
             case Common::REFERRER_TYPE_WEBSITE:
-                return \Piwik\Plugins\Transitions\Controller::getTranslation('fromWebsites');
+                return Piwik::translate('Transitions_FromWebsites');
             case Common::REFERRER_TYPE_CAMPAIGN:
-                return \Piwik\Plugins\Transitions\Controller::getTranslation('fromCampaigns');
+                return Piwik::translate('Transitions_FromCampaigns');
             default:
                 return Piwik::translate('General_Others');
         }
-    }
-    /**
-     * @internal
-     */
-    public function getTranslations() : array
-    {
-        $controller = new \Piwik\Plugins\Transitions\Controller();
-        return $controller->getTranslations();
     }
     /**
      * @param array $types
@@ -556,6 +542,7 @@ class API extends \Piwik\Plugin\API
      */
     public function isPeriodAllowed($idSite, $period, $date) : bool
     {
+        Piwik::checkUserHasViewAccess($idSite);
         $maxPeriodAllowed = \Piwik\Plugins\Transitions\Transitions::getPeriodAllowedConfig($idSite);
         if ($maxPeriodAllowed === 'all') {
             return \true;

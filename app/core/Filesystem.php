@@ -141,7 +141,7 @@ class Filesystem
             // use shell_exec
             $output = @shell_exec($command);
             if ($output) {
-                $commandFailed = \false !== strpos($output, "no file systems processed");
+                $commandFailed = str_contains($output, "no file systems processed");
                 $output = trim($output);
                 $outputArray = explode("\n", $output);
                 if (!$commandFailed && count($outputArray) > 1 && preg_match('/\\bnfs\\d?\\b/', $output)) {
@@ -166,10 +166,10 @@ class Filesystem
      */
     public static function globr($sDir, $sPattern, $nFlags = 0)
     {
-        if (($aFiles = \_glob("{$sDir}/{$sPattern}", $nFlags)) == \false) {
+        if (($aFiles = glob("{$sDir}/{$sPattern}", $nFlags)) == \false) {
             $aFiles = array();
         }
-        if (($aDirs = \_glob("{$sDir}/*", \GLOB_ONLYDIR)) != \false) {
+        if (($aDirs = glob("{$sDir}/*", \GLOB_ONLYDIR)) != \false) {
             foreach ($aDirs as $sSubDir) {
                 if (is_link($sSubDir)) {
                     continue;
@@ -185,8 +185,8 @@ class Filesystem
      * Recursively deletes a directory.
      *
      * @param string $dir Path of the directory to delete.
-     * @param boolean $deleteRootToo If true, `$dir` is deleted, otherwise just its contents.
-     * @param \Closure|false $beforeUnlink An optional closure to execute on a file path before unlinking.
+     * @param bool $deleteRootToo If true, `$dir` is deleted, otherwise just its contents.
+     * @param \Closure|null $beforeUnlink An optional closure to execute on a file path before unlinking.
      * @api
      */
     public static function unlinkRecursive($dir, $deleteRootToo, ?\Closure $beforeUnlink = null)
@@ -435,7 +435,7 @@ class Filesystem
         }
         if (function_exists('opcache_reset') && \Piwik\Config::getInstance()->Cache['enable_opcache_reset'] !== 0) {
             @opcache_reset();
-            // reset the opcode cache (php 5.5.0+)
+            // reset the opcode cache
         }
         if (function_exists('wincache_refresh_if_changed')) {
             @wincache_refresh_if_changed();
@@ -481,7 +481,7 @@ class Filesystem
     private static function isPathWithinTmpFolder($path)
     {
         $pathIsTmp = StaticContainer::get('path.tmp');
-        $isPathWithinTmpFolder = strpos($path, $pathIsTmp) === 0;
+        $isPathWithinTmpFolder = str_starts_with($path, $pathIsTmp);
         return $isPathWithinTmpFolder;
     }
     /**

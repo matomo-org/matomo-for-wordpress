@@ -52,7 +52,7 @@ class GeneratePlugin extends \Piwik\Plugins\CoreConsole\Commands\GeneratePluginB
     private function isTheme()
     {
         $commandName = $this->getInput()->getFirstArgument();
-        return \false !== strpos($commandName, 'theme');
+        return str_contains($commandName, 'theme');
     }
     protected function generatePluginFolder($pluginName)
     {

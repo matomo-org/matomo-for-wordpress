@@ -30,4 +30,17 @@ class TextNode extends Node implements NodeOutputInterface
         $compiler->addDebugInfo($this);
         $compiler->write('yield ')->string($this->getAttribute('data'))->raw(";\n");
     }
+    public function isBlank() : bool
+    {
+        if (ctype_space($this->getAttribute('data'))) {
+            return \true;
+        }
+        if (str_contains((string) $this, \chr(0xef) . \chr(0xbb) . \chr(0xbf))) {
+            $t = substr($this->getAttribute('data'), 3);
+            if ('' === $t || ctype_space($t)) {
+                return \true;
+            }
+        }
+        return \false;
+    }
 }

@@ -17,18 +17,9 @@ use Piwik\Plugins\ArchivingMetrics\Writer\DbWriter;
 use Piwik\Plugins\ArchivingMetrics\Writer\WriterInterface;
 final class Timer
 {
-    /**
-     * @var bool
-     */
-    private $isArchivePhpTriggered;
-    /**
-     * @var ClockInterface
-     */
-    private $clock;
-    /**
-     * @var WriterInterface
-     */
-    private $writer;
+    private bool $isArchivePhpTriggered;
+    private ClockInterface $clock;
+    private WriterInterface $writer;
     /**
      * @var array<string, array<string, mixed>>
      */
@@ -112,7 +103,7 @@ final class Timer
             return \false;
         }
         $doneFlag = Rules::getDoneStringFlagFor([$context->idSite], $context->segment, $context->period->getLabel(), $context->plugin);
-        if (strpos($doneFlag, '.') !== \false) {
+        if (str_contains($doneFlag, '.')) {
             return \false;
         }
         return \true;

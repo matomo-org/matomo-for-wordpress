@@ -17,8 +17,8 @@ namespace Matomo\Dependencies\Twig\Sandbox;
  */
 final class SecurityNotAllowedPropertyError extends SecurityError
 {
-    private $className;
-    private $propertyName;
+    private string $className;
+    private string $propertyName;
     public function __construct(string $message, string $className, string $propertyName)
     {
         parent::__construct($message);
@@ -29,7 +29,7 @@ final class SecurityNotAllowedPropertyError extends SecurityError
     {
         return $this->className;
     }
-    public function getPropertyName()
+    public function getPropertyName() : string
     {
         return $this->propertyName;
     }

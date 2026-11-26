@@ -12,6 +12,7 @@ namespace Matomo\Dependencies\Symfony\Component\HttpKernel\DependencyInjection;
 
 use Matomo\Dependencies\Psr\Container\ContainerInterface;
 use Matomo\Dependencies\Symfony\Component\HttpFoundation\RequestStack;
+use Matomo\Dependencies\Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Matomo\Dependencies\Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 /**
  * Lazily loads fragment renderers from the dependency injection container.
@@ -20,20 +21,17 @@ use Matomo\Dependencies\Symfony\Component\HttpKernel\Fragment\FragmentHandler;
  */
 class LazyLoadingFragmentHandler extends FragmentHandler
 {
-    private $container;
+    private ContainerInterface $container;
     /**
      * @var array<string, bool>
      */
-    private $initialized = [];
+    private array $initialized = [];
     public function __construct(ContainerInterface $container, RequestStack $requestStack, bool $debug = \false)
     {
         $this->container = $container;
         parent::__construct($requestStack, [], $debug);
     }
-    /**
-     * {@inheritdoc}
-     */
-    public function render($uri, string $renderer = 'inline', array $options = [])
+    public function render(string|ControllerReference $uri, string $renderer = 'inline', array $options = []) : ?string
     {
         if (!isset($this->initialized[$renderer]) && $this->container->has($renderer)) {
             $this->addRenderer($this->container->get($renderer));

@@ -17,6 +17,9 @@ class VersionImported extends \Piwik\Plugins\TagManager\Activity\BaseActivity
         $idSite = $finalAPIParameters['parameters']['idSite'];
         $idContainer = $finalAPIParameters['parameters']['idContainer'];
         $activityData = $this->formatActivityData($idSite, $idContainer, 0, 0);
+        if ($activityData === \false) {
+            return \false;
+        }
         if (!empty($finalAPIParameters['parameters']['backupName'])) {
             $activityData['backupName'] = $finalAPIParameters['parameters']['backupName'];
         } else {

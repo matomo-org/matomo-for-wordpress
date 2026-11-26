@@ -11,10 +11,7 @@ namespace Piwik\Plugins\Login;
 use Piwik\Plugins\Login\Security\BruteForceDetection;
 class Tasks extends \Piwik\Plugin\Tasks
 {
-    /**
-     * @var BruteForceDetection
-     */
-    private $bruteForceDetection;
+    private BruteForceDetection $bruteForceDetection;
     public function __construct(BruteForceDetection $bruteForceDetection)
     {
         $this->bruteForceDetection = $bruteForceDetection;

@@ -14,24 +14,16 @@ use Matomo\Dependencies\Psr\Container\NotFoundExceptionInterface;
  */
 class StringDefinition implements Definition, SelfResolvingDefinition
 {
-    /**
-     * Entry name.
-     * @var string
-     */
-    private $name = '';
-    /**
-     * @var string
-     */
-    private $expression;
-    public function __construct(string $expression)
+    /** Entry name. */
+    private string $name = '';
+    public function __construct(private string $expression)
     {
-        $this->expression = $expression;
     }
     public function getName() : string
     {
         return $this->name;
     }
-    public function setName(string $name)
+    public function setName(string $name) : void
     {
         $this->name = $name;
     }
@@ -47,11 +39,11 @@ class StringDefinition implements Definition, SelfResolvingDefinition
     {
         return \true;
     }
-    public function replaceNestedDefinitions(callable $replacer)
+    public function replaceNestedDefinitions(callable $replacer) : void
     {
         // no nested definitions
     }
-    public function __toString()
+    public function __toString() : string
     {
         return $this->expression;
     }
@@ -61,13 +53,14 @@ class StringDefinition implements Definition, SelfResolvingDefinition
     public static function resolveExpression(string $entryName, string $expression, ContainerInterface $container) : string
     {
         $callback = function (array $matches) use($entryName, $container) {
+            /** @psalm-suppress InvalidCatch */
             try {
                 return $container->get($matches[1]);
             } catch (NotFoundExceptionInterface $e) {
                 throw new DependencyException(sprintf("Error while parsing string expression for entry '%s': %s", $entryName, $e->getMessage()), 0, $e);
             }
         };
-        $result = preg_replace_callback('#\\{([^\\{\\}]+)\\}#', $callback, $expression);
+        $result = preg_replace_callback('#\\{([^{}]+)}#', $callback, $expression);
         if ($result === null) {
             throw new \RuntimeException(sprintf('An unknown error occurred while parsing the string definition: \'%s\'', $expression));
         }

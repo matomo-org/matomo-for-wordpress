@@ -16,8 +16,7 @@ class PiwikJsManipulator
      * @var string
      */
     private $content;
-    /** @var PluginTrackerFiles */
-    private $pluginTrackerFiles;
+    private \Piwik\Plugins\CustomJsTracker\TrackingCode\PluginTrackerFiles $pluginTrackerFiles;
     public function __construct($content, \Piwik\Plugins\CustomJsTracker\TrackingCode\PluginTrackerFiles $pluginTrackerFiles)
     {
         $this->content = $content;

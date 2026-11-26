@@ -22,7 +22,7 @@ use Matomo\Dependencies\Symfony\Component\HttpKernel\KernelEvents;
  */
 class AddRequestFormatsListener implements EventSubscriberInterface
 {
-    protected $formats;
+    private array $formats;
     public function __construct(array $formats)
     {
         $this->formats = $formats;
@@ -30,16 +30,13 @@ class AddRequestFormatsListener implements EventSubscriberInterface
     /**
      * Adds request formats.
      */
-    public function onKernelRequest(RequestEvent $event)
+    public function onKernelRequest(RequestEvent $event) : void
     {
         $request = $event->getRequest();
         foreach ($this->formats as $format => $mimeTypes) {
             $request->setFormat($format, $mimeTypes);
         }
     }
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents() : array
     {
         return [KernelEvents::REQUEST => ['onKernelRequest', 100]];

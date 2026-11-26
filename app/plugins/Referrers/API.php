@@ -181,7 +181,18 @@ class API extends \Piwik\Plugin\API
         Piwik::checkUserHasViewAccess($idSite);
         $this->checkSingleSite($idSite, 'getAll');
         /** @var DataTable|DataTable\Map $dataTable */
-        $dataTable = Request::processRequest('Referrers.getReferrerType', ['idSite' => $idSite, 'period' => $period, 'date' => $date, 'segment' => $segment, 'expanded' => \true, 'disable_generic_filters' => \true, 'disable_queued_filters' => \true, '_setReferrerTypeLabel' => 0], []);
+        $dataTable = Request::processRequest('Referrers.getReferrerType', [
+            'idSite' => $idSite,
+            'period' => $period,
+            'date' => $date,
+            'segment' => $segment,
+            'expanded' => \true,
+            'disable_generic_filters' => \true,
+            'disable_queued_filters' => \true,
+            '_setReferrerTypeLabel' => 0,
+            // percent-of-total metrics are computed for the merged table of this request instead
+            'percent_of_total' => 0,
+        ], []);
         if ($dataTable instanceof DataTable\Map) {
             throw new Exception("Referrers.getAll with multiple sites or dates is not supported (yet).");
         }

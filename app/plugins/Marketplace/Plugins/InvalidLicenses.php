@@ -18,22 +18,13 @@ use Piwik\Translation\Translator;
 use Piwik\Url;
 class InvalidLicenses
 {
-    /**
-     * @var Client
-     */
-    private $client;
+    private Client $client;
     /**
      * @var Plugin\Manager
      */
     private $pluginManager;
-    /**
-     * @var Translator
-     */
-    private $translator;
-    /**
-     * @var Eager
-     */
-    private $cache;
+    private Translator $translator;
+    private Eager $cache;
     /**
      * @var array
      */
@@ -144,6 +135,12 @@ class InvalidLicenses
         if (!empty($paidPlugins)) {
             foreach ($paidPlugins as $plugin) {
                 if (!empty($plugin['isFree'])) {
+                    continue;
+                }
+                // the paid listing also carries bundles, which are licence products rather than
+                // installable plugins; they cannot be activated or deactivated, so naming one in
+                // "deactivated because you have no license" would be meaningless
+                if (!empty($plugin['isBundle'])) {
                     continue;
                 }
                 $pluginName = $plugin['name'];

@@ -10,6 +10,7 @@
  */
 namespace Matomo\Dependencies\Symfony\Component\Console\CommandLoader;
 
+use Matomo\Dependencies\Symfony\Component\Console\Command\Command;
 use Matomo\Dependencies\Symfony\Component\Console\Exception\CommandNotFoundException;
 /**
  * A simple command loader using factories to instantiate commands lazily.
@@ -18,7 +19,7 @@ use Matomo\Dependencies\Symfony\Component\Console\Exception\CommandNotFoundExcep
  */
 class FactoryCommandLoader implements CommandLoaderInterface
 {
-    private $factories;
+    private array $factories;
     /**
      * @param callable[] $factories Indexed by command names
      */
@@ -26,28 +27,19 @@ class FactoryCommandLoader implements CommandLoaderInterface
     {
         $this->factories = $factories;
     }
-    /**
-     * {@inheritdoc}
-     */
-    public function has(string $name)
+    public function has(string $name) : bool
     {
         return isset($this->factories[$name]);
     }
-    /**
-     * {@inheritdoc}
-     */
-    public function get(string $name)
+    public function get(string $name) : Command
     {
         if (!isset($this->factories[$name])) {
-            throw new CommandNotFoundException(sprintf('Command "%s" does not exist.', $name));
+            throw new CommandNotFoundException(\sprintf('Command "%s" does not exist.', $name));
         }
         $factory = $this->factories[$name];
         return $factory();
     }
-    /**
-     * {@inheritdoc}
-     */
-    public function getNames()
+    public function getNames() : array
     {
         return array_keys($this->factories);
     }

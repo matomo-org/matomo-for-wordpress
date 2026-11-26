@@ -24,7 +24,7 @@ class TagsProvider
      */
     private $configuration;
     /**
-     * @var BaseTag[]
+     * @var BaseTag[]|null
      */
     private $cached;
     /**
@@ -54,6 +54,7 @@ class TagsProvider
                 return $tag;
             }
         }
+        return null;
     }
     /**
      * @return BaseTag[]

@@ -183,3 +183,8 @@ matomo/AGENTS.md export-ignore
 
 /app/package.json export-ignore
 /app/package-lock.json export-ignore
+
+# Matomo 6 build and test configuration is not needed at runtime.
+/app/vite.config.ts export-ignore
+/app/vitest.config.ts export-ignore
+/app/plugins/CoreVue/polyfills/vite.config.ts export-ignore

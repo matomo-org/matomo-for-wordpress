@@ -2,9 +2,6 @@
 
 namespace Davaxi\Sparkline;
 
-/**
- * Class PictureTrait.
- */
 class Picture
 {
     const DOT_RADIUS_TO_WIDTH = 2;
@@ -78,22 +75,30 @@ class Picture
             return;
         }
         $fillColor = imagecolorallocate($this->resource, $fillColor[0], $fillColor[1], $fillColor[2]);
-        if (version_compare(\PHP_VERSION, '8.1.0') === -1) {
-            imagefilledpolygon($this->resource, $polygon, $count + 2, $fillColor);
-        } else {
-            imagefilledpolygon($this->resource, $polygon, $fillColor);
-        }
+        imagefilledpolygon($this->resource, $polygon, $fillColor);
     }
     /**
      * @param array $line
      * @param array $lineColor
+     * @param array $segmentPattern [drawCount, skipCount] or [] for solid
      */
-    public function applyLine(array $line, array $lineColor)
+    public function applyLine(array $line, array $lineColor, array $segmentPattern = [])
     {
-        $lineColor = $this->getLineColor($lineColor);
-        foreach ($line as $coordinates) {
-            list($pictureX1, $pictureY1, $pictureX2, $pictureY2) = $coordinates;
-            imageline($this->resource, $pictureX1, $pictureY1, $pictureX2, $pictureY2, $lineColor);
+        $color = $this->getLineColor($lineColor);
+        if ($segmentPattern) {
+            [$draw, $skip] = $segmentPattern;
+            $period = $draw + $skip;
+            foreach ($line as $i => $coordinates) {
+                if ($i % $period < $draw) {
+                    list($pictureX1, $pictureY1, $pictureX2, $pictureY2) = $coordinates;
+                    imageline($this->resource, $pictureX1, $pictureY1, $pictureX2, $pictureY2, $color);
+                }
+            }
+        } else {
+            foreach ($line as $coordinates) {
+                list($pictureX1, $pictureY1, $pictureX2, $pictureY2) = $coordinates;
+                imageline($this->resource, $pictureX1, $pictureY1, $pictureX2, $pictureY2, $color);
+            }
         }
     }
     /**
@@ -123,9 +128,6 @@ class Picture
         imagealphablending($sparkline, \false);
         imagecopyresampled($sparkline, $this->resource, 0, 0, 0, 0, $width, $height, $this->width, $this->height);
         imagesavealpha($sparkline, \true);
-        if (\PHP_VERSION < 80000) {
-            imagedestroy($this->resource);
-        }
         return $sparkline;
     }
 }

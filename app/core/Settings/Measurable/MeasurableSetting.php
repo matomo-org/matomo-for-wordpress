@@ -42,16 +42,13 @@ class MeasurableSetting extends \Piwik\Settings\Setting
      */
     public function isWritableByCurrentUser()
     {
-        if (isset($this->hasWritePermission)) {
-            return $this->hasWritePermission;
-        }
         // performance improvement, do not detect this in __construct otherwise likely rather "big" query to DB.
-        if ($this->hasSiteBeenCreated()) {
-            $this->hasWritePermission = Piwik::isUserHasAdminAccess($this->idSite);
-        } else {
-            $this->hasWritePermission = Piwik::hasUserSuperUserAccess();
-        }
-        return $this->hasWritePermission;
+        return $this->getWritePermissionForCurrentAccess(function () {
+            if ($this->hasSiteBeenCreated()) {
+                return Piwik::isUserHasAdminAccess($this->idSite);
+            }
+            return Piwik::hasUserSuperUserAccess();
+        });
     }
     private function hasSiteBeenCreated()
     {

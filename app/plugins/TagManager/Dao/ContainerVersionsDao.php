@@ -17,10 +17,23 @@ use Piwik\Plugins\TagManager\Input\Name;
 class ContainerVersionsDao extends \Piwik\Plugins\TagManager\Dao\BaseDao implements \Piwik\Plugins\TagManager\Dao\TagManagerDao
 {
     public const REVISION_DRAFT = 0;
+    /**
+     * Width of `created_by`, matching core's `user`.`login`.
+     */
+    public const USER_LOGIN_MAX_LENGTH = 100;
+    /**
+     * Logins {@see Piwik::getCurrentUserLogin()} returns when no actual user is behind the request, eg
+     * `super user was set` for console commands and scheduled tasks. No creator is stored for these.
+     */
+    public const NON_USER_LOGINS = ['anonymous', 'super user was set'];
     protected $table = 'tagmanager_container_version';
+    /**
+     * @var bool
+     */
+    private $hasCreatedByColumn = \false;
     public function install()
     {
-        DbHelper::createTable($this->table, "\n                  `idcontainerversion` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,\n                  `idcontainer` VARCHAR(8) NOT NULL,\n                  `idsite` int(11) UNSIGNED NOT NULL,\n                  `status` VARCHAR(10) NOT NULL,\n                  `revision` MEDIUMINT UNSIGNED NOT NULL DEFAULT 1,\n                  `name` VARCHAR(" . Name::MAX_LENGTH . ") NOT NULL DEFAULT '',\n                  `description` VARCHAR(" . Description::MAX_LENGTH . ") NOT NULL DEFAULT '',\n                  `created_date` DATETIME NOT NULL,\n                  `updated_date` DATETIME NOT NULL,\n                  `deleted_date` DATETIME NULL,\n                  PRIMARY KEY(`idcontainerversion`), KEY(`idcontainer`), KEY (`idsite`, `idcontainer`)");
+        DbHelper::createTable($this->table, "\n                  `idcontainerversion` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,\n                  `idcontainer` VARCHAR(8) NOT NULL,\n                  `idsite` int(11) UNSIGNED NOT NULL,\n                  `status` VARCHAR(10) NOT NULL,\n                  `revision` MEDIUMINT UNSIGNED NOT NULL DEFAULT 1,\n                  `name` VARCHAR(" . Name::MAX_LENGTH . ") NOT NULL DEFAULT '',\n                  `description` VARCHAR(" . Description::MAX_LENGTH . ") NOT NULL DEFAULT '',\n                  `created_date` DATETIME NOT NULL,\n                  `created_by` VARCHAR(" . self::USER_LOGIN_MAX_LENGTH . ") NULL DEFAULT NULL,\n                  `updated_date` DATETIME NOT NULL,\n                  `deleted_date` DATETIME NULL,\n                  PRIMARY KEY(`idcontainerversion`), KEY(`idcontainer`), KEY (`idsite`, `idcontainer`)");
         // we cannot set a unique key on (`idsite`, `idcontainerversion`, `name`) because we soft delete tags and want to make sure names can be used again after deleting an entry
     }
     private function isNameInUse($idSite, $idContainer, $name, $exceptIdVersion = null)
@@ -58,18 +71,46 @@ class ContainerVersionsDao extends \Piwik\Plugins\TagManager\Dao\BaseDao impleme
         $values = array('idcontainer' => $idContainer, 'idsite' => $idSite, 'status' => self::STATUS_ACTIVE, 'created_date' => $createdDate, 'updated_date' => $createdDate, 'revision' => self::REVISION_DRAFT);
         return $this->insertRecord($values);
     }
-    public function createVersion($idSite, $idContainer, $versionName, $versionDescription, $createdDate)
+    /**
+     * @param string|null $createdBy login of the user creating the version; a non-user login is stored as no creator
+     */
+    public function createVersion($idSite, $idContainer, $versionName, $versionDescription, $createdDate, $createdBy = null)
     {
         if ($this->isNameInUse($idSite, $idContainer, $versionName)) {
             throw new Exception(Piwik::translate('TagManager_ErrorNameDuplicate'));
         }
         $revision = $this->getNextRevisionOfContainer($idSite, $idContainer);
         $values = array('idcontainer' => $idContainer, 'idsite' => $idSite, 'status' => self::STATUS_ACTIVE, 'name' => $versionName, 'description' => !empty($versionDescription) ? $versionDescription : '', 'created_date' => $createdDate, 'updated_date' => $createdDate, 'revision' => $revision);
+        if ($this->hasCreatedByColumn()) {
+            $isUserLogin = !empty($createdBy) && !in_array($createdBy, self::NON_USER_LOGINS, \true);
+            $values['created_by'] = $isUserLogin ? $createdBy : null;
+        }
         return $this->insertRecord($values);
     }
     /**
+     * Removes the given login from every version it is stored on as creator.
+     */
+    public function anonymizeUserLogin(string $userLogin) : void
+    {
+        if (!$this->hasCreatedByColumn()) {
+            return;
+        }
+        Db::query(sprintf('UPDATE %s SET `created_by` = NULL WHERE `created_by` = ?', $this->tablePrefixed), [$userLogin]);
+    }
+    /**
+     * `created_by` is added by an update, which can run after this code is already deployed. Only a
+     * positive result is remembered, so the column is picked up as soon as the update has added it.
+     */
+    private function hasCreatedByColumn() : bool
+    {
+        if (!$this->hasCreatedByColumn) {
+            $this->hasCreatedByColumn = array_key_exists('created_by', DbHelper::getTableColumns($this->tablePrefixed));
+        }
+        return $this->hasCreatedByColumn;
+    }
+    /**
      * @param int $idSite
-     * @param array $statuses
+     * @param string $idContainer
      * @return array
      */
     public function getVersionsOfContainer($idSite, $idContainer)
@@ -81,7 +122,7 @@ class ContainerVersionsDao extends \Piwik\Plugins\TagManager\Dao\BaseDao impleme
     }
     /**
      * @param int $idSite
-     * @param array $statuses
+     * @param string $idContainer
      * @return array
      */
     public function getDraftVersion($idSite, $idContainer)
@@ -93,7 +134,8 @@ class ContainerVersionsDao extends \Piwik\Plugins\TagManager\Dao\BaseDao impleme
     }
     /**
      * @param int $idSite
-     * @param array $statuses
+     * @param string $idContainer
+     * @param int $idContainerVersion
      * @return array
      */
     public function getVersion($idSite, $idContainer, $idContainerVersion)

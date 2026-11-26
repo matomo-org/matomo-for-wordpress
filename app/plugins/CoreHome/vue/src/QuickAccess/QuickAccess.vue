@@ -11,22 +11,16 @@
     class="quickAccessInside"
     v-focus-anywhere-but-here="{ blur: onBlur }"
   >
-    <span
-      class="icon-search"
-      @mouseenter="searchActive = true"
-    />
-    <input
-      class="quickAccessInput browser-default"
-      @keydown="onKeypress($event)"
-      @focus="searchActive = true"
+    <!-- attrs/listeners fall through to the input; v-tooltips lands on SearchInput's root -->
+    <SearchInput
+      ref="searchInput"
       v-model="searchTerm"
-      type="text"
-      tabindex="5"
-      v-focus-if="{ focused: searchActive }"
+      :focused="searchActive"
       v-tooltips
       :title="quickAccessTitle"
-      :placeholder="translate('General_Search')"
-      ref="input"
+      tabindex="5"
+      @keydown="onKeypress($event)"
+      @focus="searchActive = true"
     />
     <div
       class="dropdown quickAccessDropdown"
@@ -38,14 +32,14 @@
       <ul v-for="subcategory in menuItems" :key="subcategory.title">
         <li
           class="quick-access-category"
-          @click="searchTerm = subcategory.title;searchMenu(searchTerm)"
+          @click="searchTerm = subcategory.title"
         >
           {{ subcategory.title }}
         </li>
         <li
           class="result"
           :class="{ selected: submenuEntry.menuIndex === searchIndex }"
-          @mouseenter="searchIndex = submenuEntry.menuIndex"
+          @mouseenter="searchIndex = submenuEntry.menuIndex ?? 0"
           @click="selectMenuItem(submenuEntry)"
           v-for="submenuEntry in subcategory.items"
           :key="submenuEntry.index"
@@ -100,7 +94,7 @@
 <script lang="ts">
 import { DeepReadonly, defineComponent } from 'vue';
 import FocusAnywhereButHere from '../FocusAnywhereButHere/FocusAnywhereButHere';
-import FocusIf from '../FocusIf/FocusIf';
+import SearchInput from '../SearchInput/SearchInput.vue';
 import { translate } from '../translate';
 import SitesStore from '../SiteSelector/SitesStore';
 import Site from '../SiteSelector/Site';
@@ -140,11 +134,11 @@ interface MenuItem {
 }
 
 interface QuickAccessState {
-  menuItems: Array<unknown>;
+  menuItems: MenuItem[];
   numMenuItems: number;
   searchActive: boolean;
   searchTerm: string;
-  searchIndex: number;
+  searchIndex: number | string;
 
   menuIndexCounter: number;
   topMenuItems: SubMenuItem[]|null;
@@ -175,12 +169,23 @@ function scrollFirstElementIntoView(element: HTMLElement) {
 
 export default defineComponent({
   name: 'QuickAccess',
+  components: {
+    SearchInput,
+  },
   directives: {
     FocusAnywhereButHere,
-    FocusIf,
     Tooltips,
   },
   watch: {
+    // driven by the field's value rather than by keydown, so that changes made without a keystroke
+    // (committing an IME candidate with the mouse, pasting from the context menu) also search
+    searchTerm(newValue: string) {
+      if (!newValue) {
+        return;
+      }
+
+      this.searchMenu(newValue);
+    },
     searchActive(newValue: boolean) {
       const root = this.$refs.root as HTMLElement;
       if (!root || !root.parentElement) {
@@ -280,6 +285,12 @@ export default defineComponent({
       const isTabKey = event.which === 9;
       const isEscKey = event.which === 27;
 
+      // while an IME is composing, these keys belong to the candidate window, not to the results
+      if (event.isComposing) {
+        this.searchActive = true;
+        return;
+      }
+
       if (event.which === 38) {
         this.highlightPreviousItem();
         event.preventDefault();
@@ -295,27 +306,29 @@ export default defineComponent({
       } else if (isTabKey) {
         this.searchActive = false;
       } else {
+        // the search itself runs off the searchTerm watcher
         setTimeout(() => {
           this.searchActive = true;
-          this.searchMenu(this.searchTerm);
         });
       }
     },
     highlightPreviousItem() {
-      if ((this.searchIndex - 1) < 0) {
+      const currentIndex = Number(this.searchIndex);
+      if ((currentIndex - 1) < 0) {
         this.searchIndex = 0;
       } else {
-        this.searchIndex -= 1;
+        this.searchIndex = currentIndex - 1;
       }
       this.makeSureSelectedItemIsInViewport();
     },
     highlightNextItem() {
       const numTotal = (this.$refs.root as HTMLElement).querySelectorAll('li.result').length;
+      const currentIndex = Number(this.searchIndex);
 
-      if (numTotal <= (this.searchIndex + 1)) {
+      if (numTotal <= (currentIndex + 1)) {
         this.searchIndex = numTotal - 1;
       } else {
-        this.searchIndex += 1;
+        this.searchIndex = currentIndex + 1;
       }
 
       this.makeSureSelectedItemIsInViewport();
@@ -332,9 +345,7 @@ export default defineComponent({
     deactivateSearch() {
       this.searchTerm = '';
       this.searchActive = false;
-      if (this.$refs.input) {
-        (this.$refs.input as HTMLElement).blur();
-      }
+      (this.$refs.searchInput as { blur?: () => void } | undefined)?.blur?.();
     },
     makeSureSelectedItemIsInViewport() {
       const element = this.getCurrentlySelectedElement();
@@ -345,8 +356,8 @@ export default defineComponent({
     },
     getCurrentlySelectedElement(): HTMLElement|undefined {
       const results = (this.$refs.root as HTMLElement).querySelectorAll('li.result');
-      if (results && results.length && results.item(this.searchIndex)) {
-        return results.item(this.searchIndex) as HTMLElement;
+      if (results && results.length && results.item(Number(this.searchIndex))) {
+        return results.item(Number(this.searchIndex)) as HTMLElement;
       }
       return undefined;
     },
@@ -354,7 +365,7 @@ export default defineComponent({
       const searchTerm = unprocessedSearchTerm.toLowerCase();
 
       let index = -1;
-      const menuItemsIndex: Record<string, number> = {};
+      const menuItemsIndex: Record<string, number> = Object.create(null);
       const menuItems: MenuItem[] = [];
 
       const moveToCategory = (theSubmenuItem: SubMenuItem) => {
@@ -470,7 +481,7 @@ export default defineComponent({
 
         if (!text || (element.parentElement != null && element.parentElement.tagName != null
           && element.parentElement.tagName === 'DIV')) {
-          text = element.getAttribute('title')?.trim(); // possibly a icon, use title instead
+          text = element.getAttribute('title')?.trim() || ''; // possibly a icon, use title instead
         }
 
         if (text) {

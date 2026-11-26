@@ -128,7 +128,6 @@
         "ExceptionConfigurationFileNotFound": "Ang configuration file {%s} ay hindi nahanap o hindi mabasa.",
         "ExceptionDatabaseVersion": "Ang iyong %1$s na bersyon ay %2$s ngunit nangangailangan ang Matomo ng hindi bababa sa %3$s.",
         "ExceptionFileIntegrity": "Nabigo ang integrity check: %s",
-        "ExceptionIncompatibleClientServerVersions": "Ang iyong %1$s bersyon ng client ay %2$s kung saan ay hindi tugma sa bersyon ng server %3$s.",
         "ExceptionInvalidAggregateReportsFormat": "Ang pinagsama-samang mga hindi wastong format '%1$s'. Subukan ang alinman sa mga sumusunod sa halip: %2$s.",
         "ExceptionInvalidArchiveTimeToLive": "Ngayon ang oras ng archive upang mabuhay ay dapat bilang ng segundo na higit pa sa zero",
         "ExceptionInvalidDateFormat": "Ang format ng petsa ay dapat na: %1$s o anumang keyword na suportado ng function na %2$s (tingnan ang %3$s para sa karagdagang impormasyon).",
@@ -396,6 +395,10 @@
         "PickARow": "Pumili ng row upang ihambing",
         "PickAnotherRow": "Pumili ng isa pang row upang ihambing"
     },
+    "AIProviders": {
+        "DefaultBadge": "Default",
+        "Model": "Modelo"
+    },
     "API": {
         "ChangeTokenHint": "Kung gusto mong baguhin ang token na ito, mangyaring pumunta sa iyong %1$spersonal settings page%2$s.",
         "KeepTokenSecret": "Ang token_auth na ito ay isang lihim gaya ng iyong login at password, %1$s huwag itong ibahagi sa iba %2$s!",
@@ -575,15 +578,9 @@
         "ClickRowToExpandOrContract": "I-click ang hanay na ito, upang palawakin o ikontrata ang subtable",
         "CloseWidgetDirections": "Maaari mong isara ang widget na ito sa pamamagitan ng pag-click sa icon na 'X' na nasa tuktok ng widget.",
         "DataForThisReportHasBeenPurged": "Ang data para sa ulat na ito ay higit sa %s na buwang gulang at ito ay na-purge na.",
-        "DataTableExcludeAggregateRows": "Ang pinagsama-samang mga hilera ay ipinapakita %s Itago ang mga ito",
-        "DataTableIncludeAggregateRows": "Ang pinagsama-samang mga hilera ay nakatago %s Ipakita ang mga ito",
-        "Default": "default",
         "DonateCall1": "Ang Matomo ay palaging magdudulot sa iyo ng walang gastos, ngunit hindi ibig sabihin ay magdudulot ito sa amin upang walang gawin.",
         "DonateCall2": "Kailangan ng Matomo ang iyong patuloy na suporta upang lumago at maging maunlad ito.",
-        "ExcludeRowsWithLowPopulation": "Ang lahat ng mga hilera ay ipinapakita %s Ibukod ang mababang populasyon",
         "ExternalHelp": "Tulong (bubukas sa bagong tab)",
-        "FlattenDataTable": "Ang ulat ay naka-herarkiya %s Gawin itong patag",
-        "IncludeRowsWithLowPopulation": "Ang mga hilera na may mababang populasyon ay nakatago %s Ipakita ang lahat ng mga hilera",
         "InjectedHostEmailBody": "Hello, sinubukan kong i-access ang Matomo ngayon at nakaranas ako ng hindi kilalang hostname warning.",
         "InjectedHostEmailSubject": "Ang Matomo ay na-access gamit ang isang hindi kilalang hostname: %s",
         "InjectedHostNonSuperUserWarning": "%1$sI-click ito upang ma-access ang Matomo nang ligtas%2$s at alisin ang babalang ito. Baka gusto mo ring makipag-ugnay sa iyong administrator sa Matomo at ipaalam sa kanila ang isyung ito (%3$si-click dito upang mag-email%4$s).",
@@ -591,7 +588,6 @@
         "InjectedHostWarningIntro": "Ina-access mo na ngayon Matomo mula sa %1$s, ngunit ang Matomo ay na-configure upang tumakbo sa address na ito: %2$s.",
         "NoPrivilegesAskPiwikAdmin": "Ikaw ay naka-log-in bilang '%1$s' ngunit mukhang wala kang anumang pahintulot na naka-set sa Matomo. %2$s Tanungin ang iyong Matomo administrator (i-click upang i-email) %3$s upang bigyan ka ng 'view' access sa website.",
         "PeriodRange": "Pagitan",
-        "PivotBySubtable": "Ang ulat na ito ay hindi umiikot %1$s Paikutin ng %2$s",
         "PresetDateToday": "Ngayong araw",
         "PresetDateYesterday": "Kahapon",
         "ReportGeneratedOn": "Ang ulat ay ginawa sa %s",
@@ -604,8 +600,6 @@
         "SystemSummaryPhpVersion": "Bersyon ng PHP",
         "TableNoData": "Walang data para sa talahanayang ito.",
         "ThereIsNoDataForThisReport": "Walang data para sa ulat na ito.",
-        "UnFlattenDataTable": "Ang ulat ay flat %s Gawin itong hierarchical",
-        "UndoPivotBySubtable": "Ang ulat na ito ay napaikot %s I-undo ang pagpaikot",
         "ViewAllPiwikVideoTutorials": "Tingnan ang lahat Matomo Video Tutorials",
         "WebAnalyticsReports": "Mga Ulat ng Analitiko ng Web",
         "YouAreUsingTheLatestVersion": "Ginagamit mo ang pinaka bagong bersyon ng Matomo"
@@ -880,7 +874,8 @@
         "CategoryTextGeneral_Actions": "pahina",
         "CategoryTextReferrers_Referrers": "Mga Referrer",
         "EntryPages": "Mga entry page",
-        "PageTitles": "Mga pamagat ng pahina"
+        "PageTitles": "Mga pamagat ng pahina",
+        "RecommendationCountPages": "%s mga pahina"
     },
     "Insights": {
         "DayComparedToPreviousDay": "nakaraang araw",
@@ -963,7 +958,6 @@
         "SystemCheckFunctions": "Mga kinakailangang function",
         "SystemCheckGDFreeType": "GD &gt; 2.x + Freetype (graphics)",
         "SystemCheckGDHelp": "Ang sparklines (maliit na mga graph) at graph ng imahe (sa app at Email ulat ng Matomo Mobile) ay hindi gagana.",
-        "SystemCheckGlobHelp": "Ang mga gawa ng function na ito ay hindi gumagana sa iyong host. Ang Matomo ay susubukan na ito ay gayahin ngunit maaring magkaroon ng karagdagang paghihipit sa seguridad. Ang functionality nito ay lubos na maapektuhan.",
         "SystemCheckGzcompressHelp": "Kailangan mong i-enable ang zlib extension at gzcompress function.",
         "SystemCheckGzuncompressHelp": "Kailangan mong i-enable ang zlib extension at gzuncompress function.",
         "SystemCheckMailHelp": "Ang Feedback at mga mensahe ng Nawalang Password ay hindi ipapadala nang walang mail ().",
@@ -2080,6 +2074,9 @@
         "Authors": "Mga Gumawa",
         "BackToMarketplace": "Bumalik sa Marketplace",
         "ByXDevelopers": "sa %s mga nagdevelop",
+        "CategoryDevelopment": "Pag-unlad",
+        "CategoryInsights": "Mga Pananaw",
+        "CategorySecurity": "Seguridad",
         "Developer": "Nagdevelop",
         "FeaturedPlugin": "Feature na plugin",
         "InstallingPlugin": "Nag-iinstall %s",
@@ -2087,7 +2084,6 @@
         "LastUpdated": "Huling In-update",
         "Marketplace": "Marketplace",
         "NoPluginsFound": "Walang nakitang mga plugin",
-        "NoThemesFound": "Walang nakitang mga theme",
         "NumDownloadsLatestVersion": "Pinakabagong bersyon: %s na mga download",
         "PluginKeywords": "Mga Keyword",
         "PluginUpdateAvailable": "Iyong ginagamit ang bersyon %1$s at ang pinaka bagong bersyon %2$s ay available.",
@@ -2148,8 +2144,7 @@
     "MultiSites": {
         "Evolution": "Ebolusyon",
         "LoadingWebsites": "Naglo-load ang mga website",
-        "TopLinkTooltip": "Ikumpara ang stats ng Web Analytics para sa lahat ng iyong Website.",
-        "TotalPageviews": "kabuuang mga Pageview"
+        "TopLinkTooltip": "Ikumpara ang stats ng Web Analytics para sa lahat ng iyong Website."
     },
     "Overlay": {
         "Clicks": "%s na mga click",
@@ -2186,7 +2181,6 @@
         "DeleteLogsOlderThan": "Tanggalin ang mga log na mas luma sa",
         "DeleteMaxRows": "Pinakamataas na bilang ng mga hilera na tatanggalin sa isang pagtakbo:",
         "DeleteMaxRowsNoLimit": "walang limitasyon",
-        "DeleteReportsConfirm": "Iyong papaganahin ang pag tanggal sa datus ng ulat. Kung ang matatagal ng ulat ay natanggal Kailangan mong ulitin ang mga ito upang makita. Gustomo mo bang gawin ito?",
         "DeleteReportsOlderThan": "Tanggalin ang mga lumang ulat na hihigit sa",
         "DoNotTrack_Description": "Do Not Track ay isang teknolohiya at patakaran na nagbibigay daan sa mga gumagamit upang makapili kung nais nitong hindi masubay-bayan ang bawat website na kanilang binibista kabilang na dito ang analytics services mga network sa advertising at social platform.",
         "DoNotTrack_Disable": "Huwag paganahin ang Do Not Track support",
@@ -2205,7 +2199,6 @@
         "MenuPrivacySettings": "Privacy",
         "NextDelete": "Susunod na iskedyul sa pagtaggal sa",
         "PurgeNow": "I-purge ang DB Ngayon",
-        "PurgeNowConfirm": "Iyo ng permanenteng tanggalin ang data mula sa iyong database. Sigurado ka bang gusto mo itong ituloy?",
         "PurgingData": "Purging data…",
         "ReportsDataSavedEstimate": "Laki ng database",
         "SaveSettingsBeforePurge": "Iyong binago ang mga setting ng pagtanggal ng data. Mangyaring i-save ang mga ito bago simulan ang isang pag purge.",
@@ -2270,13 +2263,6 @@
         "WidgetGlobalVisitors": "Configuration ng bisita",
         "WidgetGlobalVisitorsDocumentation": "Ang ulat na ito ay nagpapakita ng karaniwang pangkalahatang configuration na meron ang iyong bisita. Ang configuration ay binubuo ng operating system uri ng mga browser at screen resolution.",
         "WidgetResolutions": "Screen Resolution"
-    },
-    "SEO": {
-        "Bing_IndexedPages": "Mga na index na pahina ng bing",
-        "DomainAge": "Edad ng Domain",
-        "Rank": "Ranggo",
-        "SEORankingsFor": "Ranggo ng SEO para sa %s",
-        "SeoRankings": "Ranggo sa SEO"
     },
     "ScheduledReports": {
         "AggregateReportsFormat": "Mga opsyon sa pag-display",
@@ -2438,7 +2424,6 @@
         "PluginDescription": "Maging isang Matomo Expert sa lalong madaling panahon sa pamamagitan ng pagkumpleto ng mga hamon na nagiging pamilyar sa iyo sa Matomo."
     },
     "Transitions": {
-        "BouncesInline": "%s mga bounce",
         "DirectEntries": "Direktang mga entry",
         "ErrorBack": "Bumalik sa nakaraang aksyon",
         "ExitsInline": "%s paglabas",
@@ -2460,8 +2445,7 @@
         "ToFollowingSiteSearches": "Panloob na paghahanap",
         "ToFollowingSiteSearchesInline": "panloob na paghahanap %s",
         "TransitionsSubcategoryHelp2": "Higit pang mga detalye",
-        "XOfAllPageviews": "%s ng lahat ng mga tanawin ng pahinang ito",
-        "XOutOfYVisits": "%1$s (mula sa %2$s)"
+        "XOfAllPageviews": "%s ng lahat ng mga tanawin ng pahinang ito"
     },
     "TwoFactorAuth": {
         "TwoFAShort": "2FA"

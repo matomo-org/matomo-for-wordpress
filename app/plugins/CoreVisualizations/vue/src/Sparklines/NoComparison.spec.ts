@@ -7,17 +7,16 @@
 
 import { mount } from '@vue/test-utils';
 
-// CoreHome is a package-style cross-plugin import with no jest module mapping, so it must be
-// virtually mocked. Tooltips is the (no-op here) directive used by the real MetricValue this
-// component mounts. The sparkline itself is rendered by the shell, not this body.
-jest.mock('CoreHome', () => ({
+// CoreHome is a package-style cross-plugin import; the vitest config aliases it to its source
+// entry point, so mock it here. Tooltips is the (no-op here) directive used by the real MetricValue
+// this component mounts. The sparkline itself is rendered by the shell, not this body.
+vi.mock('CoreHome', () => ({
   Tooltips: {},
   // ucfirst is mocked as an identity passthrough; its capitalization is covered by ucfirst.spec.
   ucfirst: (s?: string) => s ?? '',
-}), { virtual: true });
+}));
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const NoComparison = require('./NoComparison.vue').default;
+import NoComparison from './NoComparison.vue';
 
 function makeSparkline(overrides = {}) {
   return {

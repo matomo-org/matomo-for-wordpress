@@ -21,15 +21,11 @@ use Piwik\Plugin\MetadataLoader;
  */
 class PluginList
 {
-    /**
-     * @var GlobalSettingsProvider
-     */
-    private $settings;
+    private \Piwik\Application\Kernel\GlobalSettingsProvider $settings;
     /**
      * Plugins bundled with core package, disabled by default
-     * @var array
      */
-    private $corePluginsDisabledByDefault = array('ArchivingMetrics', 'DBStats', 'ExamplePlugin', 'ExampleCommand', 'ExampleSettingsPlugin', 'ExampleUI', 'ExampleVisualization', 'ExamplePluginTemplate', 'ExampleTracker', 'ExampleLogTables', 'ExampleReport', 'ExampleAPI', 'ExampleVue', 'MobileAppMeasurable', 'TagManager');
+    private array $corePluginsDisabledByDefault = array('ArchivingMetrics', 'DBStats', 'ExamplePlugin', 'ExampleCommand', 'ExampleSettingsPlugin', 'ExampleUI', 'ExampleVisualization', 'ExamplePluginTemplate', 'ExampleTracker', 'ExampleLogTables', 'ExampleReport', 'ExampleAPI', 'ExampleVue', 'MobileAppMeasurable', 'TagManager');
     // Themes bundled with core package, disabled by default
     private $coreThemesDisabledByDefault = array('ExampleTheme');
     public function __construct(\Piwik\Application\Kernel\GlobalSettingsProvider $settings)

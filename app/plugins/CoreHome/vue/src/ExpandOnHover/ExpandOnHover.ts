@@ -9,7 +9,7 @@ import { DirectiveBinding } from 'vue';
 import Matomo from '../Matomo/Matomo';
 import DirectiveUtilities from '../directiveUtilities';
 
-interface ExpandOnHoverArgs {
+export interface ExpandOnHoverArgs {
   // input (provided by user)
   expander: string | HTMLElement,
 
@@ -23,7 +23,7 @@ interface ExpandOnHoverArgs {
 function onMouseEnter(element: HTMLElement) {
   element.classList.add('expanded');
 
-  const positionElement = element.querySelector('.dropdown.positionInViewport');
+  const positionElement = element.querySelector('.positionInViewport');
   if (positionElement) {
     Matomo.helper.setMarginLeftToBeInViewport(positionElement);
   }

@@ -132,7 +132,9 @@ class MatomoUnit_Matomo_Fixture {
 				API::unsetAllInstances();
 				ArchiveTableCreator::clear();
 				Site::clearCache();
-				Archive::clearStaticCache();
+				if ( method_exists( Archive::class, 'clearStaticCache' ) ) {
+					Archive::clearStaticCache();
+				}
 				// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 				FrontController::$requestId = null;
 				Date::$now                  = null;

@@ -8,18 +8,19 @@
  */
 namespace Piwik\Plugins\Monolog\Processor;
 
+use Matomo\Dependencies\Monolog\LogRecord;
 /**
  * Processes a log message using `sprintf()`.
  */
 class SprintfProcessor
 {
-    public function __invoke(array $record)
+    public function __invoke(LogRecord $record) : LogRecord
     {
         $message = $record['message'];
         $parameters = $record['context'];
-        if (is_string($message) && !empty($parameters) && strpos($message, '%') !== \false) {
+        if (is_string($message) && !empty($parameters) && str_contains($message, '%')) {
             $parameters = $this->ensureParametersAreStrings($parameters);
-            $record['message'] = vsprintf($message, $parameters);
+            $record = $record->with(message: vsprintf($message, $parameters));
         }
         return $record;
     }

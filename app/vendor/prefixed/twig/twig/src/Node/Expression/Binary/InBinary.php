@@ -11,7 +11,9 @@
 namespace Matomo\Dependencies\Twig\Node\Expression\Binary;
 
 use Matomo\Dependencies\Twig\Compiler;
-class InBinary extends AbstractBinary
+use Matomo\Dependencies\Twig\Node\CoercesChildrenToStringInterface;
+use Matomo\Dependencies\Twig\Node\Expression\ReturnBoolInterface;
+class InBinary extends AbstractBinary implements ReturnBoolInterface, CoercesChildrenToStringInterface
 {
     public function compile(Compiler $compiler) : void
     {
@@ -20,5 +22,9 @@ class InBinary extends AbstractBinary
     public function operator(Compiler $compiler) : Compiler
     {
         return $compiler->raw('in');
+    }
+    public function getStringCoercedChildNames() : array
+    {
+        return ['left', 'right'];
     }
 }

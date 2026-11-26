@@ -92,11 +92,13 @@ class Http
      *                            - **status**: the HTTP status code
      *                            - **headers**: the HTTP headers
      *                            - **data**: the HTTP response data
+     *                            - **effectiveUrl**: the final URL after following redirects (best effort on the
+     *                              fopen transport)
      *
      *                            `false` is still returned on failure.
      * @throws Exception if the response cannot be saved to `$destinationPath`, if the HTTP response cannot be sent,
      *                   if there are more than 5 redirects or if the request times out.
-     * @phpstan-return ($destinationPath is null ? ($getExtendedInfo is true ? array{status: ?int, headers?: ?array, data?: ?string} : string|false) : bool)
+     * @phpstan-return ($destinationPath is null ? ($getExtendedInfo is true ? array{status: ?int, headers?: ?array, data?: ?string, effectiveUrl?: string} : string|false) : bool)
      * @api
      */
     public static function sendHttpRequest($aUrl, $timeout, $userAgent = null, $destinationPath = null, $followDepth = 0, $acceptLanguage = \false, $byteRange = \false, $getExtendedInfo = \false, $httpMethod = 'GET', $httpUsername = null, $httpPassword = null, $checkHostIsAllowed = \true, $validateEgressIp = \false)
@@ -149,7 +151,7 @@ class Http
     private static function convertWildcardToPattern(string $wildcardHost) : string
     {
         $flexibleStart = $flexibleEnd = \false;
-        if (strpos($wildcardHost, '*.') === 0) {
+        if (str_starts_with($wildcardHost, '*.')) {
             $flexibleStart = \true;
             $wildcardHost = substr($wildcardHost, 2);
         }
@@ -195,7 +197,7 @@ class Http
      *                               manual per-hop redirect re-validation and connection pinning. See
      *                               {@see sendHttpRequest()} for the full contract.
      *
-     * @return ($destinationPath is null ? ($getExtendedInfo is true ? array{status: ?int, headers?: ?array, data?: ?string} : string|false) : bool)
+     * @return ($destinationPath is null ? ($getExtendedInfo is true ? array{status: ?int, headers?: ?array, data?: ?string, effectiveUrl?: string} : string|false) : bool)
      * @throws Exception
      */
     public static function sendHttpRequestBy($method, $aUrl, $timeout, $userAgent = null, $destinationPath = null, $file = null, $followDepth = 0, $acceptLanguage = \false, $acceptInvalidSslCertificate = \false, $byteRange = \false, $getExtendedInfo = \false, $httpMethod = 'GET', $httpUsername = null, $httpPassword = null, $requestBody = null, $additionalHeaders = array(), $forcePost = null, $checkHostIsAllowed = \true, $validateEgressIp = \false)
@@ -205,6 +207,8 @@ class Http
         }
         $aUrl = preg_replace('/[\\x00-\\x1F\\x7F]/', '', trim($aUrl));
         $parsedUrl = @parse_url($aUrl);
+        // final URL after redirects; curl overrides this below
+        $effectiveUrl = $aUrl;
         if (empty($parsedUrl['scheme'])) {
             throw new Exception('Missing scheme in given url');
         }
@@ -245,21 +249,18 @@ class Http
             $effectivePort = isset($parsedUrl['port']) ? (int) $parsedUrl['port'] : ($scheme === 'https' ? 443 : 80);
             // Resolved via DI so tests can substitute a validator that accepts the local fixture server.
             [$canonicalHost, $pinnedIp] = StaticContainer::get(EgressHostValidator::class)->resolveTarget((string) ($parsedUrl['host'] ?? ''));
-            // Rewrite the URL to the canonical host when it differs (IDN folding, casing, a trailing dot)
+            // Rewrite the URL to the canonical host when it differs (IDN folding, casing, a trailing dot),
+            // and re-check the blocklist against the host curl will actually connect to.
             if ($canonicalHost !== trim((string) ($parsedUrl['host'] ?? ''), '[]')) {
                 $aUrl = self::replaceUrlHost($parsedUrl, $canonicalHost);
-                // Re-check the blocklist against the host curl will actually connect to. The check
-                // above ran on the raw host, so canonicalisation (a trailing dot, IDN folding) could
-                // otherwise slip a blocked host like "s3.amazonaws.com." past the wildcard rules.
                 if ($checkHostIsAllowed) {
                     self::assertHostNotBlocked($canonicalHost);
                 }
             }
             // For a DNS host, pin the name to the validated IP so curl cannot re-resolve to
             // a different address. An IP literal (canonicalHost === pinnedIp) needs no pin.
-            // @todo PHP 8.1 min: strpos($pinnedIp, ':') !== false can become str_contains().
             if ($canonicalHost !== $pinnedIp) {
-                $pinnedAddress = strpos($pinnedIp, ':') !== \false ? '[' . $pinnedIp . ']' : $pinnedIp;
+                $pinnedAddress = str_contains($pinnedIp, ':') ? '[' . $pinnedIp . ']' : $pinnedIp;
                 $pinnedResolveEntry = $canonicalHost . ':' . $effectivePort . ':' . $pinnedAddress;
             }
         }
@@ -293,7 +294,7 @@ class Http
         $headers = array();
         /** @var string|null $response */
         $response = null;
-        $httpAuthIsUsed = !empty($httpUsername) || !empty($httpPassword);
+        $httpAuthIsUsed = $httpUsername !== null && $httpUsername !== '' || $httpPassword !== null && $httpPassword !== '';
         $httpAuth = '';
         if ($httpAuthIsUsed) {
             $httpAuth = 'Authorization: Basic ' . base64_encode($httpUsername . ':' . $httpPassword) . "\r\n";
@@ -495,12 +496,7 @@ class Http
             @ini_set('default_socket_timeout', (string) $timeout);
             $ctx = null;
             if (function_exists('stream_context_create')) {
-                $stream_options = array('http' => array(
-                    'header' => 'User-Agent: ' . $userAgent . "\r\n" . ($httpAuth ? $httpAuth : '') . ($acceptLanguage ? $acceptLanguage . "\r\n" : '') . $via . "\r\n" . (!empty($additionalHeaders) ? implode("\r\n", $additionalHeaders) . "\r\n" : '') . $rangeHeader,
-                    'max_redirects' => 5,
-                    // PHP 5.1.0
-                    'timeout' => $timeout,
-                ));
+                $stream_options = array('http' => array('header' => 'User-Agent: ' . $userAgent . "\r\n" . ($httpAuth ? $httpAuth : '') . ($acceptLanguage ? $acceptLanguage . "\r\n" : '') . $via . "\r\n" . (!empty($additionalHeaders) ? implode("\r\n", $additionalHeaders) . "\r\n" : '') . $rangeHeader, 'max_redirects' => 5, 'timeout' => $timeout));
                 if (!empty($proxyHost) && !empty($proxyPort)) {
                     $stream_options['http']['proxy'] = 'tcp://' . $proxyHost . ':' . $proxyPort;
                     $stream_options['http']['request_fulluri'] = \true;
@@ -597,7 +593,7 @@ class Http
                 curl_setopt($ch, \CURLOPT_POST, 1);
                 curl_setopt($ch, \CURLOPT_POSTFIELDS, $requestBodyQuery);
             }
-            if (!empty($httpUsername) && !empty($httpPassword)) {
+            if ($httpUsername !== null && $httpUsername !== '' && $httpPassword !== null && $httpPassword !== '') {
                 $curl_options += array(\CURLOPT_USERPWD => $httpUsername . ':' . $httpPassword);
             }
             @curl_setopt_array($ch, $curl_options);
@@ -616,11 +612,8 @@ class Http
                     @curl_setopt($ch, \CURLOPT_RESOLVE, array($pinnedResolveEntry));
                 }
             }
-            /*
-             * as of php 5.2.0, CURLOPT_FOLLOWLOCATION can't be set if
-             * in safe_mode or open_basedir is set
-             */
-            if (!$validateEgressIp && (string) ini_get('safe_mode') == '' && ini_get('open_basedir') == '') {
+            // CURLOPT_FOLLOWLOCATION cannot be set when open_basedir is set
+            if (!$validateEgressIp && ini_get('open_basedir') == '') {
                 $protocols = 0;
                 foreach (explode(',', $allowedProtocols) as $protocol) {
                     if (defined('CURLPROTO_' . strtoupper(trim($protocol)))) {
@@ -660,7 +653,7 @@ class Http
                 $header = '';
                 // redirects are included in the output html, so we look for the last line that starts w/ HTTP/...
                 // to split the response
-                while (substr($response, 0, 5) == "HTTP/") {
+                while (str_starts_with($response, "HTTP/")) {
                     $split = explode("\r\n\r\n", $response, 2);
                     if (count($split) == 2) {
                         [$header, $response] = $split;
@@ -678,6 +671,10 @@ class Http
             $status = @curl_getinfo($ch, \CURLINFO_HTTP_CODE);
             $elapsed = (float) @curl_getinfo($ch, \CURLINFO_TOTAL_TIME);
             $curlRedirectUrl = (string) @curl_getinfo($ch, \CURLINFO_REDIRECT_URL);
+            $curlEffectiveUrl = (string) @curl_getinfo($ch, \CURLINFO_EFFECTIVE_URL);
+            if ($curlEffectiveUrl !== '') {
+                $effectiveUrl = $curlEffectiveUrl;
+            }
             @curl_close($ch);
             unset($ch);
             // SSRF-safe path follows redirects manually so each hop is re-validated and re-pinned.
@@ -746,7 +743,7 @@ class Http
         if (!$getExtendedInfo) {
             return trim($response);
         } else {
-            return array('status' => $status, 'headers' => $headers, 'data' => $response);
+            return array('status' => $status, 'headers' => $headers, 'data' => $response, 'effectiveUrl' => $effectiveUrl);
         }
     }
     public static function buildQuery($params)
@@ -882,7 +879,7 @@ class Http
     {
         $clientHints = [];
         foreach ($_SERVER as $key => $value) {
-            if (0 === strpos(strtolower($key), strtolower('HTTP_SEC_CH_UA')) || 'X_HTTP_REQUESTED_WITH' === strtoupper($key)) {
+            if (str_starts_with(strtolower($key), strtolower('HTTP_SEC_CH_UA')) || 'X_HTTP_REQUESTED_WITH' === strtoupper($key)) {
                 $clientHints[$key] = $value;
             }
         }
@@ -962,12 +959,11 @@ class Http
      */
     private static function replaceUrlHost(array $parts, string $newHost) : string
     {
-        // @todo PHP 8.1 min (Matomo 6): strpos($newHost, ':') !== false can become str_contains().
         $scheme = isset($parts['scheme']) ? $parts['scheme'] . '://' : '';
         $user = (string) ($parts['user'] ?? '');
         $pass = isset($parts['pass']) ? ':' . $parts['pass'] : '';
         $auth = $user !== '' ? $user . $pass . '@' : '';
-        $hostPart = strpos($newHost, ':') !== \false ? '[' . $newHost . ']' : $newHost;
+        $hostPart = str_contains($newHost, ':') ? '[' . $newHost . ']' : $newHost;
         $port = isset($parts['port']) ? ':' . $parts['port'] : '';
         $path = (string) ($parts['path'] ?? '');
         $query = isset($parts['query']) ? '?' . $parts['query'] : '';

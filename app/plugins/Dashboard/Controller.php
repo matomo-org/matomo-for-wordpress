@@ -10,7 +10,7 @@ namespace Piwik\Plugins\Dashboard;
 
 use Piwik\API\Request;
 use Piwik\Common;
-use Piwik\DataTable\Renderer\Json;
+use Piwik\Http\JsonResponse;
 use Piwik\Piwik;
 use Piwik\Session\SessionNamespace;
 use Piwik\View;
@@ -56,14 +56,14 @@ class Controller extends \Piwik\Plugin\Controller
         }
         return $view->render();
     }
-    public function getDashboardLayout($checkToken = \true)
+    #[JsonResponse]
+    public function getDashboardLayout($checkToken = \true) : string
     {
         if ($checkToken) {
             $this->checkTokenInUrl();
         }
         $idDashboard = Common::getRequestVar('idDashboard', 1, 'int');
         $layout = $this->getLayout($idDashboard);
-        Json::sendHeaderJSON();
         return $layout;
     }
     /**
@@ -87,16 +87,15 @@ class Controller extends \Piwik\Plugin\Controller
     /**
      * Outputs all available dashboards for the current user as a JSON string
      */
-    public function getAllDashboards()
+    #[JsonResponse]
+    public function getAllDashboards() : string
     {
         $this->checkTokenInUrl();
         if (Piwik::isUserIsAnonymous()) {
-            Json::sendHeaderJSON();
             return '[]';
         }
         $login = Piwik::getCurrentUserLogin();
         $dashboards = $this->dashboard->getAllDashboards($login);
-        Json::sendHeaderJSON();
         return json_encode($dashboards);
     }
     /**
@@ -145,10 +144,9 @@ class Controller extends \Piwik\Plugin\Controller
     {
         if (Piwik::isUserIsAnonymous()) {
             $session = new SessionNamespace("Dashboard");
-            if (!isset($session->dashboardLayout)) {
-                return $this->dashboard->getDefaultLayout();
-            }
-            $layout = $session->dashboardLayout;
+            // Not an early return: the default layout is stored by a superuser and can hold widgets
+            // that are theirs alone, so it has to go through the filtering below as well.
+            $layout = isset($session->dashboardLayout) ? $session->dashboardLayout : \false;
         } else {
             $layout = $this->dashboard->getLayoutForUser(Piwik::getCurrentUserLogin(), $idDashboard);
         }
@@ -157,6 +155,7 @@ class Controller extends \Piwik\Plugin\Controller
         }
         if (!empty($layout)) {
             $layout = $this->dashboard->removeDisabledPluginFromLayout($layout);
+            $layout = $this->dashboard->removeWidgetsNotAvailableToUser($layout);
         }
         return $layout;
     }

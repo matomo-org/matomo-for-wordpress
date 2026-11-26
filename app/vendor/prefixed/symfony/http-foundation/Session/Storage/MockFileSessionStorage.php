@@ -24,25 +24,20 @@ namespace Matomo\Dependencies\Symfony\Component\HttpFoundation\Session\Storage;
  */
 class MockFileSessionStorage extends MockArraySessionStorage
 {
-    private $savePath;
+    private string $savePath;
     /**
      * @param string|null $savePath Path of directory to save session files
      */
     public function __construct(?string $savePath = null, string $name = 'MOCKSESSID', ?MetadataBag $metaBag = null)
     {
-        if (null === $savePath) {
-            $savePath = sys_get_temp_dir();
-        }
+        $savePath ??= sys_get_temp_dir();
         if (!is_dir($savePath) && !@mkdir($savePath, 0777, \true) && !is_dir($savePath)) {
-            throw new \RuntimeException(sprintf('Session Storage was not able to create directory "%s".', $savePath));
+            throw new \RuntimeException(\sprintf('Session Storage was not able to create directory "%s".', $savePath));
         }
         $this->savePath = $savePath;
         parent::__construct($name, $metaBag);
     }
-    /**
-     * {@inheritdoc}
-     */
-    public function start()
+    public function start() : bool
     {
         if ($this->started) {
             return \true;
@@ -54,10 +49,7 @@ class MockFileSessionStorage extends MockArraySessionStorage
         $this->started = \true;
         return \true;
     }
-    /**
-     * {@inheritdoc}
-     */
-    public function regenerate(bool $destroy = \false, ?int $lifetime = null)
+    public function regenerate(bool $destroy = \false, ?int $lifetime = null) : bool
     {
         if (!$this->started) {
             $this->start();
@@ -68,7 +60,19 @@ class MockFileSessionStorage extends MockArraySessionStorage
         return parent::regenerate($destroy, $lifetime);
     }
     /**
-     * {@inheritdoc}
+     * @return void
+     */
+    public function setId(string $id)
+    {
+        // the id is turned into a file name, so keep it to the charset PHP allows for session ids
+        // and to the 255 bytes a file name can hold once the ".mocksess" suffix is added
+        if ('' !== $id && !preg_match('/^[a-zA-Z0-9,-]{1,246}$/D', $id)) {
+            $id = '';
+        }
+        parent::setId($id);
+    }
+    /**
+     * @return void
      */
     public function save()
     {
@@ -133,7 +137,7 @@ class MockFileSessionStorage extends MockArraySessionStorage
         } finally {
             restore_error_handler();
         }
-        $this->data = $data ? unserialize($data) : [];
+        $this->data = $data ? unserialize($data, ['allowed_classes' => \true]) : [];
         $this->loadSession();
     }
 }

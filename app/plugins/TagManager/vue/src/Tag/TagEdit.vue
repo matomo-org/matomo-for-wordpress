@@ -10,18 +10,12 @@
       feature="Tag Manager"
       :content-title="editTitle"
     >
-      <p v-show="isLoading">
-        <span class="loadingPiwik">
-          <img src="plugins/Morpheus/images/loading-blue.gif" />
-          {{ translate('General_LoadingData') }}
-        </span>
-      </p>
-      <p v-show="isUpdating">
-        <span class="loadingPiwik">
-          <img src="plugins/Morpheus/images/loading-blue.gif" />
-          {{ translate('TagManager_UpdatingData') }}
-        </span>
-      </p>
+      <ActivityIndicator
+        :loading="isLoading || isUpdating"
+        :loading-message="isUpdating
+          ? translate('TagManager_UpdatingData')
+          : translate('General_LoadingData')"
+      />
       <form
         v-show="!chooseTagType && editTitle"
         @submit="edit ? updateTag() : createTag()"
@@ -82,7 +76,8 @@
             </div>
           </div>
           <TagTriggerArray
-            :container-triggers="containerTriggers"
+            :container-triggers="fireTriggerOptions"
+            :unavailable-trigger-ids="unavailableTriggerIds"
             type="fire"
             :title="translate('TagManager_FireTriggerTitle')"
             :help="translate(
@@ -96,7 +91,8 @@
             @edit="editTrigger($event)"
           />
           <TagTriggerArray
-            :container-triggers="containerTriggers"
+            :container-triggers="blockTriggerOptions"
+            :unavailable-trigger-ids="unavailableTriggerIds"
             type="block"
             :title="translate('TagManager_BlockTriggerTitle')"
             :help="translate('TagManager_BlockTriggerHelp')"
@@ -175,7 +171,7 @@
                   <div class="tagStartDate">
                     <TagDateInput
                       name="start_date"
-                      :model-value="tag.start_date"
+                      :model-value="tag.start_date ?? undefined"
                       @update:model-value="tag.start_date = $event; setValueHasChanged();"
                       default-time="00:00:00"
                     />
@@ -197,7 +193,7 @@
                       v-html="$sanitize(translate(
                         'TagManager_CurrentTimeInLocalTimezone',
                         '&lt;strong&gt;',
-                        currentTime,
+                        currentTime || '',
                         '&lt;/strong&gt;',
                       ))"
                     />
@@ -218,7 +214,7 @@
                   <div class="tagEndDate">
                     <TagDateInput
                       name="end_date"
-                      :model-value="tag.end_date"
+                      :model-value="tag.end_date ?? undefined"
                       @update:model-value="tag.end_date = $event; setValueHasChanged();"
                       default-time="23:59:59"
                     />
@@ -240,7 +236,7 @@
                       v-html="$sanitize(translate(
                         'TagManager_CurrentTimeInLocalTimezone',
                         '&lt;strong&gt;',
-                        currentTime,
+                        currentTime || '',
                         '&lt;/strong&gt;',
                       ))"
                     />
@@ -288,7 +284,7 @@
             v-for="(tagTemplate, index) in tagCategory.types"
             :key="index"
             class="collection-item avatar"
-            @click="createTagType(tagTemplate)"
+            @click="createTagType(tagTemplate as TagType)"
             v-show="isTagVisible(tagTemplate.id)"
             :class="{
             disabledTemplate: isTagTemplateDisabled[tagTemplate.id],
@@ -297,7 +293,7 @@
             :title="!isTagTemplateDisabled[tagTemplate.id] ? '' : collectionItemAvatarText"
           >
             <img
-              alt
+              alt=""
               class="circle"
               :src="tagTemplate.icon"
               v-if="tagTemplate.icon"
@@ -326,6 +322,7 @@
 <script lang="ts">
 import { DeepReadonly, defineComponent } from 'vue';
 import {
+  ActivityIndicator,
   translate,
   AjaxHelper,
   ContentBlock,
@@ -349,17 +346,17 @@ import TagTriggerArray from './TagTriggerArray.vue';
 import TagDateInput from './TagDateInput.vue';
 import TagsStore from './Tags.store';
 
-interface Option {
+export interface Option {
   key: number;
   value: string;
 }
 
-interface TagEditState {
+export interface TagEditState {
   isDirty: boolean;
   showAdvanced: boolean;
   chooseTagType: boolean;
   availableTags: DeepReadonly<TagTypeCategory[]>;
-  containerTriggers: Option[];
+  allContainerTriggers: Trigger[];
   currentTime: string|null;
   tag: Tag;
   editTitle: string;
@@ -396,6 +393,7 @@ export default defineComponent({
     newTagType: null,
   },
   components: {
+    ActivityIndicator,
     TagDateInput,
     ContentBlock,
     Field,
@@ -409,7 +407,7 @@ export default defineComponent({
       showAdvanced: false,
       chooseTagType: false,
       availableTags: [],
-      containerTriggers: [],
+      allContainerTriggers: [],
       currentTime: null,
       tag: {} as unknown as Tag,
       editTitle: '',
@@ -449,6 +447,15 @@ export default defineComponent({
       this.currentTime = getCurrentTime();
       this.currentTimeTimeout = setTimeout(this.setCurrentTime.bind(this), 10000);
     },
+    getTriggerOptions(selected: (number|null)[]): Option[] {
+      // a trigger whose type is not available cannot be selected, but stays listed when it is already selected
+      return this.allContainerTriggers
+        .filter((t) => t.typeMetadata || selected.includes(t.idtrigger!))
+        .map((t) => ({
+          key: t.idtrigger!,
+          value: t.typeMetadata ? t.name : translate('TagManager_TriggerNotAvailableOption', t.name),
+        }));
+    },
     updateAvailableTriggers() {
       AjaxHelper.fetch<Trigger[]>({
         method: 'TagManager.getContainerTriggers',
@@ -456,10 +463,7 @@ export default defineComponent({
         idContainerVersion: this.idContainerVersion,
         filter_limit: '-1',
       }).then((triggers: Trigger[]) => {
-        this.containerTriggers = triggers.map((t) => ({
-          key: t.idtrigger!,
-          value: t.name,
-        }));
+        this.allContainerTriggers = triggers;
       });
     },
     removeAnyTagNotification() {
@@ -508,7 +512,7 @@ export default defineComponent({
             }
 
             this.tag = clone(tag) as unknown as Tag;
-            this.parameterValues = Object.fromEntries(tag.typeMetadata.parameters.map(
+            this.parameterValues = Object.fromEntries((tag.typeMetadata?.parameters || []).map(
               (s) => [s.name, s.value],
             ));
 
@@ -801,6 +805,17 @@ export default defineComponent({
     },
   },
   computed: {
+    unavailableTriggerIds(): number[] {
+      return this.allContainerTriggers
+        .filter((t) => !t.typeMetadata)
+        .map((t) => t.idtrigger!);
+    },
+    fireTriggerOptions(): Option[] {
+      return this.getTriggerOptions(this.fireTriggers);
+    },
+    blockTriggerOptions(): Option[] {
+      return this.getTriggerOptions(this.blockTriggers);
+    },
     availableFireLimits() {
       return AvailableFireLimitsStore.fireLimitsOptions.value;
     },

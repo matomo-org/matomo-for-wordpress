@@ -49,7 +49,7 @@ class Output implements \Piwik\CliMulti\OutputInterface
     {
         $content = @file_get_contents($this->tmpFile);
         $search = '#!/usr/bin/env php';
-        if (!empty($content) && is_string($content) && mb_substr(trim($content), 0, strlen($search)) === $search) {
+        if (!empty($content) && is_string($content) && str_starts_with(trim($content), $search)) {
             $content = trim(mb_substr(trim($content), strlen($search)));
         }
         return $content;

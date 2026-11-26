@@ -24,12 +24,12 @@ use Symfony\Component\Process\Process;
  */
 class WindowsPipes extends \Symfony\Component\Process\Pipes\AbstractPipes
 {
-    private $files = [];
-    private $fileHandles = [];
-    private $lockHandles = [];
-    private $readBytes = [Process::STDOUT => 0, Process::STDERR => 0];
-    private $haveReadSupport;
-    public function __construct($input, bool $haveReadSupport)
+    private array $files = [];
+    private array $fileHandles = [];
+    private array $lockHandles = [];
+    private array $readBytes = [Process::STDOUT => 0, Process::STDERR => 0];
+    private bool $haveReadSupport;
+    public function __construct(mixed $input, bool $haveReadSupport)
     {
         $this->haveReadSupport = $haveReadSupport;
         if ($this->haveReadSupport) {
@@ -40,12 +40,12 @@ class WindowsPipes extends \Symfony\Component\Process\Pipes\AbstractPipes
             $pipes = [Process::STDOUT => Process::OUT, Process::STDERR => Process::ERR];
             $tmpDir = sys_get_temp_dir();
             $lastError = 'unknown reason';
-            set_error_handler(function ($type, $msg) use(&$lastError) {
+            set_error_handler(static function ($type, $msg) use(&$lastError) {
                 $lastError = $msg;
             });
             for ($i = 0;; ++$i) {
                 foreach ($pipes as $pipe => $name) {
-                    $file = sprintf('%s\\sf_proc_%02X.%s', $tmpDir, $i, $name);
+                    $file = \sprintf('%s\\sf_proc_%02X.%s', $tmpDir, $i, $name);
                     if (!($h = fopen($file . '.lock', 'w'))) {
                         if (file_exists($file . '.lock')) {
                             continue 2;
@@ -76,11 +76,11 @@ class WindowsPipes extends \Symfony\Component\Process\Pipes\AbstractPipes
         }
         parent::__construct($input);
     }
-    public function __sleep() : array
+    public function __serialize() : array
     {
         throw new \BadMethodCallException('Cannot serialize ' . __CLASS__);
     }
-    public function __wakeup()
+    public function __unserialize(array $data) : void
     {
         throw new \BadMethodCallException('Cannot unserialize ' . __CLASS__);
     }
@@ -88,9 +88,6 @@ class WindowsPipes extends \Symfony\Component\Process\Pipes\AbstractPipes
     {
         $this->close();
     }
-    /**
-     * {@inheritdoc}
-     */
     public function getDescriptors() : array
     {
         if (!$this->haveReadSupport) {
@@ -102,16 +99,10 @@ class WindowsPipes extends \Symfony\Component\Process\Pipes\AbstractPipes
         // So we redirect output within the commandline and pass the nul device to the process
         return [['pipe', 'r'], ['file', 'NUL', 'w'], ['file', 'NUL', 'w']];
     }
-    /**
-     * {@inheritdoc}
-     */
     public function getFiles() : array
     {
         return $this->files;
     }
-    /**
-     * {@inheritdoc}
-     */
     public function readAndWrite(bool $blocking, bool $close = \false) : array
     {
         $this->unblock();
@@ -140,24 +131,15 @@ class WindowsPipes extends \Symfony\Component\Process\Pipes\AbstractPipes
         }
         return $read;
     }
-    /**
-     * {@inheritdoc}
-     */
     public function haveReadSupport() : bool
     {
         return $this->haveReadSupport;
     }
-    /**
-     * {@inheritdoc}
-     */
     public function areOpen() : bool
     {
         return $this->pipes && $this->fileHandles;
     }
-    /**
-     * {@inheritdoc}
-     */
-    public function close()
+    public function close() : void
     {
         parent::close();
         foreach ($this->fileHandles as $type => $handle) {

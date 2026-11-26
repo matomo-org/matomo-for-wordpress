@@ -13,11 +13,11 @@
         :model-value="modelValue"
         @update:modelValue="onChange($event)"
         :id="id"
-        :show-all-sites-item="uiControlAttributes.showAllSitesItem || false"
+        :show-all-sites-item="uiControlAttributes?.showAllSitesItem || false"
         :switch-site-on-select="false"
         :show-selected-site="true"
-        :only-sites-with-admin-access="uiControlAttributes.onlySitesWithAdminAccess || false"
-        :only-sites-with-at-least-write-access="uiControlAttributes.onlySitesWithAtLeastWriteAccess
+        :only-sites-with-admin-access="uiControlAttributes?.onlySitesWithAdminAccess || false"
+        :only-sites-with-at-least-write-access="uiControlAttributes?.onlySitesWithAtLeastWriteAccess
          || false"
         v-bind="uiControlAttributes"
       />
@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, PropType } from 'vue';
 import { SiteSelector, SiteRef } from 'CoreHome';
 import AbortableModifiers from './AbortableModifiers';
 
@@ -35,7 +35,7 @@ export default defineComponent({
     name: String,
     title: String,
     id: String,
-    modelValue: Object,
+    modelValue: Object as PropType<SiteRef|null>,
     modelModifiers: Object,
     uiControlAttributes: Object,
   },

@@ -7,12 +7,16 @@ namespace Matomo\Dependencies;
  */
 class Less_Tree_Condition extends Less_Tree
 {
+    /** @var string */
     public $op;
+    /** @var Less_Tree */
     public $lvalue;
+    /** @var Less_Tree */
     public $rvalue;
+    /** @var int */
     public $index;
+    /** @var bool */
     public $negate;
-    public $type = 'Condition';
     public function __construct($op, $l, $r, $i = 0, $negate = \false)
     {
         $this->op = \trim($op);
@@ -26,6 +30,11 @@ class Less_Tree_Condition extends Less_Tree
         $this->lvalue = $visitor->visitObj($this->lvalue);
         $this->rvalue = $visitor->visitObj($this->rvalue);
     }
+    /**
+     * @param Less_Environment $env
+     * @return bool
+     * @see less-2.5.3.js#Condition.prototype.eval
+     */
     public function compile($env)
     {
         $a = $this->lvalue->compile($env);
@@ -38,25 +47,19 @@ class Less_Tree_Condition extends Less_Tree
                 $result = $a || $b;
                 break;
             default:
-                if (Less_Parser::is_method($a, 'compare')) {
-                    $result = $a->compare($b);
-                } elseif (Less_Parser::is_method($b, 'compare')) {
-                    $result = $b->compare($a);
+                $res = Less_Tree::nodeCompare($a, $b);
+                // In JS, switch(undefined) with -1,0,-1,defaults goes to `default`.
+                // In PHP, switch(null) would go to case 0. Use if/else instead.
+                if ($res === -1) {
+                    $result = $this->op === '<' || $this->op === '=<' || $this->op === '<=';
+                } elseif ($res === 0) {
+                    $result = $this->op === '=' || $this->op === '>=' || $this->op === '=<' || $this->op === '<=';
+                } elseif ($res === 1) {
+                    $result = $this->op === '>' || $this->op === '>=';
                 } else {
-                    throw new Less_Exception_Compiler('Unable to perform comparison', null, $this->index);
+                    // null, NAN
+                    $result = \false;
                 }
-                switch ($result) {
-                    case -1:
-                        $result = $this->op === '<' || $this->op === '=<' || $this->op === '<=';
-                        break;
-                    case 0:
-                        $result = $this->op === '=' || $this->op === '>=' || $this->op === '=<' || $this->op === '<=';
-                        break;
-                    case 1:
-                        $result = $this->op === '>' || $this->op === '>=';
-                        break;
-                }
-                break;
         }
         return $this->negate ? !$result : $result;
     }

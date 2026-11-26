@@ -14,9 +14,11 @@ use Matomo\Decompress\Tar;
 use Piwik\Development;
 use Piwik\Filesystem;
 use Piwik\Http;
+use Piwik\Plugin\ArtifactsHttpAuthTrait;
 use Piwik\Plugin\ConsoleCommand;
 class DevelopmentSyncProcessedSystemTests extends ConsoleCommand
 {
+    use ArtifactsHttpAuthTrait;
     public function isEnabled()
     {
         return Development::isEnabled();
@@ -28,8 +30,7 @@ class DevelopmentSyncProcessedSystemTests extends ConsoleCommand
         $this->addRequiredArgument('buildnumber', 'Travis build number you want to sync, eg "14820".');
         $this->addNoValueOption('expected', 'e', 'If given file will be copied in expected directories instead of processed');
         $this->addOptionalValueOption('repository', 'r', 'Repository name you want to sync screenshots for.', 'matomo-org/matomo');
-        $this->addOptionalValueOption('http-user', '', 'the HTTP AUTH username (for premium plugins where artifacts are protected)');
-        $this->addOptionalValueOption('http-password', '', 'the HTTP AUTH password (for premium plugins where artifacts are protected)');
+        $this->addArtifactsHttpAuthOptions();
         $this->addOptionalValueOption('plugin', 'p', 'Name of the plugin the files shall be synced to');
     }
     protected function doExecute() : int
@@ -60,7 +61,7 @@ class DevelopmentSyncProcessedSystemTests extends ConsoleCommand
             $buildNumber = substr($buildNumber, 0, -2);
         }
         $httpUser = $input->getOption('http-user');
-        $httpPassword = $input->getOption('http-password');
+        $httpPassword = $this->getArtifactsHttpPassword();
         $filename = sprintf('system.%s.tar.bz2', $buildNumber);
         $urlBase = sprintf('https://builds-artifacts.matomo.org/%s/%s', $repository, $filename);
         $tests = Http::sendHttpRequest($urlBase, $timeout = 120, $userAgent = null, $destinationPath = null, $followDepth = 0, $acceptLanguage = \false, $byteRange = \false, $getExtendedInfo = \false, $httpMethod = 'GET', $httpUser, $httpPassword);

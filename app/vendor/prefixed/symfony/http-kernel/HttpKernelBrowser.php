@@ -29,7 +29,9 @@ use Matomo\Dependencies\Symfony\Component\HttpFoundation\Response;
 class HttpKernelBrowser extends AbstractBrowser
 {
     protected $kernel;
-    private $catchExceptions = \true;
+    private bool $catchExceptions = \true;
+    private ?object $sentResponse = null;
+    private string $sentContent = '';
     /**
      * @param array $server The server parameters (equivalent of $_SERVER)
      */
@@ -42,14 +44,14 @@ class HttpKernelBrowser extends AbstractBrowser
     }
     /**
      * Sets whether to catch exceptions when the kernel is handling a request.
+     *
+     * @return void
      */
     public function catchExceptions(bool $catchExceptions)
     {
         $this->catchExceptions = $catchExceptions;
     }
     /**
-     * {@inheritdoc}
-     *
      * @param Request $request
      *
      * @return Response
@@ -57,14 +59,25 @@ class HttpKernelBrowser extends AbstractBrowser
     protected function doRequest(object $request)
     {
         $response = $this->kernel->handle($request, HttpKernelInterface::MAIN_REQUEST, $this->catchExceptions);
+        // the content must be sent before the kernel is terminated, as when serving a real request
+        $content = '';
+        ob_start(static function ($chunk) use(&$content) {
+            $content .= $chunk;
+            return '';
+        });
+        try {
+            $response->sendContent();
+        } finally {
+            ob_end_clean();
+            $this->sentResponse = $response;
+            $this->sentContent = $content;
+        }
         if ($this->kernel instanceof TerminableInterface) {
             $this->kernel->terminate($request, $response);
         }
         return $response;
     }
     /**
-     * {@inheritdoc}
-     *
      * @param Request $request
      *
      * @return string
@@ -76,7 +89,7 @@ class HttpKernelBrowser extends AbstractBrowser
         $errorReporting = error_reporting();
         $requires = '';
         foreach (get_declared_classes() as $class) {
-            if (0 === strpos($class, 'ComposerAutoloaderInit')) {
+            if (str_starts_with($class, 'ComposerAutoloaderInit')) {
                 $r = new \ReflectionClass($class);
                 $file = \dirname($r->getFileName(), 2) . '/autoload.php';
                 if (file_exists($file)) {
@@ -99,6 +112,9 @@ error_reporting({$errorReporting});
 EOF;
         return $code . $this->getHandleScript();
     }
+    /**
+     * @return string
+     */
     protected function getHandleScript()
     {
         return <<<'EOF'
@@ -111,12 +127,7 @@ if ($kernel instanceof Symfony\Component\HttpKernel\TerminableInterface) {
 echo serialize($response);
 EOF;
     }
-    /**
-     * {@inheritdoc}
-     *
-     * @return Request
-     */
-    protected function filterRequest(DomRequest $request)
+    protected function filterRequest(DomRequest $request) : Request
     {
         $httpRequest = Request::create($request->getUri(), $request->getMethod(), $request->getParameters(), $request->getCookies(), $request->getFiles(), $server = $request->getServer(), $request->getContent());
         if (!isset($server['HTTP_ACCEPT'])) {
@@ -137,10 +148,8 @@ EOF;
      * an invalid UploadedFile is returned with an error set to UPLOAD_ERR_INI_SIZE.
      *
      * @see UploadedFile
-     *
-     * @return array
      */
-    protected function filterFiles(array $files)
+    protected function filterFiles(array $files) : array
     {
         $filtered = [];
         foreach ($files as $key => $value) {
@@ -157,18 +166,27 @@ EOF;
         return $filtered;
     }
     /**
-     * {@inheritdoc}
-     *
      * @param Response $response
-     *
-     * @return DomResponse
      */
-    protected function filterResponse(object $response)
+    protected function filterResponse(object $response) : DomResponse
     {
-        // this is needed to support StreamedResponse
-        ob_start();
-        $response->sendContent();
-        $content = ob_get_clean();
+        if ($response === $this->sentResponse) {
+            $content = $this->sentContent;
+            $this->sentResponse = null;
+            $this->sentContent = '';
+        } else {
+            // this is needed to support StreamedResponse
+            $content = '';
+            ob_start(static function ($chunk) use(&$content) {
+                $content .= $chunk;
+                return '';
+            });
+            try {
+                $response->sendContent();
+            } finally {
+                ob_end_clean();
+            }
+        }
         return new DomResponse($content, $response->getStatusCode(), $response->headers->all());
     }
 }

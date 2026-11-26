@@ -24,7 +24,7 @@ use Matomo\Dependencies\Symfony\Component\HttpKernel\HttpKernelInterface;
  */
 final class ResponseEvent extends KernelEvent
 {
-    private $response;
+    private Response $response;
     public function __construct(HttpKernelInterface $kernel, Request $request, int $requestType, Response $response)
     {
         parent::__construct($kernel, $request, $requestType);

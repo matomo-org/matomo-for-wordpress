@@ -31,7 +31,7 @@ class DiagnosticResult implements \JsonSerializable
     /**
      * @var DiagnosticResultItem[]
      */
-    private $items = array();
+    private array $items = array();
     public function __construct($label)
     {
         $this->label = $label;
@@ -50,7 +50,7 @@ class DiagnosticResult implements \JsonSerializable
     }
     /**
      * @param string $label
-     * @param string $comment
+     * @param string|bool $comment A boolean is rendered as '1' (true) or '0' (false).
      * @param bool $escapeComment
      * @return DiagnosticResult
      */

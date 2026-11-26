@@ -180,7 +180,7 @@ class Get extends \Piwik\Plugins\Goals\Reports\Base
                         $formatter = new MetricFormatter();
                         $currentValueFormatted = $value;
                         $pastValueFormatted = $pastValue;
-                        if (strpos($columnName, 'revenue') !== \false) {
+                        if (str_contains($columnName, 'revenue')) {
                             $currencySymbol = Site::getCurrencySymbolFor($idSite);
                             $pastValueFormatted = NumberFormatter::getInstance()->formatCurrency($pastValue, $currencySymbol, GoalManager::REVENUE_PRECISION);
                             $currentValueFormatted = NumberFormatter::getInstance()->formatCurrency($value, $currencySymbol, GoalManager::REVENUE_PRECISION);
@@ -205,7 +205,9 @@ class Get extends \Piwik\Plugins\Goals\Reports\Base
                 };
             }
         } elseif ($view->isViewDataTableId(Evolution::ID)) {
-            if (!empty($idSite) && Piwik::isUserHasWriteAccess($idSite) && $idGoal > GoalManager::IDGOAL_ORDER) {
+            // $idGoal may be a non-numeric ecommerce identifier (e.g. 'ecommerceOrder'); cast to int so those
+            // are not treated as editable goals. On PHP 8 "ecommerceOrder" > 0 would otherwise evaluate to true.
+            if (!empty($idSite) && Piwik::isUserHasWriteAccess($idSite) && (int) $idGoal > GoalManager::IDGOAL_ORDER) {
                 $view->config->title_edit_entity_url = 'index.php' . Url::getCurrentQueryStringWithParametersModified(['module' => 'Goals', 'action' => 'manage', 'forceView' => null, 'viewDataTable' => null, 'showtitle' => null, 'random' => null, 'format_metrics' => 0]);
             }
             $goal = $this->getGoal($idGoal);
@@ -230,6 +232,6 @@ class Get extends \Piwik\Plugins\Goals\Reports\Base
         parent::configureReportMetadata($availableReports, $infos);
         $this->addReportMetadataForEachGoal($availableReports, $infos, function ($goal) {
             return Piwik::translate('Goals_GoalX', $goal['name']);
-        }, $isSummary = \true);
+        });
     }
 }

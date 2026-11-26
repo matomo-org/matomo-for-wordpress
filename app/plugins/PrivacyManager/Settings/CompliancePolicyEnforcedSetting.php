@@ -15,8 +15,7 @@ abstract class CompliancePolicyEnforcedSetting implements PolicyComparisonInterf
 {
     /** @use PolicyComparisonTrait<bool> */
     use PolicyComparisonTrait;
-    /** @var bool */
-    private $value;
+    private bool $value;
     public static abstract function getTitle() : string;
     public static abstract function getComplianceRequirementNote(?int $idSite = null) : string;
     public static abstract function getPolicyRequirements() : array;

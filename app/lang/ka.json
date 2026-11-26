@@ -65,7 +65,6 @@
         "ExceptionDatabaseVersion": "თქვენი %1$s ვერსია არის %2$s, მაგრამ Matomo მოითხოვს არანაკლებ %3$s.",
         "ExceptionFileIntegrity": "მთლიანობის შემოწმების შეცდომა: %s",
         "ExceptionFilesizeMismatch": "ფაილის ზომა არ ემთხვევა: %1$s (მოითხოვებოდა ზომა: %2$s, არის: %3$s)",
-        "ExceptionIncompatibleClientServerVersions": "თქვენი %1$s კლიენტის ვერსია არის %2$s, რაც არ არის თავსებადი სერვერის ვერსიასთან %3$s.",
         "ExceptionInvalidArchiveTimeToLive": "დღეს არქივის სიცოცხლის დროის წამების რაოდენობა მეტი უნდა იყოს ნულზე",
         "ExceptionInvalidDateFormat": "თარიღის ფორმატი უნდა იყოს: %1$s ან რაიმე საკვანძო სიტყვა, რომელსაც %2$s ფუნქციის მხარდაჭერა აქვს (დამატებითი ინფორმაციისთვის იხ. %3$s)",
         "ExceptionInvalidDateRange": "თარიღი '%1$s' არ არის კორექტულად მითითებული. მას უნდა ქონდეს ასეთი ფორმატი: %2$s.",
@@ -175,6 +174,9 @@
         "Yes": "დიახ",
         "YouMustBeLoggedIn": "ამ ფუნქციის გამოყენებისთვის სისტემაში შესული უნდა იყოთ.",
         "YourChangesHaveBeenSaved": "თქვენს მიერ გაკეთებული ცვლილებები შენახულია."
+    },
+    "AIProviders": {
+        "DefaultBadge": "ნაგულისხმევი"
     },
     "API": {
         "KeepTokenSecret": "ეს token_auth ისევე საიდუმლოა, როგორც თქვენი მომხმარებლის სახელი და პაროლი, %1$s არავის გაუზიაროთ ის%2$s!",
@@ -351,7 +353,6 @@
         "GoalName": "მიზნის სახელი",
         "GoalX": "მიზანი %s",
         "Goals": "მიზნები",
-        "GoalsOverview": "მიზნების მიმოხილვა",
         "IsExactly": "არის ზუსტად %s",
         "Manually": "შეირჩეს მექანიკურად",
         "ManuallyTriggeredUsingJavascriptFunction": "მიზანი მექანიკურად ჩართულია JavaScript API trackGoal() გამოყენებით",
@@ -359,6 +360,8 @@
         "NewVisitorsConversionRateIs": "ახალი ვიზიტორების კინვერციის მაჩვენებელი არის %s",
         "Optional": "(ოფციონალური)",
         "Pattern": "ნიმუში",
+        "RecommendationCountOnePage": "1 გვერდი",
+        "RecommendationCountPages": "%s გვერდი",
         "ReturningVisitorsConversionRateIs": "დაბრუნებული ვიზიტორების კონვერსიის მაჩვენებელი არის %s",
         "URL": "URL",
         "UpdateGoal": "მიზნის რედაქტირება",
@@ -405,7 +408,6 @@
         "SystemCheckFileIntegrity": "ფაილის მთლიანობა",
         "SystemCheckFunctions": "მოთხოვნილი ფუნქციები",
         "SystemCheckGDHelp": "მბრწყინავი ხაზები (პატარა გრაფიკები) და გამოსახულების გრაფიკები (Matomo-ის მობილურ აპლიკაციაში და ელფოსტის ანგარიშებში) არ იმუშავებს.",
-        "SystemCheckGlobHelp": "თქვენს ჰოსტზე ეს ჩაშენებული ფუნქცია გამორთულია. Matomo ცდის, ფუნქციის ემულაცია მოახდინოს, მაგრამ შეიძლება, უფრო მეტ უსაფრთხოების შეზღუდვებს გადააწყდეს. შეიძლება, ფუნქციონალი შეიზღუდოს.",
         "SystemCheckGzcompressHelp": "თქვენ უნდა ჩართოთ zlib გაფართოება და gzcompress ფუნქცია.",
         "SystemCheckGzuncompressHelp": "თქვენ უნდა ჩართოთ zlib გაფართოება და gzuncompress ფუნქცია.",
         "SystemCheckMailHelp": "უკუკავშირის და პაროლის დავიწყების შეტყობინებების გაგზავნა შეუძლებელია ფუნქციის 'mail()' გარეშე.",
@@ -1640,6 +1642,7 @@
     },
     "Marketplace": {
         "ActivateLicenseKey": "ჩართვა",
+        "CategorySecurity": "უსაფრთხოება",
         "PluginKeywords": "საკვანძო სიტყვები",
         "SubscriptionType": "ტიპი"
     },
@@ -1691,12 +1694,6 @@
         "Resolutions": "რეზოლუციები",
         "WidgetGlobalVisitors": "ვიზიტორების გლობალური კონფიგურაცია",
         "WidgetResolutions": "ეკრანის რეზოლუვიები"
-    },
-    "SEO": {
-        "DomainAge": "დომენის ასაკი",
-        "Rank": "რანგი",
-        "SEORankingsFor": "SEO რანგები %s–სთვის",
-        "SeoRankings": "SEO რენგები"
     },
     "ScheduledReports": {
         "AlsoSendReportToTheseEmails": "რეპორტი ასევე გააგზავნეთ ელ.ფოსტის ამ მისამართებზე (ერთი მისამართი ერთ ხაზზე):",

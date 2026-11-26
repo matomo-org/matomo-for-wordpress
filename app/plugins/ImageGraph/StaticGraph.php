@@ -93,7 +93,7 @@ abstract class StaticGraph extends BaseFactory
         return $filePath;
     }
     /**
-     * @return resource  rendered static graph
+     * @return \GdImage rendered static graph
      */
     public function getRenderedImage()
     {
@@ -216,7 +216,7 @@ abstract class StaticGraph extends BaseFactory
         // Fix whitespace if not using unifont
         $abscissaSeries = $this->abscissaSeries;
         $formatMethodName = 'formatYAxis';
-        if (\false === strpos($this->font, \Piwik\Plugins\ImageGraph\API::UNICODE_FONT)) {
+        if (!str_contains($this->font, \Piwik\Plugins\ImageGraph\API::UNICODE_FONT)) {
             $abscissaSeries = array_map([$this, 'fixWhitespaceNonUnifont'], $abscissaSeries);
             $formatMethodName = 'formatYAxisNonUnifont';
         }

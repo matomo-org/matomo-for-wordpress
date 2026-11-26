@@ -21,11 +21,14 @@ use Matomo\Dependencies\Symfony\Component\VarDumper\Cloner\Stub;
 class XmlReaderCaster
 {
     private const NODE_TYPES = [\XMLReader::NONE => 'NONE', \XMLReader::ELEMENT => 'ELEMENT', \XMLReader::ATTRIBUTE => 'ATTRIBUTE', \XMLReader::TEXT => 'TEXT', \XMLReader::CDATA => 'CDATA', \XMLReader::ENTITY_REF => 'ENTITY_REF', \XMLReader::ENTITY => 'ENTITY', \XMLReader::PI => 'PI (Processing Instruction)', \XMLReader::COMMENT => 'COMMENT', \XMLReader::DOC => 'DOC', \XMLReader::DOC_TYPE => 'DOC_TYPE', \XMLReader::DOC_FRAGMENT => 'DOC_FRAGMENT', \XMLReader::NOTATION => 'NOTATION', \XMLReader::WHITESPACE => 'WHITESPACE', \XMLReader::SIGNIFICANT_WHITESPACE => 'SIGNIFICANT_WHITESPACE', \XMLReader::END_ELEMENT => 'END_ELEMENT', \XMLReader::END_ENTITY => 'END_ENTITY', \XMLReader::XML_DECLARATION => 'XML_DECLARATION'];
+    /**
+     * @return array
+     */
     public static function castXmlReader(\XMLReader $reader, array $a, Stub $stub, bool $isNested)
     {
         try {
             $properties = ['LOADDTD' => @$reader->getParserProperty(\XMLReader::LOADDTD), 'DEFAULTATTRS' => @$reader->getParserProperty(\XMLReader::DEFAULTATTRS), 'VALIDATE' => @$reader->getParserProperty(\XMLReader::VALIDATE), 'SUBST_ENTITIES' => @$reader->getParserProperty(\XMLReader::SUBST_ENTITIES)];
-        } catch (\Error $e) {
+        } catch (\Error) {
             $properties = ['LOADDTD' => \false, 'DEFAULTATTRS' => \false, 'VALIDATE' => \false, 'SUBST_ENTITIES' => \false];
         }
         $props = Caster::PREFIX_VIRTUAL . 'parserProperties';
@@ -34,6 +37,7 @@ class XmlReaderCaster
             $info[$props] = new EnumStub($info[$props]);
             $info[$props]->cut = $count;
         }
+        $a = Caster::filter($a, Caster::EXCLUDE_UNINITIALIZED, [], $count);
         $info = Caster::filter($info, Caster::EXCLUDE_EMPTY, [], $count);
         // +2 because hasValue and hasAttributes are always filtered
         $stub->cut += $count + 2;

@@ -15,10 +15,7 @@ use Piwik\Validators\BaseValidator;
 use Piwik\Validators\Exception;
 class AllowedEmailDomain extends BaseValidator
 {
-    /**
-     * @var SystemSettings
-     */
-    private $settings;
+    private SystemSettings $settings;
     public function __construct(SystemSettings $settings)
     {
         $this->settings = $settings;

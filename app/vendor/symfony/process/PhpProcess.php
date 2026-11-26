@@ -40,21 +40,23 @@ class PhpProcess extends \Symfony\Component\Process\Process
         if ('phpdbg' === \PHP_SAPI) {
             $file = tempnam(sys_get_temp_dir(), 'dbg');
             file_put_contents($file, $script);
-            register_shutdown_function('unlink', $file);
+            $pid = getmypid();
+            register_shutdown_function(static function () use($file, $pid) {
+                if ($pid === getmypid()) {
+                    unlink($file);
+                }
+            });
             $php[] = $file;
             $script = null;
         }
         parent::__construct($php, $cwd, $env, $script, $timeout);
     }
-    /**
-     * {@inheritdoc}
-     */
-    public static function fromShellCommandline(string $command, ?string $cwd = null, ?array $env = null, $input = null, ?float $timeout = 60)
+    public static function fromShellCommandline(string $command, ?string $cwd = null, ?array $env = null, mixed $input = null, ?float $timeout = 60) : static
     {
-        throw new LogicException(sprintf('The "%s()" method cannot be called when using "%s".', __METHOD__, self::class));
+        throw new LogicException(\sprintf('The "%s()" method cannot be called when using "%s".', __METHOD__, self::class));
     }
     /**
-     * {@inheritdoc}
+     * @return void
      */
     public function start(?callable $callback = null, array $env = [])
     {

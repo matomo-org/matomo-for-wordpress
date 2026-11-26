@@ -40,10 +40,7 @@ class SessionAuth implements Auth
      */
     private $user;
     private $tokenAuth;
-    /**
-     * @var bool
-     */
-    private $sessionExpired = \false;
+    private bool $sessionExpired = \false;
     public function __construct(?UsersModel $userModel = null, $shouldDestroySession = \true)
     {
         $this->userModel = $userModel ?: new UsersModel();
@@ -53,9 +50,8 @@ class SessionAuth implements Auth
     {
         return null;
     }
-    public function setTokenAuth(
-#[\SensitiveParameter]
-$token_auth)
+    public function setTokenAuth(#[\SensitiveParameter]
+        $token_auth)
     {
         $this->tokenAuth = $token_auth;
     }
@@ -74,15 +70,13 @@ $token_auth)
     {
         // empty
     }
-    public function setPassword(
-#[\SensitiveParameter]
-$password)
+    public function setPassword(#[\SensitiveParameter]
+        $password)
     {
         // empty
     }
-    public function setPasswordHash(
-#[\SensitiveParameter]
-$passwordHash)
+    public function setPasswordHash(#[\SensitiveParameter]
+        $passwordHash)
     {
         // empty
     }
@@ -109,6 +103,11 @@ $passwordHash)
             $this->destroyCurrentSession($sessionFingerprint);
             return $this->makeAuthFailure();
         }
+        $tsSessionsInvalidated = !empty($user['ts_sessions_invalidated']) ? $user['ts_sessions_invalidated'] : null;
+        if ($this->isSessionStartedBeforeInvalidation($sessionFingerprint, $tsSessionsInvalidated)) {
+            $this->destroyCurrentSession($sessionFingerprint);
+            return $this->makeAuthFailure();
+        }
         $this->updateSessionExpireTime($sessionFingerprint);
         if ($this->tokenAuth !== null && $this->tokenAuth !== \false && $this->tokenAuth !== $sessionFingerprint->getSessionTokenAuth()) {
             return $this->makeAuthFailure();
@@ -119,6 +118,18 @@ $passwordHash)
             $tokenAuth = $this->userModel->generateRandomTokenAuth();
         }
         return $this->makeAuthSuccess($user, $tokenAuth);
+    }
+    private function isSessionStartedBeforeInvalidation(\Piwik\Session\SessionFingerprint $sessionFingerprint, $tsSessionsInvalidated)
+    {
+        if ($tsSessionsInvalidated === null) {
+            return \false;
+        }
+        // if the session start time doesn't exist for some reason, log the user out
+        $sessionStartTime = $sessionFingerprint->getSessionStartTime();
+        if (empty($sessionStartTime)) {
+            return \true;
+        }
+        return $sessionStartTime < Date::factory($tsSessionsInvalidated)->getTimestampUTC();
     }
     private function isSessionStartedBeforePasswordChange(\Piwik\Session\SessionFingerprint $sessionFingerprint, $tsPasswordModified)
     {
@@ -137,15 +148,16 @@ $passwordHash)
     {
         return new AuthResult(AuthResult::FAILURE, null, null);
     }
-    private function makeAuthSuccess($user,
-#[\SensitiveParameter]
-$tokenAuth)
+    private function makeAuthSuccess($user, #[\SensitiveParameter]
+        $tokenAuth)
     {
         $this->user = $user;
         $this->tokenAuth = $tokenAuth;
         $isSuperUser = (int) $user['superuser_access'];
         $code = $isSuperUser ? AuthResult::SUCCESS_SUPERUSER_AUTH_CODE : AuthResult::SUCCESS;
-        return new AuthResult($code, $user['login'], $tokenAuth);
+        // Declaring the key states that a session login carries no scope; without it core would look the
+        // session's temporary token up in user_token_auth on every request.
+        return new AuthResult($code, $user['login'], $tokenAuth, ['token_access_level' => null]);
     }
     protected function initNewBlankSession(\Piwik\Session\SessionFingerprint $sessionFingerprint)
     {
@@ -183,7 +195,9 @@ $tokenAuth)
         // we update the session cookie to make sure expired session cookies are not available client side...
         $sessionCookieLifetime = Config::getInstance()->General['login_cookie_expire'];
         Session::writeCookie(session_name(), session_id(), time() + $sessionCookieLifetime, $sessionParams['path'], $sessionParams['domain'], $sessionParams['secure'], $sessionParams['httponly'], Session::getSameSiteCookieValue());
-        // ...and we also update the expiration time stored server side so we can prevent expired sessions from being reused
+        // ...and we keep the expiration stored server side in step with it, which is the value that
+        // actually prevents expired sessions from being reused. That one is only written once it
+        // has moved on materially, so it can lag the cookie slightly.
         $sessionFingerprint->updateSessionExpirationTime();
     }
     private function isExpiredSession(\Piwik\Session\SessionFingerprint $sessionFingerprint)

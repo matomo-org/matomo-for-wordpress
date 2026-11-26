@@ -101,7 +101,7 @@ namespace {
                         $type = \PDO::PARAM_BOOL;
                     } elseif ($variable === null) {
                         $type = \PDO::PARAM_NULL;
-                    } elseif (\is_integer($variable)) {
+                    } elseif (\is_int($variable)) {
                         $type = \PDO::PARAM_INT;
                     } else {
                         $type = \PDO::PARAM_STR;

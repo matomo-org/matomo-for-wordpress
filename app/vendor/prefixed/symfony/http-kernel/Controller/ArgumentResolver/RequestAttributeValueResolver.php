@@ -12,26 +12,25 @@ namespace Matomo\Dependencies\Symfony\Component\HttpKernel\Controller\ArgumentRe
 
 use Matomo\Dependencies\Symfony\Component\HttpFoundation\Request;
 use Matomo\Dependencies\Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
+use Matomo\Dependencies\Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Matomo\Dependencies\Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 /**
  * Yields a non-variadic argument's value from the request attributes.
  *
  * @author Iltar van der Berg <kjarli@gmail.com>
  */
-final class RequestAttributeValueResolver implements ArgumentValueResolverInterface
+final class RequestAttributeValueResolver implements ArgumentValueResolverInterface, ValueResolverInterface
 {
     /**
-     * {@inheritdoc}
+     * @deprecated since Symfony 6.2, use resolve() instead
      */
     public function supports(Request $request, ArgumentMetadata $argument) : bool
     {
+        @trigger_deprecation('symfony/http-kernel', '6.2', 'The "%s()" method is deprecated, use "resolve()" instead.', __METHOD__);
         return !$argument->isVariadic() && $request->attributes->has($argument->getName());
     }
-    /**
-     * {@inheritdoc}
-     */
-    public function resolve(Request $request, ArgumentMetadata $argument) : iterable
+    public function resolve(Request $request, ArgumentMetadata $argument) : array
     {
-        (yield $request->attributes->get($argument->getName()));
+        return !$argument->isVariadic() && $request->attributes->has($argument->getName()) ? [$request->attributes->get($argument->getName())] : [];
     }
 }

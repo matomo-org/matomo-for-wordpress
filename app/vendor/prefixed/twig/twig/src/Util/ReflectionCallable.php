@@ -10,6 +10,8 @@
  */
 namespace Matomo\Dependencies\Twig\Util;
 
+use Matomo\Dependencies\Twig\Node\Expression\CallExpression;
+use Matomo\Dependencies\Twig\TwigCallableInterface;
 /**
  * @author Fabien Potencier <fabien@symfony.com>
  *
@@ -18,10 +20,11 @@ namespace Matomo\Dependencies\Twig\Util;
 final class ReflectionCallable
 {
     private $reflector;
-    private $callable = null;
+    private $callable;
     private $name;
-    public function __construct($callable, string $debugType = 'unknown', string $debugName = 'unknown')
+    public function __construct(private TwigCallableInterface $twigCallable)
     {
+        $callable = $twigCallable->getCallable();
         if (\is_string($callable) && \false !== ($pos = strpos($callable, '::'))) {
             $callable = [substr($callable, 0, $pos), substr($callable, 2 + $pos)];
         }
@@ -35,7 +38,7 @@ final class ReflectionCallable
         try {
             $closure = \Closure::fromCallable($callable);
         } catch (\TypeError $e) {
-            throw new \LogicException(\sprintf('Callback for %s "%s" is not callable in the current scope.', $debugType, $debugName), 0, $e);
+            throw new \LogicException(\sprintf('Callback for %s "%s" is not callable in the current scope.', $twigCallable->getType(), $twigCallable->getName()), 0, $e);
         }
         $this->reflector = $r = new \ReflectionFunction($closure);
         if (str_contains($r->name, '{closure')) {
@@ -64,6 +67,42 @@ final class ReflectionCallable
     {
         return $this->reflector;
     }
+    /**
+     * Returns the PHP parameters that map to the callable's template-level
+     * arguments.
+     *
+     * The parameters Twig injects automatically (the piped input value when
+     * $stripInput is true, then needs_charset/environment/context/is_sandboxed)
+     * and the bound arguments are stripped.
+     *
+     * @return list<\ReflectionParameter>
+     */
+    public function getTwigParameters(bool $stripInput = \false) : array
+    {
+        $parameters = $this->reflector->getParameters();
+        if ($stripInput) {
+            array_shift($parameters);
+        }
+        if ($this->twigCallable->needsCharset()) {
+            array_shift($parameters);
+        }
+        if ($this->twigCallable->needsEnvironment()) {
+            array_shift($parameters);
+        }
+        if ($this->twigCallable->needsContext()) {
+            array_shift($parameters);
+        }
+        if (CallExpression::needsIsSandboxed($this->twigCallable)) {
+            array_shift($parameters);
+        }
+        foreach ($this->twigCallable->getArguments() as $argument) {
+            array_shift($parameters);
+        }
+        return array_values($parameters);
+    }
+    /**
+     * @return callable
+     */
     public function getCallable()
     {
         return $this->callable;

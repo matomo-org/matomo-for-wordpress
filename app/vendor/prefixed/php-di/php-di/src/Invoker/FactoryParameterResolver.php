@@ -18,13 +18,8 @@ use ReflectionNamedType;
  */
 class FactoryParameterResolver implements ParameterResolver
 {
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
-    public function __construct(ContainerInterface $container)
+    public function __construct(private ContainerInterface $container)
     {
-        $this->container = $container;
     }
     public function getParameters(ReflectionFunctionAbstract $reflection, array $providedParameters, array $resolvedParameters) : array
     {

@@ -24,7 +24,7 @@ class Hourly extends \Piwik\Scheduler\Schedule\Schedule
     {
         $currentTime = $this->getTime();
         // Adds one hour and reset the number of minutes
-        $rescheduledTime = mktime(date('H', $currentTime) + 1, 0, date('s', $currentTime), date('n', $currentTime), date('j', $currentTime), date('Y', $currentTime));
+        $rescheduledTime = mktime((int) date('H', $currentTime) + 1, 0, (int) date('s', $currentTime), (int) date('n', $currentTime), (int) date('j', $currentTime), (int) date('Y', $currentTime));
         return $rescheduledTime;
     }
     /**

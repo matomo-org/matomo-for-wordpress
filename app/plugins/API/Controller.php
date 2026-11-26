@@ -15,6 +15,7 @@ use Piwik\Request\AuthenticationToken;
 use Piwik\Common;
 use Piwik\Config;
 use Piwik\Container\StaticContainer;
+use Piwik\Http\SecurityHeaders;
 use Piwik\Piwik;
 use Piwik\Plugins\API\Renderer\Original;
 use Piwik\Url;
@@ -45,10 +46,11 @@ class Controller extends \Piwik\Plugin\Controller
     public function listAllMethods()
     {
         Piwik::checkUserHasSomeViewAccess();
+        $this->sendHtmlHeadersForDataResponse();
         $ApiDocumentation = new DocumentationGenerator();
         $prefixUrls = Common::getRequestVar('prefixUrl', 'https://demo.matomo.cloud/', 'string');
         $parsedUrl = parse_url($prefixUrls);
-        if (empty($parsedUrl['host']) || !UrlHelper::isLookLikeUrl($prefixUrls) || strpos($prefixUrls, 'http') !== 0 || !Url::isValidHost($parsedUrl['host'])) {
+        if (empty($parsedUrl['host']) || !UrlHelper::isLookLikeUrl($prefixUrls) || !str_starts_with($prefixUrls, 'http') || !Url::isValidHost($parsedUrl['host'])) {
             $prefixUrls = '';
         } else {
             // We put together the url based on the parsed parameters manually to ensure it might not contain unexpected locations
@@ -69,7 +71,9 @@ class Controller extends \Piwik\Plugin\Controller
     }
     public function listSegments()
     {
+        // after the API call, so the headers are not sent for a failed permission check
         $segments = \Piwik\Plugins\API\API::getInstance()->getSegmentsMetadata($this->idSite);
+        $this->sendHtmlHeadersForDataResponse();
         $tableDimensions = $tableMetrics = '';
         $customVariables = 0;
         $lastCategory = array();
@@ -139,12 +143,21 @@ class Controller extends \Piwik\Plugin\Controller
         foreach ($glossaryItems as &$item) {
             $item['letters'] = array();
             foreach ($item['entries'] as &$entry) {
-                $cleanEntryName = mb_ereg_replace('["\']', '', $entry['name']);
+                $cleanEntryName = str_replace(['"', "'"], '', $entry['name']);
                 $letter = mb_strtoupper(mb_substr($cleanEntryName, 0, 1));
                 $entry['letter'] = $letter;
                 $item['letters'][$letter] = $letter;
             }
         }
         return $this->renderTemplate('glossary', array('glossaryItems' => $glossaryItems));
+    }
+    /**
+     * Headers for the actions that return plain HTML without rendering a View, so no headers are
+     * sent for them otherwise.
+     */
+    private function sendHtmlHeadersForDataResponse() : void
+    {
+        SecurityHeaders::sendForDataResponse();
+        Common::sendHeader('Content-Type: text/html; charset=utf-8');
     }
 }

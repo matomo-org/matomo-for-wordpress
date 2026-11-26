@@ -24,41 +24,26 @@ use Matomo\Dependencies\Symfony\Component\Console\Input\InputOption;
  */
 class JsonDescriptor extends Descriptor
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected function describeInputArgument(InputArgument $argument, array $options = [])
+    protected function describeInputArgument(InputArgument $argument, array $options = []) : void
     {
         $this->writeData($this->getInputArgumentData($argument), $options);
     }
-    /**
-     * {@inheritdoc}
-     */
-    protected function describeInputOption(InputOption $option, array $options = [])
+    protected function describeInputOption(InputOption $option, array $options = []) : void
     {
         $this->writeData($this->getInputOptionData($option), $options);
         if ($option->isNegatable()) {
             $this->writeData($this->getInputOptionData($option, \true), $options);
         }
     }
-    /**
-     * {@inheritdoc}
-     */
-    protected function describeInputDefinition(InputDefinition $definition, array $options = [])
+    protected function describeInputDefinition(InputDefinition $definition, array $options = []) : void
     {
         $this->writeData($this->getInputDefinitionData($definition), $options);
     }
-    /**
-     * {@inheritdoc}
-     */
-    protected function describeCommand(Command $command, array $options = [])
+    protected function describeCommand(Command $command, array $options = []) : void
     {
         $this->writeData($this->getCommandData($command, $options['short'] ?? \false), $options);
     }
-    /**
-     * {@inheritdoc}
-     */
-    protected function describeApplication(Application $application, array $options = [])
+    protected function describeApplication(Application $application, array $options = []) : void
     {
         $describedNamespace = $options['namespace'] ?? null;
         $description = new ApplicationDescription($application, $describedNamespace, \true);
@@ -84,7 +69,7 @@ class JsonDescriptor extends Descriptor
     /**
      * Writes data as json.
      */
-    private function writeData(array $data, array $options)
+    private function writeData(array $data, array $options) : void
     {
         $flags = $options['json_encoding'] ?? 0;
         $this->write(json_encode($data, $flags));
@@ -95,7 +80,7 @@ class JsonDescriptor extends Descriptor
     }
     private function getInputOptionData(InputOption $option, bool $negated = \false) : array
     {
-        return $negated ? ['name' => '--no-' . $option->getName(), 'shortcut' => '', 'accept_value' => \false, 'is_value_required' => \false, 'is_multiple' => \false, 'description' => 'Negate the "--' . $option->getName() . '" option', 'default' => \false] : ['name' => '--' . $option->getName(), 'shortcut' => $option->getShortcut() ? '-' . str_replace('|', '|-', $option->getShortcut()) : '', 'accept_value' => $option->acceptValue(), 'is_value_required' => $option->isValueRequired(), 'is_multiple' => $option->isArray(), 'description' => preg_replace('/\\s*[\\r\\n]\\s*/', ' ', $option->getDescription()), 'default' => \INF === $option->getDefault() ? 'INF' : $option->getDefault()];
+        return $negated ? ['name' => '--no-' . $option->getName(), 'shortcut' => '', 'accept_value' => \false, 'is_value_required' => \false, 'is_multiple' => \false, 'description' => 'Negate the "--' . $option->getName() . '" option', 'default' => null === $option->getDefault() ? null : !$option->getDefault()] : ['name' => '--' . $option->getName(), 'shortcut' => $option->getShortcut() ? '-' . str_replace('|', '|-', $option->getShortcut()) : '', 'accept_value' => $option->acceptValue(), 'is_value_required' => $option->isValueRequired(), 'is_multiple' => $option->isArray(), 'description' => preg_replace('/\\s*[\\r\\n]\\s*/', ' ', $option->getDescription()), 'default' => \INF === $option->getDefault() ? 'INF' : $option->getDefault()];
     }
     private function getInputDefinitionData(InputDefinition $definition) : array
     {

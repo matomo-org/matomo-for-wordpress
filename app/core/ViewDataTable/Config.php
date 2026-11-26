@@ -267,7 +267,7 @@ class Config
     public $documentation = \false;
     /**
      * URL linking to an online guide for this report (or plugin).
-     * @var string
+     * @var string|false
      */
     public $onlineGuideUrl = \false;
     /**

@@ -17,6 +17,9 @@ namespace Matomo\Dependencies\Symfony\Component\HttpKernel\CacheWarmer;
  */
 abstract class CacheWarmer implements CacheWarmerInterface
 {
+    /**
+     * @return void
+     */
     protected function writeCacheFile(string $file, $content)
     {
         $tmpFile = @tempnam(\dirname($file), basename($file));
@@ -24,6 +27,6 @@ abstract class CacheWarmer implements CacheWarmerInterface
             @chmod($file, 0666 & ~umask());
             return;
         }
-        throw new \RuntimeException(sprintf('Failed to write cache file "%s".', $file));
+        throw new \RuntimeException(\sprintf('Failed to write cache file "%s".', $file));
     }
 }

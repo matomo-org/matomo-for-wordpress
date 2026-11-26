@@ -280,30 +280,15 @@ class SiteContentDetector
         }
         $siteData = [];
         try {
-            // @todo PHP 8.1 min (Matomo 6): use named arguments to drop the positional null/false filler.
             $siteData = \Piwik\Http::sendHttpRequestBy(
                 'curl',
                 $url,
                 $timeOut,
-                null,
-                null,
-                null,
-                0,
-                \false,
-                \true,
-                // $acceptInvalidSslCertificate: detected sites may use self-signed certs
-                \false,
-                \true,
-                // $getExtendedInfo
-                'GET',
-                null,
-                null,
-                null,
-                [],
-                null,
-                \true,
-                // $checkHostIsAllowed
-                \true
+                // detected sites may use self-signed certs
+                acceptInvalidSslCertificate: \true,
+                getExtendedInfo: \true,
+                // SSRF-safe fetch of the site's own (user-set) URL
+                validateEgressIp: \true
             );
         } catch (EgressBlockedException $e) {
             // admin-fixable rejection, not a transient network error, so it must clear the default WARN level
@@ -313,7 +298,7 @@ class SiteContentDetector
                 'message' => $e->getMessage(),
             ]);
         } catch (\Exception $e) {
-            // intentionally fail closed, but leave a diagnostic trail
+            // leave diagnostic trail
             StaticContainer::get(LoggerInterface::class)->debug('Site content detection request for {url} failed: {message}', ['url' => \Piwik\UrlHelper::getHostFromUrl($url), 'message' => $e->getMessage()]);
         }
         return $siteData;

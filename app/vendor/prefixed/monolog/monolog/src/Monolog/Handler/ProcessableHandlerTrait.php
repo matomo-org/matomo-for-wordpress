@@ -12,10 +12,10 @@ declare (strict_types=1);
 namespace Matomo\Dependencies\Monolog\Handler;
 
 use Matomo\Dependencies\Monolog\ResettableInterface;
+use Matomo\Dependencies\Monolog\Processor\ProcessorInterface;
+use Matomo\Dependencies\Monolog\LogRecord;
 /**
  * Helper trait for implementing ProcessableInterface
- *
- * This trait is present in monolog 1.x to ease forward compatibility.
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
@@ -23,31 +23,28 @@ trait ProcessableHandlerTrait
 {
     /**
      * @var callable[]
+     * @phpstan-var array<(callable(LogRecord): LogRecord)|ProcessorInterface>
      */
-    protected $processors = [];
+    protected array $processors = [];
     /**
-     * {@inheritdoc}
-     * @suppress PhanTypeMismatchReturn
+     * @inheritDoc
      */
-    public function pushProcessor($callback) : HandlerInterface
+    public function pushProcessor(callable $callback) : HandlerInterface
     {
         array_unshift($this->processors, $callback);
         return $this;
     }
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function popProcessor() : callable
     {
-        if (!$this->processors) {
+        if (\count($this->processors) === 0) {
             throw new \LogicException('You tried to pop from an empty processor stack.');
         }
         return array_shift($this->processors);
     }
-    /**
-     * Processes a record.
-     */
-    protected function processRecord(array $record) : array
+    protected function processRecord(LogRecord $record) : LogRecord
     {
         foreach ($this->processors as $processor) {
             $record = $processor($record);

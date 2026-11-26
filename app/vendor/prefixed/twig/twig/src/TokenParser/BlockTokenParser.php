@@ -14,7 +14,9 @@ namespace Matomo\Dependencies\Twig\TokenParser;
 use Matomo\Dependencies\Twig\Error\SyntaxError;
 use Matomo\Dependencies\Twig\Node\BlockNode;
 use Matomo\Dependencies\Twig\Node\BlockReferenceNode;
+use Matomo\Dependencies\Twig\Node\EmptyNode;
 use Matomo\Dependencies\Twig\Node\Node;
+use Matomo\Dependencies\Twig\Node\Nodes;
 use Matomo\Dependencies\Twig\Node\PrintNode;
 use Matomo\Dependencies\Twig\Token;
 /**
@@ -33,41 +35,27 @@ final class BlockTokenParser extends AbstractTokenParser
     {
         $lineno = $token->getLine();
         $stream = $this->parser->getStream();
-        $name = $stream->expect(
-            /* Token::NAME_TYPE */
-            5
-        )->getValue();
-        if ($this->parser->hasBlock($name)) {
-            throw new SyntaxError(\sprintf("The block '%s' has already been defined line %d.", $name, $this->parser->getBlock($name)->getTemplateLine()), $stream->getCurrent()->getLine(), $stream->getSourceContext());
-        }
-        $this->parser->setBlock($name, $block = new BlockNode($name, new Node([]), $lineno));
+        $name = $stream->expect(Token::NAME_TYPE)->getValue();
+        $this->parser->setBlock($name, $block = new BlockNode($name, new EmptyNode(), $lineno));
+        $this->parser->setDocumentationTarget($block);
         $this->parser->pushLocalScope();
         $this->parser->pushBlockStack($name);
-        if ($stream->nextIf(
-            /* Token::BLOCK_END_TYPE */
-            3
-        )) {
+        if ($stream->nextIf(Token::BLOCK_END_TYPE)) {
             $body = $this->parser->subparse([$this, 'decideBlockEnd'], \true);
-            if ($token = $stream->nextIf(
-                /* Token::NAME_TYPE */
-                5
-            )) {
+            if ($token = $stream->nextIf(Token::NAME_TYPE)) {
                 $value = $token->getValue();
                 if ($value != $name) {
                     throw new SyntaxError(\sprintf('Expected endblock for block "%s" (but "%s" given).', $name, $value), $stream->getCurrent()->getLine(), $stream->getSourceContext());
                 }
             }
         } else {
-            $body = new Node([new PrintNode($this->parser->getExpressionParser()->parseExpression(), $lineno)]);
+            $body = new Nodes([new PrintNode($this->parser->parseExpression(), $lineno)]);
         }
-        $stream->expect(
-            /* Token::BLOCK_END_TYPE */
-            3
-        );
+        $stream->expect(Token::BLOCK_END_TYPE);
         $block->setNode('body', $body);
         $this->parser->popBlockStack();
         $this->parser->popLocalScope();
-        return new BlockReferenceNode($name, $lineno, $this->getTag());
+        return new BlockReferenceNode($name, $lineno);
     }
     public function decideBlockEnd(Token $token) : bool
     {

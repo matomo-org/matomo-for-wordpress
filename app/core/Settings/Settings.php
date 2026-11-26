@@ -20,7 +20,7 @@ abstract class Settings
      *
      * @var Setting[]
      */
-    private $settings = array();
+    private array $settings = array();
     protected $pluginName;
     /**
      * By default the plugin name is shown in the UI when managing plugin settings. However, you can overwrite

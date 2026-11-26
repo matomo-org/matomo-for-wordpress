@@ -8,6 +8,7 @@
  */
 namespace Piwik\Plugins\Monolog\Processor;
 
+use Matomo\Dependencies\Monolog\LogRecord;
 use Piwik\Plugin;
 /**
  * Records the name of the class that logged.
@@ -15,7 +16,7 @@ use Piwik\Plugin;
 class ClassNameProcessor
 {
     private $skippedClasses = array(__CLASS__, 'Piwik\\Log', 'Piwik\\Piwik', 'Piwik\\CronArchive', 'Matomo\\Dependencies\\Monolog\\Logger', 'Piwik\\Log\\Logger');
-    public function __invoke(array $record)
+    public function __invoke(LogRecord $record) : LogRecord
     {
         $record['extra']['class'] = $this->getLoggingClassName();
         return $record;

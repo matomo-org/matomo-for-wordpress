@@ -56,15 +56,13 @@ class UIControl extends \Piwik\View
     /**
      * HTML Attributes for the root element
      *
-     * @var string
+     * @var array
      */
     public $htmlAttributes = array();
     /**
      * The inner view that renders the actual control content.
-     *
-     * @var View
      */
-    private $innerView = null;
+    private View $innerView;
     public function __construct()
     {
         $this->innerView = new View(static::TEMPLATE);

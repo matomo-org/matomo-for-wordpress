@@ -11,7 +11,6 @@ namespace Piwik\Db;
 use Exception;
 use Piwik\Common;
 use Piwik\Config;
-use Piwik\Config\DatabaseConfig;
 use Piwik\Container\StaticContainer;
 use Piwik\Db;
 use Piwik\ExceptionHandler;
@@ -86,10 +85,6 @@ class BatchInsert
                 $instanceId = '';
             }
             $filePath = $path . $tableName . '-' . $instanceId . Common::generateUniqId() . '.csv';
-            // always use utf8 for TiDb, as TiDb has problems with latin1
-            if (DatabaseConfig::isTiDb()) {
-                $charset = 'utf8';
-            }
             try {
                 $fileSpec = array(
                     'delim' => "\t",
@@ -191,10 +186,8 @@ class BatchInsert
          * @see https://bugs.php.net/bug.php?id=54158
          */
         $openBaseDir = ini_get('open_basedir');
-        $safeMode = ini_get('safe_mode');
-        if ((function_exists('mysqli_get_client_stats') || empty($openBaseDir)) && empty($safeMode)) {
-            // php 5.x - LOAD DATA LOCAL INFILE only used if open_basedir is not set (or we're using a non-buggy version of mysqlnd)
-            //           and if safe mode is not enabled
+        if (function_exists('mysqli_get_client_stats') || empty($openBaseDir)) {
+            // LOAD DATA LOCAL INFILE only if open_basedir is not set (or we're using a non-buggy version of mysqlnd)
             $keywords[] = 'LOCAL ';
         }
         $exceptions = array();

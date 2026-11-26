@@ -13,8 +13,8 @@
       :key="index"
     >
       <div class="col s12 m12" v-if="index === 0">
-        <h3 style="font-weight: bold;color: #5bb75b" v-html="$sanitize(trialHintsText)"></h3>
-        <h3 style="margin-bottom: 28px;color: #5bb75b">
+        <h3 style="font-weight: bold;color: var(--theme-color-brand)" v-html="$sanitize(trialHintsText)"></h3>
+        <h3 style="margin-bottom: 28px;color: var(--theme-color-brand)">
           {{ translate('Marketplace_SupportMatomoThankYou') }} <i class='icon-heart red-text'></i>
         </h3>
       </div>
@@ -51,14 +51,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, PropType } from 'vue';
+import { PluginPromo } from '../types';
 import { MatomoUrl, translate, externalRawLink } from 'CoreHome';
 import { PluginName } from 'CorePluginsAdmin';
 
 export default defineComponent({
   props: {
     plugins: {
-      type: Array,
+      type: Array as PropType<PluginPromo[]>,
       required: true,
     },
   },
@@ -68,16 +69,16 @@ export default defineComponent({
   computed: {
     trialHintsText() {
       const link = externalRawLink('https://shop.matomo.org/free-trial/');
-      const linkStyle = 'color:#5bb75b;text-decoration: underline;';
+      const linkStyle = 'color:var(--theme-color-brand);text-decoration: underline;';
       return translate(
         'Marketplace_TrialHints',
         `<a style="${linkStyle}" href="${link}" target="_blank" rel="noreferrer noopener">`,
         '</a>',
       );
     },
-    pluginRows() {
+    pluginRows(): PluginPromo[][] {
       // divide plugins array into rows of 3
-      const result: unknown[][] = [];
+      const result: PluginPromo[][] = [];
       this.plugins.forEach((plugin, index) => {
         const row = Math.floor(index / 3);
         result[row] = result[row] || [];
@@ -92,9 +93,7 @@ export default defineComponent({
         module: 'Marketplace',
         action: 'overview',
       });
-      const hash = MatomoUrl.stringify({ pluginType: 'premium' });
-
-      return `?${query}#?${hash}`;
+      return `?${query}`;
     },
   },
 });

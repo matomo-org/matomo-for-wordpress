@@ -20,8 +20,8 @@ final class Version
      * The current Matomo version.
      * @var string
      */
-    public const VERSION = '5.13.0';
-    public const MAJOR_VERSION = 5;
+    public const VERSION = '6.0.0';
+    public const MAJOR_VERSION = 6;
     public function isStableVersion($version) : bool
     {
         return (bool) preg_match('/^\\d+\\.\\d+\\.\\d+$/', $version);
@@ -64,7 +64,7 @@ final class Version
                 return $matches[1] . $matches[2];
             }, $version);
             return sprintf('%s-alpha.%s', $newVersion, $dt);
-        } elseif ('alpha' === substr($version, -5)) {
+        } elseif (str_ends_with($version, 'alpha')) {
             // -alpha
             return $version . '.' . $dt;
         } else {

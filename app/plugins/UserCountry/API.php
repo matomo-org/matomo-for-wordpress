@@ -203,7 +203,7 @@ class API extends \Piwik\Plugin\API
                 }));
             } else {
                 $dt->filter('GroupBy', array('label', function ($label) {
-                    if (substr($label, -5) == '|1|ti') {
+                    if (str_ends_with($label, '|1|ti')) {
                         return substr($label, 0, -5) . '|14|cn';
                     }
                     return $label;

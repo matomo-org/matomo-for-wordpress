@@ -41,13 +41,18 @@ export { default as DropdownMenu } from './DropdownMenu/DropdownMenu';
 export { default as FocusAnywhereButHere } from './FocusAnywhereButHere/FocusAnywhereButHere';
 export { default as FocusIf } from './FocusIf/FocusIf';
 export { default as Tooltips } from './Tooltips/Tooltips';
+export { default as closeTooltips } from './Tooltips/closeTooltips';
+export { default as tooltipContent } from './Tooltips/tooltipContent';
 export { default as MatomoDialog } from './MatomoDialog/MatomoDialog.vue';
 export { default as MatomoModal } from './MatomoModal/MatomoModal.vue';
 export { default as ExpandOnClick } from './ExpandOnClick/ExpandOnClick';
+export { default as useSelectorDropdown } from './Selector/useSelectorDropdown';
+export type { SelectorDropdown } from './Selector/useSelectorDropdown';
 export { default as ExpandOnHover } from './ExpandOnHover/ExpandOnHover';
 export { default as ShowSensitiveData } from './ShowSensitiveData/ShowSensitiveData';
 export { default as DropdownButton } from './DropdownButton/DropdownButton';
 export { default as DraggableList } from './DraggableList/DraggableList.vue';
+export { default as DragHandle } from './DragHandle/DragHandle.vue';
 export { default as SelectOnFocus } from './SelectOnFocus/SelectOnFocus';
 export { default as CopyToClipboard } from './CopyToClipboard/CopyToClipboard';
 export { default as SideNav } from './SideNav/SideNav';
@@ -65,7 +70,7 @@ export { default as ShowHelpLink } from './ShowHelpLink/ShowHelpLink.vue';
 export { default as SitesStore } from './SiteSelector/SitesStore';
 export type { default as Site } from './SiteSelector/Site';
 export { default as SiteSelector } from './SiteSelector/SiteSelector.vue';
-export { default as SiteRef } from './SiteSelector/SiteRef';
+export type { default as SiteRef } from './SiteSelector/SiteRef';
 export { default as QuickAccess } from './QuickAccess/QuickAccess.vue';
 export { default as SearchInput } from './SearchInput/SearchInput.vue';
 export { default as FieldArray } from './FieldArray/FieldArray.vue';
@@ -85,7 +90,7 @@ export {
   default as WidgetByDimensionContainer,
 } from './WidgetByDimensionContainer/WidgetByDimensionContainer.vue';
 export { default as Widget } from './Widget/Widget.vue';
-export {
+export type {
   Widget as WidgetType,
   WidgetContainer as WidgetContainerType,
   GroupedWidgets as GroupedWidgetsType,
@@ -105,6 +110,9 @@ export {
 export { default as MobileLeftMenu } from './MobileLeftMenu/MobileLeftMenu.vue';
 export { default as scrollToAnchorInUrl } from './scrollToAnchorInUrl';
 export { default as SearchFiltersPersistenceStore } from './SearchFiltersPersistence/SearchFiltersPersistence.store';
+export { default as ReportActionsStore } from './DataTable/ReportActions.store';
+export { default as reportIdentity } from './DataTable/reportIdentity';
+export { default as activateMenuItem } from './DataTable/activateMenuItem';
 export { default as AutoClearPassword } from './AutoClearPassword/AutoClearPassword';
 export { default as PasswordStrength } from './PasswordStrength/PasswordStrength.vue';
 export * from './PasswordStrength/PasswordStrength';

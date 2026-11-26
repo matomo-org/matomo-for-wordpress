@@ -21,21 +21,18 @@ use Matomo\Dependencies\Symfony\Component\Console\Exception\CommandNotFoundExcep
 class ApplicationDescription
 {
     public const GLOBAL_NAMESPACE = '_global';
-    private $application;
-    private $namespace;
-    private $showHidden;
-    /**
-     * @var array
-     */
-    private $namespaces;
+    private Application $application;
+    private ?string $namespace;
+    private bool $showHidden;
+    private array $namespaces;
     /**
      * @var array<string, Command>
      */
-    private $commands;
+    private array $commands;
     /**
      * @var array<string, Command>
      */
-    private $aliases;
+    private array $aliases = [];
     public function __construct(Application $application, ?string $namespace = null, bool $showHidden = \false)
     {
         $this->application = $application;
@@ -44,7 +41,7 @@ class ApplicationDescription
     }
     public function getNamespaces() : array
     {
-        if (null === $this->namespaces) {
+        if (!isset($this->namespaces)) {
             $this->inspectApplication();
         }
         return $this->namespaces;
@@ -54,7 +51,7 @@ class ApplicationDescription
      */
     public function getCommands() : array
     {
-        if (null === $this->commands) {
+        if (!isset($this->commands)) {
             $this->inspectApplication();
         }
         return $this->commands;
@@ -65,11 +62,11 @@ class ApplicationDescription
     public function getCommand(string $name) : Command
     {
         if (!isset($this->commands[$name]) && !isset($this->aliases[$name])) {
-            throw new CommandNotFoundException(sprintf('Command "%s" does not exist.', $name));
+            throw new CommandNotFoundException(\sprintf('Command "%s" does not exist.', $name));
         }
         return $this->commands[$name] ?? $this->aliases[$name];
     }
-    private function inspectApplication()
+    private function inspectApplication() : void
     {
         $this->commands = [];
         $this->namespaces = [];

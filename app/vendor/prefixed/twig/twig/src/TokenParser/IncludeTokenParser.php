@@ -11,15 +11,16 @@
  */
 namespace Matomo\Dependencies\Twig\TokenParser;
 
+use Matomo\Dependencies\Twig\Node\Expression\AbstractExpression;
 use Matomo\Dependencies\Twig\Node\IncludeNode;
 use Matomo\Dependencies\Twig\Node\Node;
 use Matomo\Dependencies\Twig\Token;
 /**
  * Includes a template.
  *
- *   {% include 'header.html' %}
+ *   {% include 'header.html.twig' %}
  *     Body
- *   {% include 'footer.html' %}
+ *   {% include 'footer.html.twig' %}
  *
  * @internal
  */
@@ -27,46 +28,30 @@ class IncludeTokenParser extends AbstractTokenParser
 {
     public function parse(Token $token) : Node
     {
-        $expr = $this->parser->getExpressionParser()->parseExpression();
+        $expr = $this->parser->parseExpression();
         [$variables, $only, $ignoreMissing] = $this->parseArguments();
-        return new IncludeNode($expr, $variables, $only, $ignoreMissing, $token->getLine(), $this->getTag());
+        return new IncludeNode($expr, $variables, $only, $ignoreMissing, $token->getLine());
     }
+    /**
+     * @return array{0: ?AbstractExpression, 1: bool, 2: bool}
+     */
     protected function parseArguments()
     {
         $stream = $this->parser->getStream();
         $ignoreMissing = \false;
-        if ($stream->nextIf(
-            /* Token::NAME_TYPE */
-            5,
-            'ignore'
-        )) {
-            $stream->expect(
-                /* Token::NAME_TYPE */
-                5,
-                'missing'
-            );
+        if ($stream->nextIf(Token::NAME_TYPE, 'ignore')) {
+            $stream->expect(Token::NAME_TYPE, 'missing');
             $ignoreMissing = \true;
         }
         $variables = null;
-        if ($stream->nextIf(
-            /* Token::NAME_TYPE */
-            5,
-            'with'
-        )) {
-            $variables = $this->parser->getExpressionParser()->parseExpression();
+        if ($stream->nextIf(Token::NAME_TYPE, 'with')) {
+            $variables = $this->parser->parseExpression();
         }
         $only = \false;
-        if ($stream->nextIf(
-            /* Token::NAME_TYPE */
-            5,
-            'only'
-        )) {
+        if ($stream->nextIf(Token::NAME_TYPE, 'only')) {
             $only = \true;
         }
-        $stream->expect(
-            /* Token::BLOCK_END_TYPE */
-            3
-        );
+        $stream->expect(Token::BLOCK_END_TYPE);
         return [$variables, $only, $ignoreMissing];
     }
     public function getTag() : string

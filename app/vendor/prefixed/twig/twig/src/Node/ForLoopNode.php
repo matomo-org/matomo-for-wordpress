@@ -20,9 +20,9 @@ use Matomo\Dependencies\Twig\Compiler;
 #[YieldReady]
 class ForLoopNode extends Node
 {
-    public function __construct(int $lineno, ?string $tag = null)
+    public function __construct(int $lineno)
     {
-        parent::__construct([], ['with_loop' => \false, 'ifexpr' => \false, 'else' => \false], $lineno, $tag);
+        parent::__construct([], ['with_loop' => \false, 'ifexpr' => \false, 'else' => \false], $lineno);
     }
     public function compile(Compiler $compiler) : void
     {
@@ -30,7 +30,7 @@ class ForLoopNode extends Node
             $compiler->write("\$context['_iterated'] = true;\n");
         }
         if ($this->getAttribute('with_loop')) {
-            $compiler->write("++\$context['loop']['index0'];\n")->write("++\$context['loop']['index'];\n")->write("\$context['loop']['first'] = false;\n")->write("if (isset(\$context['loop']['length'])) {\n")->indent()->write("--\$context['loop']['revindex0'];\n")->write("--\$context['loop']['revindex'];\n")->write("\$context['loop']['last'] = 0 === \$context['loop']['revindex0'];\n")->outdent()->write("}\n");
+            $compiler->write("++\$context['loop']['index0'];\n")->write("++\$context['loop']['index'];\n")->write("\$context['loop']['first'] = false;\n")->write("if (isset(\$context['loop']['revindex0'], \$context['loop']['revindex'])) {\n")->indent()->write("--\$context['loop']['revindex0'];\n")->write("--\$context['loop']['revindex'];\n")->write("\$context['loop']['last'] = 0 === \$context['loop']['revindex0'];\n")->outdent()->write("}\n");
         }
     }
 }

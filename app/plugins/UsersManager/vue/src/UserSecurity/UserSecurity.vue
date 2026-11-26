@@ -70,7 +70,7 @@
 
         <div v-if="!isValidHost">
           <div class="alert alert-danger">
-            {{ translate('UsersManager_InjectedHostCannotChangePwd', invalidHost) }}
+            {{ translate('UsersManager_InjectedHostCannotChangePwd', invalidHost || '') }}
             <span v-if="!isSuperUser" v-html="$sanitize(emailYourAdminText)"></span>
           </div>
         </div>
@@ -97,6 +97,7 @@
           <th>{{ translate('General_Description') }}</th>
           <th>{{ translate('UsersManager_LastUsed') }}</th>
           <th>{{ translate('UsersManager_SecureUseOnly') }}</th>
+          <th>{{ translate('UsersManager_TokenAccessLevel') }}</th>
           <th>{{ translate('UsersManager_ExpireDate') }}</th>
           <th>{{ translate('General_Actions') }}</th>
         </tr>
@@ -104,7 +105,7 @@
         <tbody>
         <tr v-if="!tokens?.length">
           <td
-            :colspan="5"
+            :colspan="7"
             v-html="$sanitize(noTokenCreatedYetText)"
           ></td>
         </tr>
@@ -115,9 +116,10 @@
             {{ theToken.last_used ? theToken.last_used : translate('General_Never') }}
           </td>
           <td>
-            {{ parseInt(theToken.secure_only, 10) === 1 ?
+            {{ parseInt(`${theToken.secure_only}`, 10) === 1 ?
                translate('General_Yes') : translate('General_No') }}
           </td>
+          <td>{{ theToken.access_level_label }}</td>
           <td>
             {{ theToken.date_expired ? theToken.date_expired : translate('General_Never') }}
           </td>
@@ -166,7 +168,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, markRaw } from 'vue';
+import { defineComponent, markRaw, PropType } from 'vue';
 import {
   ContentBlock,
   ContentTable, Matomo,
@@ -175,6 +177,16 @@ import {
   AutoClearPassword,
 } from 'CoreHome';
 import { Field } from 'CorePluginsAdmin';
+
+interface TokenInfo {
+  idusertokenauth: string | number;
+  description?: string;
+  date_created?: string;
+  date_expired?: string;
+  last_used?: string;
+  secure_only?: string | number;
+  access_level_label?: string;
+}
 
 interface UserSecurityState {
   password: string;
@@ -187,7 +199,7 @@ interface UserSecurityState {
 export default defineComponent({
   props: {
     deleteTokenNonce: String,
-    tokens: Array,
+    tokens: Array as PropType<TokenInfo[]>,
     isUsersAdminEnabled: Boolean,
     changePasswordNonce: String,
     isValidHost: Boolean,

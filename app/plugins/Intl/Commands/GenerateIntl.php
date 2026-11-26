@@ -88,7 +88,7 @@ class GenerateIntl extends ConsoleCommand
                 $requestLangCode = $localFixes[$langCode];
             }
             setlocale(\LC_ALL, $langCode);
-            $translations = [];
+            $translations = ['Intl' => []];
             $this->fetchLanguageData($transformedLangCode, $requestLangCode, $translations);
             $this->fetchTerritoryData($transformedLangCode, $requestLangCode, $translations);
             $this->fetchCurrencyData($transformedLangCode, $requestLangCode, $translations);
@@ -192,7 +192,7 @@ class GenerateIntl extends ConsoleCommand
         return '';
     }
     /**
-     * @param array{Intl: array<string, string>} $translations
+     * @param array{Intl: array<string, mixed>} $translations
      */
     protected function fetchLanguageData(string $langCode, string $requestLangCode, array &$translations) : void
     {
@@ -224,7 +224,7 @@ class GenerateIntl extends ConsoleCommand
         }
     }
     /**
-     * @param array{Intl: array<string, string>} $translations
+     * @param array{Intl: array<string, mixed>} $translations
      */
     protected function fetchLayoutDirection(string $langCode, string $requestLangCode, array &$translations) : void
     {
@@ -247,7 +247,7 @@ class GenerateIntl extends ConsoleCommand
         }
     }
     /**
-     * @param array{Intl: array<string, string>} $translations
+     * @param array{Intl: array<string, mixed>} $translations
      */
     protected function fetchTerritoryData(string $langCode, string $requestLangCode, array &$translations) : void
     {
@@ -279,7 +279,7 @@ class GenerateIntl extends ConsoleCommand
         }
     }
     /**
-     * @param array{Intl: array<string, string>} $translations
+     * @param array{Intl: array<string, mixed>} $translations
      */
     protected function fetchCalendarData(string $langCode, string $requestLangCode, array &$translations) : void
     {
@@ -362,7 +362,7 @@ class GenerateIntl extends ConsoleCommand
         }
     }
     /**
-     * @param array{Intl: array<string, string>} $translations
+     * @param array{Intl: array<string, mixed>} $translations
      */
     protected function fetchTimeZoneData(string $langCode, string $requestLangCode, array &$translations) : void
     {
@@ -421,7 +421,7 @@ class GenerateIntl extends ConsoleCommand
         return str_replace(array_keys($changes), array_values($changes), $dateFormat ?? '');
     }
     /**
-     * @param array{Intl: array<string, string>} $translations
+     * @param array{Intl: array<string, mixed>} $translations
      */
     protected function fetchNumberFormattingData(string $langCode, string $requestLangCode, array &$translations) : void
     {
@@ -461,7 +461,7 @@ class GenerateIntl extends ConsoleCommand
         }
     }
     /**
-     * @param array{Intl: array<string, string>} $translations
+     * @param array{Intl: array<string, mixed>} $translations
      */
     protected function fetchUnitData(string $langCode, string $requestLangCode, array &$translations) : void
     {
@@ -508,7 +508,7 @@ class GenerateIntl extends ConsoleCommand
         }
     }
     /**
-     * @param array{Intl: array<string, string>} $translations
+     * @param array{Intl: array<string, mixed>} $translations
      */
     protected function fetchCurrencyData(string $langCode, string $requestLangCode, array &$translations) : void
     {
@@ -540,7 +540,7 @@ class GenerateIntl extends ConsoleCommand
         }
     }
     /**
-     * @param array{Intl: array<string, string>} $translations
+     * @param array{Intl: array<string, mixed>} $translations
      */
     protected function fetchListingLayouts(string $langCode, string $requestLangCode, array &$translations) : void
     {

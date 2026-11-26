@@ -54,6 +54,20 @@ if ($exception['message'] && $index > 1) {
 }
 ?>
             </div>
+            <?php 
+if (\count($exception['data'] ?? [])) {
+    ?>
+                <details class="exception-properties-wrapper">
+                    <summary>Show exception properties</summary>
+                    <div class="exception-properties">
+                        <?php 
+    echo $this->dumpValue($exception['data']);
+    ?>
+                    </div>
+                </details>
+            <?php 
+}
+?>
         </div>
 
         <div id="trace-html-<?php 
@@ -62,7 +76,7 @@ echo $index;
         <?php 
 $isFirstUserCode = \true;
 foreach ($exception['trace'] as $i => $trace) {
-    $isVendorTrace = $trace['file'] && (\false !== \mb_strpos($trace['file'], '/vendor/') || \false !== \mb_strpos($trace['file'], '/var/cache/'));
+    $isVendorTrace = $trace['file'] && (\str_contains($trace['file'], '/vendor/') || \str_contains($trace['file'], '/var/cache/'));
     $displayCodeSnippet = $isFirstUserCode && !$isVendorTrace;
     if ($displayCodeSnippet) {
         $isFirstUserCode = \false;

@@ -21,14 +21,8 @@ use Piwik\Url;
 class Advertising
 {
     public const CAMPAIGN_NAME_PROFESSIONAL_SERVICES = 'App_ProfessionalServices';
-    /**
-     * @var Plugin\Manager
-     */
-    private $pluginManager;
-    /**
-     * @var Config
-     */
-    private $config;
+    private Plugin\Manager $pluginManager;
+    private Config $config;
     public function __construct(Plugin\Manager $pluginManager, Config $config)
     {
         $this->pluginManager = $pluginManager;
@@ -69,23 +63,6 @@ class Advertising
             return '';
         }
         return Url::addCampaignParametersToMatomoLink($url, $campaignName, $campaignSource, $campaignMedium . ($campaignContent !== '' ? '.' . $campaignContent : ''));
-    }
-    /**
-     * @deprecated
-     * Generates campaign URL parameters that can be used with promoting Professional Support service.
-     *
-     * @param string $campaignName
-     * @param string $campaignMedium
-     * @param string $campaignContent Optional
-     * @return string URL parameters without a leading ? or &
-     */
-    private function getCampaignParametersForPromoUrl($campaignName, $campaignMedium, $campaignContent = '')
-    {
-        $campaignName = sprintf('pk_campaign=%s&pk_medium=%s&pk_source=Matomo_App', $campaignName, $campaignMedium);
-        if (!empty($campaignContent)) {
-            $campaignName .= '&pk_content=' . $campaignContent;
-        }
-        return $campaignName;
     }
     /**
      * @param $configGeneralSection

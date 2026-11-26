@@ -22,12 +22,9 @@ final class DoTokenParser extends AbstractTokenParser
 {
     public function parse(Token $token) : Node
     {
-        $expr = $this->parser->getExpressionParser()->parseExpression();
-        $this->parser->getStream()->expect(
-            /* Token::BLOCK_END_TYPE */
-            3
-        );
-        return new DoNode($expr, $token->getLine(), $this->getTag());
+        $expr = $this->parser->parseExpression();
+        $this->parser->getStream()->expect(Token::BLOCK_END_TYPE);
+        return new DoNode($expr, $token->getLine());
     }
     public function getTag() : string
     {

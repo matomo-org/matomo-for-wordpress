@@ -1,12 +1,16 @@
 includes:
     - phpstan-baseline.neon
+    - tests/PHPUnit/PHPStan/rules.neon
 
 parameters:
     level: 5
-    phpVersion: 70200
+    phpVersion: 80100
     paths:
         - core
         - plugins
+        # the custom rule implementations (their intentionally-violating fixtures live under
+        # tests/PHPUnit/Unit/PHPStan/Rules/data and stay out of the analysed paths)
+        - tests/PHPUnit/PHPStan/Rules
     excludePaths:
         - plugins/*/tests/*
         - plugins/ScheduledReports/config/tcpdf_config.php
@@ -23,15 +27,40 @@ parameters:
         - plugins/SecurityInfo
         - plugins/TagManager
         - plugins/TasksTimetable
-        - plugins/TrackingSpamPrevention
         - plugins/TreemapVisualization
         - plugins/VisitorGenerator
     bootstrapFiles:
         - bootstrap-phpstan.php
+    # Not reachable through the composer autoloader: it is a global class pulled in
+    # via require_once, so PHPStan has to be pointed at the file explicitly.
+    scanFiles:
+        - libs/Authenticator/TwoFactorAuthenticator.php
     ignoreErrors:
         - "#Unsafe usage of new static#"
+        # Monolog\Logger and Symfony's ConsoleFormatter are marked @final only via
+        # a docblock annotation, not the final keyword. Both are extended on purpose:
+        # Piwik\Log\Logger is a proxy that adds Matomo's logger interface, and
+        # ConsoleFormatter augments the console output with %extra.*% placeholders.
+        # These are deliberate, long-standing integrations rather than accidental
+        # subclassing, so the soft-final hint is intentionally overridden here.
+        -
+            identifier: class.extendsFinalByPhpDoc
+            path: core/Log/Logger.php
+        -
+            identifier: class.extendsFinalByPhpDoc
+            path: plugins/Monolog/Formatter/ConsoleFormatter.php
     universalObjectCratesClasses:
         - Piwik\Config
         - Piwik\View
         - Piwik\ViewDataTable\Config
         - Piwik\Session\SessionNamespace
+    # These constants point at the installation directory, so any require() built from them
+    # resolves differently per environment (local/ddev vs CI) and per analysis mode: parallel
+    # workers do not see the bootstrapped values, the single-process analyser does. Treating
+    # them as dynamic keeps requireOnce.fileNotFound from appearing and disappearing, which
+    # an ignore entry cannot follow.
+    dynamicConstantNames:
+        PIWIK_INCLUDE_PATH: string
+        PIWIK_VENDOR_PATH: string
+        PIWIK_DOCUMENT_ROOT: string
+        PIWIK_USER_PATH: string

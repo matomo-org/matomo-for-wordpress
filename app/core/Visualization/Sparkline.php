@@ -10,6 +10,7 @@ namespace Piwik\Visualization;
 
 use Piwik\Common;
 use Piwik\Piwik;
+use Piwik\Plugin\ThemeStyles;
 use Piwik\View\ViewInterface;
 /**
  * Renders a sparkline image given a PHP data array.
@@ -21,10 +22,13 @@ class Sparkline implements ViewInterface
     public const DEFAULT_HEIGHT = 50;
     public const LINE_THICKNESS = 4;
     public const POINT_SIZE = 6;
-    // We now create different sized width for Sparklines based on the card designs
-    // This max width will still be adjusted as we create new Sparkline modes.
-    public const MAX_WIDTH = 1000;
-    public const MAX_HEIGHT = 250;
+    // Sparkline cards request the image at twice its displayed size, for hi-DPI screens. These
+    // caps are that doubled size: 800px wide is more than any card can be, and 64px tall is more
+    // than any sparkline asks for. The client caps its own width to match (useSparklineSlotSize.ts)
+    // so a request is never clamped here, which would squash the image.
+    // They also bound memory per request: the drawing library works at 4x before scaling down.
+    public const MAX_WIDTH = 1600;
+    public const MAX_HEIGHT = 128;
     /**
      * Width of the sparkline
      * @var int
@@ -156,7 +160,9 @@ class Sparkline implements ViewInterface
     private function setSparklineColors($sparkline, $seriesIndex)
     {
         $colors = Common::getRequestVar('colors', \false, 'json');
-        $defaultColors = array('backgroundColor' => '#ffffff', 'lineColor' => '#162C4A', 'minPointColor' => '#ff7f7f', 'maxPointColor' => '#75BF7C', 'lastPointColor' => '#55AAFF', 'fillColor' => '#ffffff');
+        // the default background is white, so take the light theme values
+        $themeStyles = ThemeStyles::get(ThemeStyles::LIGHT_MODE);
+        $defaultColors = array('backgroundColor' => '#ffffff', 'lineColor' => '#162C4A', 'minPointColor' => $themeStyles->getPropertyValue('colorNegative'), 'maxPointColor' => $themeStyles->getPropertyValue('colorPositive'), 'lastPointColor' => '#55AAFF', 'fillColor' => '#ffffff');
         if (empty($colors) || !is_array($colors)) {
             $colors = $defaultColors;
             //set default color, if no color passed

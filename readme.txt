@@ -2,9 +2,9 @@
 Contributors: matomoteam
 Tags: analytics,privacy-friendly,gdpr,behavior,conversion,wordpress analytics,google analytics,woocommerce analytics,matomo,statistics,stats,ecommerce
 Requires at least: 4.8
-Tested up to: 7.1.0
-Stable tag: 5.13.2
-Requires PHP: 7.2.5
+Tested up to: 7.1.5
+Stable tag: 6.0.0
+Requires PHP: 8.1
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 

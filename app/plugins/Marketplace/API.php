@@ -27,30 +27,12 @@ use Piwik\Validators\NotEmpty;
  */
 class API extends \Piwik\Plugin\API
 {
-    /**
-     * @var Client
-     */
-    private $marketplaceClient;
-    /**
-     * @var Service
-     */
-    private $marketplaceService;
-    /**
-     * @var InvalidLicenses
-     */
-    private $expired;
-    /**
-     * @var PluginManager
-     */
-    private $pluginManager;
-    /**
-     * @var Environment
-     */
-    private $environment;
-    /**
-     * @var PluginTrialService
-     */
-    private $pluginTrialService;
+    private Client $marketplaceClient;
+    private Service $marketplaceService;
+    private InvalidLicenses $expired;
+    private PluginManager $pluginManager;
+    private \Piwik\Plugins\Marketplace\Environment $environment;
+    private PluginTrialService $pluginTrialService;
     public function __construct(Service $service, Client $client, InvalidLicenses $expired, PluginManager $pluginManager, \Piwik\Plugins\Marketplace\Environment $environment, PluginTrialService $pluginTrialService)
     {
         $this->marketplaceService = $service;
@@ -92,6 +74,7 @@ class API extends \Piwik\Plugin\API
             throw new Exception('Marketplace_CreateAccountErrorAPI');
         }
         $this->marketplaceClient->clearAllCacheEntries();
+        $this->expired->clearCache();
         $licenseKey = trim($result['data']['license_key'] ?? '');
         $status = $result['status'];
         if (200 !== $status || empty($licenseKey)) {
@@ -157,6 +140,7 @@ class API extends \Piwik\Plugin\API
         /** @var array $result */
         $result = $this->marketplaceService->fetch('plugins/' . $pluginName . '/freeTrial', ['num_users' => $this->environment->getNumUsers(), 'num_websites' => $this->environment->getNumWebsites()], [], \true, \false);
         $this->marketplaceClient->clearAllCacheEntries();
+        $this->expired->clearCache();
         if (201 !== $result['status'] || !is_string($result['data']) || '' !== trim($result['data'])) {
             // We expect an exact empty 201 response from this API
             // Anything different should be an error

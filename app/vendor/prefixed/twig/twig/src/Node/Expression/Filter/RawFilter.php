@@ -10,24 +10,29 @@
  */
 namespace Matomo\Dependencies\Twig\Node\Expression\Filter;
 
+use Matomo\Dependencies\Twig\Attribute\FirstClassTwigCallableReady;
 use Matomo\Dependencies\Twig\Compiler;
+use Matomo\Dependencies\Twig\Node\EmptyNode;
+use Matomo\Dependencies\Twig\Node\Expression\AbstractExpression;
 use Matomo\Dependencies\Twig\Node\Expression\ConstantExpression;
 use Matomo\Dependencies\Twig\Node\Expression\FilterExpression;
 use Matomo\Dependencies\Twig\Node\Node;
+use Matomo\Dependencies\Twig\TwigFilter;
 /**
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class RawFilter extends FilterExpression
 {
-    public function __construct(Node $node, ?ConstantExpression $filterName = null, ?Node $arguments = null, int $lineno = 0, ?string $tag = null)
+    /**
+     * @param AbstractExpression $node
+     */
+    #[FirstClassTwigCallableReady]
+    public function __construct(Node $node, TwigFilter|ConstantExpression|null $filter = null, ?Node $arguments = null, int $lineno = 0)
     {
-        if (null === $filterName) {
-            $filterName = new ConstantExpression('raw', $node->getTemplateLine());
+        if (!$node instanceof AbstractExpression) {
+            trigger_deprecation('twig/twig', '3.15', 'Not passing a "%s" instance to the "node" argument of "%s" is deprecated ("%s" given).', AbstractExpression::class, static::class, $node::class);
         }
-        if (null === $arguments) {
-            $arguments = new Node();
-        }
-        parent::__construct($node, $filterName, $arguments, $lineno ?: $node->getTemplateLine(), $tag ?: $node->getNodeTag());
+        parent::__construct($node, $filter ?: new TwigFilter('raw', null, ['is_safe' => ['all']]), $arguments ?: new EmptyNode(), $lineno ?: $node->getTemplateLine());
     }
     public function compile(Compiler $compiler) : void
     {

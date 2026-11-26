@@ -11,7 +11,7 @@
 namespace Matomo\Dependencies\Symfony\Bridge\Monolog\Handler\FingersCrossed;
 
 use Matomo\Dependencies\Monolog\Handler\FingersCrossed\ActivationStrategyInterface;
-use Matomo\Dependencies\Monolog\Handler\FingersCrossed\ErrorLevelActivationStrategy;
+use Matomo\Dependencies\Monolog\LogRecord;
 use Matomo\Dependencies\Symfony\Component\HttpFoundation\RequestStack;
 use Matomo\Dependencies\Symfony\Component\HttpKernel\Exception\HttpException;
 /**
@@ -20,29 +20,15 @@ use Matomo\Dependencies\Symfony\Component\HttpKernel\Exception\HttpException;
  * @author Jordi Boggiano <j.boggiano@seld.be>
  * @author Fabien Potencier <fabien@symfony.com>
  * @author Pierrick Vignand <pierrick.vignand@gmail.com>
- *
- * @final
  */
-class NotFoundActivationStrategy extends ErrorLevelActivationStrategy implements ActivationStrategyInterface
+final class NotFoundActivationStrategy implements ActivationStrategyInterface
 {
-    private $inner;
-    private $exclude;
-    private $requestStack;
-    /**
-     * @param ActivationStrategyInterface|int|string $inner an ActivationStrategyInterface to decorate
-     */
-    public function __construct(RequestStack $requestStack, array $excludedUrls, $inner)
+    private string $exclude;
+    public function __construct(private RequestStack $requestStack, array $excludedUrls, private ActivationStrategyInterface $inner)
     {
-        if (!$inner instanceof ActivationStrategyInterface) {
-            trigger_deprecation('symfony/monolog-bridge', '5.2', 'Passing an actionLevel (int|string) as constructor\'s 3rd argument of "%s" is deprecated, "%s" expected.', __CLASS__, ActivationStrategyInterface::class);
-            $actionLevel = $inner;
-            $inner = new ErrorLevelActivationStrategy($actionLevel);
-        }
-        $this->inner = $inner;
-        $this->requestStack = $requestStack;
         $this->exclude = '{(' . implode('|', $excludedUrls) . ')}i';
     }
-    public function isHandlerActivated(array $record) : bool
+    public function isHandlerActivated(array|LogRecord $record) : bool
     {
         $isActivated = $this->inner->isHandlerActivated($record);
         if ($isActivated && isset($record['context']['exception']) && $record['context']['exception'] instanceof HttpException && 404 == $record['context']['exception']->getStatusCode() && ($request = $this->requestStack->getMainRequest())) {

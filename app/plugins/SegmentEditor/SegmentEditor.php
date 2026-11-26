@@ -214,13 +214,13 @@ class SegmentEditor extends \Piwik\Plugin
             return null;
         }
         $idSites = Site::getIdSitesFromIdSitesString($idSite);
-        if (strpos($date, ',') !== \false) {
+        if (str_contains($date, ',')) {
             // if getting multiple periods, check the whole range for visits
             $periodStr = 'range';
         }
         // if no visits recorded, data will not appear, so don't show the message
         $liveModel = new \Piwik\Plugins\Live\Model();
-        $visits = $liveModel->queryLogVisits($idSites, $periodStr, $date, $segment->getString(), $offset = 0, $limit = 1, null, null, 'ASC');
+        $visits = $liveModel->queryLogVisits($idSites, $periodStr, $date, $segment->getString(), $offset = 0, $limit = 1, \false, \false, 'ASC');
         if (empty($visits)) {
             return null;
         }
@@ -230,9 +230,10 @@ class SegmentEditor extends \Piwik\Plugin
         // data does not exist. this means the data will be processed later. we let the user know so they will not
         // be confused.
         $model = new \Piwik\Plugins\SegmentEditor\Model();
-        $storedSegment = $model->getSegmentByDefinition($segment->getString());
+        $userLogin = Piwik::hasUserSuperUserAccess() ? null : Piwik::getCurrentUserLogin();
+        $storedSegment = $model->getSegmentByDefinition($segment->getString(), $idSite, $userLogin);
         if (empty($storedSegment)) {
-            $storedSegment = $model->getSegmentByDefinition(urldecode($segment->getString()));
+            $storedSegment = $model->getSegmentByDefinition(urldecode($segment->getString()), $idSite, $userLogin);
         }
         if (empty($storedSegment)) {
             $storedSegment = null;

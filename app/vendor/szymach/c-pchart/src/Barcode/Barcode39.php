@@ -4,19 +4,6 @@ namespace CpChart\Barcode;
 
 use CpChart\Image;
 use Exception;
-/**
- *  pBarcode39 - class to create barcodes (39B)
- *
- *  Version     : 2.1.4
- *  Made by     : Jean-Damien POGOLOTTI
- *  Last Update : 19/01/2014
- *
- *  This file can be distributed under the license you can find at :
- *
- *  http://www.pchart.net/license
- *
- *  You can find the whole class documentation on the pChart web site.
- */
 class Barcode39
 {
     /**
@@ -40,12 +27,12 @@ class Barcode39
      */
     public $CRC;
     /**
-     * @var boolean
+     * @var bool
      */
     public $MOD43;
     /**
      * @param string $filePath
-     * @param boolean $EnableMOD43
+     * @param bool $EnableMOD43
      * @throws Exception
      */
     public function __construct($filePath = "", $EnableMOD43 = \false)
@@ -127,10 +114,11 @@ class Barcode39
     /**
      * Create the encoded string
      * @param Image $Object
-     * @param type $Value
-     * @param type $X
-     * @param type $Y
+     * @param string $Value
+     * @param int $X
+     * @param int $Y
      * @param array $Format
+     * @return void
      */
     public function draw(Image $Object, $Value, $X, $Y, $Format = [])
     {

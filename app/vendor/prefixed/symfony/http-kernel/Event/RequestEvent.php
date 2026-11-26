@@ -22,18 +22,18 @@ use Matomo\Dependencies\Symfony\Component\HttpFoundation\Response;
  */
 class RequestEvent extends KernelEvent
 {
-    private $response;
+    private ?Response $response = null;
     /**
      * Returns the response object.
-     *
-     * @return Response|null
      */
-    public function getResponse()
+    public function getResponse() : ?Response
     {
         return $this->response;
     }
     /**
      * Sets a response and stops event propagation.
+     *
+     * @return void
      */
     public function setResponse(Response $response)
     {
@@ -42,10 +42,8 @@ class RequestEvent extends KernelEvent
     }
     /**
      * Returns whether a response was set.
-     *
-     * @return bool
      */
-    public function hasResponse()
+    public function hasResponse() : bool
     {
         return null !== $this->response;
     }

@@ -18,6 +18,9 @@ class VersionPublished extends \Piwik\Plugins\TagManager\Activity\VersionBaseAct
         $idContainer = $finalAPIParameters['parameters']['idContainer'];
         $idContainerVersion = $finalAPIParameters['parameters']['idContainerVersion'];
         $activityData = $this->formatActivityData($idSite, $idContainer, $idContainerVersion, 0);
+        if ($activityData === \false) {
+            return \false;
+        }
         $activityData['environment'] = $finalAPIParameters['parameters']['environment'];
         return $activityData;
     }

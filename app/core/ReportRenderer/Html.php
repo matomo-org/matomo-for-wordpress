@@ -8,6 +8,7 @@
  */
 namespace Piwik\ReportRenderer;
 
+use Piwik\Common;
 use Piwik\Piwik;
 use Piwik\ReportRenderer;
 use Piwik\View;
@@ -67,7 +68,7 @@ class Html extends ReportRenderer
     }
     public function renderFrontPage($reportTitle, $prettyDate, $description, $reportMetadata, $segment)
     {
-        $frontPageView = new View\HtmlReportEmailHeaderView($reportTitle, $prettyDate, $description, $reportMetadata, $segment, $this->idSite, $this->report['period']);
+        $frontPageView = new View\HtmlReportEmailHeaderView($reportTitle, $prettyDate, $description, $reportMetadata, $segment, $this->idSite, $this->report['period_param'] ?? $this->report['period']);
         $this->rendering .= $frontPageView->render();
     }
     public function renderReport($processedReport)
@@ -76,7 +77,12 @@ class Html extends ReportRenderer
         View\HtmlReportEmailHeaderView::assignCommonParameters($reportView);
         $reportMetadata = $processedReport['metadata'];
         $reportData = $processedReport['reportData'];
-        $columns = $processedReport['columns'];
+        $columns = self::shortenPercentOfTotalColumnLabels($processedReport['columns']);
+        // processTableFormat() builds row labels from the metric names when a report has no
+        // dimension, so encode them to match the encoding the data table's own labels carry.
+        if (!self::isAggregateReport($reportMetadata)) {
+            $columns = Common::sanitizeInputValues($columns);
+        }
         list($reportData, $columns) = self::processTableFormat($reportMetadata, $reportData, $columns);
         $reportView->assign("reportName", $reportMetadata['name']);
         $reportView->assign("reportId", $reportMetadata['uniqueId']);

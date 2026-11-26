@@ -10,7 +10,6 @@ namespace Piwik;
 
 use Exception;
 use Piwik\Db\Adapter;
-use Piwik\Db\Schema;
 use Piwik\Db\TransactionalDatabaseInterface;
 use Piwik\Db\TransactionalDatabaseStaticTrait;
 /**
@@ -118,9 +117,10 @@ class Db implements TransactionalDatabaseInterface
     }
     /**
      * For tests only.
-     * @param $connection
+     * @param \Piwik\Db\AdapterInterface|null $connection
      * @ignore
      * @internal
+     * @return void
      */
     public static function setDatabaseObject($connection)
     {
@@ -133,6 +133,7 @@ class Db implements TransactionalDatabaseInterface
      *
      * @param array|null $dbConfig Connection parameters in an array. Defaults to the `[database]`
      *                             INI config section.
+     * @return void
      */
     public static function createDatabaseObject($dbConfig = null)
     {
@@ -149,6 +150,8 @@ class Db implements TransactionalDatabaseInterface
      *                             INI config section.
      *
      * @since Matomo 3.12
+     *
+     * @return void
      */
     public static function createReaderDatabaseObject($dbConfig = null)
     {
@@ -173,6 +176,7 @@ class Db implements TransactionalDatabaseInterface
      * Detect whether a database object is initialized / created or not.
      *
      * @internal
+     * @return bool
      */
     public static function hasDatabaseObject()
     {
@@ -182,6 +186,7 @@ class Db implements TransactionalDatabaseInterface
      * Detect whether a database object is initialized / created or not.
      *
      * @internal
+     * @return bool
      */
     public static function hasReaderDatabaseObject()
     {
@@ -191,6 +196,8 @@ class Db implements TransactionalDatabaseInterface
      * Disconnects and destroys the database connection.
      *
      * For tests.
+     *
+     * @return void
      */
     public static function destroyDatabaseObject()
     {
@@ -205,13 +212,13 @@ class Db implements TransactionalDatabaseInterface
     }
     /**
      * Executes an unprepared SQL query. Recommended for DDL statements like `CREATE`,
-     * `DROP` and `ALTER`. The return value is DBMS-specific. For MySQLI, it returns the
-     * number of rows affected. For PDO, it returns a
-     * [Zend_Db_Statement](https://framework.zend.com/manual/1.12/en/zend.db.statement.html) object.
+     * `DROP` and `ALTER`.
+     *
+     * Must not be used during tracker requests, as the tracker database does not provide a profiler.
      *
      * @param string $sql The SQL query.
      * @throws \Exception If there is an error in the SQL.
-     * @return integer|\Zend_Db_Statement
+     * @return int The number of rows affected.
      */
     public static function exec($sql)
     {
@@ -290,8 +297,8 @@ class Db implements TransactionalDatabaseInterface
      * @param string $sql The SQL query.
      * @param array $parameters Parameters to bind in the query, eg, `array(param1 => value1, param2 => value2)`.
      * @throws \Exception If there is a problem with the SQL or bind parameters.
-     * @return array The fetched rows, each element is an associative array mapping column names
-     *               with column values.
+     * @return list<array<array-key, string|int|float|null>> The fetched rows, each an associative array of column => value.
+     *                                                       Numeric column names, eg, `SELECT 1`, yield integer keys.
      */
     public static function fetchAll($sql, $parameters = array())
     {
@@ -309,8 +316,9 @@ class Db implements TransactionalDatabaseInterface
      * @param string $sql The SQL query.
      * @param array $parameters Parameters to bind in the query, eg, `array(param1 => value1, param2 => value2)`.
      * @throws \Exception If there is a problem with the SQL or bind parameters.
-     * @return array The fetched row, each element is an associative array mapping column names
-     *               with column values.
+     * @return array<array-key, string|int|float|null>|false The fetched row as column => value, or false when the result
+     *                                                       set is empty. Numeric column names, eg, `SELECT 1`, yield
+     *                                                       integer keys.
      */
     public static function fetchRow($sql, $parameters = array())
     {
@@ -329,7 +337,7 @@ class Db implements TransactionalDatabaseInterface
      * @param string $sql The SQL query.
      * @param array $parameters Parameters to bind in the query, eg, `array(param1 => value1, param2 => value2)`.
      * @throws \Exception If there is a problem with the SQL or bind parameters.
-     * @return string
+     * @return string|int|float|null|false The first column of the first row, or `false` when the result set is empty.
      */
     public static function fetchOne($sql, $parameters = array())
     {
@@ -348,11 +356,8 @@ class Db implements TransactionalDatabaseInterface
      * @param string $sql The SQL query.
      * @param array $parameters Parameters to bind in the query, eg, `array(param1 => value1, param2 => value2)`.
      * @throws \Exception If there is a problem with the SQL or bind parameters.
-     * @return array eg,
-     *               ```
-     *               array('col1value1' => array('col2' => '...', 'col3' => ...),
-     *                     'col1value2' => array('col2' => '...', 'col3' => ...))
-     *               ```
+     * @return array<array-key, array<array-key, string|int|float|null>> The rows indexed by the first selected column,
+     *                                                                  each row an associative array of column => value.
      */
     public static function fetchAssoc($sql, $parameters = array())
     {
@@ -397,27 +402,6 @@ class Db implements TransactionalDatabaseInterface
         return $totalRowsDeleted;
     }
     /**
-     * Runs an `OPTIMIZE TABLE` query on the supplied table or tables.
-     *
-     * Tables will only be optimized if the `[General] enable_sql_optimize_queries` INI config option is
-     * set to **1**.
-     *
-     * @param string|array $tables The name of the table to optimize or an array of tables to optimize.
-     *                             Table names must be prefixed (see {@link Piwik\Common::prefixTable()}).
-     * @param bool $force If true, the `OPTIMIZE TABLE` query will be run even if InnoDB tables are being used.
-     * @return bool
-     * @deprecated  will be removed in Matomo 6
-     *              use Schema::getInstance()->optimizeTables() instead
-     */
-    public static function optimizeTables($tables, $force = \false)
-    {
-        if (empty($tables)) {
-            return \false;
-        }
-        $tables = !is_array($tables) ? [$tables] : $tables;
-        return Schema::getInstance()->optimizeTables($tables, (bool) $force);
-    }
-    /**
      * Drops the supplied table or tables.
      *
      * @param string|array $tables The name of the table to drop or an array of table names to drop.
@@ -433,6 +417,8 @@ class Db implements TransactionalDatabaseInterface
     }
     /**
      * Drops all tables
+     *
+     * @return void
      */
     public static function dropAllTables()
     {
@@ -449,7 +435,7 @@ class Db implements TransactionalDatabaseInterface
      *                                   be prefixed (see {@link Piwik\Common::prefixTable()}).
      * @param string|array $tablesToWrite The table or tables to obtain 'write' locks on. Table names must
      *                                    be prefixed (see {@link Piwik\Common::prefixTable()}).
-     * @return \Zend_Db_Statement
+     * @return int The number of rows affected, see {@link exec()}.
      */
     public static function lockTables($tablesToRead, $tablesToWrite = array())
     {
@@ -474,7 +460,7 @@ class Db implements TransactionalDatabaseInterface
      * **NOTE:** Piwik does not require the `LOCK TABLES` privilege to be available. Piwik
      * should still work if it has not been granted.
      *
-     * @return \Zend_Db_Statement
+     * @return int The number of rows affected, see {@link exec()}.
      */
     public static function unlockAllTables()
     {
@@ -516,7 +502,8 @@ class Db implements TransactionalDatabaseInterface
      * @param int $step The maximum number of rows to scan in one query.
      * @param array $params Parameters to bind in the query, eg, `array(param1 => value1, param2 => value2)`
      *
-     * @return string
+     * @return string|int|float|null|false The first value fetched that is not `false`, or `false` if no chunk
+     *                                     returned a value.
      */
     public static function segmentedFetchFirst($sql, $first, $last, $step, $params = array())
     {
@@ -551,7 +538,7 @@ class Db implements TransactionalDatabaseInterface
      * @param int $last The maximum ID to loop to.
      * @param int $step The maximum number of rows to scan in one query.
      * @param array $params Parameters to bind in the query, `array(param1 => value1, param2 => value2)`
-     * @return array An array of primitive values.
+     * @return list<string|int|float|null|false> One fetched value per chunk.
      */
     public static function segmentedFetchOne($sql, $first, $last, $step, $params = array())
     {
@@ -586,8 +573,8 @@ class Db implements TransactionalDatabaseInterface
      * @param int $last The maximum ID to loop to.
      * @param int $step The maximum number of rows to scan in one query.
      * @param array $params Parameters to bind in the query, array( param1 => value1, param2 => value2)
-     * @return array An array of rows that includes the result set of every smaller
-     *               query.
+     * @return list<array<array-key, string|int|float|null>> An array of rows that includes the result set of every
+     *                                                       smaller query.
      */
     public static function segmentedFetchAll($sql, $first, $last, $step, $params = array())
     {
@@ -622,6 +609,7 @@ class Db implements TransactionalDatabaseInterface
      * @param int $last The maximum ID to loop to.
      * @param int $step The maximum number of rows to scan in one query.
      * @param array $params Parameters to bind in the query, `array(param1 => value1, param2 => value2)`
+     * @return void
      */
     public static function segmentedQuery($sql, $first, $last, $step, $params = array())
     {
@@ -685,7 +673,7 @@ class Db implements TransactionalDatabaseInterface
      *
      * Public so tests can simulate the situation where the lock tables privilege isn't granted.
      *
-     * @var bool
+     * @var bool|null
      * @ignore
      */
     public static $lockPrivilegeGranted = null;
@@ -707,6 +695,9 @@ class Db implements TransactionalDatabaseInterface
         }
         return self::$lockPrivilegeGranted;
     }
+    /**
+     * @return void
+     */
     private static function logExtraInfoIfDeadlock($ex)
     {
         if (!self::get()->isErrNo($ex, 1213) && !self::get()->isErrNo($ex, 1205)) {
@@ -720,6 +711,9 @@ class Db implements TransactionalDatabaseInterface
             //  1227 Access denied; you need (at least one of) the PROCESS privilege(s) for this operation
         }
     }
+    /**
+     * @return void
+     */
     private static function logSql($functionName, $sql, $parameters = array())
     {
         self::checkBoundParametersIfInDevMode($sql, $parameters);
@@ -729,6 +723,9 @@ class Db implements TransactionalDatabaseInterface
         // NOTE: at the moment we don't log parameters in order to avoid sensitive information leaks
         \Piwik\Log::debug("Db::%s() executing SQL: %s", $functionName, $sql);
     }
+    /**
+     * @return void
+     */
     private static function checkBoundParametersIfInDevMode($sql, $parameters)
     {
         if (!\Piwik\Development::isEnabled()) {
@@ -745,24 +742,17 @@ class Db implements TransactionalDatabaseInterface
     }
     /**
      * @param bool $enable
+     * @return void
      */
     public static function enableQueryLog($enable)
     {
         self::$logQueries = $enable;
     }
     /**
-     * @return boolean
+     * @return bool
      */
     public static function isQueryLogEnabled()
     {
         return self::$logQueries;
-    }
-    /**
-     * @deprecated will be removed with Matomo 6
-     *             use Schema::getInstance()->isOptimizeInnoDBSupported() instead
-     */
-    public static function isOptimizeInnoDBSupported($version = null)
-    {
-        return \Piwik\Db\Schema::getInstance()->isOptimizeInnoDBSupported();
     }
 }

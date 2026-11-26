@@ -13,27 +13,33 @@ namespace Matomo\Dependencies\Symfony\Bridge\Monolog\Handler;
 use Matomo\Dependencies\Monolog\Formatter\FormatterInterface;
 use Matomo\Dependencies\Monolog\Handler\AbstractProcessingHandler;
 use Matomo\Dependencies\Monolog\Handler\FormattableHandlerTrait;
+use Matomo\Dependencies\Monolog\Level;
 use Matomo\Dependencies\Monolog\Logger;
+use Matomo\Dependencies\Monolog\LogRecord;
 use Matomo\Dependencies\Symfony\Bridge\Monolog\Formatter\VarDumperFormatter;
 if (trait_exists(FormattableHandlerTrait::class)) {
+    /**
+     * @final since Symfony 6.1
+     */
     class ServerLogHandler extends AbstractProcessingHandler
     {
+        use CompatibilityHandler;
+        use CompatibilityProcessingHandler;
         use ServerLogHandlerTrait;
-        /**
-         * {@inheritdoc}
-         */
         protected function getDefaultFormatter() : FormatterInterface
         {
             return new VarDumperFormatter();
         }
     }
 } else {
+    /**
+     * @final since Symfony 6.1
+     */
     class ServerLogHandler extends AbstractProcessingHandler
     {
+        use CompatibilityHandler;
+        use CompatibilityProcessingHandler;
         use ServerLogHandlerTrait;
-        /**
-         * {@inheritdoc}
-         */
         protected function getDefaultFormatter()
         {
             return new VarDumperFormatter();
@@ -42,16 +48,21 @@ if (trait_exists(FormattableHandlerTrait::class)) {
 }
 /**
  * @author Grégoire Pineau <lyrixx@lyrixx.info>
+ *
+ * @internal since Symfony 6.1
  */
 trait ServerLogHandlerTrait
 {
-    private $host;
-    private $context;
-    private $socket;
+    private string $host;
     /**
-     * @param string|int $level The minimum logging level at which this handler will be triggered
+     * @var resource
      */
-    public function __construct(string $host, $level = Logger::DEBUG, bool $bubble = \true, array $context = [])
+    private $context;
+    /**
+     * @var resource|null
+     */
+    private $socket;
+    public function __construct(string $host, string|int|Level $level = Logger::DEBUG, bool $bubble = \true, array $context = [])
     {
         parent::__construct($level, $bubble);
         if (!str_contains($host, '://')) {
@@ -60,15 +71,12 @@ trait ServerLogHandlerTrait
         $this->host = $host;
         $this->context = stream_context_create($context);
     }
-    /**
-     * {@inheritdoc}
-     */
-    public function handle(array $record) : bool
+    private function doHandle(array|LogRecord $record) : bool
     {
         if (!$this->isHandling($record)) {
             return \false;
         }
-        set_error_handler(self::class . '::nullErrorHandler');
+        set_error_handler(static fn() => null);
         try {
             if (!($this->socket = $this->socket ?: $this->createSocket())) {
                 return \false === $this->bubble;
@@ -78,10 +86,10 @@ trait ServerLogHandlerTrait
         }
         return parent::handle($record);
     }
-    protected function write(array $record) : void
+    private function doWrite(array|LogRecord $record) : void
     {
         $recordFormatted = $this->formatRecord($record);
-        set_error_handler(self::class . '::nullErrorHandler');
+        set_error_handler(static fn() => null);
         try {
             if (-1 === stream_socket_sendto($this->socket, $recordFormatted)) {
                 stream_socket_shutdown($this->socket, \STREAM_SHUT_RDWR);
@@ -94,16 +102,13 @@ trait ServerLogHandlerTrait
             restore_error_handler();
         }
     }
-    /**
-     * {@inheritdoc}
-     */
     protected function getDefaultFormatter() : FormatterInterface
     {
         return new VarDumperFormatter();
     }
-    private static function nullErrorHandler()
-    {
-    }
+    /**
+     * @return resource
+     */
     private function createSocket()
     {
         $socket = stream_socket_client($this->host, $errno, $errstr, 0, \STREAM_CLIENT_CONNECT | \STREAM_CLIENT_ASYNC_CONNECT | \STREAM_CLIENT_PERSISTENT, $this->context);
@@ -112,7 +117,7 @@ trait ServerLogHandlerTrait
         }
         return $socket;
     }
-    private function formatRecord(array $record) : string
+    private function formatRecord(array|LogRecord $record) : string
     {
         $recordFormatted = $record['formatted'];
         foreach (['log_uuid', 'uuid', 'uid'] as $key) {

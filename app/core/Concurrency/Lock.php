@@ -14,10 +14,7 @@ class Lock
 {
     public const MAX_KEY_LEN = 70;
     public const DEFAULT_TTL = 60;
-    /**
-     * @var LockBackend
-     */
-    private $backend;
+    private \Piwik\Concurrency\LockBackend $backend;
     private $namespace;
     private $lockKey = null;
     private $lockValue = null;

@@ -4,19 +4,31 @@ namespace Matomo\Dependencies;
 
 /**
  * Tree
- *
- * TODO: Callers often use `property_exists(, 'value')` to distinguish
- * tree nodes that are considerd value-holding. Refactor this to move
- * the 'value' property that most subclasses implement to there, and use
- * something else (special value, method, or intermediate class?) to
- * signal whether a subclass is considered value-holding.
  */
 class Less_Tree
 {
-    public $cache_string;
+    /** @var bool */
     public $parensInOp = \false;
+    /** @var true|null */
     public $extendOnEveryPath;
+    /** @var Less_Tree_Extend[] */
     public $allExtends;
+    /**
+     * This is set to true to ensure visibility
+     * for all except Less_Tree_Anonymous where we decide
+     * if the the node should be visible or not
+     *
+     * @var bool
+     */
+    public $nodeVisible = \true;
+    /**
+     * @var Less_Parser
+     * @see less-3.13.1.js#Node.prototype.parse
+     */
+    public static $parse;
+    /**
+     * @see less-2.5.3.js#Node.prototype.toCSS
+     */
     public function toCSS()
     {
         $output = new Less_Output();
@@ -35,6 +47,40 @@ class Less_Tree
     public function compile($env)
     {
         return $this;
+    }
+    /**
+     * @param string $op
+     * @param float $a
+     * @param float $b
+     * @see less-2.5.3.js#Node.prototype._operate
+     */
+    protected function _operate($op, $a, $b)
+    {
+        switch ($op) {
+            case '+':
+                return $a + $b;
+            case '-':
+                return $a - $b;
+            case '*':
+                return $a * $b;
+            case '/':
+                return $a / $b;
+        }
+    }
+    /**
+     * @see less-2.5.3.js#Node.prototype.fround
+     */
+    protected function fround($value)
+    {
+        if ($value === 0) {
+            return $value;
+        }
+        // TODO: Migrate to passing $env.
+        if (Less_Parser::$options['numPrecision']) {
+            $p = \pow(10, Less_Parser::$options['numPrecision']);
+            return \round($value * $p) / $p;
+        }
+        return $value;
     }
     /**
      * @param Less_Output $output
@@ -68,11 +114,64 @@ class Less_Tree
     public function accept($visitor)
     {
     }
+    /**
+     * @param Less_Tree $a
+     * @param Less_Tree $b
+     * @return int|null
+     * @see less-2.5.3.js#Node.compare
+     */
+    public static function nodeCompare($a, $b)
+    {
+        // Less_Tree subclasses that implement compare() are:
+        // Anonymous, Color, Dimension, Quoted, Unit
+        $aHasCompare = $a instanceof Less_Tree_Anonymous || $a instanceof Less_Tree_Color || $a instanceof Less_Tree_Dimension || $a instanceof Less_Tree_Quoted || $a instanceof Less_Tree_Unit;
+        $bHasCompare = $b instanceof Less_Tree_Anonymous || $b instanceof Less_Tree_Color || $b instanceof Less_Tree_Dimension || $b instanceof Less_Tree_Quoted || $b instanceof Less_Tree_Unit;
+        if ($aHasCompare && !($b instanceof Less_Tree_Quoted || $b instanceof Less_Tree_Anonymous)) {
+            // for "symmetric results" force toCSS-based comparison via b.compare()
+            // of Quoted or Anonymous if either value is one of those
+            return $a->compare($b);
+        } elseif ($bHasCompare) {
+            $res = $b->compare($a);
+            // In JS, `-undefined` produces NAN, which, just like undefined
+            // will enter the the default/false branch of Less_Tree_Condition#compile.
+            // In PHP, `-null` is 0. To ensure parity, preserve the null.
+            return $res !== null ? -$res : null;
+        } elseif (\get_class($a) !== \get_class($b)) {
+            return null;
+        }
+        // Less_Tree subclasses that have an array value: Less_Tree_Expression, Less_Tree_Value
+        $aval = $a->value ?? [];
+        $bval = $b->value ?? [];
+        if (!($a instanceof Less_Tree_Expression || $a instanceof Less_Tree_Value)) {
+            return $aval === $bval ? 0 : null;
+        }
+        '@phan-var Less_Tree[] $aval';
+        '@phan-var Less_Tree[] $bval';
+        if (\count($aval) !== \count($bval)) {
+            return null;
+        }
+        foreach ($aval as $i => $item) {
+            if (self::nodeCompare($item, $bval[$i]) !== 0) {
+                return null;
+            }
+        }
+        return 0;
+    }
+    /**
+     * @param string|float|int $a
+     * @param string|float|int $b
+     * @return int|null
+     * @see less-2.5.3.js#Node.numericCompare
+     */
+    public static function numericCompare($a, $b)
+    {
+        return $a < $b ? -1 : ($a === $b ? 0 : ($a > $b ? 1 : null));
+    }
     public static function ReferencedArray($rules)
     {
         foreach ($rules as $rule) {
             if (\method_exists($rule, 'markReferenced')) {
-                // @phan-suppress-next-line PhanUndeclaredMethod
+                // @phan-suppress-next-line PhanUndeclaredMethod False positive
                 $rule->markReferenced();
             }
         }
@@ -88,5 +187,12 @@ class Less_Tree
             $obj->{$key} = $val;
         }
         return $obj;
+    }
+    /**
+     * @see less-3.13.1.js#Node.prototype.isVisible
+     */
+    public function isVisible()
+    {
+        return $this->nodeVisible;
     }
 }

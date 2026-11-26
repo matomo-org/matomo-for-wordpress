@@ -15,14 +15,8 @@ class DevelopmentLoader implements \Piwik\Translation\Loader\LoaderInterface
 {
     public const LANGUAGE_ID = 'dev';
     private const MAP = ["a" => 'ȧ', "A" => 'Ȧ', "b" => 'ƀ', "B" => 'Ɓ', "c" => 'ƈ', "C" => 'Ƈ', "d" => 'ḓ', "D" => 'Ḓ', "e" => 'ḗ', "E" => 'Ḗ', "f" => 'ƒ', "F" => 'Ƒ', "g" => 'ɠ', "G" => 'Ɠ', "h" => 'ħ', "H" => 'Ħ', "i" => 'ī', "I" => 'Ī', "j" => 'ĵ', "J" => 'Ĵ', "k" => 'ķ', "K" => 'Ķ', "l" => 'ŀ', "L" => 'Ŀ', "m" => 'ḿ', "M" => 'Ḿ', "n" => 'ƞ', "N" => 'Ƞ', "o" => 'ǿ', "O" => 'Ǿ', "p" => 'ƥ', "P" => 'Ƥ', "q" => 'ɋ', "Q" => 'Ɋ', "r" => 'ř', "R" => 'Ř', "s" => 'ş', "S" => 'Ş', "t" => 'ŧ', "T" => 'Ŧ', "v" => 'ṽ', "V" => 'Ṽ', "u" => 'ŭ', "U" => 'Ŭ', "w" => 'ẇ', "W" => 'Ẇ', "x" => 'ẋ', "X" => 'Ẋ', "y" => 'ẏ', "Y" => 'Ẏ', "z" => 'ẑ', "Z" => 'Ẑ'];
-    /**
-     * @var LoaderInterface
-     */
-    private $loader;
-    /**
-     * @var string
-     */
-    private $fallbackLanguage = 'en';
+    private \Piwik\Translation\Loader\LoaderInterface $loader;
+    private string $fallbackLanguage = 'en';
     /**
      * @param LoaderInterface $loader Decorate another loader to add the pseudo-language.
      */

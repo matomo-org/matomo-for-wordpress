@@ -17,10 +17,7 @@ use Piwik\Plugins\Login\Security\BruteForceDetection;
  */
 class API extends \Piwik\Plugin\API
 {
-    /**
-     * @var BruteForceDetection
-     */
-    private $bruteForceDetection;
+    private BruteForceDetection $bruteForceDetection;
     public function __construct(BruteForceDetection $bruteForceDetection)
     {
         $this->bruteForceDetection = $bruteForceDetection;

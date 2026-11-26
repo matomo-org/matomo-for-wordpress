@@ -23,7 +23,7 @@ class GoogleAnalytics4 extends \Piwik\Plugins\SitesManager\SiteContentDetection\
         if (empty($data)) {
             return \false;
         }
-        if (strpos($data, 'gtag.js') !== \false) {
+        if (str_contains($data, 'gtag.js')) {
             return \true;
         }
         $tests = ["/properties\\/[^\\/]/", "/G-[A-Z0-9]{7,10}/", "/gtag\\/js\\?id=G-/"];

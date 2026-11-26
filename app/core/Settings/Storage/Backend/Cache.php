@@ -17,10 +17,7 @@ use Piwik\Cache as PiwikCache;
  */
 class Cache implements \Piwik\Settings\Storage\Backend\BackendInterface
 {
-    /**
-     * @var BackendInterface
-     */
-    private $backend;
+    private \Piwik\Settings\Storage\Backend\BackendInterface $backend;
     public function __construct(\Piwik\Settings\Storage\Backend\BackendInterface $backend)
     {
         $this->backend = $backend;

@@ -14,6 +14,7 @@ use Matomo\Dependencies\Monolog\Formatter\FormatterInterface;
 use Matomo\Dependencies\Monolog\Formatter\LineFormatter;
 use Matomo\Dependencies\Monolog\Handler\AbstractProcessingHandler;
 use Matomo\Dependencies\Monolog\Logger;
+use Matomo\Dependencies\Monolog\LogRecord;
 use Matomo\Dependencies\Symfony\Bridge\Monolog\Formatter\ConsoleFormatter;
 use Matomo\Dependencies\Symfony\Component\Console\ConsoleEvents;
 use Matomo\Dependencies\Symfony\Component\Console\Event\ConsoleCommandEvent;
@@ -22,6 +23,39 @@ use Matomo\Dependencies\Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Matomo\Dependencies\Symfony\Component\Console\Output\OutputInterface;
 use Matomo\Dependencies\Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Matomo\Dependencies\Symfony\Component\VarDumper\Dumper\CliDumper;
+if (Logger::API >= 3) {
+    /**
+     * The base class for compatibility between Monolog 3 LogRecord and Monolog 1/2 array records.
+     *
+     * @author Jordi Boggiano <j.boggiano@seld.be>
+     *
+     * @internal
+     */
+    trait CompatibilityIsHandlingHandler
+    {
+        private abstract function doIsHandling(array|LogRecord $record) : bool;
+        public function isHandling(LogRecord $record) : bool
+        {
+            return $this->doIsHandling($record);
+        }
+    }
+} else {
+    /**
+     * The base class for compatibility between Monolog 3 LogRecord and Monolog 1/2 array records.
+     *
+     * @author Jordi Boggiano <j.boggiano@seld.be>
+     *
+     * @internal
+     */
+    trait CompatibilityIsHandlingHandler
+    {
+        private abstract function doIsHandling(array|LogRecord $record) : bool;
+        public function isHandling(array $record) : bool
+        {
+            return $this->doIsHandling($record);
+        }
+    }
+}
 /**
  * Writes logs to the console output depending on its verbosity setting.
  *
@@ -38,12 +72,18 @@ use Matomo\Dependencies\Symfony\Component\VarDumper\Dumper\CliDumper;
  * This mapping can be customized with the $verbosityLevelMap constructor parameter.
  *
  * @author Tobias Schultze <http://tobion.de>
+ *
+ * @final since Symfony 6.1
  */
 class ConsoleHandler extends AbstractProcessingHandler implements EventSubscriberInterface
 {
-    private $output;
-    private $verbosityLevelMap = [OutputInterface::VERBOSITY_QUIET => Logger::ERROR, OutputInterface::VERBOSITY_NORMAL => Logger::WARNING, OutputInterface::VERBOSITY_VERBOSE => Logger::NOTICE, OutputInterface::VERBOSITY_VERY_VERBOSE => Logger::INFO, OutputInterface::VERBOSITY_DEBUG => Logger::DEBUG];
-    private $consoleFormatterOptions;
+    use CompatibilityHandler;
+    use CompatibilityIsHandlingHandler;
+    use CompatibilityProcessingHandler;
+    private ?OutputInterface $output;
+    private array $verbosityLevelMap = [OutputInterface::VERBOSITY_QUIET => Logger::ERROR, OutputInterface::VERBOSITY_NORMAL => Logger::WARNING, OutputInterface::VERBOSITY_VERBOSE => Logger::NOTICE, OutputInterface::VERBOSITY_VERY_VERBOSE => Logger::INFO, OutputInterface::VERBOSITY_DEBUG => Logger::DEBUG];
+    private array $consoleFormatterOptions;
+    private int $nestedCommandDepth = 0;
     /**
      * @param OutputInterface|null $output            The console output to use (the handler remains disabled when passing null
      *                                                until the output is set, e.g. by using console events)
@@ -60,17 +100,11 @@ class ConsoleHandler extends AbstractProcessingHandler implements EventSubscribe
         }
         $this->consoleFormatterOptions = $consoleFormatterOptions;
     }
-    /**
-     * {@inheritdoc}
-     */
-    public function isHandling(array $record) : bool
+    private function doIsHandling(array|LogRecord $record) : bool
     {
         return $this->updateLevel() && parent::isHandling($record);
     }
-    /**
-     * {@inheritdoc}
-     */
-    public function handle(array $record) : bool
+    private function doHandle(array|LogRecord $record) : bool
     {
         // we have to update the logging level each time because the verbosity of the
         // console output might have changed in the meantime (it is not immutable)
@@ -78,6 +112,8 @@ class ConsoleHandler extends AbstractProcessingHandler implements EventSubscribe
     }
     /**
      * Sets the console output to use for printing logs.
+     *
+     * @return void
      */
     public function setOutput(OutputInterface $output)
     {
@@ -88,15 +124,21 @@ class ConsoleHandler extends AbstractProcessingHandler implements EventSubscribe
      */
     public function close() : void
     {
+        $this->nestedCommandDepth = 0;
         $this->output = null;
         parent::close();
     }
     /**
      * Before a command is executed, the handler gets activated and the console output
      * is set in order to know where to write the logs.
+     *
+     * @return void
      */
     public function onCommand(ConsoleCommandEvent $event)
     {
+        if (1 !== ++$this->nestedCommandDepth) {
+            return;
+        }
         $output = $event->getOutput();
         if ($output instanceof ConsoleOutputInterface) {
             $output = $output->getErrorOutput();
@@ -105,29 +147,24 @@ class ConsoleHandler extends AbstractProcessingHandler implements EventSubscribe
     }
     /**
      * After a command has been executed, it disables the output.
+     *
+     * @return void
      */
     public function onTerminate(ConsoleTerminateEvent $event)
     {
-        $this->close();
+        if ($this->nestedCommandDepth && !--$this->nestedCommandDepth) {
+            $this->close();
+        }
     }
-    /**
-     * {@inheritdoc}
-     */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents() : array
     {
         return [ConsoleEvents::COMMAND => ['onCommand', 255], ConsoleEvents::TERMINATE => ['onTerminate', -255]];
     }
-    /**
-     * {@inheritdoc}
-     */
-    protected function write(array $record) : void
+    private function doWrite(array|LogRecord $record) : void
     {
         // at this point we've determined for sure that we want to output the record, so use the output's own verbosity
         $this->output->write((string) $record['formatted'], \false, $this->output->getVerbosity());
     }
-    /**
-     * {@inheritdoc}
-     */
     protected function getDefaultFormatter() : FormatterInterface
     {
         if (!class_exists(CliDumper::class)) {

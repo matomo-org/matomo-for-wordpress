@@ -13,7 +13,7 @@ class UIAssetCatalog
     /**
      * @var UIAsset[]
      */
-    private $uiAssets = array();
+    private array $uiAssets = array();
     /**
      * @var UIAssetCatalogSorter
      */
@@ -21,7 +21,7 @@ class UIAssetCatalog
     /**
      * @var string[]  Absolute file locations
      */
-    private $existingAssetLocations = array();
+    private array $existingAssetLocations = array();
     /**
      * @param UIAssetCatalogSorter $catalogSorter
      */

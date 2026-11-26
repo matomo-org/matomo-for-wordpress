@@ -12,7 +12,6 @@ use Exception;
 use Piwik\Access;
 use Piwik\Http\HttpCodeException;
 use Piwik\Request\AuthenticationToken;
-use Piwik\Cache;
 use Piwik\Common;
 use Piwik\Config\GeneralConfig;
 use Piwik\Container\StaticContainer;
@@ -85,10 +84,17 @@ class Request
 {
     /**
      * The count of nested API request invocations. Used to determine if the currently executing request is the root or not.
-     *
-     * @var int
      */
-    private static $nestedApiInvocationCount = 0;
+    private static int $nestedApiInvocationCount = 0;
+    /**
+     * The API method of the root request when that request is an API request, or null otherwise.
+     *
+     * Kept as process state rather than in the transient cache: the cache can be cleared while a
+     * request is still being processed, and this value must stay stable for the whole request.
+     *
+     * @var string|null
+     */
+    private static $rootRequestApiMethod = null;
     private $request = null;
     /**
      * Converts the supplied request string into an array of query parameter name/value
@@ -125,11 +131,6 @@ class Request
             }
             $requestArray = $requestParsed + $defaultRequest;
         }
-        foreach ($requestArray as &$element) {
-            if (!is_array($element)) {
-                $element = trim((string) $element);
-            }
-        }
         return $requestArray;
     }
     /**
@@ -152,7 +153,7 @@ class Request
      *
      * @param $module
      * @param $action
-     * @return array( $module, $action )
+     * @return array [$module, $action]
      * @ignore
      */
     public static function getRenamedModuleAndAction($module, $action)
@@ -263,6 +264,10 @@ class Request
             }
             if (empty($response)) {
                 $response = new \Piwik\API\ResponseBuilder('console', $this->request);
+                // as above, this one renders the exception for a nested request as well
+                if (!self::isCurrentApiRequestTheRootApiRequest()) {
+                    $response->disableSendHeader();
+                }
             }
             $toReturn = $response->getResponseException($e);
         } finally {
@@ -273,9 +278,8 @@ class Request
         }
         return $toReturn;
     }
-    private function restoreAuthUsingTokenAuth(
-#[\SensitiveParameter]
-$tokenToRestore, $hadSuperUserAccess)
+    private function restoreAuthUsingTokenAuth(#[\SensitiveParameter]
+        $tokenToRestore, $hadSuperUserAccess)
     {
         // if we would not make sure to unset super user access, the tokenAuth would be not authenticated and any
         // token would just keep super user access (eg if the token that was reloaded before had super user access)
@@ -301,32 +305,30 @@ $tokenToRestore, $hadSuperUserAccess)
     /**
      * @ignore
      * @internal
-     * @param string $currentApiMethod
+     * @param string|null $currentApiMethod
      */
     public static function setIsRootRequestApiRequest($currentApiMethod)
     {
-        Cache::getTransientCache()->save('API.setIsRootRequestApiRequest', $currentApiMethod);
+        self::$rootRequestApiMethod = $currentApiMethod;
     }
     /**
      * @ignore
      * @internal
-     * @return string current Api Method if it is an api request
+     * @return string|null current Api Method if it is an api request
      */
     public static function getRootApiRequestMethod()
     {
-        return Cache::getTransientCache()->fetch('API.setIsRootRequestApiRequest');
+        return self::$rootRequestApiMethod;
     }
     /**
      * Detect if the root request (the actual request) is an API request or not. To detect whether an API is currently
      * request within any request, have a look at {@link isApiRequest()}.
      *
      * @return bool
-     * @throws Exception
      */
     public static function isRootRequestApiRequest()
     {
-        $apiMethod = Cache::getTransientCache()->fetch('API.setIsRootRequestApiRequest');
-        return !empty($apiMethod);
+        return !empty(self::$rootRequestApiMethod);
     }
     /**
      * Checks if the currently executing API request is the root API request or not.
@@ -354,15 +356,31 @@ $tokenToRestore, $hadSuperUserAccess)
         return self::$nestedApiInvocationCount > 1;
     }
     /**
+     * Whether the request being served is the API endpoint itself. The module dispatches the
+     * requested method through its index action; its other actions accept a method parameter
+     * without dispatching it.
+     *
+     * Reads the live request, so it is only meaningful before a nested API call overlays
+     * `module=API` onto the request parameters.
+     *
+     * @ignore
+     * @internal
+     */
+    public static function isApiHttpRequest() : bool
+    {
+        $action = Piwik::getAction();
+        return Piwik::getModule() === 'API' && (empty($action) || $action === 'index');
+    }
+    /**
      * Detect if request is an API request. Meaning the module is 'API' and an API method having a valid format was
      * specified. Note that this method will return true even if the actual request is for example a regular UI
      * reporting page request but within this request we are currently processing an API request (eg a
      * controller calls Request::processRequest('API.getMatomoVersion')). To find out if the root request is an API
      * request or not, call {@link isRootRequestApiRequest()}
      *
-     * @param array $request  eg array('module' => 'API', 'method' => 'Test.getMethod')
+     * @param array|null $request  eg array('module' => 'API', 'method' => 'Test.getMethod'), or
+     *                             null to read them from the query string and the request body
      * @return bool
-     * @throws Exception
      */
     public static function isApiRequest($request)
     {
@@ -407,10 +425,18 @@ $tokenToRestore, $hadSuperUserAccess)
      * @param string $tokenAuth
      * @return void
      */
-    private static function forceReloadAuthUsingTokenAuth(
-#[\SensitiveParameter]
-$tokenAuth)
+    private static function forceReloadAuthUsingTokenAuth(#[\SensitiveParameter]
+        $tokenAuth)
     {
+        // Empty and anonymous tokens are skipped: neither can grant superuser, and resetting would clobber
+        // deliberate caller state such as CliMulti's --superuser observer.
+        $hadAmbientSuperUserAccess = Access::getInstance()->hasSuperUserAccess();
+        $ambientLogin = Access::getInstance()->getLogin();
+        $ambientTokenAuth = Access::getInstance()->getTokenAuth();
+        $ambientAuth = Access::getInstance()->getAuth();
+        if (!empty($tokenAuth) && $tokenAuth !== 'anonymous') {
+            Access::getInstance()->setSuperUserAccess(\false);
+        }
         /**
          * Triggered when authenticating an API request, but only if the **token_auth**
          * query parameter is found in the request.
@@ -422,7 +448,34 @@ $tokenAuth)
          * @param string $token_auth The value of the **token_auth** query parameter.
          */
         Piwik::postEvent('API.Request.authenticate', array($tokenAuth));
-        if (!Access::getInstance()->reloadAccess() && $tokenAuth && $tokenAuth !== 'anonymous') {
+        // Resolved after the event so a listener that rebound `Piwik\Auth` is honoured. Leftover
+        // password-auth state is cleared so it cannot pre-empt the token branch in Auth::authenticate();
+        // an implementation that cannot verify a hash may refuse null instead, which is not an error here.
+        $auth = StaticContainer::get('Piwik\\Auth');
+        try {
+            $auth->setPasswordHash(null);
+        } catch (\Exception $e) {
+            // nothing to clear
+        }
+        try {
+            $auth->setPassword(null);
+        } catch (\Exception $e) {
+            // nothing to clear
+        }
+        if (!Access::getInstance()->reloadAccess($auth) && $tokenAuth && $tokenAuth !== 'anonymous') {
+            // A value that did not authenticate is not a credential, so the caller keeps the access it
+            // arrived with; re-running its own Auth also restores the site lists reloadAccess() cleared on
+            // its way to failing. A token that did authenticate never reaches here.
+            if ($ambientAuth === null || !Access::getInstance()->reloadAccess($ambientAuth)) {
+                // Ambient access set programmatically (CliMulti's --superuser observer, doAsSuperUser())
+                // has no Auth to re-run, and only the super-user flag was ever set.
+                if ($hadAmbientSuperUserAccess) {
+                    // Identity first: setSuperUserAccess() substitutes a placeholder for an empty login,
+                    // which the rest of the request would then attribute its writes and log lines to.
+                    Access::getInstance()->restoreAmbientIdentity($ambientLogin, $ambientTokenAuth, $hadAmbientSuperUserAccess);
+                    Access::getInstance()->setSuperUserAccess(\true);
+                }
+            }
             /**
              * @ignore
              * @internal
@@ -492,18 +545,6 @@ $tokenAuth)
         // not using !== is on purpose as getTokenAuth() might return null whereas $tokenAuth is '' . In this case
         // we do not need to reload.
         return $tokenAuth != Access::getInstance()->getTokenAuth();
-    }
-    /**
-     * Returns true if a token_auth parameter was supplied via a secure mechanism and is not present as a URL parameter
-     * At the moment POST requests are checked, but in future other mechanism such as Authorisation HTTP header
-     * and bearer tokens might be used as well.
-     *
-     * @return bool True if token was supplied in a secure way
-     * @deprecated will be removed in Matomo 6
-     */
-    public static function isTokenAuthProvidedSecurely() : bool
-    {
-        return StaticContainer::get(AuthenticationToken::class)->wasTokenAuthProvidedSecurely();
     }
     /**
      * Returns array($class, $method) from the given string $class.$method

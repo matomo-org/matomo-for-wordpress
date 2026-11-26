@@ -37,7 +37,7 @@ class RowEvolution
     /**
      * @var string[]
      */
-    private static $actionsUrlReports = ['getPageUrls', 'getPageUrlsFollowingSiteSearch', 'getEntryPageUrls', 'getExitPageUrls', 'getPageUrl'];
+    private static array $actionsUrlReports = ['getPageUrls', 'getPageUrlsFollowingSiteSearch', 'getEntryPageUrls', 'getExitPageUrls', 'getPageUrl'];
     /**
      * @param int|string $idSite
      * @param string $period
@@ -403,7 +403,7 @@ class RowEvolution
     {
         $reportMetadata = \Piwik\Plugins\API\API::getInstance()->getMetadata($idSite, $apiModule, $apiAction, $apiParameters, $language, $period, $date, $hideMetricsDoc = \false, $showSubtableReports = \true);
         if (empty($reportMetadata)) {
-            throw new Exception("Requested report {$apiModule}.{$apiAction} for Website id={$idSite} " . "not found in the list of available reports. \n");
+            throw new Exception(\Piwik\Plugins\API\ProcessedReport::getReportNotFoundMessage($idSite, $apiModule, $apiAction, $apiParameters));
         }
         $reportMetadata = reset($reportMetadata);
         $metrics = isset($reportMetadata['metrics']) && is_array($reportMetadata['metrics']) ? $reportMetadata['metrics'] : [];

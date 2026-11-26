@@ -55,7 +55,7 @@ class Csv extends Renderer
     /**
      * @var string[]
      */
-    private $unsupportedColumns = [];
+    private array $unsupportedColumns = [];
     /**
      * Computes the dataTable output and returns the string/binary
      */
@@ -187,7 +187,7 @@ class Csv extends Renderer
         if (is_string($value)) {
             $value = str_replace(["\t", "\r"], ' ', $value);
             // surround value with double quotes if it contains a double quote or a commonly used separator
-            if (strpos($value, '"') !== \false || strpos($value, $this->separator) !== \false || strpos($value, $this->lineEnd) !== \false || strpos($value, ',') !== \false || strpos($value, ';') !== \false) {
+            if (str_contains($value, '"') || str_contains($value, $this->separator) || str_contains($value, $this->lineEnd) || str_contains($value, ',') || str_contains($value, ';')) {
                 $value = '"' . str_replace('"', '""', $value) . '"';
             }
         }
@@ -231,7 +231,7 @@ class Csv extends Renderer
             // in test cases, there are no request params set
             if ($period === 'range') {
                 $period = new Range($period, $date);
-            } elseif (strpos($date, ',') !== \false) {
+            } elseif (str_contains($date, ',')) {
                 $period = new Range('range', $date);
             } else {
                 $period = Period\Factory::build($period, $date);
@@ -379,7 +379,7 @@ class Csv extends Renderer
     {
         // remove all null byte chars from the beginning
         $value = ltrim($value, "\x00");
-        while (0 === strpos($value, '%00')) {
+        while (str_starts_with($value, '%00')) {
             $value = ltrim(substr($value, 3), "\x00");
         }
         $posPercent = strpos($value, '%');

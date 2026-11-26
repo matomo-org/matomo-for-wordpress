@@ -13,10 +13,7 @@ use Piwik\Url;
  */
 class DbMaxPacket implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnostic
 {
-    /**
-     * @var Translator
-     */
-    private $translator;
+    private Translator $translator;
     public const MIN_VALUE_MAX_PACKET_MB = 64;
     public function __construct(Translator $translator)
     {

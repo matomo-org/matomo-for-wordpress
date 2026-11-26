@@ -16,10 +16,7 @@ use Exception;
 use Piwik\SettingsPiwik;
 class Validator
 {
-    /**
-     * @var TwoFactorAuthentication
-     */
-    private $twoFa;
+    private \Piwik\Plugins\TwoFactorAuth\TwoFactorAuthentication $twoFa;
     public function __construct(\Piwik\Plugins\TwoFactorAuth\TwoFactorAuthentication $twoFactorAuthentication)
     {
         $this->twoFa = $twoFactorAuthentication;

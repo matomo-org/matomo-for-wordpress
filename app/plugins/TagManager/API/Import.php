@@ -75,6 +75,7 @@ class Import
             $message = sprintf(Piwik::translate('TagManager_ErrorContainerVersionImportWrongContext', array($container['context'], $exportedContainerVersion['context'])));
             throw new Exception($message);
         }
+        $this->checkTypesAreAvailable($exportedContainerVersion, 'TagManager_ErrorImportTypeNotAvailable');
         foreach ($exportedContainerVersion['tags'] as $tag) {
             $this->tagsProvider->checkIsValidTag($tag['type']);
             if ($this->tagsProvider->isCustomTemplate($tag['type'])) {
@@ -94,16 +95,81 @@ class Import
             }
         }
     }
+    /**
+     * A type is not available for example when the plugin that provides it is no longer active, or when it is disabled
+     * in the configuration. We list all affected entities in one message so the user knows which ones to delete.
+     * Creating a version uses its own message, as the entities are already in the container, unlike in an import.
+     */
+    public function checkVersionTypesAreAvailable($exportedContainerVersion)
+    {
+        $this->checkTypesAreAvailable($exportedContainerVersion, 'TagManager_ErrorTypeNotAvailable');
+    }
+    private function checkTypesAreAvailable($exportedContainerVersion, $errorTranslationKey)
+    {
+        $unavailable = [];
+        foreach ($exportedContainerVersion['tags'] as $tag) {
+            if (!$this->tagsProvider->getTag($tag['type'])) {
+                $unavailable[] = Piwik::translate('TagManager_ErrorTypeNotAvailableTag', $tag['name']);
+            }
+        }
+        foreach ($exportedContainerVersion['triggers'] as $trigger) {
+            if (!$this->triggersProvider->getTrigger($trigger['type'])) {
+                $unavailable[] = Piwik::translate('TagManager_ErrorTypeNotAvailableTrigger', $trigger['name']);
+            }
+        }
+        foreach ($exportedContainerVersion['variables'] as $variable) {
+            if (!$this->variablesProvider->getVariable($variable['type'])) {
+                $unavailable[] = Piwik::translate('TagManager_ErrorTypeNotAvailableVariable', $variable['name']);
+            }
+        }
+        if (!empty($unavailable)) {
+            throw new Exception(Piwik::translate($errorTranslationKey, implode(', ', $unavailable)));
+        }
+    }
+    public function checkCanReplaceExistingEntities($idSite, $idContainerVersion)
+    {
+        $this->checkReplacingEntitiesIsPossible($idSite, $this->tags->getContainerTags($idSite, $idContainerVersion), $this->triggers->getContainerTriggers($idSite, $idContainerVersion), $this->variables->getContainerVariables($idSite, $idContainerVersion));
+    }
+    /**
+     * An import replaces the entire content of the given container version. Removing an existing custom template
+     * entity requires the same capability as removing it through the regular delete API, otherwise a user without
+     * that capability could delete a protected entity by importing a version that simply omits it.
+     */
+    private function checkReplacingEntitiesIsPossible($idSite, array $tags, array $triggers, array $variables)
+    {
+        foreach ($tags as $tag) {
+            if ($this->tagsProvider->isCustomTemplate($tag['type'])) {
+                $this->accessValidator->checkUseCustomTemplatesCapability($idSite);
+                return;
+            }
+        }
+        foreach ($triggers as $trigger) {
+            if ($this->triggersProvider->isCustomTemplate($trigger['type'])) {
+                $this->accessValidator->checkUseCustomTemplatesCapability($idSite);
+                return;
+            }
+        }
+        foreach ($variables as $variable) {
+            if ($this->variablesProvider->isCustomTemplate($variable['type'])) {
+                $this->accessValidator->checkUseCustomTemplatesCapability($idSite);
+                return;
+            }
+        }
+    }
     public function importContainerVersion($exportedContainerVersion, $idSite, $idContainer, $idContainerVersion)
     {
         $this->checkImportContainerIsPossible($exportedContainerVersion, $idSite, $idContainer);
-        foreach ($this->tags->getContainerTags($idSite, $idContainerVersion) as $tag) {
+        $existingTags = $this->tags->getContainerTags($idSite, $idContainerVersion);
+        $existingTriggers = $this->triggers->getContainerTriggers($idSite, $idContainerVersion);
+        $existingVariables = $this->variables->getContainerVariables($idSite, $idContainerVersion);
+        $this->checkReplacingEntitiesIsPossible($idSite, $existingTags, $existingTriggers, $existingVariables);
+        foreach ($existingTags as $tag) {
             $this->tags->deleteContainerTag($idSite, $idContainerVersion, $tag['idtag']);
         }
-        foreach ($this->triggers->getContainerTriggers($idSite, $idContainerVersion) as $trigger) {
+        foreach ($existingTriggers as $trigger) {
             $this->triggers->deleteContainerTrigger($idSite, $idContainerVersion, $trigger['idtrigger'], \true);
         }
-        foreach ($this->variables->getContainerVariables($idSite, $idContainerVersion) as $variable) {
+        foreach ($existingVariables as $variable) {
             $this->variables->deleteContainerVariable($idSite, $idContainerVersion, $variable['idvariable'], \true);
         }
         $ecv = $exportedContainerVersion;

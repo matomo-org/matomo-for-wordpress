@@ -16,19 +16,13 @@ use Matomo\Dependencies\Monolog\Formatter\LineFormatter;
 /**
  * Helper trait for implementing FormattableInterface
  *
- * This trait is present in monolog 1.x to ease forward compatibility.
- *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
 trait FormattableHandlerTrait
 {
+    protected FormatterInterface|null $formatter = null;
     /**
-     * @var FormatterInterface
-     */
-    protected $formatter;
-    /**
-     * {@inheritdoc}
-     * @suppress PhanTypeMismatchReturn
+     * @inheritDoc
      */
     public function setFormatter(FormatterInterface $formatter) : HandlerInterface
     {
@@ -36,11 +30,11 @@ trait FormattableHandlerTrait
         return $this;
     }
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function getFormatter() : FormatterInterface
     {
-        if (!$this->formatter) {
+        if (null === $this->formatter) {
             $this->formatter = $this->getDefaultFormatter();
         }
         return $this->formatter;

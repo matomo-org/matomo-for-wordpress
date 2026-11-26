@@ -19,6 +19,14 @@ class EcommerceRestricted extends CompliancePolicyEnforcedSetting
     {
         return Piwik::translate('Ecommerce_EcommercePolicySettingTitle');
     }
+    public static function getWhatItDoes(?int $idSite = null) : string
+    {
+        return Piwik::translate('Ecommerce_EcommercePolicySettingWhatItDoes');
+    }
+    public static function getImpact(?int $idSite = null) : string
+    {
+        return Piwik::translate('Ecommerce_EcommercePolicySettingImpact');
+    }
     public static function getComplianceRequirementNote(?int $idSite = null) : string
     {
         $idSites = self::getIdSitesToCheck($idSite);
@@ -48,6 +56,10 @@ class EcommerceRestricted extends CompliancePolicyEnforcedSetting
         $currentValue = self::getInstance($idSite)->getValue();
         $idSites = self::getIdSitesToCheck($idSite);
         return $currentValue === $policyValues[$policy] || !self::hasEcommerceEnabledSite($idSites);
+    }
+    public static function getPolicyOrder() : int
+    {
+        return 75;
     }
     public static function getPolicyRequirements() : array
     {

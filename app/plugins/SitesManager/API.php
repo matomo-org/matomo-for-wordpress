@@ -27,6 +27,7 @@ use Piwik\Piwik;
 use Piwik\Plugin\SettingsProvider;
 use Piwik\Request\AuthenticationToken;
 use Piwik\Plugins\CorePluginsAdmin\SettingsMetadata;
+use Piwik\Policy\PolicyManager;
 use Piwik\Plugins\SitesManager\Settings\FilterPIIParameters;
 use Piwik\Plugins\SitesManager\SiteContentDetection\ConsentManagerDetectionAbstract;
 use Piwik\Plugins\SitesManager\SiteContentDetection\SiteContentDetectionAbstract;
@@ -41,7 +42,6 @@ use Piwik\SiteContentDetector;
 use Piwik\Tracker\Cache;
 use Piwik\Tracker\TrackerCodeGenerator;
 use Piwik\Translation\Translator;
-use Piwik\Url;
 use Piwik\UrlHelper;
 use Piwik\Validators\WhitelistedValue;
 /**
@@ -55,7 +55,7 @@ use Piwik\Validators\WhitelistedValue;
  * "getSitesWithAdminAccess", "getSitesWithViewAccess" or "getSitesWithAtLeastViewAccess" (which returns both).
  *
  * Some methods will affect all websites globally: "setGlobalExcludedIps" will set the list of IPs to be excluded on all websites,
- * "setGlobalExcludedQueryParameters" will set the list of URL parameters to remove from URLs for all websites.
+ * "setGlobalQueryParamExclusion" will set the URL parameters to remove from URLs for all websites.
  * The existing values can be fetched via "getExcludedIpsGlobal" and "getExcludedQueryParametersGlobal".
  * See also the documentation about <a href='https://matomo.org/docs/manage-websites/' rel='noreferrer' target='_blank'>Managing Websites</a> in Matomo.
  *
@@ -97,24 +97,13 @@ class API extends \Piwik\Plugin\API
     public const OPTION_EXCLUDED_REFERRERS_GLOBAL = 'SitesManager_ExcludedReferrersGlobal';
     public const OPTION_KEEP_URL_FRAGMENTS_GLOBAL = 'SitesManager_KeepURLFragmentsGlobal';
     public const OPTION_EXCLUDE_TYPE_QUERY_PARAMS_GLOBAL = 'SitesManager_ExcludeTypeQueryParamsGlobal';
-    /**
-     * @var SettingsProvider
-     */
-    private $settingsProvider;
-    /**
-     * @var SettingsMetadata
-     */
-    private $settingsMetadata;
-    /**
-     * @var Translator
-     */
-    private $translator;
+    private SettingsProvider $settingsProvider;
+    private SettingsMetadata $settingsMetadata;
+    private Translator $translator;
     /** @var array<string, string> */
     private $timezoneNameCache = [];
-    /** @var SiteContentDetector */
-    private $siteContentDetector;
-    /** @var TypeManager */
-    private $typeManager;
+    private SiteContentDetector $siteContentDetector;
+    private TypeManager $typeManager;
     public function __construct(SettingsProvider $provider, SettingsMetadata $settingsMetadata, Translator $translator, SiteContentDetector $siteContentDetector, TypeManager $typeManager)
     {
         $this->settingsProvider = $provider;
@@ -152,9 +141,7 @@ class API extends \Piwik\Plugin\API
     public function getJavascriptTag(int $idSite, string $piwikUrl = '', bool $mergeSubdomains = \false, bool $groupPageTitlesByDomain = \false, bool $mergeAliasUrls = \false, array $visitorCustomVariables = [], array $pageCustomVariables = [], string $customCampaignNameQueryParam = '', string $customCampaignKeywordParam = '', bool $doNotTrack = \false, bool $disableCookies = \false, bool $trackNoScript = \false, bool $crossDomain = \false, bool $forceMatomoEndpoint = \false, $excludedQueryParams = '', $excludedReferrers = '', bool $disableCampaignParameters = \false) : string
     {
         Piwik::checkUserHasViewAccess($idSite);
-        if (empty($piwikUrl)) {
-            $piwikUrl = SettingsPiwik::getPiwikUrl() ?: '';
-        }
+        $piwikUrl = $this->resolveTrackerUrl($piwikUrl);
         if (is_array($excludedQueryParams)) {
             $excludedQueryParams = implode(',', $excludedQueryParams);
         }
@@ -162,26 +149,29 @@ class API extends \Piwik\Plugin\API
         if ($forceMatomoEndpoint) {
             $generator->forceMatomoEndpoint();
         }
-        $code = $generator->generate($idSite, $piwikUrl, $mergeSubdomains, $groupPageTitlesByDomain, $mergeAliasUrls, $visitorCustomVariables, $pageCustomVariables, $customCampaignNameQueryParam, $customCampaignKeywordParam, $doNotTrack, $disableCookies, $trackNoScript, $crossDomain, $excludedQueryParams, $excludedReferrers, $disableCampaignParameters);
-        return str_replace(['<br>', '<br />', '<br/>'], '', $code);
+        return $generator->generate($idSite, $piwikUrl, $mergeSubdomains, $groupPageTitlesByDomain, $mergeAliasUrls, $visitorCustomVariables, $pageCustomVariables, $customCampaignNameQueryParam, $customCampaignKeywordParam, $doNotTrack, $disableCookies, $trackNoScript, $crossDomain, $excludedQueryParams, $excludedReferrers, $disableCampaignParameters);
     }
     /**
      * Returns image link tracking code for a given site with specified options.
      *
+     * Requires view access to the specified site.
+     *
      * @param int $idSite The ID to generate tracking code for.
-     * @param string $piwikUrl The domain and URL path to the Matomo installation.
-     * @param string|false $actionName Action name to include in the image tracking request, or `false` to omit it.
+     * @param string $piwikUrl The domain and URL path to the Matomo installation. Defaults to the current Matomo URL.
+     * @param string|null $actionName Action name to include in the image tracking request, or `null` to omit it.
      * @param int|false $idGoal Goal ID to trigger a conversion for, or `false` to omit goal tracking.
      * @param int|float|false $revenue Revenue for the goal conversion. Only used when `$idGoal` is supplied.
      * @param bool $forceMatomoEndpoint Whether the Matomo endpoint should be forced if Matomo was installed
      *                                  prior to 3.7.0.
      * @return string The HTML-encoded image tracking code.
      */
-    public function getImageTrackingCode($idSite, $piwikUrl = '', $actionName = \false, $idGoal = \false, $revenue = \false, $forceMatomoEndpoint = \false) : string
+    public function getImageTrackingCode(int $idSite, string $piwikUrl = '', ?string $actionName = null, $idGoal = \false, $revenue = \false, bool $forceMatomoEndpoint = \false) : string
     {
+        Piwik::checkUserHasViewAccess($idSite);
+        $piwikUrl = $this->resolveTrackerUrl($piwikUrl);
         $urlParams = ['idsite' => $idSite, 'rec' => 1];
-        if ($actionName !== \false) {
-            $urlParams['action_name'] = urlencode(Common::unsanitizeInputValue($actionName));
+        if (null !== $actionName && '' !== $actionName) {
+            $urlParams['action_name'] = Common::unsanitizeInputValue($actionName);
         }
         if ($idGoal !== \false) {
             $urlParams['idgoal'] = $idGoal;
@@ -194,10 +184,14 @@ class API extends \Piwik\Plugin\API
          * this event to customise the image tracking code that is displayed to the
          * user.
          *
-         * @param string &$piwikHost The domain and URL path to the Matomo installation, eg,
-         *                           `'examplepiwik.com/path/to/piwik'`.
+         * @param string &$piwikUrl The domain and URL path to the Matomo installation. Defaults to the
+         *                           configured Matomo URL, including its protocol. Any protocol is
+         *                           stripped afterwards, as the tracking code adds one itself.
          * @param array &$urlParams The query parameters used in the <img> element's src
          *                          URL. See Matomo's image tracking docs for more info.
+         *                          Names and values are URL encoded when the query string is built,
+         *                          so a handler has to add them unencoded. A `null` or `false` value
+         *                          is skipped, an array is added as `name[]=value`.
          */
         Piwik::postEvent('SitesManager.getImageTrackingCode', [&$piwikUrl, &$urlParams]);
         $trackerCodeGenerator = new TrackerCodeGenerator();
@@ -205,9 +199,43 @@ class API extends \Piwik\Plugin\API
             $trackerCodeGenerator->forceMatomoEndpoint();
         }
         $matomoPhp = $trackerCodeGenerator->getPhpTrackerEndpoint();
-        $url = (ProxyHttp::isHttps() ? "https://" : "http://") . rtrim($piwikUrl, '/') . '/' . $matomoPhp . '?' . Url::getQueryStringFromParameters($urlParams);
-        $html = "<!-- Matomo Image Tracker-->\n<img referrerpolicy=\"no-referrer-when-downgrade\" src=\"" . htmlspecialchars($url, \ENT_COMPAT, 'UTF-8') . "\" style=\"border:0\" alt=\"\" />\n<!-- End Matomo -->";
-        return htmlspecialchars($html, \ENT_COMPAT, 'UTF-8');
+        // the protocol is added below, so drop the one a caller or plugin may have supplied
+        $piwikUrl = TrackerCodeGenerator::normalizeTrackerUrl($piwikUrl);
+        $url = (ProxyHttp::isHttps() ? "https://" : "http://") . $piwikUrl . '/' . $matomoPhp . '?' . $this->getEncodedQueryString($urlParams);
+        $html = "<!-- Matomo Image Tracker-->\n<img referrerpolicy=\"no-referrer-when-downgrade\" src=\"" . htmlspecialchars($url, \ENT_COMPAT | \ENT_SUBSTITUTE, 'UTF-8') . "\" style=\"border:0\" alt=\"\" />\n<!-- End Matomo -->";
+        return htmlspecialchars($html, \ENT_COMPAT | \ENT_SUBSTITUTE, 'UTF-8');
+    }
+    /**
+     * Returns the URL to generate a tracking code for, falling back to the URL of this Matomo, and
+     * refuses one that would leave the code without a host. Not normalised, as the generator does that
+     * itself and normalising decodes the value.
+     */
+    private function resolveTrackerUrl(string $piwikUrl) : string
+    {
+        if (empty($piwikUrl)) {
+            $piwikUrl = SettingsPiwik::getPiwikUrl() ?: '';
+        }
+        if ('' === TrackerCodeGenerator::normalizeTrackerUrl($piwikUrl)) {
+            throw new Exception(Piwik::translate('SitesManager_ExceptionMatomoUrlUnknown'));
+        }
+        return $piwikUrl;
+    }
+    /**
+     * Builds the query string of the image tracking URL. Every name and value is URL encoded, so that a
+     * malformed parameter cannot end the URL it is placed in.
+     */
+    private function getEncodedQueryString(array $urlParams) : string
+    {
+        $query = [];
+        foreach ($urlParams as $name => $value) {
+            foreach (is_array($value) ? $value : [$value] as $singleValue) {
+                if (\false === $singleValue || !is_scalar($singleValue)) {
+                    continue;
+                }
+                $query[] = urlencode((string) $name) . (is_array($value) ? '[]' : '') . '=' . urlencode((string) $singleValue);
+            }
+        }
+        return implode('&', $query);
     }
     /**
      * Returns all websites belonging to the specified group.
@@ -495,7 +523,8 @@ class API extends \Piwik\Plugin\API
             if (Piwik::hasTheUserSuperUserAccess($_restrictSitesToLogin)) {
                 return Access::getInstance()->getSitesIdWithAtLeastViewAccess();
             }
-            $accessRaw = Access::getInstance()->getRawSitesWithSomeViewAccess($_restrictSitesToLogin);
+            // The capped variant: raw rows would answer past the token's access level.
+            $accessRaw = Access::getInstance()->getRawSitesWithSomeViewAccessWithinTokenScope($_restrictSitesToLogin);
             $sitesId = array_column($accessRaw, 'idsite');
             return array_map('intval', $sitesId);
         } else {
@@ -762,7 +791,7 @@ class API extends \Piwik\Plugin\API
     private function setAndValidateMeasurableSettings(int $idSite, ?string $idType, array $settingValues) : array
     {
         $measurableSettings = $this->settingsProvider->getAllMeasurableSettings($idSite, $idType);
-        $this->settingsMetadata->setPluginSettings($measurableSettings, $settingValues);
+        $this->settingsMetadata->setPluginSettings($measurableSettings, $settingValues, $idSite);
         return $measurableSettings;
     }
     /**
@@ -798,9 +827,8 @@ class API extends \Piwik\Plugin\API
      * @param string|null $passwordConfirmation The current user's password. Only required when the request
      *                                          is authenticated with a session token.
      */
-    public function deleteSite(int $idSite,
-#[\SensitiveParameter]
-?string $passwordConfirmation = null) : void
+    public function deleteSite(int $idSite, #[\SensitiveParameter]
+        ?string $passwordConfirmation = null) : void
     {
         Piwik::checkUserHasSuperUserAccess();
         \Piwik\Plugins\SitesManager\SitesManager::dieIfSitesAdminIsDisabled();
@@ -1185,25 +1213,6 @@ class API extends \Piwik\Plugin\API
         Cache::deleteTrackerCache();
     }
     /**
-     * Sets list of URL query parameters to be excluded on all websites.
-     * Will also apply to websites created in the future.
-     *
-     * Requires Superuser access.
-     *
-     * @param string $excludedQueryParameters Comma-separated list of URL query parameters to exclude from URLs.
-     * @return bool Always `true`.
-     * @deprecated Use {@see setGlobalQueryParamExclusion()} instead.
-     */
-    public function setGlobalExcludedQueryParameters($excludedQueryParameters) : bool
-    {
-        if (empty($excludedQueryParameters)) {
-            $this->setGlobalQueryParamExclusion(\Piwik\Plugins\SitesManager\SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_COMMON_SESSION_PARAMETERS);
-            return \true;
-        }
-        $this->setGlobalQueryParamExclusion(\Piwik\Plugins\SitesManager\SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_CUSTOM, $excludedQueryParameters);
-        return \true;
-    }
-    /**
      * Returns the list of IPs that are excluded from all websites
      *
      * @return string|false Comma separated list of IPs
@@ -1294,6 +1303,9 @@ class API extends \Piwik\Plugin\API
         }
         if ($exclusionType !== \Piwik\Plugins\SitesManager\SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_CUSTOM && !empty($queryParamsToExclude)) {
             throw new Exception($this->translator->translate('SitesManager_ExceptionNonEmptyQueryParamsForNonCustomType'));
+        }
+        if (!PolicyManager::checkSettingValueAgainstPolicies(self::OPTION_EXCLUDE_TYPE_QUERY_PARAMS_GLOBAL, $exclusionType, null, PolicyManager::SETTING_TYPE_OPTION)) {
+            return;
         }
         Option::set(self::OPTION_EXCLUDE_TYPE_QUERY_PARAMS_GLOBAL, $exclusionType);
         if ($exclusionType !== \Piwik\Plugins\SitesManager\SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_CUSTOM) {
@@ -1550,7 +1562,7 @@ class API extends \Piwik\Plugin\API
      */
     public function getTimezoneName(string $timezone, ?string $countryCode = null, ?bool $multipleTimezonesInCountry = null) : string
     {
-        if (substr($timezone, 0, 3) === 'UTC') {
+        if (str_starts_with($timezone, 'UTC')) {
             return $this->translator->translate('SitesManager_Format_Utc', str_replace(['.25', '.5', '.75'], [':15', ':30', ':45'], substr($timezone, 3)));
         }
         if (!isset($countryCode)) {

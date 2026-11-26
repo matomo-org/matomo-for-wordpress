@@ -2,10 +2,9 @@
 
 Generic and extensible callable invoker.
 
-[![Build Status](https://img.shields.io/travis/PHP-DI/Invoker.svg?style=flat-square)](https://travis-ci.org/PHP-DI/Invoker)
-[![Coverage Status](https://img.shields.io/coveralls/PHP-DI/Invoker/master.svg?style=flat-square)](https://coveralls.io/r/PHP-DI/Invoker?branch=master)
-[![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/PHP-DI/Invoker.svg?style=flat-square)](https://scrutinizer-ci.com/g/PHP-DI/Invoker/?branch=master)
+[![CI](https://github.com/PHP-DI/Invoker/actions/workflows/ci.yml/badge.svg)](https://github.com/PHP-DI/Invoker/actions/workflows/ci.yml)
 [![Latest Version](https://img.shields.io/github/release/PHP-DI/invoker.svg?style=flat-square)](https://packagist.org/packages/PHP-DI/invoker)
+[![Total Downloads](https://img.shields.io/packagist/dt/php-di/invoker.svg?style=flat-square)](https://packagist.org/packages/php-di/invoker)
 
 ## Why?
 
@@ -13,7 +12,7 @@ Who doesn't need an over-engineered `call_user_func()`?
 
 ### Named parameters
 
-Does this [Silex](http://silex.sensiolabs.org) example look familiar:
+Does this [Silex](https://github.com/silexphp/Silex#readme) example look familiar:
 
 ```php
 $app->get('/project/{project}/issue/{issue}', function ($project, $issue) {
@@ -29,7 +28,7 @@ $app->command('greet [name] [--yell]', function ($name, $yell) {
 });
 ```
 
-Same pattern in [Slim](http://www.slimframework.com):
+Same pattern in [Slim](https://www.slimframework.com):
 
 ```php
 $app->get('/hello/:name', function ($name) {
@@ -67,7 +66,7 @@ $app->command('greet [name]', function ($name, OutputInterface $output) {
 });
 ```
 
-[PHP-DI](http://php-di.org/doc/container.html) provides a way to invoke a callable and resolve all dependencies from the container using type-hints:
+[PHP-DI](https://php-di.org/doc/container.html) provides a way to invoke a callable and resolve all dependencies from the container using type-hints:
 
 ```php
 $container->call(function (Logger $logger, EntityManager $em) {
@@ -231,4 +230,5 @@ $invoker->call('WelcomeController::home');
 
 That feature can be used as the base building block for a framework's dispatcher.
 
-Again, any [PSR-11](http://www.php-fig.org/psr/psr-11/) compliant container can be provided.
+Again, any [PSR-11](https://www.php-fig.org/psr/psr-11/) compliant container can be provided.
+

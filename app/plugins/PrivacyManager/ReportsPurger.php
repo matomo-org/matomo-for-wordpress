@@ -220,14 +220,14 @@ class ReportsPurger
     }
     private function getNumericTableDeleteCount($table)
     {
-        $maxIdArchive = Db::fetchOne("SELECT MAX(idarchive) FROM `{$table}`");
+        $maxIdArchive = (int) Db::fetchOne("SELECT MAX(idarchive) FROM `{$table}`");
         $sql = "SELECT COUNT(*) FROM `{$table}`\n                 WHERE name NOT IN ('" . implode("','", $this->metricsToKeep) . "')\n                   AND name NOT LIKE 'done%'\n                   AND idarchive >= ?\n                   AND idarchive < ?";
         $segments = Db::segmentedFetchOne($sql, 0, $maxIdArchive, self::$selectSegmentSize);
         return array_sum($segments);
     }
     private function getBlobTableDeleteCount($oldNumericTables, $table)
     {
-        $maxIdArchive = Db::fetchOne("SELECT MAX(idarchive) FROM `{$table}`");
+        $maxIdArchive = (int) Db::fetchOne("SELECT MAX(idarchive) FROM `{$table}`");
         $blobTableWhere = $this->getBlobTableWhereExpr($oldNumericTables, $table);
         if (empty($blobTableWhere)) {
             return 0;
@@ -267,7 +267,7 @@ class ReportsPurger
         }
         foreach ($numericTables as $table) {
             $tableDate = ArchiveTableCreator::getDateFromTableName($table);
-            $maxIdArchive = Db::fetchOne("SELECT MAX(idarchive) FROM `{$table}`");
+            $maxIdArchive = (int) Db::fetchOne("SELECT MAX(idarchive) FROM `{$table}`");
             $sql = "SELECT idarchive FROM `{$table}`\n                     WHERE name != 'done'\n                       AND name LIKE 'done_%.%'\n                       AND idarchive >= ?\n                       AND idarchive < ?";
             if (is_null($this->segmentArchiveIds)) {
                 $this->segmentArchiveIds = array();

@@ -59,24 +59,16 @@ use Piwik\Piwik;
 class Archiver
 {
     public static $ARCHIVE_DEPENDENT = \true;
-    /**
-     * @var \Piwik\ArchiveProcessor
-     */
-    private $processor;
-    /**
-     * @var bool
-     */
-    private $enabled;
+    private ArchiveProcessor $processor;
+    private bool $enabled = \true;
     /**
      * @var mixed
      */
     protected $maximumRows;
     /**
      * Used if a plugin has RecordBuilders but no Archiver subclass.
-     *
-     * @var string|null
      */
-    private $pluginName = null;
+    private ?string $pluginName = null;
     /**
      * @param ArchiveProcessor $processor The ArchiveProcessor instance to use when persisting archive
      *                                    data.
@@ -130,23 +122,32 @@ class Archiver
             $transientCache->save($cacheKey, $recordBuilders);
         }
         /**
-         * Triggered to filter / restrict reports.
+         * Triggered to filter / restrict reports, or to replace a RecordBuilder for the archive being processed.
+         *
+         * The RecordBuilder instances are shared by every archive built in the same request, so replace or
+         * remove entries rather than modifying an instance.
          *
          * **Example**
          *
-         *     public function filterRecordBuilders(&$recordBuilders)
+         *     public function filterRecordBuilders(&$recordBuilders, ArchiveProcessor $archiveProcessor)
          *     {
-         *         foreach ($reports as $index => $recordBuilder) {
-         *              if ($recordBuilders instanceof AnotherPluginRecordBuilder) {
-         *                  unset($reports[$index]);
+         *         if ($archiveProcessor->getParams()->getSite()->getId() != $this->idSiteToRestrict) {
+         *             return;
+         *         }
+         *
+         *         foreach ($recordBuilders as $index => $recordBuilder) {
+         *              if ($recordBuilder instanceof AnotherPluginRecordBuilder) {
+         *                  unset($recordBuilders[$index]);
          *              }
          *         }
          *     }
          *
          * @param ArchiveProcessor\RecordBuilder[] $recordBuilders An array of RecordBuilder instances
+         * @param ArchiveProcessor $archiveProcessor The processor of the archive the RecordBuilders will build,
+         *                                           for its site, period and segment.
          * @api
          */
-        Piwik::postEvent('Archiver.filterRecordBuilders', [&$recordBuilders]);
+        Piwik::postEvent('Archiver.filterRecordBuilders', [&$recordBuilders, $this->processor]);
         return $recordBuilders;
     }
     private function filterRecordBuildersByRequestedRecords(array $recordBuilders, array $requestedReports) : array

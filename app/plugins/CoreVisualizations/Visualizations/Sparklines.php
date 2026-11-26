@@ -373,7 +373,7 @@ class Sparklines extends ViewDataTable
     }
     private function formatSparklineMetricValue($value, string $columnName, array $columnMetrics, MetricFormatter $metricFormatter, int $idSite)
     {
-        if (strpos($columnName, 'revenue') !== \false && $idSite > 0) {
+        if (str_contains($columnName, 'revenue') && $idSite > 0) {
             return $metricFormatter->getPrettyMoney($value, $idSite);
         }
         if (isset($columnMetrics[$columnName]) && $columnMetrics[$columnName]) {
@@ -386,7 +386,7 @@ class Sparklines extends ViewDataTable
         if (isset($comparisonRows[$segment][$period][$date])) {
             return $comparisonRows[$segment][$period][$date];
         }
-        if (strpos($date, ',') === \false) {
+        if (!str_contains($date, ',')) {
             $rangeDate = Factory::build($period, $date)->getRangeString();
             if (isset($comparisonRows[$segment][$period][$rangeDate])) {
                 return $comparisonRows[$segment][$period][$rangeDate];

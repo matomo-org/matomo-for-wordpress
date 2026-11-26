@@ -147,7 +147,6 @@
         "ExceptionDatabaseVersion": "Vaša %1$s verzija je %2$s ali Matomo zahtjeva barem %3$s.",
         "ExceptionFileIntegrity": "Provjera integriteta nije uspjela: %s",
         "ExceptionFilesizeMismatch": "Veličina datoteke ne odgovara:%1$s (očekivana veličina: %2$s, pronađena: %3$s)",
-        "ExceptionIncompatibleClientServerVersions": "Vaša %1$s klijent verzija je %2$s koja nije uskladiva sa server verzijom %3$s.",
         "ExceptionInvalidArchiveTimeToLive": "Vrijednost mora biti broj sekundi veći od nule",
         "ExceptionInvalidDateFormat": "Format datuma mora biti %1$s ili bilo koji izraz koji prepoznaje %2$s funkcija (vidi %3$s za više informacija)",
         "ExceptionInvalidDateRange": "Datum '%1$s' nema ispravan raspon. Mora imati sljedeći oblik: %2$s.",
@@ -442,6 +441,9 @@
         "PickARow": "Odaberi redak za usporedbu",
         "PickAnotherRow": "Odaberi jedan drugi redak za usporedbu"
     },
+    "AIProviders": {
+        "DefaultBadge": "Pretpostavljeno"
+    },
     "API": {
         "ChangeTokenHint": "Ako želiš promijeniti ovaj token, idi na svoju %1$sstranicu osobnih postavki%2$s.",
         "EvolutionMetricName": "%s razvoj",
@@ -596,7 +598,6 @@
     "CoreHome": {
         "CheckForUpdates": "Traži nove verzije",
         "ChooseWebsite": "Odaberi web-stranicu",
-        "Default": "standardno",
         "EndDate": "Datum kraja",
         "LearnMoreFullStop": "%1$sSaznaj više.%2$s",
         "PresetDateToday": "Danas",
@@ -739,7 +740,6 @@
         "GoalName": "Ime cilja",
         "GoalX": "Cilj %s",
         "Goals": "Ciljevi",
-        "GoalsOverview": "Pregled ciljeva",
         "IsExactly": "je točno %s",
         "ManageGoals": "Upravljaj ciljevima",
         "Manually": "ručno",
@@ -1887,7 +1887,6 @@
         "DisableVisitorProfile": "Isključi profile posjetitelja",
         "DisableVisitorProfileDescription": "Sve funkcije u vezi s dnevnikom posjeta uvijek rade.",
         "DisableVisitsLogAndProfile": "Isključi dnevnik posjeta i profile posjetitelja",
-        "DisableVisitsLogAndProfileDescription": "Također uklanja fukcije koje ovise o njima, poput dnevnika e-trgovine, dnevnika segmentiranih posjeta, karte u stvarnom vremenu ili widgeta u stvarnom vremenu. Možda je potrebno za usklađivanje s lokalnim zakonima\/smjernicama o privatnosti.",
         "FirstVisit": "Prvi posjet",
         "GoalType": "Vrsta",
         "HideMap": "sakrij kartu",
@@ -2090,12 +2089,7 @@
         "PluginDescription": "Pogledaj i usporedi sve svoje web-stranice i aplikacije u ovoj korisnoj nadzornoj ploči „Sve web stranice”.",
         "SegmentationNotSupported": "Segmentacija nije podržana",
         "SingleWebsitesDashboardDocumentation": "Ovaj izvještaj pruža informativni pregled za određenu web-stranicu, s najopćenitijim mjernim podacima o tvojim posjetiteljima.",
-        "TopLinkTooltip": "Usporedi statistike web analitike za sve tvoje web-stranice.",
-        "TotalAiChatbotsRequests": "Ukupni broj zahtjeva UI-chatbotova",
-        "TotalHits": "Ukupni broj zahtjeva za datotekama",
-        "TotalHitsIncludingAiTooltip": "Ukupni broj učitanih datoteka web-stranice: uključujući sve ljudske posjete i zahtjeve UI-chatbotova",
-        "TotalPageviews": "Ukupni broj prikaza stranice",
-        "TotalVisits": "Ukupni broj posjeta"
+        "TopLinkTooltip": "Usporedi statistike web analitike za sve tvoje web-stranice."
     },
     "Overlay": {
         "Domain": "Domena",
@@ -2174,14 +2168,6 @@
         "WidgetGlobalVisitorsDocumentation": "Ovaj izvještaj prikazuje najčešće konfiguracije tvojih posjetitelja. Konfiguracija je kombinacija operacijskog sustava, vrste preglednika i rezolucije ekrana.",
         "WidgetResolutions": "Rezolucija zaslona",
         "WidgetResolutionsDocumentation": "Ovaj izvještaj prikazuje rezolucije ekrana koje su tvoji posjetitelji koristili prilikom pregledavanja tvoje web-stranice."
-    },
-    "SEO": {
-        "Bing_IndexedPages": "Indeksirane stranice na Bingu",
-        "DomainAge": "Starost domene",
-        "PluginDescription": "Ovaj dodatak izdvaja i prikazuje mjerne podatke zs SEO: Google Pagerank, broj indeksiranih stranica i povratne poveznice trenutačno odabrane web-stranice.",
-        "Rank": "Rang",
-        "SEORankingsFor": "SEO rangiranja za %s",
-        "SeoRankings": "SEO rangiranja"
     },
     "ScheduledReports": {
         "AggregateReportsFormat": "Opcije prikaza",
@@ -2404,10 +2390,20 @@
         "ViewVisitsLogDescription": "Prikazuje sve pojedinačne posjete i radnje koje je svaki posjetitelj izvršio na tvojoj web-stranici.",
         "ViewX": "Prikaži %s"
     },
+    "TrackingSpamPrevention": {
+        "BanIpNotificationMailSubject": "IP adresi je zabranjen pristup zbog generiranja previše radnji.",
+        "BlockCloudNoteInternetDisabled": "Budući da je internet isključen u tvojoj Matomo konfiguraciji, ova funkcija neće raditi.",
+        "SettingBlockHeadlessTitle": "Blokiraj „headless” preglednike (bez grafičkog korisničkog sučelja)",
+        "SettingExcludedCountriesTitle": "Isključi zemlje",
+        "SettingIncludedCountriesDescription": "Ovo isključuje sve ostale zemlje. Postavka „Isključi zemlje” sadrži više informacija.",
+        "SettingIncludedCountriesTitle": "Prati samo posjetitelje iz ovih zemalja",
+        "SettingMaxActionsTitle": "Maks. broj radnji za snimanje po posjetu",
+        "SettingNotificationEmailDescription": "Ova će e-mail adresa obavijestiti svaki put kada se IP adresa blokira zbog previše radnji. U budućnosti će se možda dodati daljnji razlozi za obavještavanje.",
+        "SettingNotificationEmailTitle": "E-mail adresa za obavijesti"
+    },
     "Transitions": {
         "AvailableInOtherReports": "Je li već znaš? Tranzicije su također dostupne kao radnja po retku u sljedećim izvještajima:",
         "AvailableInOtherReports2": "Pokreni tranzicije klikom na njihovu ikonu (%s) nakon što prijeđeš mišem preko retka u bilo kojem od ovih izvještaja.",
-        "BouncesInline": "%s napuštanja",
         "DirectEntries": "Izravni unosi",
         "ErrorBack": "Vrati se na prethodnu radnju",
         "ExitsInline": "%s izlaza",
@@ -2442,8 +2438,7 @@
         "Transitions": "Tranzicije",
         "TransitionsSubcategoryHelp1": "„Tranzicije” je izvještaj koji prikazuje što su tvoji posjetitelji radili neposredno prije i nakon što su pogledali određenu stranicu. Ova stranica objašnjava kako pristupiti izvještaju „Tranzicije”, kako ga razumjeti i koristiti.",
         "TransitionsSubcategoryHelp2": "Više detalja",
-        "XOfAllPageviews": "%s od svih prikaza ove stranice",
-        "XOutOfYVisits": "%1$s (od %2$s)"
+        "XOfAllPageviews": "%s od svih prikaza ove stranice"
     },
     "TwoFactorAuth": {
         "TwoFAShort": "2FA",

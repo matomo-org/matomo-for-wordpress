@@ -1,91 +1,291 @@
 # Changelog
 
-## 3.2.1
+## v5.5.1
 
-* [All changes](https://gerrit.wikimedia.org/g/mediawiki/libs/less.php/+log/v3.2.1)
+Fixed:
+* Less_Parser: Fix SetImportDirs() type hint to accept callable without string key (Timo Tijhof)
+
+## v5.5.0
+
+Added:
+* Add support for CSS4 `#RRGGBBAA` colors. (Hannah Okwelum) [T403056](https://phabricator.wikimedia.org/T403056)
+* Add support for native CSS color functions including with CSS variables. (Hannah Okwelum) [T405815](https://phabricator.wikimedia.org/T405815)
+
+Fixed:
+* Fix "PHP Warning: Using null as the key parameter for array_key_exists" on PHP 8.5. (del72683) [T410596](https://phabricator.wikimedia.org/T410596)
+* Fix interpolation of string with number followed by underscore. (Timo Tijhof) [Less.js #2462](https://github.com/less/less.js/issues/2462)
+* Fix "PHP Warning: Using null as an array offset" on PHP 8.5 in Less_Functions. (Hannah Okwelum) [T411398](https://phabricator.wikimedia.org/T411398)
+* Fix "PHP Warning: Using null as an array offset" on PHP 8.5 in Less_ImportVisitor. (Hannah Okwelum) [T411400](https://phabricator.wikimedia.org/T411400)
+* Fix "PHP Warning: ord(): Providing an empty string is deprecated" on PHP 8.5. (Hannah Okwelum) [T411397](https://phabricator.wikimedia.org/T411397)
+
+## v5.4.0
+
+Added:
+* Add support for Logical Functions `if()` and `boolean()`. (Hannah Okwelum) [T393383](https://phabricator.wikimedia.org/T393383)
+
+Changed:
+* Remove support for PHP 7.4 and 8.0. Raise requirement to PHP 8.1+. (James D. Forrester)
+
+## v5.3.1
+
+Fixed:
+* Fix "PHP Warning: Undefined property $value" in `extract()`. (Timo Tijhof) [T391735](https://phabricator.wikimedia.org/T391735)
+
+## v5.3.0
+
+Added:
+* Less_Parser: Add `cache_incremental` option. Set this to false via `Less_Cache` to use the fast whole-output cache without the memory-intensive incremental cache. (Timo Tijhof)
+
+Deprecated:
+* Deprecate `Less_Cache::CheckCacheDir()` as public method. This is called automatically.
+* Deprecate `Less_Cache::CleanCache()` as public method. This is called automatically.
+* Deprecate `Less_Parser::SetCacheDir()`. Set the `cache_dir` option, or use `Less_Cache::SetCacheDir()` instead.
+
+## v5.2.2
+
+Fixed:
+* Fix ParseError on CSS variable when there is no trailing semicolon (Hannah Okwelum) [T386077](https://phabricator.wikimedia.org/T386077)
+* Support functions calls in CSS variable value after first comma (Hannah Okwelum) [T386079](https://phabricator.wikimedia.org/T386079)
+
+## v5.2.1
+
+Fixed:
+* Fix un-parenthesized nested operation via a variable (Hannah Okwelum) [T386074](https://phabricator.wikimedia.org/T386074)
+* Faster Less_Visitor_joinSelector by skipping Declaration blocks (ubermanu)
+
+## v5.2.0
+
+Added:
+* Add support for BrianHenryIE/strauss codemod in Less_Visitor (Stefan Warnat)
+
+Fixed:
+* Fix "PHP Warning: Undefined array key currentUri" when using `@import (inline)` (tck) [T380641](https://phabricator.wikimedia.org/T380641)
+* Fix "PHP Warning: Implicit conversion from float to int" on PHP 8.1 when using `hsv()` (Peter Knut)
+* Less_Visitor: Faster class mapping in `visitObj`  by using inline cache (Thiemo Kreuz)
+
+## v5.1.2
+
+Fixed:
+* Less_Functions: Fix "PHP Warning: Implicitly nullable parameter" on PHP 8.4 (Reedy) [T376276](https://phabricator.wikimedia.org/T376276)
+
+## v5.1.1
+
+Fixed:
+* Fix compiling of PHP-injected variables with false, null or empty string (Hannah Okwelum)
+
+## v5.1.0
+
+Added:
+* Add support for property acessors (Piotr Miazga) [T368408](https://phabricator.wikimedia.org/T368408)
+* Increase parsing flexibility around at-rule blocks and custom properties (Piotr Miazga) [T368408](https://phabricator.wikimedia.org/T368408)
+* Add support for Namespaces and Accessors (Piotr Miazga) [T368409](https://phabricator.wikimedia.org/T368409)
+
+Fixed:
+* Fix parse error when opacity is set to zero in `alpha()` function (Hannah Okwelum) [T371606](https://phabricator.wikimedia.org/T371606)
+
+## v5.0.0
+
+Added:
+* Add support for Lessjs 3.5.0 `calc()` exception (Piotr Miazga) [T367186](https://phabricator.wikimedia.org/T367186)
+* Add support for CSS Grid syntax (Dringsim) [T288498](https://phabricator.wikimedia.org/T288498)
+* Add support for `\9` escapes in CSS keyword (Dringsim) [T288498](https://phabricator.wikimedia.org/T288498)
+* Add Less_Parser "math" option, renamed from strictMath (Hannah Okwelum) [T366445](https://phabricator.wikimedia.org/T366445)
+
+Changed:
+* Change Less_Parser "math" default from "always" to "parens-division" (Hannah Okwelum) [T366445](https://phabricator.wikimedia.org/T366445)
+* Change `Less_Version::less_version` to "3.13.3". This end compatibility support of Less.js 2.5.3.
+  Less.php 5.0 and later will target Less.js 3.13.1 behaviour instead. (Piotr Miazga)
+
+Removed:
+* Remove `import_callback` Less_Parser option (Hannah Okwelum)
+* Remove backtick evaluation inside quoted strings (Bartosz Dziewoński)
+* Remove `Less_Parser::AllParsedFiles()` (Hannah Okwelum)
+* Remove Less_Parser->SetInput() public method, now private (Hannah Okwelum)
+* Remove Less_Parser->CacheFile() public method, now private (Hannah Okwelum)
+* Remove Less_Parser->UnsetInput() public method, now private (Hannah Okwelum)
+* Remove Less_Parser->save() public method, now private (Hannah Okwelum)
+
+## v4.4.1
+
+Fixed:
+* Update `Less_Version::version` and bump `Less_Version::cache_version` (Timo Tijhof)
+
+## v4.4.0
+
+Added:
+* Add `image-size()` function, disable base64 for SVG `data-uri()` (Hannah Okwelum) [T353147](https://phabricator.wikimedia.org/T353147)
+* Improve support for preserving `!important` via variables (Piotr Miazga) [T362341](https://phabricator.wikimedia.org/T362341)
+* Add support for include path inside `data-uri()` (Hannah Okwelum) [T364871](https://phabricator.wikimedia.org/T364871)
+
+Changed, to match Less.js 2.5.3:
+* Fix multiplication of mixed units to preserve the first unit (Piotr Miazga) [T362341](https://phabricator.wikimedia.org/T362341)
+
+Fixed:
+* Fix checking of guard conditions in nested mixins (Hannah Okwelum) [T352867](https://phabricator.wikimedia.org/T352867)
+* Less_Functions: Avoid clobbering `clamp()` with internal helper (Timo Tijhof) [T363728](https://phabricator.wikimedia.org/T363728)
+
+## v4.3.0
+
+Added:
+* Support interpolated variable imports, via ImportVisitor (Hannah Okwelum) [T353133](https://phabricator.wikimedia.org/T353133)
+* Support rulesets as default values of a mixin parameter (Hannah Okwelum) [T353143](https://phabricator.wikimedia.org/T353143)
+* Support `...` expand operator in mixin calls (Piotr Miazga) [T352897](https://phabricator.wikimedia.org/T352897)
+* Improve support for `@import (reference)` matching Less.js 2.x (Hannah Okwelum) [T362647](https://phabricator.wikimedia.org/T362647)
+
+Changed:
+* Improve `mix()` argument exception message to mention given arg type (Timo Tijhof)
+* The `Less_Tree_Import->getPath()` method now reflects the path as written in the source code,
+  without auto-appended `.less` suffix, matching upstream Less.js 2.5.3 behaviour.
+  This internal detail is exposed via the deprecated `import_callback` parser option.
+  It is recommended to migrate to `Less_Parser->SetImportDirs`, which doesn't expose internals,
+  and is unaffected by this change.
+
+Deprecated:
+* Deprecate `import_callback` Less_Parser option. Use `Less_Parser->SetImportDirs` with callback instead.
+* Deprecate `Less_Parser->SetInput()` as public method. Use `Less_Parser->parseFile()` instead.
+* Deprecate `Less_Parser->CacheFile()` as public method. Use `Less_Cache` API instead.
+* Deprecate `Less_Parser::AllParsedFiles()` as static method. Use `Less_Parser->getParsedFiles()` instead.
+* Deprecate `Less_Parser->UnsetInput()` as public method, considered internal.
+* Deprecate `Less_Parser->save()` as public method, considered internal.
+
+Fixed:
+* Fix `replace()` when passed multiple replacements (Roan Kattouw) [T358631](https://phabricator.wikimedia.org/T358631)
+* Fix unexpected duplicating of uncalled mixin rules (Hannah Okwelum) [T363076](https://phabricator.wikimedia.org/T363076)
+* Fix ParseError for comments after rule name or in `@keyframes` (Piotr Miazga) [T353131](https://phabricator.wikimedia.org/T353131)
+* Fix ParseError for comments in more places and preserve them (Piotr Miazga) [T353132](https://phabricator.wikimedia.org/T353132)
+* Fix ParseError effecting pseudo classes with `when` guards (Piotr Miazga) [T353144](https://phabricator.wikimedia.org/T353144)
+* Fix preservation of units in some cases (Timo Tijhof) [T360065](https://phabricator.wikimedia.org/T360065)
+* Less_Parser: Faster matching by inlining `matcher()` chains (Timo Tijhof)
+* Less_Parser: Faster matching with `matchStr()` method (Timo Tijhof)
+
+## v4.2.1
+
+Added:
+* Add support for `/deep/` selectors (Hannah Okwelum) [T352862](https://phabricator.wikimedia.org/T352862)
+
+Fixed:
+* Fix ParseError in some division expressions (Hannah Okwelum) [T358256](https://phabricator.wikimedia.org/T358256)
+* Fix `when()` matching between string and non-string (Timo Tijhof) [T358159](https://phabricator.wikimedia.org/T358159)
+* Preserve whitespace before `;` or `!` in simple rules (Hannah Okwelum) [T352911](https://phabricator.wikimedia.org/T352911)
+
+## v4.2.0
+
+Added:
+* Add `isruleset()` function (Hannah Okwelum) [T354895](https://phabricator.wikimedia.org/T354895)
+* Add source details to "Operation on an invalid type" error (Hannah Okwelum) [T344197](https://phabricator.wikimedia.org/T344197)
+* Add support for `method=relative` parameter in color functions (Hannah Okwelum) [T354895](https://phabricator.wikimedia.org/T354895)
+* Add support for comments in variables and function parameters (Hannah Okwelum) [T354895](https://phabricator.wikimedia.org/T354895)
+* Less_Parser: Add `functions` parser option API (Hannah Okwelum)
+
+Changed, to match Less.js 2.5.3:
+* Preserve original color keywords and shorthand hex (Hannah Okwelum) [T352866](https://phabricator.wikimedia.org/T352866)
+
+Fixed:
+* Fix PHP Warning when using a dynamic variable name like `@@name` (Hannah Okwelum) [T352830](https://phabricator.wikimedia.org/T352830)
+* Fix PHP Warning when `@extend` path contains non-quoted attribute (Gr8b) [T349433](https://phabricator.wikimedia.org/T349433)
+* Less_Parser: Faster `skipWhitespace` by using native `strspn` (Umherirrender)
+* Less_Parser: Fix Less_Tree_JavaScript references to consistently be in camel-case (Stefan Fröhlich)
+* Fix `!important` in nested mixins (Hannah Okwelum) [T353141](https://phabricator.wikimedia.org/T353141)
+* Fix crash when using recursive mixins (Timo Tijhof) [T352829](https://phabricator.wikimedia.org/T352829)
+* Fix disappearing selectors in certain nested blocks (Hannah Okwelum) [T352859](https://phabricator.wikimedia.org/T352859)
+* Fix Less_Exception_Compiler when passing unquoted value to `color()` (Hannah Okwelum) [T353289](https://phabricator.wikimedia.org/T353289)
+* Fix order of comments in `@font-face` blocks (Timo Tijhof) [T356706](https://phabricator.wikimedia.org/T356706)
+* Fix string comparison to ignore quote type (Timo Tijhof) [T357160](https://phabricator.wikimedia.org/T357160)
+* Fix string interpolation in selectors (Hannah Okwelum) [T353142](https://phabricator.wikimedia.org/T353142)
+
+## v4.1.1
+
+* Less_Parser: Faster `MatchQuoted` by using native `strcspn`. (Thiemo Kreuz)
+* Less_Parser: Faster `parseEntitiesQuoted` by inlining `MatchQuoted`. (Thiemo Kreuz)
+* Less_Parser: Faster `parseUnicodeDescriptor` and `parseEntitiesJavascript` by first-char checks. (Thiemo Kreuz)
+* Less_Tree_Mixin_Call: Include mixin name in error message (Jeremy P)
+* Fix mismatched casing in class names to fix autoloading on case-sensitive filesystems (Jeremy P)
+
+## v4.1.0
+
+* Add support for `@supports` blocks. (Anne Tomasevich) [T332923](http://phabricator.wikimedia.org/T332923)
+* Less_Parser: Returning a URI from `SetImportDirs()` callbacks is now optional. (Timo Tijhof)
+
+## v4.0.0
+
+* Remove support for PHP 7.2 and 7.3. Raise requirement to PHP 7.4+.
+* Remove support for `cache_method=php` and `cache_method=var_export`, only the faster and more secure `cache_method=serialize` is now available. The built-in cache remains disabled by default.
+* Fix `url(#myid)` to be treated as absolute URL. [T331649](https://phabricator.wikimedia.org/T331688)
+* Fix "Undefined property" PHP 8.1 warning when `calc()` is used with CSS `var()`. [T331688](https://phabricator.wikimedia.org/T331688)
+* Less_Parser: Improve performance by removing MatchFuncs and NewObj overhead. (Timo Tijhof)
+
+## v3.2.1
+
 * Tree_Ruleset: Fix support for nested parent selectors (Timo Tijhof) [T204816](https://phabricator.wikimedia.org/T204816)
 * Fix ParseError when interpolating variable after colon in selector (Timo Tijhof) [T327163](https://phabricator.wikimedia.org/T327163)
 * Functions: Fix "Undefined property" warning on bad minmax arg
 * Tree_Call: Include previous exception when catching functions (Robert Frunzke)
 
-## 3.2.0
+## v3.2.0
 
-* [All changes](https://github.com/wikimedia/less.php/compare/v3.1.0...v3.2.0)
-* Fix "Implicit conversion" PHP 8.1 warnings (Ayokunle Odusan)
-* Fix "Creation of dynamic property" PHP 8.2 warnings (Bas Couwenberg)
-* Fix "Creation of dynamic property" PHP 8.2 warnings (Rajesh Kumar)
+* Fix "PHP Warning: Implicit conversion" on PHP 8.1 (Ayokunle Odusan)
+* Fix "PHP Warning: Creation of dynamic property" on PHP 8.2 (Bas Couwenberg, Rajesh Kumar)
 * Tree_Url: Add support for "Url" type to `Parser::getVariables()` (ciroarcadio) [#51](https://github.com/wikimedia/less.php/pull/51)
 * Tree_Import: Add support for importing URLs without file extension (Timo Tijhof) [#27](https://github.com/wikimedia/less.php/issues/27)
 
-## 3.1.0
+## v3.1.0
 
-* [All changes](https://github.com/wikimedia/less.php/compare/v3.0.0...v3.1.0)
 * Add PHP 8.0 support: Drop use of curly braces for sub-string eval (James D. Forrester)
 * Make `Directive::__construct` $rules arg optional (fix PHP 7.4 warning) (Sam Reed)
 * ProcessExtends: Improve performance by using a map for selectors and parents (Andrey Legayev)
 
-## 3.0.0
+## v3.0.0
 
-* [All changes](https://github.com/wikimedia/less.php/compare/v2.0.0...v3.0.0)
 * Raise PHP requirement from 7.1 to 7.2.9 (James Forrester)
 
-## 2.0.0
+## v2.0.0
 
-* [All changes](https://github.com/wikimedia/less.php/compare/v1.8.2...v2.0.0)
 * Relax PHP requirement down to 7.1, from 7.2.9 (Franz Liedke)
 * Reflect recent breaking changes properly with the semantic versioning (James Forrester)
 
-## 1.8.2
+## v1.8.2
 
-* [All changes](https://github.com/wikimedia/less.php/compare/v1.8.1...v1.8.2)
 * Require PHP 7.2.9+, up from 5.3+ (James Forrester)
 * release: Update Version.php with the current release ID (COBadger)
 * Fix access array offset on value of type null (Michele Locati)
 * Fix test suite on PHP 7.4 (Sergei Morozov)
 
-## 1.8.1
+## v1.8.1
 
-* [All changes](https://github.com/wikimedia/less.php/compare/v1.8.0...v1.8.1)
 * Another PHP 7.3 compatibility tweak
 
-## 1.8.0
+## v1.8.0
 
 Library forked by Wikimedia, from [oyejorge/less.php](https://github.com/oyejorge/less.php).
 
-* [All changes](https://github.com/wikimedia/less.php/compare/v1.7.0.13...v1.8.0)
 * Supports up to PHP 7.3
 * No longer tested against PHP 5, though it's still remains allowed in `composer.json` for HHVM compatibility
 * Switched to [semantic versioning](https://semver.org/), hence version numbers now use 3 digits
 
-## 1.7.0.13
+## v1.7.0.13
 
-* [All changes](https://github.com/wikimedia/less.php/compare/v1.7.0.12...v1.7.0.13)
 * Fix composer.json (PSR-4 was invalid)
 
-## 1.7.0.12
+## v1.7.0.12
 
-* [All changes](https://github.com/wikimedia/less.php/compare/v1.7.0.11...v1.7.0.12)
-* set bin/lessc bit executable
-* Add `gettingVariables` method to `Less_Parser`
+* Fix `bin/lessc` to have executable bit (regression from v1.7.0.10)
+* Add `Less_Parser::getVariables` method [oyejorge #258](https://github.com/oyejorge/less.php/issues/258)
 
-## 1.7.0.11
+## v1.7.0.11
 
-* [All changes](https://github.com/wikimedia/less.php/compare/v1.7.0.10...v1.7.0.11)
-* Fix realpath issue (windows)
-* Set Less_Tree_Call property back to public ( Fix 258 266 267 issues from oyejorge/less.php)
+* Fix realpath issue on Windows
+* Change Less_Tree_Call property back to public (protected since v1.7.0.2) [oyejorge #324](https://github.com/oyejorge/less.php/pull/324)
 
-## 1.7.0.10
+## v1.7.0.10
 
-* [All changes](https://github.com/wikimedia/less.php/compare/v1.7.0.9...v1.7.10)
-* Add indentation option
-* Add `optional` modifier for `@import`
+* Less_Parser: Add `indentation` option
+* Add support for `optional` modifier to `@import`
 * Fix $color in Exception messages
-* take relative-url into account when building the cache filename
+* Fix cache filename to take relative-url into account [oyejorge #295](https://github.com/oyejorge/less.php/pull/295)
 * urlArgs should be string no array()
-* fix missing on NameValue type [#269](https://github.com/oyejorge/less.php/issues/269)
+* Fix missing on NameValue type [oyejorge #269](https://github.com/oyejorge/less.php/issues/269)
 
-## 1.7.0.9
+## v1.7.0.9
 
-* [All changes](https://github.com/wikimedia/less.php/compare/v1.7.0.8...v1.7.0.9)
 * Remove space at beginning of Version.php
 * Revert require() paths in test interface

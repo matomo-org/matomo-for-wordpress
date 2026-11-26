@@ -12,6 +12,7 @@ namespace Matomo\Dependencies\Symfony\Component\HttpKernel\Controller\ArgumentRe
 
 use Matomo\Dependencies\Symfony\Component\HttpFoundation\Request;
 use Matomo\Dependencies\Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
+use Matomo\Dependencies\Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Matomo\Dependencies\Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 use Symfony\Component\Stopwatch\Stopwatch;
 /**
@@ -19,32 +20,32 @@ use Symfony\Component\Stopwatch\Stopwatch;
  *
  * @author Iltar van der Berg <kjarli@gmail.com>
  */
-final class TraceableValueResolver implements ArgumentValueResolverInterface
+final class TraceableValueResolver implements ArgumentValueResolverInterface, ValueResolverInterface
 {
-    private $inner;
-    private $stopwatch;
-    public function __construct(ArgumentValueResolverInterface $inner, Stopwatch $stopwatch)
+    private ArgumentValueResolverInterface|ValueResolverInterface $inner;
+    private Stopwatch $stopwatch;
+    public function __construct(ArgumentValueResolverInterface|ValueResolverInterface $inner, Stopwatch $stopwatch)
     {
         $this->inner = $inner;
         $this->stopwatch = $stopwatch;
     }
     /**
-     * {@inheritdoc}
+     * @deprecated since Symfony 6.2, use resolve() instead
      */
     public function supports(Request $request, ArgumentMetadata $argument) : bool
     {
-        $method = \get_class($this->inner) . '::' . __FUNCTION__;
+        if ($this->inner instanceof ValueResolverInterface) {
+            return \true;
+        }
+        $method = $this->inner::class . '::' . __FUNCTION__;
         $this->stopwatch->start($method, 'controller.argument_value_resolver');
         $return = $this->inner->supports($request, $argument);
         $this->stopwatch->stop($method);
         return $return;
     }
-    /**
-     * {@inheritdoc}
-     */
     public function resolve(Request $request, ArgumentMetadata $argument) : iterable
     {
-        $method = \get_class($this->inner) . '::' . __FUNCTION__;
+        $method = $this->inner::class . '::' . __FUNCTION__;
         $this->stopwatch->start($method, 'controller.argument_value_resolver');
         yield from $this->inner->resolve($request, $argument);
         $this->stopwatch->stop($method);

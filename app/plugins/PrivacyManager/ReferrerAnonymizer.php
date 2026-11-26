@@ -81,7 +81,7 @@ class ReferrerAnonymizer
                     $scheme = $urlParts['scheme'] ?? '';
                     if ($scheme) {
                         $scheme .= '://';
-                    } elseif (strpos($url, '//') === 0) {
+                    } elseif (str_starts_with($url, '//')) {
                         $scheme = '//';
                     }
                     $url = $scheme . $urlParts['host'] . '/';

@@ -248,7 +248,7 @@ class ArchiveSelector
                     [$idarchive, $doneFlag, $value] = $parts;
                     $idarchives[$doneFlag][$dateStr][] = $idarchive;
                     $idarchiveStates[$idSite][$doneFlag][$dateStr][$idarchive] = (int) $value;
-                    if (strpos($doneFlag, '.') === \false && $value != \Piwik\DataAccess\ArchiveWriter::DONE_PARTIAL) {
+                    if (!str_contains($doneFlag, '.') && $value != \Piwik\DataAccess\ArchiveWriter::DONE_PARTIAL) {
                         break;
                         // found the all plugins archive, don't need to look in older archives since we have everything here
                     }

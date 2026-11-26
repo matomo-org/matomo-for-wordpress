@@ -18,10 +18,7 @@ use Piwik\Translation\Translator;
  */
 class PhpInformational implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnostic
 {
-    /**
-     * @var Translator
-     */
-    private $translator;
+    private Translator $translator;
     public function __construct(Translator $translator)
     {
         $this->translator = $translator;
@@ -45,13 +42,13 @@ class PhpInformational implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnost
                 $isGlobalConfigIniAccessible = $rpd->isGlobalConfigIniAccessible();
             }
         }
-        if (strpos(strtolower(php_sapi_name()), 'fpm-fcgi') !== \false && $isGlobalConfigIniAccessible && !$disableFileAccessCheck) {
+        if (str_contains(strtolower(php_sapi_name()), 'fpm-fcgi') && $isGlobalConfigIniAccessible && !$disableFileAccessCheck) {
             // Using PHP-FPM and private files are accessible
             $comment = php_sapi_name() . "<br><br>";
             if (!empty($_SERVER['SERVER_SOFTWARE'])) {
-                if (strpos(strtolower($_SERVER['SERVER_SOFTWARE']), 'apache') !== \false) {
+                if (str_contains(strtolower($_SERVER['SERVER_SOFTWARE']), 'apache')) {
                     $comment .= $this->translator->translate('Diagnostics_PHPFPMWarningApache', ['<code>ProxyPass /config !</code>', '<code>mod_proxy_fcgi.c</code>', '<code>ProxyPassMatch</code>']);
-                } elseif (strpos(strtolower($_SERVER['SERVER_SOFTWARE']), 'nginx') !== \false) {
+                } elseif (str_contains(strtolower($_SERVER['SERVER_SOFTWARE']), 'nginx')) {
                     $comment .= $this->translator->translate('Diagnostics_PHPFPMWarningNginx', ['<a href="https://github.com/matomo-org/matomo-nginx#readme" target="_blank">', '</a>']);
                 } else {
                     $comment .= $this->translator->translate('Diagnostics_PHPFPMWarningGeneric');

@@ -63,9 +63,10 @@ class Less_SourceMap_Generator extends Less_Configurable
     /**
      * File to content map
      *
-     * @var array
+     * @var array<string,string>
      */
     protected $sources = [];
+    /** @var array<string,int> */
     protected $source_keys = [];
     /**
      * Constructor
@@ -82,6 +83,17 @@ class Less_SourceMap_Generator extends Less_Configurable
         $this->SetOptions($options);
         $this->options['sourceMapRootpath'] = $this->fixWindowsPath($this->options['sourceMapRootpath'], \true);
         $this->options['sourceMapBasepath'] = $this->fixWindowsPath($this->options['sourceMapBasepath'], \true);
+    }
+    /**
+     * PHP version of JavaScript's `encodeURIComponent` function
+     *
+     * @param string $string The string to encode
+     * @return string The encoded string
+     */
+    private static function encodeURIComponent($string)
+    {
+        $revert = ['%21' => '!', '%2A' => '*', '%27' => "'", '%28' => '(', '%29' => ')'];
+        return \strtr(\rawurlencode($string), $revert);
     }
     /**
      * Generates the CSS
@@ -106,7 +118,7 @@ class Less_SourceMap_Generator extends Less_Configurable
         }
         // inline the map
         if (!$sourceMapUrl) {
-            $sourceMapUrl = \sprintf('data:application/json,%s', Less_Functions::encodeURIComponent($sourceMapContent));
+            $sourceMapUrl = \sprintf('data:application/json,%s', self::encodeURIComponent($sourceMapContent));
         }
         if ($sourceMapUrl) {
             $output->add(\sprintf('/*# sourceMappingURL=%s */', $sourceMapUrl));
@@ -146,11 +158,11 @@ class Less_SourceMap_Generator extends Less_Configurable
         $rootpath = $this->getOption('sourceMapRootpath');
         $basePath = $this->getOption('sourceMapBasepath');
         // "Trim" the 'sourceMapBasepath' from the output filename.
-        if (\is_string($basePath) && \strpos($filename, $basePath) === 0) {
+        if (\is_string($basePath) && \str_starts_with($filename, $basePath)) {
             $filename = \substr($filename, \strlen($basePath));
         }
         // Remove extra leading path separators.
-        if (\strpos($filename, '\\') === 0 || \strpos($filename, '/') === 0) {
+        if (\str_starts_with($filename, '\\') || \str_starts_with($filename, '/')) {
             $filename = \substr($filename, 1);
         }
         return $rootpath . $filename;
@@ -166,8 +178,10 @@ class Less_SourceMap_Generator extends Less_Configurable
      */
     public function addMapping($generatedLine, $generatedColumn, $originalLine, $originalColumn, $fileInfo)
     {
-        $this->mappings[] = ['generated_line' => $generatedLine, 'generated_column' => $generatedColumn, 'original_line' => $originalLine, 'original_column' => $originalColumn, 'source_file' => $fileInfo['currentUri']];
-        $this->sources[$fileInfo['currentUri']] = $fileInfo['filename'];
+        $this->mappings[] = ['generated_line' => $generatedLine, 'generated_column' => $generatedColumn, 'original_line' => $originalLine, 'original_column' => $originalColumn, 'source_file' => $fileInfo['currentUri'] ?? null];
+        if (isset($fileInfo['currentUri'])) {
+            $this->sources[$fileInfo['currentUri']] = $fileInfo['filename'];
+        }
     }
     /**
      * Generates the JSON source map
@@ -186,7 +200,8 @@ class Less_SourceMap_Generator extends Less_Configurable
         if ($file) {
             $sourceMap['file'] = $file;
         }
-        // An optional source root, useful for relocating source files on a server or removing repeated values in the 'sources' entry.	This value is prepended to the individual entries in the 'source' field.
+        // An optional source root, useful for relocating source files on a server or removing repeated values in the 'sources' entry.
+        // This value is prepended to the individual entries in the 'source' field.
         $root = $this->getOption('sourceRoot');
         if ($root) {
             $sourceMap['sourceRoot'] = $root;
@@ -282,7 +297,7 @@ class Less_SourceMap_Generator extends Less_Configurable
      */
     protected function findFileIndex($filename)
     {
-        return $this->source_keys[$filename];
+        return $this->source_keys[$filename] ?? \false;
     }
     /**
      * fix windows paths

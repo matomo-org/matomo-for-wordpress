@@ -32,9 +32,9 @@ class CoreVisualizations extends \Piwik\Plugin
         $stylesheets[] = "plugins/CoreVisualizations/vue/src/EvolutionBadge/EvolutionBadge.less";
         $stylesheets[] = "plugins/CoreVisualizations/vue/src/MetricValue/MetricValue.less";
         $stylesheets[] = "plugins/CoreVisualizations/vue/src/SeriesPicker/SeriesPicker.less";
-        $stylesheets[] = "plugins/CoreVisualizations/vue/src/MetricsPicker/MetricsPicker.less";
         $stylesheets[] = "plugins/CoreVisualizations/vue/src/SingleMetricView/SingleMetricView.less";
         $stylesheets[] = "plugins/CoreVisualizations/vue/src/SparklinesGrid/SparklinesGrid.less";
+        $stylesheets[] = "plugins/CoreVisualizations/vue/src/Sparklines/SparklineLoadingSkeleton.less";
         $stylesheets[] = "plugins/CoreVisualizations/vue/src/Sparklines/SparklineCard.less";
         $stylesheets[] = "plugins/CoreVisualizations/vue/src/Sparklines/DateAtom.less";
         $stylesheets[] = "plugins/CoreVisualizations/vue/src/Sparklines/PeriodColumns.less";
@@ -64,6 +64,7 @@ class CoreVisualizations extends \Piwik\Plugin
         $translationKeys[] = 'General_EvolutionSummaryGeneric';
         $translationKeys[] = 'General_IncompletePeriod';
         $translationKeys[] = 'General_InvalidatedPeriod';
+        $translationKeys[] = 'General_MetricNotAvailableForThisPeriod';
         $translationKeys[] = 'General_Forecast';
     }
 }

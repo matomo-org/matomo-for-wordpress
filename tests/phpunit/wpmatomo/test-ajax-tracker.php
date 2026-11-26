@@ -82,9 +82,9 @@ class AjaxTrackerTest extends MatomoAnalytics_SharedFixture_TestCase {
 		switch_to_blog( $idblog );
 
 		$tracker = new AjaxTracker( $this->settings );
-		$this->normalize_tracker_url();
+		$this->normalize_tracker_url( $tracker );
 
-		$this->assertEmpty( $tracker->idSite );
+		$this->assertSame( 0, $tracker->idSite );
 		$this->assertEmpty( $tracker->pageUrl );
 	}
 
@@ -92,7 +92,7 @@ class AjaxTrackerTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$this->settings->set_global_option( 'track_api_endpoint', 'restapi' );
 
 		$tracker = new AjaxTracker( $this->settings );
-		$this->normalize_tracker_url();
+		$this->normalize_tracker_url( $tracker );
 
 		$this->assertEquals( 1, $tracker->idSite );
 		$this->assertEquals( 'https://example.org/index.php?rest_route=/matomo/v1/hit/', MatomoTracker::$URL );
@@ -103,7 +103,7 @@ class AjaxTrackerTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$_SERVER['HTTP_REFERER'] = 'https://whatever.com/path';
 
 		$tracker = new AjaxTracker( $this->settings );
-		$this->normalize_tracker_url();
+		$this->normalize_tracker_url( $tracker );
 
 		$this->assertEquals( 1, $tracker->idSite );
 		$this->assertEquals( 'https://example.org/wp-content/plugins/matomo/app/matomo.php', MatomoTracker::$URL );
@@ -114,7 +114,7 @@ class AjaxTrackerTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$this->settings->set_global_option( 'disable_cookies', true );
 
 		$tracker = new AjaxTracker( $this->settings );
-		$this->normalize_tracker_url();
+		$this->normalize_tracker_url( $tracker );
 
 		$this->assertEquals( 1, $tracker->idSite );
 		$this->assertEquals( 'https://example.org/wp-content/plugins/matomo/app/matomo.php', MatomoTracker::$URL );
@@ -127,7 +127,7 @@ class AjaxTrackerTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$_COOKIE['_pk_id_1_3678'] = $visitor_id . '.' . time();
 
 		$tracker = new AjaxTracker( $this->settings );
-		$this->normalize_tracker_url();
+		$this->normalize_tracker_url( $tracker );
 
 		$this->assertEquals( 1, $tracker->idSite );
 		$this->assertEquals( 'https://example.org/wp-content/plugins/matomo/app/matomo.php', MatomoTracker::$URL );
@@ -139,7 +139,7 @@ class AjaxTrackerTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	public function test_construct_when_cookies_are_enabled_and_cookie_doesnt_exist() {
 		$tracker = new AjaxTracker( $this->settings );
-		$this->normalize_tracker_url();
+		$this->normalize_tracker_url( $tracker );
 
 		$this->assertEquals( 1, $tracker->idSite );
 		$this->assertEquals( 'https://example.org/wp-content/plugins/matomo/app/matomo.php', MatomoTracker::$URL );
@@ -156,7 +156,7 @@ class AjaxTrackerTest extends MatomoAnalytics_SharedFixture_TestCase {
 		WC()->session->set( \WpMatomo\Ecommerce\ServerSideVisitorId::VISITOR_ID_SESSION_VAR_NAME, $visitor_id );
 
 		$tracker = new AjaxTracker( $this->settings );
-		$this->normalize_tracker_url();
+		$this->normalize_tracker_url( $tracker );
 
 		$this->assertEquals( 1, $tracker->idSite );
 		$this->assertEquals( 'https://example.org/wp-content/plugins/matomo/app/matomo.php', MatomoTracker::$URL );
@@ -180,7 +180,7 @@ class AjaxTrackerTest extends MatomoAnalytics_SharedFixture_TestCase {
 		WC()->session->set( \WpMatomo\Ecommerce\ServerSideVisitorId::VISITOR_ID_SESSION_VAR_NAME, $visitor_id );
 
 		$tracker = new AjaxTracker( $this->settings );
-		$this->normalize_tracker_url();
+		$this->normalize_tracker_url( $tracker );
 
 		$this->assertEmpty( $tracker->cookieVisitorId );
 		$this->assertEmpty( $tracker->forcedVisitorId );
@@ -205,7 +205,7 @@ class AjaxTrackerTest extends MatomoAnalytics_SharedFixture_TestCase {
 			}
 		};
 
-		$this->normalize_tracker_url();
+		$this->normalize_tracker_url( $tracker );
 
 		if ( empty( $header_value ) ) { // test without sec-purpose
 			unset( $_SERVER['HTTP_SEC_PURPOSE'] );
@@ -266,7 +266,7 @@ class AjaxTrackerTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 		$tracker = new AjaxTracker( $this->settings );
 		$tracker->set_visitor_id_safe( $visitor_id );
-		$this->normalize_tracker_url();
+		$this->normalize_tracker_url( $tracker );
 
 		$this->assertEmpty( $tracker->forcedVisitorId );
 	}
@@ -304,7 +304,7 @@ class AjaxTrackerTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	public function test_ajax_tracker_sends_correct_request_when_custom_ip_is_used() {
 		$tracker = $this->make_mock_tracker();
-		$this->normalize_tracker_url();
+		$this->normalize_tracker_url( $tracker );
 
 		$tracker->setIp( '1.2.3.4' );
 		$tracker->doTrackPageView( 'test page' );
@@ -334,7 +334,8 @@ class AjaxTrackerTest extends MatomoAnalytics_SharedFixture_TestCase {
 		return new TestAjaxTracker( $this->settings );
 	}
 
-	private function normalize_tracker_url() {
-		MatomoTracker::$URL = preg_replace( '/^http:/', 'https:', MatomoTracker::$URL );
+	private function normalize_tracker_url( MatomoTracker $tracker ) {
+		// The tracker now prefers its instance API URL over the legacy static URL.
+		$tracker->setApiUrl( preg_replace( '/^http:/', 'https:', MatomoTracker::$URL ) );
 	}
 }

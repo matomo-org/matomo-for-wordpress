@@ -27,9 +27,9 @@ use Matomo\Dependencies\Symfony\Component\HttpKernel\Exception\HttpException;
  */
 class FragmentHandler
 {
-    private $debug;
-    private $renderers = [];
-    private $requestStack;
+    private bool $debug;
+    private array $renderers = [];
+    private RequestStack $requestStack;
     /**
      * @param FragmentRendererInterface[] $renderers An array of FragmentRendererInterface instances
      * @param bool                        $debug     Whether the debug mode is enabled or not
@@ -44,6 +44,8 @@ class FragmentHandler
     }
     /**
      * Adds a renderer.
+     *
+     * @return void
      */
     public function addRenderer(FragmentRendererInterface $renderer)
     {
@@ -56,20 +58,16 @@ class FragmentHandler
      *
      *  * ignore_errors: true to return an empty string in case of an error
      *
-     * @param string|ControllerReference $uri A URI as a string or a ControllerReference instance
-     *
-     * @return string|null
-     *
      * @throws \InvalidArgumentException when the renderer does not exist
      * @throws \LogicException           when no main request is being handled
      */
-    public function render($uri, string $renderer = 'inline', array $options = [])
+    public function render(string|ControllerReference $uri, string $renderer = 'inline', array $options = []) : ?string
     {
         if (!isset($options['ignore_errors'])) {
             $options['ignore_errors'] = !$this->debug;
         }
         if (!isset($this->renderers[$renderer])) {
-            throw new \InvalidArgumentException(sprintf('The "%s" renderer does not exist.', $renderer));
+            throw new \InvalidArgumentException(\sprintf('The "%s" renderer does not exist.', $renderer));
         }
         if (!($request = $this->requestStack->getCurrentRequest())) {
             throw new \LogicException('Rendering a fragment can only be done when handling a Request.');
@@ -86,11 +84,11 @@ class FragmentHandler
      *
      * @throws \RuntimeException when the Response is not successful
      */
-    protected function deliver(Response $response)
+    protected function deliver(Response $response) : ?string
     {
         if (!$response->isSuccessful()) {
             $responseStatusCode = $response->getStatusCode();
-            throw new \RuntimeException(sprintf('Error when rendering "%s" (Status code is %d).', $this->requestStack->getCurrentRequest()->getUri(), $responseStatusCode), 0, new HttpException($responseStatusCode));
+            throw new \RuntimeException(\sprintf('Error when rendering "%s" (Status code is %d).', $this->requestStack->getCurrentRequest()->getUri(), $responseStatusCode), 0, new HttpException($responseStatusCode));
         }
         if (!$response instanceof StreamedResponse) {
             return $response->getContent();

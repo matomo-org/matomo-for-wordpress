@@ -38,10 +38,10 @@ class GoogleTagManager extends \Piwik\Plugins\SitesManager\SiteContentDetection\
     public function isDetected(?string $data = null, ?array $headers = null) : bool
     {
         $needle = 'gtm.start';
-        if (strpos($data, $needle) !== \false) {
+        if (str_contains($data, $needle)) {
             return \true;
         }
-        if (strpos($data, 'gtm.js') !== \false) {
+        if (str_contains($data, 'gtm.js')) {
             return \true;
         }
         $tests = ["/googletagmanager/i"];

@@ -51,7 +51,7 @@ class Less_Output_Mapped extends Less_Output
      * @param string $chunk
      * @param array|null $fileInfo
      * @param int $index
-     * @param mixed $mapLines
+     * @param bool|null $mapLines
      */
     public function add($chunk, $fileInfo = null, $index = 0, $mapLines = null)
     {
@@ -61,7 +61,7 @@ class Less_Output_Mapped extends Less_Output
         }
         $sourceLines = [];
         $sourceColumns = ' ';
-        if ($fileInfo) {
+        if (isset($fileInfo['currentUri'])) {
             $url = $fileInfo['currentUri'];
             if (isset($this->contentsMap[$url])) {
                 $inputSource = \substr($this->contentsMap[$url], 0, $index);

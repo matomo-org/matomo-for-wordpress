@@ -49,7 +49,14 @@ class Bzip implements \Matomo\Decompress\DecompressInterface
         }
         $output = fopen($pathExtracted, 'w');
         while (!feof($file)) {
-            fwrite($output, fread($file, 1024 * 1024));
+            $content = fread($file, 1024 * 1024);
+            if (\false === $content) {
+                $this->error = "fread failed";
+                fclose($output);
+                @unlink($pathExtracted);
+                return \false;
+            }
+            fwrite($output, $content);
         }
         fclose($output);
         $success = bzclose($file);

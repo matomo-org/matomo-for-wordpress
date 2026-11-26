@@ -18,7 +18,7 @@ use Matomo\Dependencies\Symfony\Component\VarDumper\Cloner\Stub;
  */
 class ArgsStub extends EnumStub
 {
-    private static $parameters = [];
+    private static array $parameters = [];
     public function __construct(array $args, string $function, ?string $class)
     {
         [$variadic, $params] = self::getParameters($function, $class);
@@ -50,7 +50,7 @@ class ArgsStub extends EnumStub
         }
         try {
             $r = null !== $class ? new \ReflectionMethod($class, $function) : new \ReflectionFunction($function);
-        } catch (\ReflectionException $e) {
+        } catch (\ReflectionException) {
             return [null, null];
         }
         $variadic = '...';

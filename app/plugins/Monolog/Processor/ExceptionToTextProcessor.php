@@ -8,6 +8,7 @@
  */
 namespace Piwik\Plugins\Monolog\Processor;
 
+use Matomo\Dependencies\Monolog\LogRecord;
 use Piwik\Common;
 use Piwik\ErrorHandler;
 use Piwik\Exception\InvalidRequestParameterException;
@@ -24,7 +25,7 @@ class ExceptionToTextProcessor
     {
         $this->forcePrintBacktrace = $forcePrintBacktrace;
     }
-    public function __invoke(array $record)
+    public function __invoke(LogRecord $record) : LogRecord
     {
         if (!$this->contextContainsException($record)) {
             return $record;
@@ -35,13 +36,13 @@ class ExceptionToTextProcessor
             return $record;
         }
         $exceptionStr = sprintf("%s(%d): %s", ExceptionHandler::replaceSensitiveValues($exception instanceof \Exception ? $exception->getFile() : $exception['file']), $exception instanceof \Exception ? $exception->getLine() : $exception['line'], $this->getStackTrace($exception));
-        if (!isset($record['message']) || strpos($record['message'], '{exception}') === \false) {
-            $record['message'] = $exceptionStr;
+        if (!isset($record['message']) || !str_contains($record['message'], '{exception}')) {
+            $message = $exceptionStr;
         } else {
-            $record['message'] = str_replace('{exception}', $exceptionStr, ExceptionHandler::replaceSensitiveValues($record['message']));
+            $message = str_replace('{exception}', $exceptionStr, ExceptionHandler::replaceSensitiveValues($record['message']));
         }
-        $record['message'] .= ' [' . $this->getErrorContext() . ']';
-        return $record;
+        $message .= ' [' . $this->getErrorContext() . ']';
+        return $record->with(message: $message);
     }
     private function contextContainsException($record)
     {

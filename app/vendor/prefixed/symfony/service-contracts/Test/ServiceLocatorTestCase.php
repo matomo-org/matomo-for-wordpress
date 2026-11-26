@@ -11,14 +11,16 @@
 namespace Matomo\Dependencies\Symfony\Contracts\Service\Test;
 
 use PHPUnit\Framework\TestCase;
+use Matomo\Dependencies\Psr\Container\ContainerExceptionInterface;
 use Matomo\Dependencies\Psr\Container\ContainerInterface;
+use Matomo\Dependencies\Psr\Container\NotFoundExceptionInterface;
 use Matomo\Dependencies\Symfony\Contracts\Service\ServiceLocatorTrait;
 abstract class ServiceLocatorTestCase extends TestCase
 {
     /**
-     * @return ContainerInterface
+     * @param array<string, callable> $factories
      */
-    protected function getServiceLocator(array $factories)
+    protected function getServiceLocator(array $factories) : ContainerInterface
     {
         return new class($factories) implements ContainerInterface
         {
@@ -27,31 +29,21 @@ abstract class ServiceLocatorTestCase extends TestCase
     }
     public function testHas()
     {
-        $locator = $this->getServiceLocator(['foo' => function () {
-            return 'bar';
-        }, 'bar' => function () {
-            return 'baz';
-        }, function () {
-            return 'dummy';
-        }]);
+        $locator = $this->getServiceLocator(['foo' => static fn() => 'bar', 'bar' => static fn() => 'baz', static fn() => 'dummy']);
         $this->assertTrue($locator->has('foo'));
         $this->assertTrue($locator->has('bar'));
         $this->assertFalse($locator->has('dummy'));
     }
     public function testGet()
     {
-        $locator = $this->getServiceLocator(['foo' => function () {
-            return 'bar';
-        }, 'bar' => function () {
-            return 'baz';
-        }]);
+        $locator = $this->getServiceLocator(['foo' => static fn() => 'bar', 'bar' => static fn() => 'baz']);
         $this->assertSame('bar', $locator->get('foo'));
         $this->assertSame('baz', $locator->get('bar'));
     }
     public function testGetDoesNotMemoize()
     {
         $i = 0;
-        $locator = $this->getServiceLocator(['foo' => function () use(&$i) {
+        $locator = $this->getServiceLocator(['foo' => static function () use(&$i) {
             ++$i;
             return 'bar';
         }]);
@@ -61,26 +53,24 @@ abstract class ServiceLocatorTestCase extends TestCase
     }
     public function testThrowsOnUndefinedInternalService()
     {
-        if (!$this->getExpectedException()) {
-            $this->expectException(\Matomo\Dependencies\Psr\Container\NotFoundExceptionInterface::class);
-            $this->expectExceptionMessage('The service "foo" has a dependency on a non-existent service "bar". This locator only knows about the "foo" service.');
-        }
-        $locator = $this->getServiceLocator(['foo' => function () use(&$locator) {
+        $locator = $this->getServiceLocator(['foo' => static function () use(&$locator) {
             return $locator->get('bar');
         }]);
+        $this->expectException(NotFoundExceptionInterface::class);
+        $this->expectExceptionMessage('The service "foo" has a dependency on a non-existent service "bar". This locator only knows about the "foo" service.');
         $locator->get('foo');
     }
     public function testThrowsOnCircularReference()
     {
-        $this->expectException(\Matomo\Dependencies\Psr\Container\ContainerExceptionInterface::class);
-        $this->expectExceptionMessage('Circular reference detected for service "bar", path: "bar -> baz -> bar".');
-        $locator = $this->getServiceLocator(['foo' => function () use(&$locator) {
+        $locator = $this->getServiceLocator(['foo' => static function () use(&$locator) {
             return $locator->get('bar');
-        }, 'bar' => function () use(&$locator) {
+        }, 'bar' => static function () use(&$locator) {
             return $locator->get('baz');
-        }, 'baz' => function () use(&$locator) {
+        }, 'baz' => static function () use(&$locator) {
             return $locator->get('bar');
         }]);
+        $this->expectException(ContainerExceptionInterface::class);
+        $this->expectExceptionMessage('Circular reference detected for service "bar", path: "bar -> baz -> bar".');
         $locator->get('foo');
     }
 }

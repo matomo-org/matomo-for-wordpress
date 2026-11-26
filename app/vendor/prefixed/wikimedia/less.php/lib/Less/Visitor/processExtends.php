@@ -7,6 +7,7 @@ namespace Matomo\Dependencies;
  */
 class Less_Visitor_processExtends extends Less_Visitor
 {
+    /** @var Less_Tree_Extend[][] */
     public $allExtendsStack;
     /**
      * @param Less_Tree_Ruleset $root
@@ -97,7 +98,7 @@ class Less_Visitor_processExtends extends Less_Visitor
         }
         return \array_merge($extendsList, $extendsToAdd);
     }
-    protected function visitRule($ruleNode, &$visitDeeper)
+    protected function visitDeclaration($declNode, &$visitDeeper)
     {
         $visitDeeper = \false;
     }
@@ -223,6 +224,9 @@ class Less_Visitor_processExtends extends Less_Visitor
         return \false;
     }
     /**
+     * @param array $potentialMatch
+     * @param Less_Tree_Element[] $needleElements
+     * @param Less_Tree_Element $haystackElement
      * @param int $hackstackElementIndex
      */
     private function PotentialMatch($potentialMatch, $needleElements, $haystackElement, $hackstackElementIndex)
@@ -304,8 +308,14 @@ class Less_Visitor_processExtends extends Less_Visitor
             }
             return \true;
         }
-        $elementValue1 = $elementValue1->value->value ?: $elementValue1->value;
-        $elementValue2 = $elementValue2->value->value ?: $elementValue2->value;
+        $elementValue1 = $elementValue1->value;
+        if ($elementValue1 instanceof Less_Tree_Quoted) {
+            $elementValue1 = $elementValue1->value;
+        }
+        $elementValue2 = $elementValue2->value;
+        if ($elementValue2 instanceof Less_Tree_Quoted) {
+            $elementValue2 = $elementValue2->value;
+        }
         return $elementValue1 === $elementValue2;
     }
     private function extendSelector($matches, $selectorPath, $replacementSelector)
@@ -325,12 +335,12 @@ class Less_Visitor_processExtends extends Less_Visitor
                 $currentSelectorPathElementIndex = 0;
                 $currentSelectorPathIndex++;
             }
-            $newElements = \array_merge(
-                \array_slice($selector->elements, $currentSelectorPathElementIndex, $match['index'] - $currentSelectorPathElementIndex),
+            $newElements = \array_merge(\array_slice(
+                $selector->elements,
+                $currentSelectorPathElementIndex,
                 // last parameter of array_slice is different than the last parameter of javascript's slice
-                [$firstElement],
-                \array_slice($replacementSelector->elements, 1)
-            );
+                $match['index'] - $currentSelectorPathElementIndex
+            ), [$firstElement], \array_slice($replacementSelector->elements, 1));
             if ($currentSelectorPathIndex === $match['pathIndex'] && $matchIndex > 0) {
                 $last_key = \count($path) - 1;
                 $path[$last_key]->elements = \array_merge($path[$last_key]->elements, $newElements);
@@ -363,12 +373,12 @@ class Less_Visitor_processExtends extends Less_Visitor
     {
         \array_pop($this->allExtendsStack);
     }
-    protected function visitDirective($directiveNode)
+    protected function visitAtRule($atRuleNode)
     {
-        $newAllExtends = \array_merge($directiveNode->allExtends, \end($this->allExtendsStack));
-        $this->allExtendsStack[] = $this->doExtendChaining($newAllExtends, $directiveNode->allExtends);
+        $newAllExtends = \array_merge($atRuleNode->allExtends, \end($this->allExtendsStack));
+        $this->allExtendsStack[] = $this->doExtendChaining($newAllExtends, $atRuleNode->allExtends);
     }
-    protected function visitDirectiveOut()
+    protected function visitAtRuleOut()
     {
         \array_pop($this->allExtendsStack);
     }

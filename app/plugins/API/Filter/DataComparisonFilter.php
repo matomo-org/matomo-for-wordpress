@@ -63,10 +63,7 @@ use Piwik\Site;
  */
 class DataComparisonFilter
 {
-    /**
-     * @var \Piwik\Request
-     */
-    private $request;
+    private \Piwik\Request $request;
     /**
      * @var int
      */
@@ -103,10 +100,7 @@ class DataComparisonFilter
      * @var bool
      */
     private $isRequestMultiplePeriod;
-    /**
-     * @var ComparisonRowGenerator
-     */
-    private $comparisonRowGenerator;
+    private ComparisonRowGenerator $comparisonRowGenerator;
     /**
      * @var array
      */
@@ -303,7 +297,7 @@ class DataComparisonFilter
         $metadata['compareSegment'] = $segment;
         $idSite = $modifiedParams['idSite'] ?? $this->request->getStringParameter('idSite');
         $segmentObj = new Segment($segment, [$idSite]);
-        $metadata['compareSegmentPretty'] = $segmentObj->getStoredSegmentName($idSite);
+        $metadata['compareSegmentPretty'] = $segmentObj->getStoredSegmentName(self::getSingleSiteId($idSite));
         $metadata['comparePeriod'] = $period;
         $metadata['compareDate'] = $date;
         $prettyPeriod = Factory::build($period, $date)->getLocalizedLongString();
@@ -480,6 +474,14 @@ class DataComparisonFilter
         return $this->request->getBoolParameter('include_trends', \false);
     }
     /**
+     * `idSite` can be `all` or a comma separated list, neither of which names a single site. Callers that need
+     * one site pass null instead, which asks for the segments available across every site the user can see.
+     */
+    private static function getSingleSiteId($idSite) : ?int
+    {
+        return is_numeric($idSite) ? (int) $idSite : null;
+    }
+    /**
      * Returns the pretty series label for a specific comparison based on the currently set comparison query parameters.
      *
      * @param int $labelSeriesIndex The index of the comparison. Comparison series order is determined by {@see self::getReportsToCompare()}.
@@ -492,7 +494,7 @@ class DataComparisonFilter
         [$periodIndex, $segmentIndex] = self::getIndividualComparisonRowIndices(null, $labelSeriesIndex, count($compareSegments));
         $idSite = \Piwik\Request::fromRequest()->getStringParameter('idSite');
         $segmentObj = new Segment($compareSegments[$segmentIndex], [$idSite]);
-        $prettySegment = $segmentObj->getStoredSegmentName($idSite);
+        $prettySegment = $segmentObj->getStoredSegmentName(self::getSingleSiteId($idSite));
         $prettyPeriod = Factory::build($comparePeriods[$periodIndex], $compareDates[$periodIndex])->getLocalizedLongString();
         $prettyPeriod = ucfirst($prettyPeriod);
         return self::getComparisonSeriesLabelSuffixFromParts($prettyPeriod, $prettySegment);

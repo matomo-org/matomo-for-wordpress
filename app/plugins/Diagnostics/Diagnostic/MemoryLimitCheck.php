@@ -15,10 +15,7 @@ use Piwik\Translation\Translator;
  */
 class MemoryLimitCheck implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnostic
 {
-    /**
-     * @var Translator
-     */
-    private $translator;
+    private Translator $translator;
     /**
      * @var int
      */

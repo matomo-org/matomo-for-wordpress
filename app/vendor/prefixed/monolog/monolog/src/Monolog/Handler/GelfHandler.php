@@ -1,5 +1,6 @@
 <?php
 
+declare (strict_types=1);
 /*
  * This file is part of the Monolog package.
  *
@@ -10,12 +11,11 @@
  */
 namespace Matomo\Dependencies\Monolog\Handler;
 
-use Gelf\IMessagePublisher;
 use Gelf\PublisherInterface;
-use Gelf\Publisher;
-use InvalidArgumentException;
-use Matomo\Dependencies\Monolog\Logger;
+use Matomo\Dependencies\Monolog\Level;
 use Matomo\Dependencies\Monolog\Formatter\GelfMessageFormatter;
+use Matomo\Dependencies\Monolog\Formatter\FormatterInterface;
+use Matomo\Dependencies\Monolog\LogRecord;
 /**
  * Handler to send messages to a Graylog2 (http://www.graylog2.org) server
  *
@@ -25,33 +25,28 @@ use Matomo\Dependencies\Monolog\Formatter\GelfMessageFormatter;
 class GelfHandler extends AbstractProcessingHandler
 {
     /**
-     * @var Publisher|PublisherInterface|IMessagePublisher the publisher object that sends the message to the server
+     * @var PublisherInterface the publisher object that sends the message to the server
      */
-    protected $publisher;
+    protected PublisherInterface $publisher;
     /**
-     * @param PublisherInterface|IMessagePublisher|Publisher $publisher a publisher object
-     * @param int                                            $level     The minimum logging level at which this handler will be triggered
-     * @param bool                                           $bubble    Whether the messages that are handled can bubble up the stack or not
+     * @param PublisherInterface $publisher a gelf publisher object
      */
-    public function __construct($publisher, $level = Logger::DEBUG, $bubble = \true)
+    public function __construct(PublisherInterface $publisher, int|string|Level $level = Level::Debug, bool $bubble = \true)
     {
         parent::__construct($level, $bubble);
-        if (!$publisher instanceof Publisher && !$publisher instanceof IMessagePublisher && !$publisher instanceof PublisherInterface) {
-            throw new InvalidArgumentException('Invalid publisher, expected a Gelf\\Publisher, Gelf\\IMessagePublisher or Gelf\\PublisherInterface instance');
-        }
         $this->publisher = $publisher;
     }
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
-    protected function write(array $record)
+    protected function write(LogRecord $record) : void
     {
-        $this->publisher->publish($record['formatted']);
+        $this->publisher->publish($record->formatted);
     }
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    protected function getDefaultFormatter()
+    protected function getDefaultFormatter() : FormatterInterface
     {
         return new GelfMessageFormatter();
     }

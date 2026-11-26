@@ -145,7 +145,7 @@ class VariablesDao extends \Piwik\Plugins\TagManager\Dao\BaseDao implements \Piw
         $bind = [self::STATUS_ACTIVE, $idSite, $idContainerVersion, $variableType];
         $table = $this->tablePrefixed;
         $variables = Db::fetchAll("SELECT idvariable FROM {$table} WHERE status = ? AND idsite = ? and idcontainerversion = ? and type = ? ORDER BY created_date ASC", $bind);
-        return is_array($variables) && count($variables) ? array_column($variables, 'idvariable') : [];
+        return count($variables) ? array_column($variables, 'idvariable') : [];
     }
     protected function isNameAlreadyUsed(int $idSite, string $name, ?int $idContainerVersion = null) : bool
     {

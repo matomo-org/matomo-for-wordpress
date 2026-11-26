@@ -33,7 +33,7 @@
               <input
                 type="checkbox"
                 id="select-plugin-all"
-                @change="selectAll($event.target.checked)"
+                @change="selectAll(($event.target as HTMLInputElement).checked)"
               />
               <span></span>
             </label>
@@ -71,7 +71,7 @@
           </span>
         </td>
         <td class="name">
-          <a @click.prevent v-plugin-name="{pluginName:plugin.name}" class="plugin-details">
+          <a v-plugin-name="{pluginName:plugin.name}" class="plugin-details">
             {{ plugin.name }}
           </a>
         </td>

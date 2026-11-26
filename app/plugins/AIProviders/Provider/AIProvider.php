@@ -23,6 +23,7 @@ use Piwik\Plugins\AIProviders\Exception\AIProviderClientException;
 use Piwik\Plugins\AIProviders\Exception\AIProviderException;
 use Piwik\Plugins\AIProviders\Exception\AIProviderServerException;
 use Piwik\Plugins\AIProviders\Model\Configuration;
+use Piwik\Plugins\AIProviders\WebSearchUsage;
 /**
  * @phpstan-import-type CanonicalMessageArray from CanonicalMessage
  * @phpstan-import-type CanonicalContentBlockArray from CanonicalMessage
@@ -45,6 +46,35 @@ abstract class AIProvider
      * above Anthropic's 1024-token minimum so it is valid for every provider.
      */
     protected const DEFAULT_THINKING_BUDGET = 2048;
+    /**
+     * Default provider HTTP timeout for a single-shot completion, unless the
+     * request sets its own with {@link AIRequest::withTimeoutSeconds()}.
+     */
+    protected const COMPLETE_TIMEOUT_SECONDS = 30;
+    /**
+     * Default timeout for a grounded completion. Server-side search runs several
+     * fetches inside the one HTTP request, so these routinely take 30-90s where
+     * an ungrounded completion takes 2-5s.
+     *
+     * That outlasts the default read timeout of every common web server and
+     * proxy in front of PHP (nginx `fastcgi_read_timeout` and Apache `Timeout`
+     * are both 60s), which cut the connection whatever PHP is configured to
+     * allow. So grounded completions are meant for CLI commands and scheduled
+     * tasks, which have nothing in front of them. A caller running one inside a
+     * web request must either raise those limits itself or lower this with
+     * {@link AIRequest::withTimeoutSeconds()}, or the connection dies before the
+     * provider answers.
+     *
+     * PHP's own `max_execution_time` is the lesser worry: on non-Windows SAPIs
+     * it does not advance while a cURL transfer is waiting, so a long provider
+     * call alone rarely trips it.
+     *
+     * A retryable HTTP status (see {@link TRANSIENT_ERROR_STATUS_CODES}) can
+     * multiply both the wall time and the per-search fees, because each attempt
+     * runs its own searches. A transport-level timeout does not: it throws on
+     * the first attempt.
+     */
+    protected const WEB_SEARCH_COMPLETE_TIMEOUT_SECONDS = 120;
     /**
      * @var string
      */
@@ -284,21 +314,65 @@ abstract class AIProvider
         return rtrim($systemPrompt) . "\n\n" . self::JSON_RESPONSE_INSTRUCTION;
     }
     /**
-     * @param int|null $inputTokens  Prompt tokens reported by the provider, if any.
-     * @param int|null $outputTokens Completion tokens reported by the provider, if any.
+     * @param int|null $inputTokens      Prompt tokens reported by the provider, if any.
+     * @param int|null $outputTokens     Completion tokens reported by the provider, if any.
+     * @param int|null $cacheReadTokens  Prompt tokens served from the provider cache, if any.
+     * @param int|null $cacheWriteTokens Prompt tokens written to the provider cache, if any.
+     * @param int      $flatFeeCalls     Calls billed at a fixed price per call, 0 for token-billed providers.
+     * @param array<string, mixed> $providerMeta Extra data for the usage event, no prompt or response content.
      */
-    protected function buildResponse(AIRequest $request, string $model, string $text, ?int $inputTokens = null, ?int $outputTokens = null, ?string $stopReason = null) : AIProviderResponse
+    protected function buildResponse(AIRequest $request, string $model, string $text, ?int $inputTokens = null, ?int $outputTokens = null, ?string $stopReason = null, ?WebSearchUsage $webSearch = null, ?float $cost = null, ?int $cacheReadTokens = null, ?int $cacheWriteTokens = null, int $flatFeeCalls = 0, array $providerMeta = []) : AIProviderResponse
     {
-        return new AIProviderResponse($this->getId(), $this->getName(), $model, trim($text), $inputTokens, $outputTokens, $this->getReasoningLevelUsed($request), $this->isWebSearchUsed($request), $this->lastRequestExecutionTimeMs, $stopReason);
+        return new AIProviderResponse($this->getId(), $this->getName(), $model, trim($text), $inputTokens, $outputTokens, $this->getReasoningLevelUsed($request), $this->lastRequestExecutionTimeMs, $stopReason, $webSearch, $cost, $cacheReadTokens, $cacheWriteTokens, $flatFeeCalls, $providerMeta);
     }
     /**
      * @param list<CanonicalContentBlockArray> $content canonical assistant content blocks
-     * @param int|null $inputTokens  Prompt tokens reported by the provider, if any.
-     * @param int|null $outputTokens Completion tokens reported by the provider, if any.
+     * @param int|null $inputTokens      Prompt tokens reported by the provider, if any.
+     * @param int|null $outputTokens     Completion tokens reported by the provider, if any.
+     * @param float|null $cost           Cost in USD as billed by the provider, if it reports one.
+     * @param int|null $cacheReadTokens  Prompt tokens served from the provider cache, if any.
+     * @param int|null $cacheWriteTokens Prompt tokens written to the provider cache, if any.
+     * @param int      $flatFeeCalls     Calls billed at a fixed price per call, 0 for token-billed providers.
+     * @param array<string, mixed> $providerMeta Extra data for the usage event, no prompt or response content.
      */
-    protected function buildConversationResponse(string $model, array $content, string $stopReason, ?int $inputTokens = null, ?int $outputTokens = null) : AIConversationResponse
+    protected function buildConversationResponse(string $model, array $content, string $stopReason, ?int $inputTokens = null, ?int $outputTokens = null, ?float $cost = null, ?int $cacheReadTokens = null, ?int $cacheWriteTokens = null, int $flatFeeCalls = 0, array $providerMeta = []) : AIConversationResponse
     {
-        return new AIConversationResponse($this->getId(), $this->getName(), $model, $content, $stopReason, $inputTokens, $outputTokens, $this->lastRequestExecutionTimeMs);
+        return new AIConversationResponse($this->getId(), $this->getName(), $model, $content, $stopReason, $inputTokens, $outputTokens, $this->lastRequestExecutionTimeMs, $cost, $cacheReadTokens, $cacheWriteTokens, $flatFeeCalls, $providerMeta);
+    }
+    /**
+     * Splits an input count that includes the tokens served from the prompt
+     * cache (as OpenAI and Gemini report it) into uncached input and cache
+     * reads, so `inputTokens` means the same for every provider.
+     *
+     * @return array{0: int|null, 1: int|null} Uncached input tokens and cache read tokens.
+     */
+    protected function splitCachedInputTokens(?int $total, ?int $cached) : array
+    {
+        if ($total === null || $cached === null) {
+            return [$total, $cached];
+        }
+        return [max(0, $total - $cached), $cached];
+    }
+    /**
+     * Reads a token count from a provider `usage` object, taking the first key
+     * that is present. Providers that report the same counter under more than
+     * one name (Bedrock returns both the API and the CloudWatch metric
+     * spelling) can list every spelling they accept.
+     *
+     * @param mixed           $usage Raw `usage` value as decoded from the response.
+     * @param non-empty-list<string> $keys
+     */
+    protected function readUsageTokens($usage, array $keys) : ?int
+    {
+        if (!is_array($usage)) {
+            return null;
+        }
+        foreach ($keys as $key) {
+            if (isset($usage[$key]) && is_numeric($usage[$key])) {
+                return (int) $usage[$key];
+            }
+        }
+        return null;
     }
     protected function getReasoningLevelUsed(AIRequest $request) : string
     {
@@ -307,11 +381,60 @@ abstract class AIProvider
         // resolved capability level all map onto this single flag.
         return $this->wantsThinking($request) ? Configuration::CAPABILITY_THINKING : AIRequest::REASONING_NONE;
     }
-    protected function isWebSearchUsed(AIRequest $request) : bool
+    /**
+     * Appends one fragment of answer text to the answer being assembled,
+     * inserting a single space only where a boundary needs one.
+     *
+     * Grounded answers arrive in pieces, and the two kinds of gap between them
+     * need opposite treatment:
+     *
+     * - Two *adjacent* text fragments are one sentence split at a citation
+     *   boundary, and each carries its own spacing, so nothing may be inserted.
+     *   Anthropic sends `"Matomo is "` then `"the leading option"`.
+     * - Fragments separated by something else, a tool-use block, a skipped
+     *   reasoning part or a separate output message, are separate sentences and
+     *   the provider does not pad them. Anthropic sends
+     *   `"I'll search for that."` then the search blocks then
+     *   `"Based on the search results, "`, which run together unjoined.
+     *
+     * A space rather than a newline, because a fragment boundary can fall inside
+     * a JSON string value, where a raw newline makes the response undecodable.
+     * Nothing is inserted when either side already carries boundary whitespace.
+     *
+     * @param bool $atBoundary Whether something other than answer text stood between the two.
+     */
+    protected function appendAnswerText(string $answer, string $fragment, bool $atBoundary) : string
     {
-        // TODO: Implement provider-specific web search/tool configuration for
-        // OpenAI, Google, Anthropic, and managed providers separately.
+        if ($answer === '' || $fragment === '') {
+            return $answer . $fragment;
+        }
+        $needsSpace = $atBoundary && rtrim($answer) === $answer && ltrim($fragment) === $fragment;
+        return $answer . ($needsSpace ? ' ' : '') . $fragment;
+    }
+    /**
+     * Whether the provider has a server-side web search tool that
+     * {@link complete()} can switch on. {@link AIProviderService::complete()}
+     * rejects a grounded request for a provider that returns false.
+     */
+    public function supportsWebSearch() : bool
+    {
         return \false;
+    }
+    /**
+     * Whether this request runs grounded: the caller asked for search and this
+     * provider can do it.
+     */
+    protected function wantsWebSearch(AIRequest $request) : bool
+    {
+        return $request->isWebSearchEnabled() && $this->supportsWebSearch();
+    }
+    /**
+     * The HTTP timeout for this completion: the request's own, else the default
+     * for grounded or ungrounded requests.
+     */
+    protected function completionTimeoutSeconds(AIRequest $request) : int
+    {
+        return $request->getTimeoutSeconds() ?? ($this->wantsWebSearch($request) ? static::WEB_SEARCH_COMPLETE_TIMEOUT_SECONDS : static::COMPLETE_TIMEOUT_SECONDS);
     }
     /**
      * Completes a request against an OpenAI-compatible Chat Completions endpoint.
@@ -340,10 +463,11 @@ abstract class AIProvider
         if ($request->isJsonResponse()) {
             $payload['response_format'] = ['type' => 'json_object'];
         }
-        $response = $this->sendJsonRequest($endpointUrl, $headers, $payload);
+        $response = $this->sendJsonRequest($endpointUrl, $headers, $payload, $this->completionTimeoutSeconds($request));
         $text = $response['choices'][0]['message']['content'] ?? '';
         $finishReason = is_string($response['choices'][0]['finish_reason'] ?? null) ? $response['choices'][0]['finish_reason'] : null;
-        return $this->buildResponse($request, $model, is_string($text) ? $text : '', isset($response['usage']['prompt_tokens']) ? (int) $response['usage']['prompt_tokens'] : null, isset($response['usage']['completion_tokens']) ? (int) $response['usage']['completion_tokens'] : null, $finishReason);
+        [$inputTokens, $cacheReadTokens] = $this->splitCachedInputTokens($this->readUsageTokens($response['usage'] ?? null, ['prompt_tokens']), $this->readUsageTokens($response['usage']['prompt_tokens_details'] ?? null, ['cached_tokens']));
+        return $this->buildResponse($request, $model, is_string($text) ? $text : '', $inputTokens, isset($response['usage']['completion_tokens']) ? (int) $response['usage']['completion_tokens'] : null, $finishReason, null, null, $cacheReadTokens);
     }
     /**
      * @return array<string, mixed>
@@ -427,7 +551,8 @@ abstract class AIProvider
         $response = $this->sendJsonRequest($endpointUrl, $headers, $payload, $request->getTimeoutSeconds());
         $message = is_array($response['choices'][0]['message'] ?? null) ? $response['choices'][0]['message'] : [];
         $finishReason = is_string($response['choices'][0]['finish_reason'] ?? null) ? $response['choices'][0]['finish_reason'] : '';
-        return $this->buildConversationResponse($model, $this->openAIMessageToCanonical($message), $this->mapOpenAIFinishReason($finishReason), isset($response['usage']['prompt_tokens']) ? (int) $response['usage']['prompt_tokens'] : null, isset($response['usage']['completion_tokens']) ? (int) $response['usage']['completion_tokens'] : null);
+        [$inputTokens, $cacheReadTokens] = $this->splitCachedInputTokens($this->readUsageTokens($response['usage'] ?? null, ['prompt_tokens']), $this->readUsageTokens($response['usage']['prompt_tokens_details'] ?? null, ['cached_tokens']));
+        return $this->buildConversationResponse($model, $this->openAIMessageToCanonical($message), $this->mapOpenAIFinishReason($finishReason), $inputTokens, isset($response['usage']['completion_tokens']) ? (int) $response['usage']['completion_tokens'] : null, null, $cacheReadTokens);
     }
     /**
      * @param list<CanonicalMessageArray> $messages canonical messages
@@ -702,15 +827,21 @@ abstract class AIProvider
         return $endpointUrl;
     }
     /**
-     * Derives the OpenAI-compatible models-listing endpoint from a chat
-     * completions endpoint, e.g. `.../v1/chat/completions` or a bare `.../v1`
-     * base both become `.../v1/models` — the standard `GET {base}/models`
-     * probe used by the "test connection" flow.
+     * Derives a sibling OpenAI-compatible endpoint from a chat completions
+     * endpoint, e.g. `.../v1/chat/completions` or a bare `.../v1` base both
+     * become `.../v1/{$path}`.
+     */
+    protected function openAiCompatibleEndpoint(string $chatEndpointUrl, string $path) : string
+    {
+        $base = preg_replace('#/chat/completions/?$#', '', $chatEndpointUrl) ?? $chatEndpointUrl;
+        return rtrim($base, '/') . '/' . $path;
+    }
+    /**
+     * The standard `GET {base}/models` probe used by the "test connection" flow.
      */
     protected function openAiCompatibleModelsEndpoint(string $chatEndpointUrl) : string
     {
-        $base = preg_replace('#/chat/completions/?$#', '', $chatEndpointUrl) ?? $chatEndpointUrl;
-        return rtrim($base, '/') . '/models';
+        return $this->openAiCompatibleEndpoint($chatEndpointUrl, 'models');
     }
     /**
      * Sends a JSON request to the provider and returns the decoded JSON object.
@@ -722,10 +853,10 @@ abstract class AIProvider
      * failures.
      *
      * @param array<string, string> $headers
-     * @param array<string, mixed> $payload
+     * @param array<mixed> $payload JSON body: an object, or a list for APIs that take one
      * @return array<string, mixed>
      */
-    protected function sendJsonRequest(string $url, array $headers, array $payload, int $timeoutSeconds = 30) : array
+    protected function sendJsonRequest(string $url, array $headers, array $payload, int $timeoutSeconds = self::COMPLETE_TIMEOUT_SECONDS) : array
     {
         $requestBody = json_encode($payload);
         if (!is_string($requestBody)) {
@@ -751,7 +882,7 @@ abstract class AIProvider
      * {@link sendGetRequest()}.
      *
      * @param array<string, string> $headers
-     * @param array<string, mixed>|null $debugPayload
+     * @param array<mixed>|null $debugPayload
      * @return array<string, mixed>
      */
     private function sendRequest(string $method, string $url, array $headers, ?string $requestBody, int $timeoutSeconds, ?array $debugPayload = null) : array
@@ -833,7 +964,7 @@ abstract class AIProvider
      * Debug-only metadata for local provider testing. Intentionally does not
      * log request/response content, headers, API keys, prompts, or model output.
      *
-     * @param array<string, mixed>|null $payload
+     * @param array<mixed>|null $payload
      */
     private function logProviderRequestDebugMetadata(string $method, string $url, int $timeoutSeconds, int $requestBytes, int $attempt, ?array $payload) : void
     {
@@ -843,7 +974,7 @@ abstract class AIProvider
         StaticContainer::get(LoggerInterface::class)->debug('AIProviders debug provider request metadata: provider={provider}, method={method}, ' . 'host={host}, path={path}, model={model}, thinking={thinking}, timeoutSeconds={timeoutSeconds}, ' . 'attempt={attempt}, requestBytes={requestBytes}', array_merge($this->getProviderRequestDebugMetadata($url, $payload), ['provider' => $this->getName(), 'method' => $method, 'timeoutSeconds' => $timeoutSeconds, 'attempt' => $attempt, 'requestBytes' => $requestBytes]));
     }
     /**
-     * @param array<string, mixed>|null $payload
+     * @param array<mixed>|null $payload
      */
     private function logProviderResponseDebugMetadata(string $method, string $url, int $timeoutSeconds, int $status, int $responseBytes, int $durationMs, int $attempt, ?array $payload) : void
     {
@@ -860,7 +991,7 @@ abstract class AIProvider
         StaticContainer::get(LoggerInterface::class)->debug('AIProviders debug provider transport metadata: provider={provider}, method={method}, ' . 'host={host}, path={path}, timeoutSeconds={timeoutSeconds}, attempt={attempt}, ' . 'exceptionClass={exceptionClass}', array_merge($this->getProviderRequestDebugMetadata($url, null), ['provider' => $this->getName(), 'method' => $method, 'timeoutSeconds' => $timeoutSeconds, 'attempt' => $attempt, 'exceptionClass' => get_class($exception)]));
     }
     /**
-     * @param array<string, mixed>|null $payload
+     * @param array<mixed>|null $payload
      * @return array{host: string, path: string, model: string, thinking: string}
      */
     private function getProviderRequestDebugMetadata(string $url, ?array $payload) : array
@@ -869,7 +1000,7 @@ abstract class AIProvider
         return ['host' => (string) parse_url($url, \PHP_URL_HOST), 'path' => $path, 'model' => $this->getDebugModel($payload, $path), 'thinking' => $this->getDebugThinking($payload)];
     }
     /**
-     * @param array<string, mixed>|null $payload
+     * @param array<mixed>|null $payload
      */
     private function getDebugModel(?array $payload, string $path) : string
     {
@@ -884,7 +1015,7 @@ abstract class AIProvider
         return '';
     }
     /**
-     * @param array<string, mixed>|null $payload
+     * @param array<mixed>|null $payload
      */
     private function getDebugThinking(?array $payload) : string
     {
@@ -906,7 +1037,7 @@ abstract class AIProvider
     private function isAuthenticationError(string $message) : bool
     {
         $message = strtolower($message);
-        return strpos($message, 'api key') !== \false || strpos($message, 'x-api-key') !== \false || strpos($message, 'authentication') !== \false || strpos($message, 'unauthorized') !== \false || strpos($message, 'invalid key') !== \false;
+        return str_contains($message, 'api key') || str_contains($message, 'x-api-key') || str_contains($message, 'authentication') || str_contains($message, 'unauthorized') || str_contains($message, 'invalid key');
     }
     /**
      * @param int[] $retryDelays

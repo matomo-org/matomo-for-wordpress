@@ -6,7 +6,7 @@
  *
  */
 
-import { expect, browser } from '@wdio/globals';
+import { expect, browser, $ } from '@wdio/globals';
 import ContentsPage from './pageobjects/matomo-reporting/behaviour/contents.page.js';
 import DownloadsPage from './pageobjects/matomo-reporting/behaviour/downloads.page.js';
 import EngagementPage from './pageobjects/matomo-reporting/behaviour/engagement.page.js';
@@ -46,38 +46,21 @@ describe('Matomo Reporting > Behaviour', () => {
   });
 
   it('should load the engagement page correctly', async () => {
-    await EngagementPage.open();
+    // Request tables through the report URL instead of depending on the report-actions menu.
+    // Equal-frequency tags can appear in a different order on each tag-cloud render.
+    await EngagementPage.open({ viewDataTable: 'table' });
 
-    // row positions in tag clouds can change randomly when the primary metric
-    // has the samevalue for each row. so we change tag clouds to simple tables
-    // before taking a screenshot.
-    const widgetsToChange = [
+    const widgetsToCheck = [
       'widgetVisitorInterestgetNumberOfVisitsPerVisitDuration',
       'widgetVisitorInterestgetNumberOfVisitsPerPage',
     ];
 
-    for (const w of widgetsToChange) {
-      await browser.execute((widget) => {
-        $(`#${widget} .activateVisualizationSelection`)[0].click();
-      }, w);
-      await browser.pause(250);
-      await browser.execute((widget) => {
-        $(`#${widget} .tableAllColumnsSwitch`)[0].click();
-      }, w);
-
-      await browser.waitUntil(() => {
-        return browser.execute(() => {
-          return $('.loadingPiwik:visible').length === 0;
-        });
-      }, { interval: 1000, timeout: 30000 });
+    for (const id of widgetsToCheck) {
+      const widget = $(`#${id}`);
+      await expect(widget.$('table.dataTable')).toBeDisplayed({ wait: 30000 });
+      await expect(widget.$('table.dataTable tbody tr')).toBeDisplayed();
+      await expect(widget.$('.tagCloud')).not.toBeDisplayed();
     }
-
-    await browser.pause(4000);
-
-    await EngagementPage.prepareMatomoPageForScreenshot();
-    await expect(
-      await browser.checkFullPageScreen(getScreenshotName('matomo-reporting.behaviour.engagement'))
-    ).toBeLessThan(0.1);
   });
 
   it('should load the entry pages page correctly', async () => {

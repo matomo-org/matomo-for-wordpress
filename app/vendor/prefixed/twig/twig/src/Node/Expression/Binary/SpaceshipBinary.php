@@ -11,10 +11,16 @@
 namespace Matomo\Dependencies\Twig\Node\Expression\Binary;
 
 use Matomo\Dependencies\Twig\Compiler;
-class SpaceshipBinary extends AbstractBinary
+use Matomo\Dependencies\Twig\Node\CoercesChildrenToStringInterface;
+use Matomo\Dependencies\Twig\Node\Expression\ReturnNumberInterface;
+class SpaceshipBinary extends AbstractBinary implements ReturnNumberInterface, CoercesChildrenToStringInterface
 {
     public function operator(Compiler $compiler) : Compiler
     {
         return $compiler->raw('<=>');
+    }
+    public function getStringCoercedChildNames() : array
+    {
+        return ['left', 'right'];
     }
 }

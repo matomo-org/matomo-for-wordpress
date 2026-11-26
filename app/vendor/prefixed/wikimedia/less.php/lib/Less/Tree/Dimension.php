@@ -4,16 +4,18 @@ namespace Matomo\Dependencies;
 
 /**
  * @private
+ * @see less-2.5.3.js#Dimension.prototype
  */
-class Less_Tree_Dimension extends Less_Tree
+class Less_Tree_Dimension extends Less_Tree implements Less_Tree_HasValueProperty
 {
+    /** @var float */
     public $value;
+    /** @var Less_Tree_Unit */
     public $unit;
-    public $type = 'Dimension';
     public function __construct($value, $unit = null)
     {
         $this->value = \floatval($value);
-        if ($unit && $unit instanceof Less_Tree_Unit) {
+        if ($unit instanceof Less_Tree_Unit) {
             $this->unit = $unit;
         } elseif ($unit) {
             $this->unit = new Less_Tree_Unit([$unit]);
@@ -37,7 +39,7 @@ class Less_Tree_Dimension extends Less_Tree
         if (Less_Parser::$options['strictUnits'] && !$this->unit->isSingular()) {
             throw new Less_Exception_Compiler("Multiple units in dimension. Correct the units or use the unit function. Bad unit: " . $this->unit->toString());
         }
-        $value = Less_Functions::fround($this->value);
+        $value = $this->fround($this->value);
         $strValue = (string) $value;
         if ($value !== 0 && $value < 1.0E-6 && $value > -1.0E-6) {
             // would be output 1e-6 etc.
@@ -67,15 +69,18 @@ class Less_Tree_Dimension extends Less_Tree
     // so `1px + 2em` will yield `3px`.
     /**
      * @param string $op
+     * @param self $other
      */
     public function operate($op, $other)
     {
-        $value = Less_Functions::operate($op, $this->value, $other->value);
-        $unit = clone $this->unit;
+        $value = $this->_operate($op, $this->value, $other->value);
+        $unit = $this->unit->clone();
         if ($op === '+' || $op === '-') {
             if (!$unit->numerator && !$unit->denominator) {
-                $unit->numerator = $other->unit->numerator;
-                $unit->denominator = $other->unit->denominator;
+                $unit = $other->unit->clone();
+                if ($this->unit->backupUnit) {
+                    $unit->backupUnit = $this->unit->backupUnit;
+                }
             } elseif (!$other->unit->numerator && !$other->unit->denominator) {
                 // do nothing
             } else {
@@ -83,7 +88,7 @@ class Less_Tree_Dimension extends Less_Tree
                 if (Less_Parser::$options['strictUnits'] && $other->unit->toString() !== $unit->toCSS()) {
                     throw new Less_Exception_Compiler("Incompatible units. Change the units or use the unit function. Bad units: '" . $unit->toString() . "' and " . $other->unit->toString() . "'.");
                 }
-                $value = Less_Functions::operate($op, $this->value, $other->value);
+                $value = $this->_operate($op, $this->value, $other->value);
             }
         } elseif ($op === '*') {
             $unit->numerator = \array_merge($unit->numerator, $other->unit->numerator);
@@ -98,33 +103,29 @@ class Less_Tree_Dimension extends Less_Tree
             \sort($unit->denominator);
             $unit->cancel();
         }
-        return new Less_Tree_Dimension($value, $unit);
+        return new self($value, $unit);
     }
+    /**
+     * @param Less_Tree $other
+     * @return int|null
+     * @see less-2.5.3.js#Dimension.prototype.compare
+     */
     public function compare($other)
     {
-        if ($other instanceof Less_Tree_Dimension) {
-            if ($this->unit->isEmpty() || $other->unit->isEmpty()) {
-                $a = $this;
-                $b = $other;
-            } else {
-                $a = $this->unify();
-                $b = $other->unify();
-                if ($a->unit->compare($b->unit) !== 0) {
-                    return -1;
-                }
-            }
-            $aValue = $a->value;
-            $bValue = $b->value;
-            if ($bValue > $aValue) {
-                return -1;
-            } elseif ($bValue < $aValue) {
-                return 1;
-            } else {
-                return 0;
-            }
-        } else {
-            return -1;
+        if (!$other instanceof self) {
+            return null;
         }
+        if ($this->unit->isEmpty() || $other->unit->isEmpty()) {
+            $a = $this;
+            $b = $other;
+        } else {
+            $a = $this->unify();
+            $b = $other->unify();
+            if ($a->unit->compare($b->unit) !== 0) {
+                return null;
+            }
+        }
+        return Less_Tree::numericCompare($a->value, $b->value);
     }
     public function unify()
     {
@@ -133,7 +134,7 @@ class Less_Tree_Dimension extends Less_Tree
     public function convertTo($conversions)
     {
         $value = $this->value;
-        $unit = clone $this->unit;
+        $unit = $this->unit->clone();
         if (\is_string($conversions)) {
             $derivedConversions = [];
             foreach (Less_Tree_UnitConversions::$groups as $i) {
@@ -151,7 +152,7 @@ class Less_Tree_Dimension extends Less_Tree
                 if (!isset($group[$atomicUnit])) {
                     continue;
                 }
-                $value = $value * ($group[$atomicUnit] / $group[$targetUnit]);
+                $value *= $group[$atomicUnit] / $group[$targetUnit];
                 $unit->numerator[$i] = $targetUnit;
             }
             // denominator
@@ -160,11 +161,11 @@ class Less_Tree_Dimension extends Less_Tree
                 if (!isset($group[$atomicUnit])) {
                     continue;
                 }
-                $value = $value / ($group[$atomicUnit] / $group[$targetUnit]);
+                $value /= $group[$atomicUnit] / $group[$targetUnit];
                 $unit->denominator[$i] = $targetUnit;
             }
         }
         $unit->cancel();
-        return new Less_Tree_Dimension($value, $unit);
+        return new self($value, $unit);
     }
 }

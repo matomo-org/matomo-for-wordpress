@@ -188,7 +188,7 @@ class Cookie
     private function extractSignedContent($content)
     {
         $signature = substr($content, -40);
-        if (substr($content, -43, 3) === self::VALUE_SEPARATOR . '_=' && $signature === sha1(substr($content, 0, -40) . \Piwik\SettingsPiwik::getSalt())) {
+        if (substr($content, -43, 3) === self::VALUE_SEPARATOR . '_=' && hash_equals(sha1(substr($content, 0, -40) . \Piwik\SettingsPiwik::getSalt()), $signature)) {
             // strip trailing: VALUE_SEPARATOR '_=' signature"
             return substr($content, 0, -43);
         }
@@ -206,7 +206,7 @@ class Cookie
         // this value
         $cookieStr = $this->extractSignedContent($_COOKIE[$this->name]);
         $isSigned = !empty($cookieStr);
-        if ($cookieStr === \false && !empty($_COOKIE[$this->name]) && strpos($_COOKIE[$this->name], '=') !== \false) {
+        if ($cookieStr === \false && !empty($_COOKIE[$this->name]) && str_contains($_COOKIE[$this->name], '=')) {
             // cookie was set since Matomo 4
             $cookieStr = $_COOKIE[$this->name];
         }

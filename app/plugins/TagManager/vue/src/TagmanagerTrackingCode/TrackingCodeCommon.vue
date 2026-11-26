@@ -1,3 +1,9 @@
+<!--
+  Matomo - free/libre analytics platform
+  @link https://matomo.org
+  @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+-->
+
 <template>
   <div class="tagManagerTrackingCode">
     <li v-if="showContainerRow">
@@ -73,7 +79,7 @@
                     name="environment"
                     :model-value="environment"
                     @update:model-value="environment = $event;
-                      this.$emit('fetchInstallInstructions')"
+                      $emit('fetchInstallInstructions')"
                     :options="environments"
                     :disabled="environments.length <= 1"
                     :full-width="true"
@@ -93,7 +99,7 @@
       v-if="idContainer && noReleaseFound"
     >
       {{ translate('TagManager_NoReleasesFoundForContainer') }}
-      <a href>{{ translate('TagManager_PublishVersionToEnvironmentToViewEmbedCode') }} </a>
+      <a href="">{{ translate('TagManager_PublishVersionToEnvironmentToViewEmbedCode') }} </a>
     </div>
     <template
       v-for="(installInstruction, index) in installInstructions"
@@ -121,14 +127,14 @@
     <template v-if="showBottom && !noReleaseFound && idContainer">
       <p v-if="!showTestSection" v-html="$sanitize(getCongratulationsText)"></p>
       <template v-else>
-        <li><component :is="testComponent" :site="site"></component></li>
+        <li><component :is="asComponent(testComponent)" :site="site"></component></li>
       </template>
     </template>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent , Component } from 'vue';
 import {
   AjaxHelper,
   ActivityIndicator,
@@ -159,7 +165,7 @@ interface Option {
   value: string;
 }
 
-interface TagmanagerTrackingCodeState {
+export interface TagmanagerTrackingCodeState {
   containerVariables: Variable[];
   isLoading: boolean;
   idContainer: string;
@@ -248,6 +254,9 @@ export default defineComponent({
     },
   },
   methods: {
+    asComponent(component: unknown): Component {
+      return component as Component;
+    },
     onSiteChange() {
       this.installInstructions = [];
       this.containerOptions = [];

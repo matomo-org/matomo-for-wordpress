@@ -11,6 +11,7 @@
 namespace Matomo\Dependencies\Symfony\Component\HttpFoundation;
 
 use Matomo\Dependencies\Symfony\Component\HttpFoundation\Exception\BadRequestException;
+use Matomo\Dependencies\Symfony\Component\HttpFoundation\Exception\UnexpectedValueException;
 /**
  * InputBag is a container for user input values such as $_GET, $_POST, $_REQUEST, and $_COOKIE.
  *
@@ -22,31 +23,22 @@ final class InputBag extends ParameterBag
      * Returns a scalar input value by name.
      *
      * @param string|int|float|bool|null $default The default value if the input key does not exist
-     *
-     * @return string|int|float|bool|null
      */
-    public function get(string $key, $default = null)
+    public function get(string $key, mixed $default = null) : string|int|float|bool|null
     {
-        if (null !== $default && !\is_scalar($default) && !(\is_object($default) && method_exists($default, '__toString'))) {
-            trigger_deprecation('symfony/http-foundation', '5.1', 'Passing a non-scalar value as 2nd argument to "%s()" is deprecated, pass a scalar or null instead.', __METHOD__);
+        if (null !== $default && !\is_scalar($default) && !$default instanceof \Stringable) {
+            throw new \InvalidArgumentException(\sprintf('Expected a scalar value as a 2nd argument to "%s()", "%s" given.', __METHOD__, get_debug_type($default)));
         }
         $value = parent::get($key, $this);
-        if (null !== $value && $this !== $value && !\is_scalar($value) && !(\is_object($value) && method_exists($value, '__toString'))) {
-            trigger_deprecation('symfony/http-foundation', '5.1', 'Retrieving a non-scalar value from "%s()" is deprecated, and will throw a "%s" exception in Symfony 6.0, use "%s::all($key)" instead.', __METHOD__, BadRequestException::class, __CLASS__);
+        if (null !== $value && $this !== $value && !\is_scalar($value) && !$value instanceof \Stringable) {
+            throw new BadRequestException(\sprintf('Input value "%s" contains a non-scalar value.', $key));
         }
         return $this === $value ? $default : $value;
     }
     /**
-     * {@inheritdoc}
-     */
-    public function all(?string $key = null) : array
-    {
-        return parent::all($key);
-    }
-    /**
      * Replaces the current input values by a new set.
      */
-    public function replace(array $inputs = [])
+    public function replace(array $inputs = []) : void
     {
         $this->parameters = [];
         $this->add($inputs);
@@ -54,7 +46,7 @@ final class InputBag extends ParameterBag
     /**
      * Adds input values.
      */
-    public function add(array $inputs = [])
+    public function add(array $inputs = []) : void
     {
         foreach ($inputs as $input => $value) {
             $this->set($input, $value);
@@ -65,17 +57,40 @@ final class InputBag extends ParameterBag
      *
      * @param string|int|float|bool|array|null $value
      */
-    public function set(string $key, $value)
+    public function set(string $key, mixed $value) : void
     {
-        if (null !== $value && !\is_scalar($value) && !\is_array($value) && !method_exists($value, '__toString')) {
-            trigger_deprecation('symfony/http-foundation', '5.1', 'Passing "%s" as a 2nd Argument to "%s()" is deprecated, pass a scalar, array, or null instead.', get_debug_type($value), __METHOD__);
+        if (null !== $value && !\is_scalar($value) && !\is_array($value) && !$value instanceof \Stringable) {
+            throw new \InvalidArgumentException(\sprintf('Expected a scalar, or an array as a 2nd argument to "%s()", "%s" given.', __METHOD__, get_debug_type($value)));
         }
         $this->parameters[$key] = $value;
     }
     /**
-     * {@inheritdoc}
+     * Returns the parameter value converted to an enum.
+     *
+     * @template T of \BackedEnum
+     *
+     * @param class-string<T> $class
+     * @param ?T              $default
+     *
+     * @return ?T
      */
-    public function filter(string $key, $default = null, int $filter = \FILTER_DEFAULT, $options = [])
+    public function getEnum(string $key, string $class, ?\BackedEnum $default = null) : ?\BackedEnum
+    {
+        try {
+            return parent::getEnum($key, $class, $default);
+        } catch (UnexpectedValueException $e) {
+            throw new BadRequestException($e->getMessage(), $e->getCode(), $e);
+        }
+    }
+    /**
+     * Returns the parameter value converted to string.
+     */
+    public function getString(string $key, string $default = '') : string
+    {
+        // Shortcuts the parent method because the validation on scalar is already done in get().
+        return (string) $this->get($key, $default);
+    }
+    public function filter(string $key, mixed $default = null, int $filter = \FILTER_DEFAULT, mixed $options = []) : mixed
     {
         $value = $this->has($key) ? $this->all()[$key] : $default;
         // Always turn $options into an array - this allows filter_var option shortcuts.
@@ -83,15 +98,58 @@ final class InputBag extends ParameterBag
             $options = ['flags' => $options];
         }
         if (\is_array($value) && !(($options['flags'] ?? 0) & (\FILTER_REQUIRE_ARRAY | \FILTER_FORCE_ARRAY))) {
-            trigger_deprecation('symfony/http-foundation', '5.1', 'Filtering an array value with "%s()" without passing the FILTER_REQUIRE_ARRAY or FILTER_FORCE_ARRAY flag is deprecated', __METHOD__);
-            if (!isset($options['flags'])) {
-                $options['flags'] = \FILTER_REQUIRE_ARRAY;
-            }
+            throw new BadRequestException(\sprintf('Input value "%s" contains an array, but "FILTER_REQUIRE_ARRAY" or "FILTER_FORCE_ARRAY" flags were not set.', $key));
         }
         if (\FILTER_CALLBACK & $filter && !($options['options'] ?? null) instanceof \Closure) {
-            trigger_deprecation('symfony/http-foundation', '5.2', 'Not passing a Closure together with FILTER_CALLBACK to "%s()" is deprecated. Wrap your filter in a closure instead.', __METHOD__);
-            // throw new \InvalidArgumentException(sprintf('A Closure must be passed to "%s()" when FILTER_CALLBACK is used, "%s" given.', __METHOD__, get_debug_type($options['options'] ?? null)));
+            throw new \InvalidArgumentException(\sprintf('A Closure must be passed to "%s()" when FILTER_CALLBACK is used, "%s" given.', __METHOD__, get_debug_type($options['options'] ?? null)));
         }
-        return filter_var($value, $filter, $options);
+        $options['flags'] ??= 0;
+        $nullOnFailure = $options['flags'] & \FILTER_NULL_ON_FAILURE;
+        $options['flags'] |= \FILTER_NULL_ON_FAILURE;
+        $invalid = \false;
+        $forceArray = !\is_array($value) && $options['flags'] & \FILTER_FORCE_ARRAY && !($options['flags'] & \FILTER_REQUIRE_ARRAY);
+        if (!$nullOnFailure && \is_array($value) && $value && !($options['flags'] & \FILTER_REQUIRE_SCALAR) && $options['flags'] & (\FILTER_REQUIRE_ARRAY | \FILTER_FORCE_ARRAY)) {
+            $options['flags'] &= ~(\FILTER_REQUIRE_ARRAY | \FILTER_FORCE_ARRAY);
+            $value = self::filterArray($value, $filter, $options, $invalid);
+        } else {
+            if ($forceArray) {
+                $options['flags'] &= ~\FILTER_FORCE_ARRAY;
+            }
+            $value = filter_var($value, $filter, $options);
+            $invalid = null === $value;
+            if ($forceArray) {
+                $value = [$value];
+            }
+        }
+        if (!$invalid || $nullOnFailure) {
+            return $value;
+        }
+        $method = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS | \DEBUG_BACKTRACE_PROVIDE_OBJECT, 2)[1];
+        $method = ($method['object'] ?? null) === $this ? $method['function'] : 'filter';
+        $hint = 'filter' === $method ? 'pass' : 'use method "filter()" with';
+        trigger_deprecation('symfony/http-foundation', '6.3', 'Ignoring invalid values when using "%s::%s(\'%s\')" is deprecated and will throw a "%s" in 7.0; ' . $hint . ' flag "FILTER_NULL_ON_FAILURE" to keep ignoring them.', $this::class, $method, $key, BadRequestException::class);
+        return $value ?? \false;
+    }
+    private static function filterArray(array $value, int $filter, array $options, bool &$invalid, array &$references = []) : array
+    {
+        foreach ($value as $key => $item) {
+            if (!\is_array($item)) {
+                $value[$key] = filter_var($item, $filter, $options);
+                $invalid = $invalid || null === $value[$key];
+                continue;
+            }
+            $id = \ReflectionReference::fromArrayElement($value, $key)?->getId();
+            if (null !== $id && isset($references[$id])) {
+                continue;
+            }
+            if (null !== $id) {
+                $references[$id] = \true;
+            }
+            $value[$key] = self::filterArray($item, $filter, $options, $invalid, $references);
+            if (null !== $id) {
+                unset($references[$id]);
+            }
+        }
+        return $value;
     }
 }

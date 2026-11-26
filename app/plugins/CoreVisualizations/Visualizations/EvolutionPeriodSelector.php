@@ -14,10 +14,7 @@ use Piwik\Period\Factory;
 use Piwik\Plugins\CoreVisualizations\Visualizations\Sparklines\Config;
 class EvolutionPeriodSelector
 {
-    /**
-     * @var Config
-     */
-    private $config;
+    private Config $config;
     public function __construct(Config $config)
     {
         $this->config = $config;

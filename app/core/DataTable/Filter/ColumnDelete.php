@@ -110,7 +110,7 @@ class ColumnDelete extends BaseFilter
                     $keep = \false;
                     // @see self::APPEND_TO_COLUMN_NAME_TO_KEEP
                     foreach ($this->columnsToKeep as $nameKeep => $true) {
-                        if (strpos($name, $nameKeep . self::APPEND_TO_COLUMN_NAME_TO_KEEP) === 0) {
+                        if (str_starts_with($name, $nameKeep . self::APPEND_TO_COLUMN_NAME_TO_KEEP)) {
                             $keep = \true;
                         }
                     }

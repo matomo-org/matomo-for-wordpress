@@ -20,14 +20,8 @@ class GetSystemSummary extends Widget
 {
     public const TEST_MYSQL_VERSION = 'mysql-version-redacted';
     public const TEST_PHP_VERSION = 'php-version-redacted';
-    /**
-     * @var StoredSegmentService
-     */
-    private $storedSegmentService;
-    /**
-     * @var Plugin\Manager
-     */
-    private $pluginManager;
+    private StoredSegmentService $storedSegmentService;
+    private Plugin\Manager $pluginManager;
     public function __construct(StoredSegmentService $storedSegmentService, Plugin\Manager $pluginManager)
     {
         $this->storedSegmentService = $storedSegmentService;

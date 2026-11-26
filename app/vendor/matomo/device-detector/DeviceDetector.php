@@ -66,7 +66,7 @@ class DeviceDetector
     /**
      * Current version number of DeviceDetector
      */
-    public const VERSION = '6.5.1';
+    public const VERSION = '6.5.2';
     /**
      * Constant used as value for unknown browser / os
      */
@@ -665,13 +665,14 @@ class DeviceDetector
         return (bool) $this->matchUserAgent($regex);
     }
     /**
-     * Returns if the parsed UA contains the 'Desktop;', 'Desktop x32;', 'Desktop x64;' or 'Desktop WOW64;' fragment
+     * Returns if the parsed UA contains the 'Desktop;', 'Desktop x32;', 'Desktop x64;', 'Desktop WOW64;'
+     * or 'PC;' fragment
      *
      * @return bool
      */
     protected function hasDesktopFragment() : bool
     {
-        $regex = 'Desktop(?: (x(?:32|64)|WOW64))?;';
+        $regex = '(?:Desktop|PC)(?: (x(?:32|64)|WOW64))?;';
         return (bool) $this->matchUserAgent($regex);
     }
     /**
@@ -774,6 +775,12 @@ class DeviceDetector
          */
         if (empty($this->brand) && \in_array($osName, $appleOsNames)) {
             $this->brand = 'Apple';
+        }
+        /**
+         * Assume all devices running ThinOS are from Dell
+         */
+        if (empty($this->brand) && 'ThinOS' === $osName) {
+            $this->brand = 'Dell';
         }
         /**
          * All devices containing VR fragment are assumed to be a wearable
@@ -890,9 +897,15 @@ class DeviceDetector
             $this->brand = 'coocaa';
         }
         /**
+         * All devices running VIDAA are assumed to be a tv
+         */
+        if ('VIDAA' === $osName) {
+            $this->device = AbstractDeviceParser::DEVICE_TYPE_TV;
+        }
+        /**
          * All devices that contain Andr0id in string are assumed to be a tv
          */
-        $hasDeviceTvType = !\in_array($this->device, [AbstractDeviceParser::DEVICE_TYPE_TV, AbstractDeviceParser::DEVICE_TYPE_PERIPHERAL], \true) && $this->matchUserAgent('Andr0id|(?:Android(?: UHD)?|Google) TV|\\(lite\\) TV|BRAVIA|Firebolt| TV$');
+        $hasDeviceTvType = !\in_array($this->device, [AbstractDeviceParser::DEVICE_TYPE_TV, AbstractDeviceParser::DEVICE_TYPE_WEARABLE, AbstractDeviceParser::DEVICE_TYPE_PERIPHERAL], \true) && $this->matchUserAgent('Andr0id|(?:Android(?: UHD)?|Google) TV|\\(lite\\) TV|BRAVIA|Firebolt| TV$');
         if ($hasDeviceTvType) {
             $this->device = AbstractDeviceParser::DEVICE_TYPE_TV;
         }
@@ -905,7 +918,7 @@ class DeviceDetector
         /**
          * Devices running those clients are assumed to be a TV
          */
-        if (\in_array($clientName, ['Kylo', 'Espial TV Browser', 'LUJO TV Browser', 'LogicUI TV Browser', 'Open TV Browser', 'Seraphic Sraf', 'Opera Devices', 'Crow Browser', 'Vewd Browser', 'TiviMate', 'Quick Search TV', 'QJY TV Browser', 'TV Bro', 'Redline'])) {
+        if (\in_array($clientName, ['Kylo', 'Espial TV Browser', 'LUJO TV Browser', 'LogicUI TV Browser', 'Open TV Browser', 'Seraphic Sraf', 'Opera Devices', 'Crow Browser', 'Vewd Browser', 'TiviMate', 'Quick Search TV', 'QJY TV Browser', 'TV Bro', 'Redline', 'Odin'])) {
             $this->device = AbstractDeviceParser::DEVICE_TYPE_TV;
         }
         /**
@@ -917,7 +930,7 @@ class DeviceDetector
         /**
          * Set device type desktop if string ua contains desktop
          */
-        $hasDesktop = AbstractDeviceParser::DEVICE_TYPE_DESKTOP !== $this->device && \false !== \strpos($this->userAgent, 'Desktop') && $this->hasDesktopFragment();
+        $hasDesktop = AbstractDeviceParser::DEVICE_TYPE_DESKTOP !== $this->device && $this->hasDesktopFragment();
         if ($hasDesktop) {
             $this->device = AbstractDeviceParser::DEVICE_TYPE_DESKTOP;
         }

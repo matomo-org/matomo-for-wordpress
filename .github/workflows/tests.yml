@@ -40,15 +40,9 @@ jobs:
       fail-fast: false
       matrix:
         wp-versions: [ 'latest' ]
-        php-versions: [ '7.4', '8.1' ]
+        # Matomo 6 requires PHP 8.1 or newer.
+        php-versions: [ '8.1' ]
         multisite: [ "singlesite", "multisite" ]
-        include:
-          - wp-versions: '5.2'
-            php-versions: '7.2'
-            multisite: 'singlesite'
-          - wp-versions: '5.2'
-            php-versions: '7.2'
-            multisite: 'multisite'
     permissions:
       contents: read  # <--- allows to read repo
     steps:
@@ -145,8 +139,6 @@ jobs:
           [ -e /tmp/file.txt ] && echo File exists || echo Timeout
       - run: npm run compose logs wordpress --no-color # for debugging failures to start
         if: always()
-      - run: cat ./docker/wordpress/test/wp-content/debug.log || echo "debug.log file does not exist"
-        if: always()
 
       - name: Run unit tests
         shell: bash
@@ -163,6 +155,20 @@ jobs:
 
           npm run phpunit
 
+      - name: Show PHP logs after unit tests
+        if: always()
+        shell: bash
+        run: |
+          for log in ./docker/wordpress/test/wp-content/debug.log ./docker/wordpress/test-multi/wp-content/debug.log; do
+            if [[ -f "$log" ]]; then
+              echo "::group::$log"
+              tail -n 200 "$log"
+              echo "::endgroup::"
+            else
+              echo "$log does not exist"
+            fi
+          done
+
 
   e2e_tests:
     runs-on: 'ubuntu-latest'
@@ -170,10 +176,9 @@ jobs:
       fail-fast: false
       matrix:
         wp-versions: [ 'latest' ]
-        php-versions: [ '7.4', '8.1' ]
+        # Matomo 6 requires PHP 8.1 or newer.
+        php-versions: [ '8.1' ]
         include:
-          - wp-versions: 'trunk'
-            php-versions: '7.4'
           - wp-versions: 'trunk'
             php-versions: '8.1'
     permissions:

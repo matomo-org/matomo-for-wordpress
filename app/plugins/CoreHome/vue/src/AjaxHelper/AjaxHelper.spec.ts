@@ -5,6 +5,8 @@
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 
+import type { MockInstance } from 'vitest';
+
 import AjaxHelper from './AjaxHelper';
 
 type AjaxMode = 'success' | 'apiErrorEachChunk' | 'abort' | 'sessionTimeout';
@@ -18,7 +20,7 @@ describe('CoreHome/AjaxHelper', () => {
   const originalRefreshAfter = window.piwikHelper.refreshAfter;
 
   let notificationCallCount = 0;
-  let consoleLogSpy: jest.SpyInstance;
+  let consoleLogSpy: MockInstance;
 
   function makeBulkRequests(count: number): QueryParameters[] {
     return Array.from({ length: count }, (_, index) => ({
@@ -54,7 +56,7 @@ describe('CoreHome/AjaxHelper', () => {
         status: 200,
         statusText: 'success',
         responseJSON: data,
-        abort: jest.fn(),
+        abort: vi.fn(),
         getResponseHeader(headerName: string) {
           if (mode === 'sessionTimeout' && headerName === 'X-Matomo-Session-Timed-Out') {
             return '1';
@@ -98,7 +100,7 @@ describe('CoreHome/AjaxHelper', () => {
         status: 200,
         statusText: 'success',
         responseJSON: [],
-        abort: jest.fn(),
+        abort: vi.fn(),
         getResponseHeader() {
           return null;
         },
@@ -116,11 +118,11 @@ describe('CoreHome/AjaxHelper', () => {
   }
 
   beforeEach(() => {
-    consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+    consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
     notificationCallCount = 0;
     document.body.innerHTML = '<div id="ajaxError"></div>';
 
-    (window as Window & { require: (name: string) => any }).require = jest.fn().mockImplementation((moduleName: string) => {
+    (window as Window & { require: (name: string) => any }).require = vi.fn().mockImplementation((moduleName: string) => {
       if (moduleName !== 'piwik/UI') {
         throw new Error(`unexpected module ${moduleName}`);
       }
@@ -137,8 +139,8 @@ describe('CoreHome/AjaxHelper', () => {
       };
     });
 
-    window.piwikHelper.redirect = jest.fn();
-    window.piwikHelper.refreshAfter = jest.fn();
+    window.piwikHelper.redirect = vi.fn();
+    window.piwikHelper.refreshAfter = vi.fn();
     window.piwik.idSite = 1;
     window.piwik.period = 'day';
     window.piwik.currentDateString = 'yesterday';
@@ -317,6 +319,23 @@ describe('CoreHome/AjaxHelper', () => {
     expect(window.piwikHelper.refreshAfter).toHaveBeenCalledWith(0);
   });
 
+  it('omits a request parameter with an unsupported name', async () => {
+    let requestedUrl = '';
+
+    installUrlCapturingAjaxMock((url) => {
+      requestedUrl = url;
+    });
+
+    await AjaxHelper.fetch({
+      method: 'API.getMatomoVersion',
+      keep: '1',
+      [`drop${String.fromCharCode(0)}x`]: '2',
+    });
+
+    expect(requestedUrl).toContain('keep=1');
+    expect(requestedUrl).not.toContain('drop');
+  });
+
   it('should not replace an explicitly empty segment with the URL segment', async () => {
     let requestedUrl = '';
 
@@ -436,6 +455,76 @@ describe('CoreHome/AjaxHelper', () => {
     await helper.send();
 
     expect(requestedUrl).toContain('segment=pageUrl%3D%3Dhttps%253A%252F%252Fexample.com');
+  });
+
+  describe('language parameter', () => {
+    let originalHref = '';
+
+    // Captured per test rather than at collection time: other tests in this file change the URL
+    // without restoring it, so a value read once up front depends on the order they ran in.
+    beforeEach(() => {
+      originalHref = window.location.href;
+    });
+
+    afterEach(() => {
+      window.history.replaceState({}, '', originalHref);
+    });
+
+    async function urlForPage(pageQuery: string, params: QueryParameters = {}): Promise<string> {
+      window.history.replaceState({}, '', pageQuery);
+
+      let requestedUrl = '';
+      installUrlCapturingAjaxMock((url) => {
+        requestedUrl = url;
+      });
+
+      await AjaxHelper.fetch({ method: 'X.get', ...params });
+
+      return requestedUrl;
+    }
+
+    it('passes the page language on to its own requests', async () => {
+      expect(await urlForPage('?idSite=1&language=es')).toContain('language=es');
+    });
+
+    it('reads the language from the hash as well as the query string', async () => {
+      expect(await urlForPage('?idSite=1#?language=es')).toContain('language=es');
+    });
+
+    it('prefers the language in the hash over the one in the query string', async () => {
+      const url = await urlForPage('?idSite=1&language=fr#?language=es');
+
+      expect(url).toContain('language=es');
+      expect(url).not.toContain('language=fr');
+    });
+
+    it('sends no language when the page does not ask for one', async () => {
+      expect(await urlForPage('?idSite=1')).not.toContain('language=');
+    });
+
+    it('leaves a language set on the request itself alone', async () => {
+      const url = await urlForPage('?idSite=1&language=es', { language: 'de' });
+
+      expect(url).toContain('language=de');
+      expect(url).not.toContain('language=es');
+    });
+
+    it('leaves a language posted with the request alone', async () => {
+      window.history.replaceState({}, '', '?idSite=1&language=es');
+
+      let requestedUrl = '';
+      installUrlCapturingAjaxMock((url) => {
+        requestedUrl = url;
+      });
+
+      const helper = new AjaxHelper();
+      helper.addParams({ module: 'API', method: 'X.get' }, 'get');
+      helper.addParams({ language: 'de' }, 'post');
+
+      await helper.send();
+
+      expect(requestedUrl).not.toContain('language=');
+    });
   });
 
   describe('date/period validation', () => {

@@ -252,7 +252,7 @@ class VisitorDetails extends \Piwik\Plugins\Live\VisitorDetailsAbstract
         return $visit->getColumn('referrerName');
     }
     /**
-     * @return array<int, array<string>>
+     * @return string[]
      */
     private function getAdditionalUrlsForSite(int $idSite) : array
     {

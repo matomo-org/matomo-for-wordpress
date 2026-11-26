@@ -607,13 +607,13 @@ class ArchivingHelper
         $lastIndex = count($segments) - 1;
         $lastSegment = (string) $segments[$lastIndex];
         if ($actionType === Action::TYPE_PAGE_URL) {
-            if (strpos($lastSegment, self::URL_ACTION_LEAF_MARKER) === 0) {
+            if (str_starts_with($lastSegment, self::URL_ACTION_LEAF_MARKER)) {
                 $lastSegment = substr($lastSegment, strlen(self::URL_ACTION_LEAF_MARKER));
             }
             $segments[$lastIndex] = $lastSegment;
             $delimiter = self::$actionUrlCategoryDelimiter;
         } else {
-            if (strpos($lastSegment, self::TITLE_ACTION_LEAF_MARKER) === 0) {
+            if (str_starts_with($lastSegment, self::TITLE_ACTION_LEAF_MARKER)) {
                 $lastSegment = substr($lastSegment, strlen(self::TITLE_ACTION_LEAF_MARKER));
             }
             $segments[$lastIndex] = $lastSegment;
@@ -624,7 +624,7 @@ class ArchivingHelper
         } else {
             $label = implode($delimiter, $segments);
         }
-        if ($actionType === Action::TYPE_PAGE_URL && $label !== self::getUnknownActionName(Action::TYPE_PAGE_URL) && substr($label, 0, 1) !== '/') {
+        if ($actionType === Action::TYPE_PAGE_URL && $label !== self::getUnknownActionName(Action::TYPE_PAGE_URL) && !str_starts_with($label, '/')) {
             return '/' . $label;
         }
         return $label;
@@ -921,7 +921,7 @@ class ArchivingHelper
             return array(trim($urlHost), $path);
         }
         $name = $urlPath;
-        if ($name === '' || substr($name, -1) == '/') {
+        if ($name === '' || str_ends_with($name, '/')) {
             $name .= self::$defaultActionName;
         }
         $urlFragment = PageUrl::processUrlFragment($urlFragment);

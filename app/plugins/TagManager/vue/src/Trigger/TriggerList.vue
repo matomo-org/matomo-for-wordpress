@@ -45,10 +45,12 @@
         <tbody>
           <tr v-show="isLoading || isUpdating">
             <td colspan="7">
-              <span class="loadingPiwik">
-                <img src="plugins/Morpheus/images/loading-blue.gif" />
-                {{ translate('General_LoadingData') }}
-              </span>
+              <ActivityIndicator
+                :loading="isLoading || isUpdating"
+                :loading-message="isUpdating
+                  ? translate('TagManager_UpdatingData')
+                  : translate('General_LoadingData')"
+              />
             </td>
           </tr>
           <tr v-show="!isLoading && triggers.length === 0">
@@ -76,8 +78,12 @@
             </td>
             <td
               class="type"
-              :title="trigger.typeMetadata.description"
-            >{{ trigger.typeMetadata.name }}</td>
+              :title="trigger.typeMetadata
+                ? trigger.typeMetadata.description
+                : translate('TagManager_TypeNotAvailableHelp')"
+            >{{ trigger.typeMetadata
+              ? trigger.typeMetadata.name
+              : translate('TagManager_TypeNotAvailable', trigger.type) }}</td>
             <td class="conditions">
               <span
                 class="icon-ok"
@@ -86,7 +92,7 @@
             </td>
             <td
               class="lastUpdated"
-              :title="translate('TagManager_CreatedOnX', trigger.created_date_pretty)"
+              :title="translate('TagManager_CreatedOnX', trigger.created_date_pretty || '')"
             >
               <span>{{ trigger.updated_date_pretty }}</span>
             </td>
@@ -96,13 +102,14 @@
             >
               <a
                 class="table-action icon-edit"
-                @click="editTrigger(trigger.idtrigger, trigger.type)"
+                v-show="trigger.typeMetadata"
+                @click="editTrigger(trigger.idtrigger ?? 0)"
                 :title="translate('TagManager_EditTrigger')"
               />
               <a
                 class="table-action icon-content-copy"
-                v-show="hasPublishCapability()"
-                @click="openCopyDialog(trigger)"
+                v-show="hasPublishCapability() && trigger.typeMetadata"
+                @click="openCopyDialog(trigger as Trigger)"
                 :title="translate(
                   'TagManager_CopyX',
                   translate('TagManager_Trigger'),
@@ -155,15 +162,7 @@
     >
       <h2>{{ translate('TagManager_TriggerCannotBeDeleted') }}</h2>
       <p>{{ translate('TagManager_TriggerBeingUsedBy') }}</p>
-      <ul class="collection">
-        <li
-          class="collection-item"
-          v-for="reference in triggerReferences"
-          :key="reference.referenceId"
-        >
-          {{ reference.referenceTypeName }}: {{ reference.referenceName }}
-        </li>
-      </ul>
+      <ReferenceList :references="triggerReferences" />
       <p>{{ translate('TagManager_TriggerBeingUsedNeedsRemove') }}</p>
       <input
         role="no"
@@ -177,6 +176,7 @@
 <script lang="ts">
 import { DeepReadonly, defineComponent } from 'vue';
 import {
+  ActivityIndicator,
   AjaxHelper,
   Matomo,
   ContentBlock,
@@ -187,8 +187,9 @@ import {
 import { Field } from 'CorePluginsAdmin';
 import TriggersStore from './Triggers.store';
 import { TriggerReference, Trigger, TriggerType } from '../types';
+import ReferenceList from '../ReferenceList/ReferenceList.vue';
 
-interface TriggerListState {
+export interface TriggerListState {
   hasWriteAccess: boolean;
   triggerReferences: TriggerReference[];
   triggerSearch: string;
@@ -209,8 +210,10 @@ export default defineComponent({
     triggersHelpText: String,
   },
   components: {
+    ActivityIndicator,
     Field,
     ContentBlock,
+    ReferenceList,
   },
   directives: {
     ContentTable,
@@ -241,6 +244,7 @@ export default defineComponent({
         idContainer: this.idContainer,
         idContainerVersion: this.idContainerVersion,
         idTrigger: trigger.idtrigger,
+        filter_limit: '-1',
       }).then((references) => {
         if (!references || !references.length) {
           this.triggerReferences = [];
@@ -303,8 +307,8 @@ export default defineComponent({
         if (typeof entity[propName] === 'string') {
           propValue = (entity[propName] as string);
         } else if (propName === 'typeMetadata') {
-          const propTypeMeta = (entity.typeMetadata as TriggerType);
-          propValue = (propTypeMeta.name as string);
+          const propTypeMeta = (entity.typeMetadata as TriggerType|null);
+          propValue = (propTypeMeta?.name || '');
         } else if (propName === 'parameters' && entity.type === 'CustomEvent') {
           const propTypeParameters = (entity.parameters as Record<string, unknown>);
           propValue = (propTypeParameters.eventName as string);

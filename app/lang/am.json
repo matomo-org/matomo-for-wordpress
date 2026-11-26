@@ -165,7 +165,9 @@
     },
     "Goals": {
         "CategoryTextReferrers_Referrers": "አመላካቾች",
-        "ColumnConversions": "ልወጣዎች"
+        "ColumnConversions": "ልወጣዎች",
+        "RecommendationCountOnePage": "1 ገፅ",
+        "RecommendationCountPages": "%s ገፆች"
     },
     "Installation": {
         "ConfirmDeleteExistingTables": "እርግጠኛ ነህ ይህንን ሰንጠረዥ ከውሂብ ጎታህ ውስጥ : %s መሰረዝ ትፈልጋለህ? ማስጠንቀቂያ: ከዚህ ሰንጠረዥ ውስጥ የጠፉ ውሂቦች ተመልሰው ሊገኙ አይችሉም!",
