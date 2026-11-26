@@ -1,5 +1,9 @@
 == Changelog ===
 
+= 6.0.0 =
+* Update bundled Matomo core to 6.0.0.
+* Require PHP 8.1 or later for Matomo analytics.
+
 = 5.13.2 =
 * Bug fix: PHP 8.5 no longer reports deprecation notices for the bundled PHP tracker's use of
   `curl_close()` and of the `$http_response_header` variable, or for the plugin's own use of
