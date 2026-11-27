@@ -221,6 +221,40 @@ class DbWordPressTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$this->assertEquals( 3, $result );
 	}
 
+	public function test_rollBack_discards_changes_made_in_the_transaction() {
+		$table = Common::prefixTable( 'access' );
+
+		$this->db->beginTransaction();
+		$this->db->exec( 'update ' . $table . ' set idsite = 2' );
+		$this->assertEquals( 3, $this->db->fetchOne( 'select count(*) from ' . $table . ' where idsite = 2' ) );
+		$this->db->rollBack();
+
+		$this->assertEquals( 0, $this->db->fetchOne( 'select count(*) from ' . $table . ' where idsite = 2' ) );
+	}
+
+	public function test_rollBack_discards_changes_made_before_a_nested_beginTransaction() {
+		$table = Common::prefixTable( 'access' );
+
+		$this->db->beginTransaction();
+		$this->db->exec( 'update ' . $table . ' set idsite = 2' );
+		$this->db->beginTransaction();
+		$this->db->rollBack();
+
+		$this->assertEquals( 0, $this->db->fetchOne( 'select count(*) from ' . $table . ' where idsite = 2' ) );
+	}
+
+	public function test_commit_keeps_changes_made_in_the_transaction() {
+		$table = Common::prefixTable( 'access' );
+
+		$this->db->beginTransaction();
+		$this->db->exec( 'update ' . $table . ' set idsite = 2' );
+		$this->db->commit();
+		// sent directly, as rollBack() does nothing outside a transaction the adapter started
+		$this->db->exec( 'ROLLBACK' );
+
+		$this->assertEquals( 3, $this->db->fetchOne( 'select count(*) from ' . $table . ' where idsite = 2' ) );
+	}
+
 	public function test_update_sets_null_values_correctly() {
 		$table = Common::prefixTable( 'logger_message' );
 
