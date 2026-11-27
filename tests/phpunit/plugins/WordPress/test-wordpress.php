@@ -457,7 +457,7 @@ class WordPressTest extends MatomoAnalytics_SharedFixture_TestCase {
 		);
 	}
 
-	public function test_updateContainerVariable_should_rename_a_variable_a_constrained_tag_refers_to() {
+	public function test_updateContainerVariable_should_refuse_to_rename_a_variable_a_constrained_tag_refers_to() {
 		$this->require_tag_manager();
 
 		$id_site = $this->create_a_user_without_unfiltered_html();
@@ -470,21 +470,38 @@ class WordPressTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 				$this->store_a_custom_html_tag( $id_site, $container, $tag_name, '<script>console.log("{{MatomoHost}}");</script>' );
 
-				MatomoApiRequest::processRequest(
-					'TagManager.updateContainerVariable',
+				try {
+					MatomoApiRequest::processRequest(
+						'TagManager.updateContainerVariable',
+						[
+							'idSite'             => $id_site,
+							'idContainer'        => $container['id_container'],
+							'idContainerVersion' => $container['id_version'],
+							'idVariable'         => $id_variable,
+							'name'               => 'MatomoHostRenamed',
+							'parameters'         => [ 'constantValue' => '/' ],
+						]
+					);
+					$this->fail( 'renaming a variable a Custom HTML tag refers to has to be refused' );
+				} catch ( ValidatorException $e ) {
+					$this->assertStringContainsString( 'used in a place that you are not allowed to change', $e->getMessage() );
+				}
+
+				$variable = MatomoApiRequest::processRequest(
+					'TagManager.getContainerVariable',
 					[
 						'idSite'             => $id_site,
 						'idContainer'        => $container['id_container'],
 						'idContainerVersion' => $container['id_version'],
 						'idVariable'         => $id_variable,
-						'name'               => 'MatomoHostRenamed',
-						'parameters'         => [ 'constantValue' => '/' ],
 					]
 				);
 
+				$this->assertSame( 'MatomoHost', $variable['name'] );
+
 				$tag = $this->find_container_tag( $id_site, $container, $tag_name );
 
-				$this->assertStringContainsString( '{{MatomoHostRenamed}}', $tag['parameters']['customHtml'] );
+				$this->assertStringContainsString( '{{MatomoHost}}', $tag['parameters']['customHtml'] );
 			}
 		);
 	}

@@ -50,6 +50,49 @@ class SecuredTemplateFactory
     }
 
     /**
+     * @return array<class-string, string[]> the tag parameters that the replacements restrict
+     */
+    public static function getRestrictedTagParameters()
+    {
+        return array_map('array_keys', self::tagFieldValidators());
+    }
+
+    /**
+     * @return array<class-string, string[]> the variable parameters that the replacements restrict
+     */
+    public static function getRestrictedVariableParameters()
+    {
+        return array_map('array_keys', self::variableFieldValidators());
+    }
+
+    /**
+     * @return array<class-string, array<string, \Piwik\Validators\BaseValidator[]>>
+     */
+    private static function tagFieldValidators()
+    {
+        return [
+            CustomHtmlTag::class => ['customHtml' => [new UnfilteredHtmlRequired()]],
+            CustomImageTag::class => ['customImageSrc' => [new SiteOwnUrl()]],
+        ];
+    }
+
+    /**
+     * @return array<class-string, array<string, \Piwik\Validators\BaseValidator[]>>
+     */
+    private static function variableFieldValidators()
+    {
+        return [
+            MatomoConfigurationVariable::class => [
+                'matomoUrl' => [new SiteOwnUrl()],
+                'jsEndpointCustom' => [new NoVariableInterpolation(), new NoPathTraversal(), new TrackerEndpointPath()],
+                'trackingEndpointCustom' => [new NoVariableInterpolation(), new NoPathTraversal(), new TrackerEndpointPath()],
+            ],
+            CustomJsFunctionVariable::class => ['jsFunction' => [new UnfilteredHtmlRequired()]],
+            CustomRequestProcessingVariable::class => ['jsFunction' => [new UnfilteredHtmlRequired()]],
+        ];
+    }
+
+    /**
      * Prevent use of the custom HTML tag entirely. Note: if the user has `unfiltered_html`,
      * this override will not be registered (see WordPress.php).
      *
@@ -60,7 +103,7 @@ class SecuredTemplateFactory
     {
         return new class(
             $wrapped,
-            ['customHtml' => [new UnfilteredHtmlRequired()]]
+            self::tagFieldValidators()[CustomHtmlTag::class]
         ) extends CustomHtmlTag {
             use SecuredTemplate;
         };
@@ -77,7 +120,7 @@ class SecuredTemplateFactory
     {
         return new class(
             $wrapped,
-            ['customImageSrc' => [new SiteOwnUrl()]]
+            self::tagFieldValidators()[CustomImageTag::class]
         ) extends CustomImageTag {
             use SecuredTemplate;
         };
@@ -97,11 +140,7 @@ class SecuredTemplateFactory
     {
         return new class(
             $wrapped,
-            [
-                'matomoUrl' => [new SiteOwnUrl()],
-                'jsEndpointCustom' => [new NoVariableInterpolation(), new NoPathTraversal(), new TrackerEndpointPath()],
-                'trackingEndpointCustom' => [new NoVariableInterpolation(), new NoPathTraversal(), new TrackerEndpointPath()],
-            ],
+            self::variableFieldValidators()[MatomoConfigurationVariable::class],
             [
                 'matomoUrl' => self::dropUrlQueryAndFragment(),
                 'jsEndpointCustom' => self::relativeTrackerEndpoint(),
@@ -124,7 +163,7 @@ class SecuredTemplateFactory
     {
         return new class(
             $wrapped,
-            ['jsFunction' => [new UnfilteredHtmlRequired()]]
+            self::variableFieldValidators()[CustomJsFunctionVariable::class]
         ) extends CustomJsFunctionVariable {
             use SecuredTemplate;
         };
@@ -142,7 +181,7 @@ class SecuredTemplateFactory
     {
         return new class(
             $wrapped,
-            ['jsFunction' => [new UnfilteredHtmlRequired()]]
+            self::variableFieldValidators()[CustomRequestProcessingVariable::class]
         ) extends CustomRequestProcessingVariable {
             use SecuredTemplate;
         };

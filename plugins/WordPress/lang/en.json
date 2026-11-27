@@ -13,6 +13,7 @@
     "AIBotTrackingIsNotEnabled": "AI bot tracking is not currently enabled in Matomo for WordPress. %1$sIt must be enabled before you will see data in these reports.%2$s",
     "TagManagerNoVariableInterpolation": "Referencing another variable is not allowed here, so \"{{\" and \"}}\" cannot be used. Enter the value itself.",
     "TagManagerVariableNameBracesNotAllowed": "A variable name cannot contain \"{{\" or \"}}\", because that is how one variable refers to another.",
+    "TagManagerVariableUsedByRestrictedField": "This variable is used in a place that you are not allowed to change, so you cannot change or delete this variable, or add a variable with this name.",
     "TagManagerUrlNotAllowed": "This is not a valid URL for this site.",
     "TagManagerUrlSchemeNotAllowed": "Only http:// and https:// URLs, or a path on this site, are allowed here.",
     "TagManagerUrlHostNotAllowed": "%1$s is not this site's address. You are not allowed to load resources from another site, so only a URL on %2$s, or a path, can be used here.",
