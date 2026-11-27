@@ -4,6 +4,8 @@
 * Bug fix: PHP 8.5 no longer reports deprecation notices for the bundled PHP tracker's use of
   `curl_close()` and of the `$http_response_header` variable, or for the plugin's own use of
   `ReflectionProperty::setAccessible()` and of an implicitly nullable parameter type.
+* Bug fix: database transactions started through Matomo's database layer now take effect on
+  WordPress's own database connection.
 
 = 5.13.1 =
 * Bug fix: when the plugin is network activated, a blog's administrator now holds Matomo super

@@ -24,6 +24,8 @@ class WordPress extends Mysqli {
 
 	private $old_suppress_errors_value = null;
 
+	private $in_transaction = false;
+
 	/**
 	 * Return default port.
 	 *
@@ -308,6 +310,43 @@ class WordPress extends Mysqli {
 		$this->after_execute_query( $wpdb, $sqlQuery );
 
 		return $exec;
+	}
+
+	// the parent's transaction methods open a separate mysqli connection, while every query runs through $wpdb.
+	// START TRANSACTION implicitly commits an open transaction, so a nested begin from this adapter is ignored.
+	// A transaction another component opened on the shared $wpdb connection is still committed by it,
+	// since MySQL has no portable way to detect one.
+	public function beginTransaction() {
+		if ( $this->in_transaction ) {
+			return $this;
+		}
+
+		$this->exec( 'START TRANSACTION' );
+		$this->in_transaction = true;
+
+		return $this;
+	}
+
+	public function commit() {
+		if ( ! $this->in_transaction ) {
+			return $this;
+		}
+
+		$this->exec( 'COMMIT' );
+		$this->in_transaction = false;
+
+		return $this;
+	}
+
+	public function rollBack() {
+		if ( ! $this->in_transaction ) {
+			return $this;
+		}
+
+		$this->exec( 'ROLLBACK' );
+		$this->in_transaction = false;
+
+		return $this;
 	}
 
 	public function fetch( $query, $parameters = array() ) {
